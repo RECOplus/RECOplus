@@ -1,0 +1,4 @@
+{
+  "_readme": "Base de datos de puntos sugeridos por la comunidad de RECO+. Cada objeto sigue el mismo formato que POINTS en app.js. Este archivo representa los puntos ya revisados/publicados oficialmente. Las sugerencias nuevas que un usuario envía desde el modal se guardan primero en su navegador (localStorage, clave 'reco-suggested-points') y aparecen al instante en su propio mapa; para publicarlas aquí para todos, copia esas entradas dentro del array 'puntos' de este archivo.",
+  "puntos": []
+}

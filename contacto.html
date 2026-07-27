@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script src="darkmode.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contacto | RECO+</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --verde-900:#0c3d24;
+    --verde-700:#13502f;
+    --verde-600:#1c6b3c;
+    --verde-500:#237a42;
+    --verde-400:#2f8f4e;
+    --verde-100:#e7f3ea;
+    --verde-50:#f4f9f5;
+    --gris-900:#1c2521;
+    --gris-600:#5b6b62;
+    --gris-400:#8a978f;
+    --gris-200:#e3e8e4;
+    --gris-100:#f1f4f1;
+    --blanco:#ffffff;
+    --radius-lg:20px;
+    --radius-md:14px;
+    --radius-sm:10px;
+    --shadow-sm:0 2px 10px rgba(12,61,36,0.06);
+    --shadow-md:0 10px 30px rgba(12,61,36,0.10);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    color:var(--gris-900);
+    background:var(--blanco);
+    line-height:1.5;
+  }
+  h1,h2,h3,h4{
+    font-family:'Poppins',sans-serif;
+    margin:0;
+    color:var(--verde-900);
+  }
+  p{margin:0;}
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  button{font-family:inherit;cursor:pointer;border:none;}
+  .container{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 24px;
+  }
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-weight:600;
+    color:var(--verde-700);
+    font-size:0.95rem;
+  }
+  .leaf-dot{
+    width:22px;height:22px;border-radius:50%;
+    background:var(--verde-100);
+    display:inline-flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .leaf-dot svg{width:13px;height:13px;}
+
+  /* ===== HEADER ===== */
+  header{
+    border-bottom:1px solid var(--gris-100);
+    position:sticky;top:0;background:var(--blanco);z-index:50;
+  }
+  .nav-wrap{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 24px;max-width:1180px;margin:0 auto;
+  }
+  .logo{
+    display:flex;align-items:center;gap:10px;
+  }
+  .logo .mark{
+    width:38px;height:38px;border-radius:50%;
+    background:var(--verde-600);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .logo .mark svg{width:20px;height:20px;}
+  .logo-text{display:flex;flex-direction:column;line-height:1.1;}
+  .logo-text strong{font-family:'Poppins',sans-serif;font-weight:800;font-size:1.25rem;color:var(--verde-900);}
+  .logo-text span{font-size:0.7rem;color:var(--gris-600);}
+  nav ul{
+    display:flex;gap:30px;list-style:none;margin:0;padding:0;
+  }
+  nav a{
+    font-size:0.95rem;font-weight:500;color:var(--gris-900);
+    position:relative;padding:6px 0;
+    transition:color .2s;
+  }
+  nav a.active{color:var(--verde-600);font-weight:600;}
+  nav a:hover{color:var(--verde-600);}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:11px 22px;border-radius:999px;
+    font-weight:600;font-size:0.95rem;
+    transition:transform .15s ease, box-shadow .15s ease, background .2s;
+  }
+  .btn-primary{background:var(--verde-600);color:var(--blanco);}
+  .btn-primary:hover{background:var(--verde-700);transform:translateY(-1px);box-shadow:var(--shadow-sm);}
+  .btn-light{background:var(--blanco);color:var(--verde-700);}
+  .btn-light:hover{transform:translateY(-1px);box-shadow:var(--shadow-sm);}
+  .menu-toggle{display:none;background:none;}
+  .menu-toggle svg{width:26px;height:26px;}
+
+  /* ===== HERO ===== */
+  .hero{
+    padding:56px 0 0;
+  }
+  .hero-grid{
+    display:grid;grid-template-columns:1fr 1.05fr;
+    gap:0;align-items:stretch;
+    border-radius:var(--radius-lg);
+    overflow:hidden;
+    background:var(--blanco);
+  }
+  .hero-text{
+    padding:30px 36px 30px 0;
+    display:flex;flex-direction:column;gap:18px;justify-content:center;
+    position:relative;
+  }
+  .hero-text h1{
+    font-size:2.7rem;font-weight:700;line-height:1.12;
+    max-width:430px;
+  }
+  .hero-text .accent-leaf{
+    position:absolute;top:6px;right:90px;width:34px;color:var(--verde-500);
+    transform:rotate(8deg);
+  }
+  .hero-text p{
+    color:var(--gris-600);font-size:1.02rem;max-width:400px;
+  }
+  .scribble{width:60px;color:var(--verde-500);margin-top:4px;}
+  .hero-photo{
+    position:relative;background:linear-gradient(160deg,#1c3a23,#2c5a33 45%,#3c7a3f 100%);
+    border-radius:var(--radius-lg);
+    overflow:hidden;min-height:380px;
+  }
+  .hero-photo svg{width:100%;height:100%;display:block;}
+
+  .perks{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:18px;margin-top:28px;
+    background:var(--verde-50);
+    border-radius:var(--radius-lg);
+    padding:22px 26px;
+  }
+  .perk{display:flex;gap:14px;align-items:flex-start;}
+  .perk .icon{
+    width:42px;height:42px;border-radius:50%;
+    background:var(--blanco);box-shadow:var(--shadow-sm);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .perk .icon svg{width:20px;height:20px;color:var(--verde-600);}
+  .perk h4{font-size:0.95rem;margin-bottom:3px;}
+  .perk p{font-size:0.85rem;color:var(--gris-600);}
+
+  /* ===== CONTACT SECTION ===== */
+  .contact-section{padding:56px 0;}
+  .contact-grid{
+    display:grid;grid-template-columns:1.3fr 1fr;
+    gap:28px;align-items:start;
+  }
+  .card{
+    background:var(--blanco);
+    border:1px solid var(--gris-100);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-sm);
+    padding:34px;
+  }
+  .card-title{
+    display:flex;align-items:center;gap:10px;margin-bottom:26px;
+  }
+  .card-title .leaf-dot{background:var(--verde-100);}
+  .card-title h2{font-size:1.35rem;}
+
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;}
+  .field{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;}
+  .field label{font-size:0.88rem;font-weight:600;color:var(--gris-900);}
+  .field input,.field select,.field textarea{
+    border:1px solid var(--gris-200);
+    border-radius:var(--radius-sm);
+    padding:12px 14px;font-size:0.92rem;font-family:inherit;
+    color:var(--gris-900);background:var(--blanco);
+    transition:border-color .15s, box-shadow .15s;
+  }
+  .field input::placeholder,.field textarea::placeholder{color:var(--gris-400);}
+  .field input:focus,.field select:focus,.field textarea:focus{
+    outline:none;border-color:var(--verde-500);
+    box-shadow:0 0 0 3px rgba(35,122,66,0.15);
+  }
+  .field textarea{resize:vertical;min-height:120px;}
+  .field-error{font-size:0.78rem;color:#c0392b;display:none;}
+  .field.invalid input,.field.invalid select,.field.invalid textarea{border-color:#c0392b;}
+  .field.invalid .field-error{display:block;}
+
+  .checkbox-row{
+    display:flex;align-items:flex-start;gap:10px;margin-bottom:24px;
+  }
+  .checkbox-row input{margin-top:3px;width:16px;height:16px;accent-color:var(--verde-600);flex-shrink:0;}
+  .checkbox-row label{font-size:0.86rem;color:var(--gris-600);}
+  .checkbox-row a{color:var(--verde-600);font-weight:600;}
+
+  .submit-btn{
+    background:var(--verde-600);color:var(--blanco);
+    padding:13px 26px;border-radius:999px;font-weight:600;font-size:0.95rem;
+    display:inline-flex;align-items:center;gap:10px;
+    transition:background .2s, transform .15s;
+  }
+  .submit-btn:hover{background:var(--verde-700);transform:translateY(-1px);}
+  .submit-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+  .submit-btn svg{width:16px;height:16px;}
+
+  .form-status{
+    margin-top:16px;font-size:0.88rem;font-weight:600;display:none;
+  }
+  .form-status.success{display:block;color:var(--verde-700);}
+  .form-status.error{display:block;color:#c0392b;}
+
+  .contact-list{display:flex;flex-direction:column;gap:26px;}
+  .contact-item{display:flex;gap:16px;align-items:flex-start;}
+  .contact-item .ic{
+    width:46px;height:46px;border-radius:50%;background:var(--verde-600);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .contact-item .ic svg{width:20px;height:20px;color:var(--blanco);}
+  .contact-item h4{font-size:1rem;margin-bottom:4px;}
+  .contact-item p{font-size:0.88rem;color:var(--gris-600);}
+  .contact-item .sub{font-size:0.8rem;color:var(--gris-400);margin-top:2px;}
+  .socials{display:flex;gap:10px;margin-top:10px;}
+  .socials a{
+    width:34px;height:34px;border-radius:50%;background:var(--verde-600);
+    display:flex;align-items:center;justify-content:center;color:var(--blanco);
+    transition:background .2s, transform .15s;
+  }
+  .socials a:hover{background:var(--verde-700);transform:translateY(-2px);}
+  .socials svg{width:16px;height:16px;}
+
+  /* ===== MAP SECTION ===== */
+  .map-section{padding:0 0 56px;}
+  .map-card{
+    display:grid;grid-template-columns:0.85fr 1.4fr;
+    gap:0;border-radius:var(--radius-lg);overflow:hidden;
+    border:1px solid var(--gris-100);box-shadow:var(--shadow-sm);
+    align-items:stretch;
+  }
+  .map-info{padding:40px;display:flex;flex-direction:column;gap:16px;justify-content:center;}
+  .map-info h2{font-size:1.4rem;}
+  .map-info p{color:var(--gris-600);font-size:0.95rem;max-width:300px;}
+  .map-visual{
+    position:relative;min-height:260px;
+    background:
+      repeating-linear-gradient(0deg, #eef1ed 0 2px, transparent 2px 64px),
+      repeating-linear-gradient(90deg, #eef1ed 0 2px, transparent 2px 64px),
+      #e7eee8;
+  }
+  .map-visual::before, .map-visual::after{
+    content:"";position:absolute;background:#d6e6d4;border-radius:50%;
+  }
+  .map-visual::before{width:140px;height:140px;top:-30px;left:-20px;}
+  .map-visual::after{width:180px;height:120px;bottom:-40px;right:-30px;}
+  .pin{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-100%);
+    width:46px;height:46px;
+  }
+
+  /* ===== HELP CARDS ===== */
+  .help-section{padding:10px 0 56px;text-align:center;}
+  .help-section h2{font-size:1.5rem;margin-bottom:32px;}
+  .help-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:left;
+  }
+  .help-card{
+    border:1px solid var(--gris-100);border-radius:var(--radius-md);
+    padding:26px;transition:box-shadow .2s, transform .2s;
+  }
+  .help-card:hover{box-shadow:var(--shadow-md);transform:translateY(-3px);}
+  .help-card .ic{
+    width:44px;height:44px;border-radius:50%;background:var(--verde-100);
+    display:flex;align-items:center;justify-content:center;margin-bottom:14px;
+  }
+  .help-card .ic svg{width:22px;height:22px;color:var(--verde-600);}
+  .help-card.warning .ic{background:#fdeee0;}
+  .help-card.warning .ic svg{color:#c97a1a;}
+  .help-card h4{font-size:1rem;margin-bottom:6px;}
+  .help-card p{font-size:0.85rem;color:var(--gris-600);margin-bottom:14px;}
+  .help-card a{
+    font-size:0.85rem;font-weight:600;color:var(--verde-600);
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .help-card a svg{width:13px;height:13px;transition:transform .15s;}
+  .help-card a:hover svg{transform:translateX(3px);}
+
+  /* ===== CTA BANNER ===== */
+  .cta-section{padding:0 0 56px;}
+  .cta-banner{
+    background:linear-gradient(120deg,var(--verde-900),var(--verde-600));
+    border-radius:var(--radius-lg);
+    padding:42px 48px;
+    display:flex;align-items:center;justify-content:space-between;gap:24px;
+    color:var(--blanco);position:relative;overflow:hidden;
+  }
+  .cta-banner::before{
+    content:"";position:absolute;width:260px;height:260px;
+    background:radial-gradient(circle,rgba(255,255,255,0.10),transparent 70%);
+    top:-80px;left:-40px;
+  }
+  .cta-left{display:flex;align-items:center;gap:22px;position:relative;z-index:1;}
+  .cta-globe{width:64px;height:64px;flex-shrink:0;}
+  .cta-text h3{color:var(--blanco);font-size:1.3rem;margin-bottom:6px;}
+  .cta-text p{color:rgba(255,255,255,0.85);font-size:0.92rem;max-width:380px;}
+  .cta-right{display:flex;align-items:center;gap:14px;position:relative;z-index:1;}
+  .avatars{display:flex;}
+  .avatars span{
+    width:38px;height:38px;border-radius:50%;border:2px solid var(--verde-700);
+    margin-left:-10px;background:var(--verde-400);
+    display:flex;align-items:center;justify-content:center;color:var(--blanco);
+    font-size:0.8rem;font-weight:700;
+  }
+  .avatars span:first-child{margin-left:0;}
+
+  /* ===== PARTNERS ===== */
+  .partners-section{padding:0 0 64px;text-align:center;}
+  .partners-section h3{font-size:1.15rem;color:var(--gris-900);margin-bottom:32px;font-weight:600;}
+  .partners-row{display:flex;align-items:center;justify-content:center;gap:8px;}
+  .partners-track{
+    display:flex;align-items:center;justify-content:space-between;flex:1;gap:30px;
+  }
+  .partner{display:flex;align-items:center;gap:10px;color:var(--gris-600);}
+  .partner svg{width:26px;height:26px;color:var(--verde-600);flex-shrink:0;}
+  .partner .pname{display:flex;flex-direction:column;line-height:1.2;text-align:left;}
+  .partner .pname strong{font-size:0.9rem;color:var(--gris-900);}
+  .partner .pname span{font-size:0.72rem;color:var(--gris-400);}
+  .arrow-btn{
+    width:36px;height:36px;border-radius:50%;border:1px solid var(--gris-200);
+    background:var(--blanco);display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;transition:background .2s;
+  }
+  .arrow-btn:hover{background:var(--gris-100);}
+  .arrow-btn svg{width:14px;height:14px;color:var(--gris-600);}
+
+  /* ===== FOOTER ===== */
+  footer{background:var(--verde-900);color:rgba(255,255,255,0.82);padding:56px 0 0;}
+  .footer-grid{
+    display:grid;grid-template-columns:1.4fr 0.8fr 0.8fr 0.8fr 1.1fr;
+    gap:30px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,0.12);
+  }
+  .footer-brand .logo-text strong{color:var(--blanco);}
+  .footer-brand .logo-text span{color:rgba(255,255,255,0.6);}
+  .footer-brand p{font-size:0.85rem;color:rgba(255,255,255,0.6);margin-top:14px;max-width:220px;}
+  .footer-socials{display:flex;gap:10px;margin-top:18px;}
+  .footer-socials a{
+    width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.1);
+    display:flex;align-items:center;justify-content:center;color:var(--blanco);
+    transition:background .2s;
+  }
+  .footer-socials a:hover{background:rgba(255,255,255,0.2);}
+  .footer-socials svg{width:14px;height:14px;}
+  footer h5{color:var(--blanco);font-size:0.95rem;margin-bottom:18px;font-family:'Poppins',sans-serif;}
+  footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:11px;}
+  footer ul li a{font-size:0.87rem;color:rgba(255,255,255,0.72);transition:color .15s;}
+  footer ul li a:hover{color:var(--blanco);}
+  .newsletter-form{display:flex;flex-direction:column;gap:10px;margin-top:6px;}
+  .newsletter-form input{
+    padding:11px 14px;border-radius:999px;border:none;font-size:0.85rem;font-family:inherit;
+  }
+  .newsletter-form input:focus{outline:2px solid var(--verde-400);}
+  .newsletter-form button{
+    background:var(--verde-500);color:var(--blanco);padding:11px;border-radius:999px;
+    font-weight:600;font-size:0.85rem;transition:background .2s;
+  }
+  .newsletter-form button:hover{background:var(--verde-400);}
+  .footer-bottom{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:22px 0;font-size:0.8rem;color:rgba(255,255,255,0.55);
+  }
+  .whatsapp-float{
+    position:fixed;bottom:26px;right:26px;width:54px;height:54px;border-radius:50%;
+    background:#25D366;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 18px rgba(0,0,0,0.25);z-index:60;transition:transform .15s;
+  }
+  .whatsapp-float:hover{transform:scale(1.08);}
+  .whatsapp-float svg{width:26px;height:26px;color:var(--blanco);}
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width:980px){
+    nav{display:none;}
+    .menu-toggle{display:block;}
+    .hero-grid{grid-template-columns:1fr;}
+    .hero-text{padding:0 0 24px;}
+    .hero-photo{min-height:280px;}
+    .perks{grid-template-columns:1fr;}
+    .contact-grid{grid-template-columns:1fr;}
+    .map-card{grid-template-columns:1fr;}
+    .map-visual{min-height:220px;}
+    .help-grid{grid-template-columns:1fr 1fr;}
+    .footer-grid{grid-template-columns:1fr 1fr;}
+    .cta-banner{flex-direction:column;align-items:flex-start;}
+    .partners-track{flex-wrap:wrap;justify-content:center;}
+  }
+  @media (max-width:600px){
+    .hero-text h1{font-size:2rem;}
+    .form-row{grid-template-columns:1fr;}
+    .help-grid{grid-template-columns:1fr;}
+    .footer-grid{grid-template-columns:1fr;}
+    .cta-right{width:100%;justify-content:space-between;}
+    .nav-wrap .btn-primary span{display:none;}
+  }
+
+  /* Accesibilidad: foco visible */
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible{
+    outline:3px solid var(--verde-400);outline-offset:2px;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+  }
+</style>
+<!-- Capa aditiva: el CTA "Únete" ahora es <a>, no <button> -->
+<link rel="stylesheet" href="nav-cta-link-fix.css">
+<!-- Capa aditiva: chip de usuario con foto/avatar + menú cuando hay sesión -->
+<link rel="stylesheet" href="navbar-auth.css">
+</head>
+<body>
+
+<!-- ── BUBBLE NAVBAR ── -->
+<div class="bubble-nav-wrapper">
+  <header class="bubble-nav">
+
+    <!-- Logo -->
+    <div class="bubble-nav__logo">
+      <img src="img/logo png nombre.png" alt="RECO+">
+    </div>
+
+    <!-- Links -->
+        <nav class="bubble-nav__links">
+      <a href="https://RECOplus.github.io/rEcOPlus-Final/index.html" data-tooltip="Vuelve a la página principal." data-i18n-tooltip="nav.inicio.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M3 9.5L10 3l7 6.5V17a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M7 18v-6h6v6"/></svg>
+        <span data-i18n="nav.inicio">Inicio</span>
+      </a>
+      <a href="https://RECOplus.github.io/rEcOPlus-Final/reciclar.html" data-tooltip="Centros de reciclaje cerca de ti." data-i18n-tooltip="nav.reciclar.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M10 2a6 6 0 016 6c0 4-6 10-6 10S4 12 4 8a6 6 0 016-6z"/><circle cx="10" cy="8" r="2"/></svg>
+        <span data-i18n="nav.reciclar">Reciclar</span>
+      </a>
+      <a href="https://RECOplus.github.io/rEcOPlus-Final/donar.html" data-tooltip="Comparte lo que ya no usas y cambia vidas." data-i18n-tooltip="nav.donar.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M3 11c0-2.5 2-4 4-3l3 1.5 5-1.5c1.2-.2 2.5.6 2.5 2 0 1.2-.8 2-2 2l-3.5.5"/><path d="M3 11l2 5h3l7-4"/></svg>
+        <span data-i18n="nav.donar">Donar</span>
+      </a>
+      <a href="https://RECOplus.github.io/rEcOPlus-Final/guia.html" data-tooltip="Aprende paso a paso cómo reciclar y donar." data-i18n-tooltip="nav.guia.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><rect x="4" y="2" width="12" height="16" rx="1.5"/><path d="M4 5h12M7 2v16"/></svg>
+        <span data-i18n="nav.guia">Guía</span>
+      </a>
+      <a href="https://RECOplus.github.io/rEcOPlus-Final/contacto.html" class="active" data-tooltip="Escríbenos, respondemos en menos de 24h." data-i18n-tooltip="nav.contacto.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><rect x="2" y="5" width="16" height="12" rx="1.5"/><path d="M2 7l8 5 8-5"/></svg>
+        <span data-i18n="nav.contacto">Contacto</span>
+      </a>
+      <a href="https://RECOplus.github.io/rEcOPlus-Final/blog.html" data-tooltip="Historias, tips y noticias sobre sostenibilidad." data-i18n-tooltip="nav.blog.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><rect x="3" y="3" width="14" height="14" rx="1.5"/><path d="M6 7h8M6 10h8M6 13h5"/></svg>
+        <span data-i18n="nav.blog">Blog</span>
+      </a>
+    </nav>
+
+    <!-- Right side: dark mode pill + lang pill + CTA -->
+    <!-- navbar__spacer keeps compatibility with darkmode.js auto-injection -->
+    <div class="bubble-nav__actions navbar__spacer">
+
+      <!-- Dark mode pill -->
+      <div class="dm-pill" id="darkModeToggle" role="button" title="Cambiar modo claro/oscuro" aria-label="Toggle dark mode">
+        <span class="dm-pill__btn dm-pill__sun dm-sun" id="dmSunBtn">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" width="16" height="16">
+            <circle cx="10" cy="10" r="3.5"/>
+            <line x1="10" y1="2" x2="10" y2="4.5"/><line x1="10" y1="15.5" x2="10" y2="18"/>
+            <line x1="2" y1="10" x2="4.5" y2="10"/><line x1="15.5" y1="10" x2="18" y2="10"/>
+            <line x1="4.4" y1="4.4" x2="6.2" y2="6.2"/><line x1="13.8" y1="13.8" x2="15.6" y2="15.6"/>
+            <line x1="15.6" y1="4.4" x2="13.8" y2="6.2"/><line x1="6.2" y1="13.8" x2="4.4" y2="15.6"/>
+          </svg>
+        </span>
+        <span class="dm-pill__btn dm-pill__moon dm-moon" id="dmMoonBtn">
+          <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15">
+            <path d="M17.3 13.3A8 8 0 016.7 2.7a7 7 0 100 14.6 7.9 7.9 0 0010.6-4z"/>
+          </svg>
+        </span>
+      </div>
+
+      <!-- Language pill -->
+      <button class="lang-pill" onclick="toggleLang()" aria-label="Cambiar idioma" data-current="es">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15">
+          <circle cx="10" cy="10" r="8"/>
+          <ellipse cx="10" cy="10" rx="3.5" ry="8"/>
+          <line x1="2" y1="10" x2="18" y2="10"/>
+        </svg>
+        <span class="lang-pill__label lang-label-es">ES</span>
+        <span class="lang-pill__label lang-label-en" style="display:none">EN</span>
+        <svg class="lang-pill__chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" width="11" height="11" stroke-linecap="round">
+          <path d="M5 7l5 5 5-5"/>
+        </svg>
+      </button>
+
+      <a href="https://RECOplus.github.io/rEcOPlus-Final/login.html" class="bubble-nav__cta" data-i18n="nav.unete">
+        <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z"/></svg>
+        Únete
+      </a>
+
+    </div>
+  </header>
+</div>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-text">
+          <svg class="accent-leaf" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21C12 21 5 16.5 5 10.5C5 6.5 8 4 11 5.5C9.5 7 9 9 10 11C11.5 8.5 14.5 7.5 17 9C18 12 16.5 16 12 21Z"/></svg>
+          <h1>Estamos aquí<br>para ayudarte</h1>
+          <p>¿Tienes dudas, sugerencias o quieres trabajar con nosotros? Escríbenos y nos pondremos en contacto contigo lo antes posible.</p>
+          <svg class="scribble" viewBox="0 0 60 30" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M2 24C12 26 18 6 30 8C40 10 38 22 52 6"/><path d="M44 4L53 5L51 14"/></svg>
+        </div>
+        <div class="hero-photo">
+          <svg viewBox="0 0 600 420" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="leafGlow" cx="30%" cy="30%" r="80%">
+                <stop offset="0%" stop-color="#4f8f4a"/>
+                <stop offset="100%" stop-color="#1c3a23"/>
+              </radialGradient>
+            </defs>
+            <rect width="600" height="420" fill="url(#leafGlow)"/>
+            <g opacity="0.5" fill="#2f5b34">
+              <ellipse cx="80" cy="90" rx="90" ry="40" transform="rotate(-30 80 90)"/>
+              <ellipse cx="180" cy="40" rx="100" ry="42" transform="rotate(20 180 40)"/>
+              <ellipse cx="60" cy="220" rx="80" ry="36" transform="rotate(60 60 220)"/>
+              <ellipse cx="40" cy="340" rx="100" ry="44" transform="rotate(-10 40 340)"/>
+              <ellipse cx="220" cy="380" rx="90" ry="40" transform="rotate(40 220 380)"/>
+            </g>
+            <!-- buzón -->
+            <g transform="translate(330,60)">
+              <rect x="40" y="120" width="170" height="170" rx="10" fill="#1a4d2e"/>
+              <path d="M40 120 Q125 60 210 120 L210 150 L40 150 Z" fill="#1f5c36"/>
+              <rect x="20" y="280" width="210" height="22" rx="6" fill="#123a21"/>
+              <rect x="95" y="150" width="60" height="140" fill="#173f23"/>
+              <g transform="translate(78,178)">
+                <rect x="0" y="0" width="100" height="74" rx="6" fill="#e9ece7"/>
+                <path d="M0 6 L50 46 L100 6" fill="none" stroke="#1a4d2e" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+              </g>
+              <rect x="160" y="100" width="14" height="36" rx="3" fill="#0f3a22" transform="rotate(8 167 118)"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="perks">
+        <div class="perk">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1v-7h3z"/><path d="M3 19a2 2 0 002 2h1v-7H3z"/></svg>
+          </span>
+          <div><h4>Respuesta rápida</h4><p>Te respondemos en menos de 24 horas</p></div>
+        </div>
+        <div class="perk">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21C12 21 5 16.5 5 10.5C5 6.5 8 4 11 5.5C9.5 7 9 9 10 11C11.5 8.5 14.5 7.5 17 9C18 12 16.5 16 12 21Z"/></svg>
+          </span>
+          <div><h4>Comprometidos</h4><p>Atención cercana y personalizada</p></div>
+        </div>
+        <div class="perk">
+          <span class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
+          </span>
+          <div><h4>Confidencial</h4><p>Tus datos están seguros con nosotros</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section class="contact-section">
+    <div class="container">
+      <div class="contact-grid">
+
+        <div class="card">
+          <div class="card-title">
+            <span class="leaf-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#1c6b3c" stroke-width="2.4"><path d="M12 21C12 21 5 16.5 5 10.5C5 6.5 8 4 11 5.5C9.5 7 9 9 10 11C11.5 8.5 14.5 7.5 17 9C18 12 16.5 16 12 21Z"/></svg></span>
+            <h2>Envíanos un mensaje</h2>
+          </div>
+
+          <form id="contactForm" novalidate>
+            <div class="field" id="field-nombre">
+              <label for="nombre">Nombre completo</label>
+              <input type="text" id="nombre" name="nombre" placeholder="Escribe tu nombre" autocomplete="name">
+              <span class="field-error">Por favor escribe tu nombre.</span>
+            </div>
+
+            <div class="form-row">
+              <div class="field" id="field-correo">
+                <label for="correo">Correo electrónico</label>
+                <input type="email" id="correo" name="correo" placeholder="Escribe tu correo" autocomplete="email">
+                <span class="field-error">Introduce un correo válido.</span>
+              </div>
+              <div class="field" id="field-asunto">
+                <label for="asunto">Asunto</label>
+                <select id="asunto" name="asunto">
+                  <option value="" selected disabled>Selecciona un asunto</option>
+                  <option value="reciclaje">Dudas sobre reciclaje</option>
+                  <option value="donaciones">Donaciones o alianzas</option>
+                  <option value="pedidos">Pedidos de tienda</option>
+                  <option value="problema">Reportar un problema</option>
+                  <option value="otro">Otro</option>
+                </select>
+                <span class="field-error">Selecciona un asunto.</span>
+              </div>
+            </div>
+
+            <div class="field" id="field-mensaje">
+              <label for="mensaje">Mensaje</label>
+              <textarea id="mensaje" name="mensaje" placeholder="Cuéntanos cómo podemos ayudarte..."></textarea>
+              <span class="field-error">Escribe tu mensaje.</span>
+            </div>
+
+            <div class="checkbox-row" id="field-privacidad">
+              <input type="checkbox" id="privacidad" name="privacidad">
+              <label for="privacidad">Acepto la <a href="#">política de privacidad</a> y el tratamiento de mis datos.</label>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>
+              Enviar mensaje
+            </button>
+
+            <p class="form-status" id="formStatus"></p>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <span class="leaf-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#1c6b3c" stroke-width="2.4"><path d="M12 21C12 21 5 16.5 5 10.5C5 6.5 8 4 11 5.5C9.5 7 9 9 10 11C11.5 8.5 14.5 7.5 17 9C18 12 16.5 16 12 21Z"/></svg></span>
+            <h2>Otras formas de contacto</h2>
+          </div>
+
+          <div class="contact-list">
+            <div class="contact-item">
+              <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span>
+              <div>
+                <h4>Correo electrónico</h4>
+                <p>soporte.recoplus@gmail.com</p>
+                <p class="sub">Te responderemos en menos de 24h</p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13 1 .35 1.99.65 2.94a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.14-1.14a2 2 0 012.11-.45c.95.3 1.94.52 2.94.65A2 2 0 0122 16.92z"/></svg></span>
+              <div>
+                <h4>Teléfono / WhatsApp</h4>
+                <p>+507 6399-1249</p>
+                <p class="sub">Lunes a Viernes de 9:00 a 18:00</p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+              <div>
+                <h4>Dirección</h4>
+                <p>David, Panama</p>
+              </div>
+            </div>
+            <div class="contact-item">
+              <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21C12 21 5 16.5 5 10.5C5 6.5 8 4 11 5.5C9.5 7 9 9 10 11C11.5 8.5 14.5 7.5 17 9C18 12 16.5 16 12 21Z"/></svg></span>
+              <div>
+                <h4>Redes sociales</h4>
+                <p>Síguenos y escríbenos</p>
+                <div class="socials">
+                  <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17.2" cy="6.8" r="0.6" fill="currentColor"/></svg></a>
+                  <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h-3a4 4 0 00-4 4v3H5v3h3v8h3v-8h3l1-3h-4V7a1 1 0 011-1h3z"/></svg></a>
+                  <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 3a10.9 10.9 0 01-3.14 1.53A4.48 4.48 0 0012 8.1V9a10.66 10.66 0 01-9-4.93s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg></a>
+                  <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4V8h4v1.5A4.5 4.5 0 0116 8z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- MAPA -->
+  <section class="map-section">
+    <div class="container">
+      <div class="map-card">
+        <div class="map-info">
+          <div class="card-title" style="margin-bottom:6px;">
+            <span class="leaf-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#1c6b3c" stroke-width="2.4"><path d="M12 21C12 21 5 16.5 5 10.5C5 6.5 8 4 11 5.5C9.5 7 9 9 10 11C11.5 8.5 14.5 7.5 17 9C18 12 16.5 16 12 21Z"/></svg></span>
+            <h2>¿Dónde estamos?</h2>
+          </div>
+          <p>Visítanos en nuestras oficinas o encuéntranos en el mapa.</p>
+          <a href="https://www.google.com/maps" target="_blank" rel="noopener" class="btn btn-primary" style="width:fit-content;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Ver en Google Maps
+          </a>
+        </div>
+        <div class="map-visual" role="img" aria-label="Mapa ilustrativo de la ubicación de RECO+">
+          <svg class="pin" viewBox="0 0 24 24" fill="#1c6b3c"><path d="M12 22s8-8.5 8-13.5A8 8 0 004 8.5C4 13.5 12 22 12 22z"/><circle cx="12" cy="8.5" r="3" fill="white"/></svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AYUDA -->
+  <section class="help-section">
+    <div class="container">
+      <h2>¿Necesitas ayuda con algo específico?</h2>
+      <div class="help-grid">
+
+        <div class="help-card">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0115-6.7M21 12a9 9 0 01-15 6.7"/><path d="M3 5v4h4M21 19v-4h-4"/></svg></span>
+          <h4>Dudas sobre reciclaje</h4>
+          <p>Te ayudamos a reciclar correctamente.</p>
+          <a href="#">Ir a la guía <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+
+        <div class="help-card">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1-1a5.5 5.5 0 10-7.8 7.8l1 1L12 22l7.8-8.5 1-1a5.5 5.5 0 000-7.9z"/></svg></span>
+          <h4>Donaciones o alianzas</h4>
+          <p>Conoce cómo colaborar con RECO+.</p>
+          <a href="#">Saber más <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+
+        <div class="help-card">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 7h12l1 13H5z"/><path d="M9 7a3 3 0 016 0"/></svg></span>
+          <h4>Pedidos de tienda</h4>
+          <p>Consulta sobre envíos, productos y más.</p>
+          <a href="#">Ir a la tienda <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+
+        <div class="help-card warning">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg></span>
+          <h4>Reportar un problema</h4>
+          <p>Ayúdanos a mejorar reportando aquí.</p>
+          <a href="#">Reportar <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-banner">
+        <div class="cta-left">
+          <svg class="cta-globe" viewBox="0 0 64 64" fill="none">
+            <circle cx="32" cy="26" r="18" fill="#3c8a4a"/>
+            <path d="M18 22c4-2 8 2 12-1s8-1 10 2" stroke="#1c6b3c" stroke-width="2" fill="none"/>
+            <path d="M16 44c4-6 12-8 16-8s12 2 16 8" stroke="#e7f3ea" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <ellipse cx="32" cy="54" rx="20" ry="5" fill="#e7f3ea" opacity="0.3"/>
+          </svg>
+          <div class="cta-text">
+            <h3>Juntos hacemos la diferencia</h3>
+            <p>Cada mensaje, idea y colaboración nos acerca a un mundo más limpio, solidario y sostenible.</p>
+          </div>
+        </div>
+        <div class="cta-right">
+          <a href="#" class="btn btn-light">Únete a la comunidad
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <div class="avatars">
+            <span>A</span><span>M</span><span>+</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ALIADOS -->
+  <section class="partners-section">
+    <div class="container">
+      <h3>Empresas y aliados que confían en nosotros</h3>
+      <div class="partners-row">
+        <button class="arrow-btn" aria-label="Anterior">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="partners-track">
+          <div class="partner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0115-6.7M21 12a9 9 0 01-15 6.7"/></svg>
+            <span class="pname"><strong>EcoCiclo</strong><span>Recicla · Reutiliza</span></span>
+          </div>
+          <div class="partner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21C12 21 5 16.5 5 10.5C5 6.5 8 4 11 5.5C9.5 7 9 9 10 11C11.5 8.5 14.5 7.5 17 9C18 12 16.5 16 12 21Z"/></svg>
+            <span class="pname"><strong>GreenTech</strong><span>Soluciones Sostenibles</span></span>
+          </div>
+          <div class="partner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg>
+            <span class="pname"><strong>Dispesa</strong><span>Vivir en Azul</span></span>
+          </div>
+          <div class="partner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4.5L18.5 21 12 16.5 5.5 21l2-7.5L2 9h7z"/></svg>
+            <span class="pname"><strong>BióRecicla</strong><span>Por un planeta limpio</span></span>
+          </div>
+          <div class="partner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><path d="M7.5 7.5L16.5 7.5M7 7l5 9M17 7l-5 9"/></svg>
+            <span class="pname"><strong>TecnoVerde</strong><span>Innovación Sustentable</span></span>
+          </div>
+        </div>
+        <button class="arrow-btn" aria-label="Siguiente">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="logo">
+          <span class="mark">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 21C12 21 5 16.5 5 10.5C5 6.5 8 4 11 5.5C9.5 7 9 9 10 11C11.5 8.5 14.5 7.5 17 9C18 12 16.5 16 12 21Z" fill="white"/></svg>
+          </span>
+          <span class="logo-text">
+            <strong>RECO+</strong>
+            <span>Cada acción cuenta.</span>
+          </span>
+        </a>
+        <p>Plataforma comunitaria para reciclar, donar y construir un futuro más sostenible.</p>
+        <div class="footer-socials">
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h-3a4 4 0 00-4 4v3H5v3h3v8h3v-8h3l1-3h-4V7a1 1 0 011-1h3z"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3.5"/></svg></a>
+          <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 3a10.9 10.9 0 01-3.14 1.53A4.48 4.48 0 0012 8.1V9a10.66 10.66 0 01-9-4.93s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l5 3-5 3z" fill="currentColor" stroke="none"/></svg></a>
+        </div>
+      </div>
+
+      <div>
+        <h5>Navegación</h5>
+        <ul>
+          <li><a href="#">Inicio</a></li>
+          <li><a href="#">Mapa</a></li>
+          <li><a href="#">Guía</a></li>
+          <li><a href="#">Donar / Ayuda</a></li>
+          <li><a href="#">Tienda EcoTech</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Sobre nosotros</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h5>Recursos</h5>
+        <ul>
+          <li><a href="#">Centro de ayuda</a></li>
+          <li><a href="#">Preguntas frecuentes</a></li>
+          <li><a href="#">Políticas y condiciones</a></li>
+          <li><a href="#">Política de privacidad</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h5>Contacto</h5>
+        <ul>
+          <li><a href="mailto:soporte.recoplus@gmail.com">soporte.recoplus@gmail.com</a></li>
+          <li><a href="tel:+50763991249">+507 6399-1249</a></li>
+          <li><span>David, Panama</span></li>
+        </ul>
+      </div>
+
+      <div>
+        <h5>Newsletter</h5>
+        <p style="font-size:0.85rem;color:rgba(255,255,255,0.65);margin-bottom:12px;">Recibe las últimas novedades sobre sostenibilidad.</p>
+        <form class="newsletter-form" id="newsletterForm">
+          <input type="email" placeholder="Tu correo electrónico" required>
+          <button type="submit">Suscribirme</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 RECO+. Todos los derechos reservados.</span>
+    </div>
+  </div>
+</footer>
+
+<a class="whatsapp-float" href="https://wa.me/34600123456" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.5 15.2L2 22l4.9-1.3A10 10 0 1012 2zm5.6 14.2c-.3.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5-4.5-.2-.2-1.2-1.6-1.2-3a3.3 3.3 0 011-2.4c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .6l-.4.6c-.1.2-.2.3-.1.5.3.7 1 1.5 1.6 2 .7.6 1.4 1 1.6 1.1.2.1.4.1.5-.1l.7-.8c.2-.2.4-.2.6-.1l1.9 1c.2.1.4.2.4.4.1.3.1.7-.1 1z"/></svg>
+</a>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------- VALIDACIÓN DEL FORMULARIO DE CONTACTO ----------
+  const form = document.getElementById('contactForm');
+  const status = document.getElementById('formStatus');
+  const submitBtn = document.getElementById('submitBtn');
+
+  function setError(fieldId, isInvalid){
+    const wrap = document.getElementById(fieldId);
+    if(!wrap) return;
+    wrap.classList.toggle('invalid', isInvalid);
+  }
+
+  function isValidEmail(value){
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  }
+
+  function validateForm(){
+    let valid = true;
+
+    const nombre = document.getElementById('nombre').value.trim();
+    if(!nombre){ setError('field-nombre', true); valid = false; }
+    else { setError('field-nombre', false); }
+
+    const correo = document.getElementById('correo').value.trim();
+    if(!isValidEmail(correo)){ setError('field-correo', true); valid = false; }
+    else { setError('field-correo', false); }
+
+    const asunto = document.getElementById('asunto').value;
+    if(!asunto){ setError('field-asunto', true); valid = false; }
+    else { setError('field-asunto', false); }
+
+    const mensaje = document.getElementById('mensaje').value.trim();
+    if(!mensaje){ setError('field-mensaje', true); valid = false; }
+    else { setError('field-mensaje', false); }
+
+    const privacidad = document.getElementById('privacidad').checked;
+    if(!privacidad){ setError('field-privacidad', true); valid = false; }
+    else { setError('field-privacidad', false); }
+
+    return valid;
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    status.className = 'form-status';
+    status.textContent = '';
+
+    if(!validateForm()){
+      status.classList.add('error');
+      status.textContent = 'Por favor revisa los campos marcados antes de continuar.';
+      return;
+    }
+
+    // Simulación de envío. Sustituye este bloque por tu llamada real
+    // (fetch a tu backend, endpoint de email, etc).
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Enviando...';
+
+    setTimeout(function(){
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg> Enviar mensaje';
+      status.classList.add('success');
+      status.textContent = '¡Gracias! Tu mensaje fue enviado, te responderemos pronto.';
+      form.reset();
+    }, 900);
+  });
+
+  // Limpia el error de un campo en cuanto el usuario empieza a corregirlo
+  ['nombre','correo','asunto','mensaje','privacidad'].forEach(function(id){
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.addEventListener('input', function(){ setError('field-' + id, false); });
+    el.addEventListener('change', function(){ setError('field-' + id, false); });
+  });
+
+  // ---------- NEWSLETTER DEL FOOTER ----------
+  const newsletterForm = document.getElementById('newsletterForm');
+  newsletterForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    const input = newsletterForm.querySelector('input');
+    if(input.value.trim()){
+      input.value = '';
+      input.placeholder = '¡Gracias por suscribirte!';
+    }
+  });
+
+})();
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="auth.js"></script>
+  <script src="i18n.js"></script>
+  <script src="navbar-auth.js"></script>
+<style>
+/* ── BUBBLE NAV — CSS variables for light/dark ── */
+
+/* MODO CLARO */
+:root {
+  --nav-bg:               rgba(242, 250, 244, 0.55);
+  --nav-border:           rgba(168, 218, 181, 0.55);
+  --nav-shadow:           0 8px 32px rgba(30, 80, 40, 0.14), 0 2px 8px rgba(30, 80, 40, 0.08);
+  --nav-link-color:       #2a4a34;
+  --nav-link-hover-bg:    rgba(45, 140, 78, 0.10);
+  --nav-link-hover-color: #1a5c2a;
+  --nav-link-active-bg:   rgba(45, 140, 78, 0.14);
+  --nav-lang-bg:          rgba(45, 140, 78, 0.08);
+  --nav-lang-border:      rgba(45, 140, 78, 0.22);
+  --nav-lang-color:       #2a4a34;
+  --nav-dm-bg:            rgba(45, 140, 78, 0.08);
+  --nav-dm-border:        rgba(45, 140, 78, 0.22);
+  --nav-cta-bg:           #2d8c4e;
+  --nav-cta-color:        #fff;
+  --nav-cta-hover:        #1a5c2a;
+}
+
+/* MODO OSCURO */
+html.dark {
+  --nav-bg:               rgba(12, 22, 14, 0.55);
+  --nav-border:           rgba(61, 170, 96, 0.20);
+  --nav-shadow:           0 8px 32px rgba(0, 0, 0, 0.40), 0 2px 8px rgba(0, 0, 0, 0.28);
+  --nav-link-color:       rgba(212, 234, 216, 0.80);
+  --nav-link-hover-bg:    rgba(255, 255, 255, 0.08);
+  --nav-link-hover-color: #d4ead8;
+  --nav-link-active-bg:   rgba(255, 255, 255, 0.11);
+  --nav-lang-bg:          rgba(255, 255, 255, 0.07);
+  --nav-lang-border:      rgba(255, 255, 255, 0.15);
+  --nav-lang-color:       rgba(212, 234, 216, 0.80);
+  --nav-dm-bg:            rgba(255, 255, 255, 0.07);
+  --nav-dm-border:        rgba(255, 255, 255, 0.15);
+  --nav-cta-bg:           #fff;
+  --nav-cta-color:        #111;
+  --nav-cta-hover:        #e8f5ec;
+}
+
+/* ── WRAPPER ── */
+.bubble-nav-wrapper {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: calc(100% - 48px);
+  max-width: 1160px;
+}
+
+/* ── PILL ── */
+.bubble-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--nav-bg);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid var(--nav-border);
+  border-radius: 999px;
+  padding: 10px 14px 10px 20px;
+  box-shadow: var(--nav-shadow);
+  gap: 16px;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+/* ── LOGO ── */
+.bubble-nav__logo img {
+  height: 34px;
+  width: auto;
+  display: block;
+  flex-shrink: 0;
+  transition: filter 0.3s;
+}
+
+/* ── LINKS ── */
+.bubble-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  justify-content: center;
+}
+
+.bubble-nav__links a {
+  font-family: 'DM Sans', 'Arial', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--nav-link-color);
+  text-decoration: none;
+  padding: 6px 11px;
+  border-radius: 999px;
+  white-space: nowrap;
+  transition: color 0.18s, background 0.18s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.bubble-nav__links a svg {
+  opacity: 0.75;
+  flex-shrink: 0;
+  transition: opacity 0.18s;
+}
+
+.bubble-nav__links a:hover {
+  color: var(--nav-link-hover-color);
+  background: var(--nav-link-hover-bg);
+}
+
+.bubble-nav__links a:hover svg { opacity: 1; }
+
+.bubble-nav__links a.active {
+  color: var(--nav-link-hover-color);
+  background: var(--nav-link-active-bg);
+  font-weight: 600;
+}
+
+.bubble-nav__links a.active svg { opacity: 1; }
+
+/* ── RIGHT ACTIONS ── */
+.bubble-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ── DARK MODE PILL ── */
+.dm-pill {
+  display: inline-flex;
+  align-items: center;
+  background: var(--nav-dm-bg);
+  border: 1px solid var(--nav-dm-border);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s;
+}
+
+.dm-pill__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  transition: background 0.2s, color 0.2s, opacity 0.2s;
+  color: var(--nav-link-color);
+  opacity: 0.45;
+}
+
+html:not(.dark) .dm-pill__sun { opacity: 1; background: rgba(45,140,78,0.15); color: #d4a017; }
+html:not(.dark) .dm-pill__moon { opacity: 0.38; }
+html.dark .dm-pill__moon { opacity: 1; background: rgba(61,170,96,0.18); color: #c8d8ff; }
+html.dark .dm-pill__sun { opacity: 0.38; }
+
+/* ── LANG PILL ── */
+.lang-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--nav-lang-bg);
+  border: 1px solid var(--nav-lang-border);
+  border-radius: 999px;
+  padding: 5px 11px 5px 9px;
+  cursor: pointer;
+  font-family: 'DM Sans', 'Arial', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--nav-lang-color);
+  transition: background 0.18s;
+  letter-spacing: 0.02em;
+}
+
+.lang-pill:hover { background: var(--nav-link-hover-bg); }
+.lang-pill svg { opacity: 0.8; flex-shrink: 0; }
+.lang-pill__chevron { opacity: 0.6; }
+.lang-pill__label { color: var(--nav-lang-color); }
+
+/* ── CTA BUTTON ── */
+.bubble-nav__cta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--nav-cta-bg);
+  color: var(--nav-cta-color);
+  border: none;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-family: 'DM Sans', 'Arial', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s, transform 0.15s;
+}
+
+.bubble-nav__cta:hover {
+  background: var(--nav-cta-hover);
+  transform: translateY(-1px);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 860px) {
+  .bubble-nav-wrapper { width: calc(100% - 24px); top: 10px; }
+  .bubble-nav__links { display: none; }
+  .bubble-nav { padding: 10px 14px; }
+}
+</style>
+<script>
+/* ── DM-PILL: manejado por darkmode.js (injectToggleButton conecta el .dm-pill) ── */
+
+/* ── LANG PILL ── */
+(function () {
+  function syncLangPill(lang) {
+    var esLabel = document.querySelector('.lang-pill .lang-label-es');
+    var enLabel = document.querySelector('.lang-pill .lang-label-en');
+    var btn     = document.querySelector('.lang-pill');
+    if (!btn) return;
+    if (lang === 'en') {
+      if (esLabel) esLabel.style.display = 'none';
+      if (enLabel) enLabel.style.display = 'inline';
+      btn.setAttribute('data-current', 'en');
+    } else {
+      if (esLabel) esLabel.style.display = 'inline';
+      if (enLabel) enLabel.style.display = 'none';
+      btn.setAttribute('data-current', 'es');
+    }
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    var saved = localStorage.getItem('reco-lang') || 'es';
+    syncLangPill(saved);
+    var origToggle = window.toggleLang;
+    if (origToggle) {
+      window.toggleLang = function () {
+        origToggle();
+        syncLangPill(localStorage.getItem('reco-lang') || 'es');
+      };
+    }
+  });
+  window.addEventListener('load', function () {
+    var origToggle = window.toggleLang;
+    if (origToggle && !origToggle._patched) {
+      window.toggleLang = function () {
+        origToggle();
+        syncLangPill(localStorage.getItem('reco-lang') || 'es');
+      };
+      window.toggleLang._patched = true;
+    }
+  });
+})();
+</script>
+</body>
+</html>

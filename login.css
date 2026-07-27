@@ -1,0 +1,550 @@
+/* ══════════════════════════════════════════════════════════════
+   LOGIN.CSS
+   Capa ADITIVA para login.html. No modifica style.css ni navbar.css.
+   Usa la variante "Liquid Glass oscuro fijo" (sección 2b de design.md):
+   el mismo vidrio oscuro de las cards de Acceso Rápido / sidebar del
+   mapa, sin importar si html.dark está activo o no — coherente con el
+   mockup original, que solo tenía tema oscuro.
+
+   Reutiliza el mismo lenguaje de: glow orbs (mapa-effects.css),
+   easing estándar cubic-bezier(.4,0,.2,1), botón CTA pill verde
+   (.bubble-nav__cta) y tipografía Fraunces/DM Sans del proyecto.
+═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Paleta liquid glass oscura — igual a liquid-glass-mapa.css */
+  --lg-bg:            rgba(18, 26, 20, 0.55);
+  --lg-bg-strong:     rgba(14, 20, 16, 0.68);
+  --lg-border:        rgba(255, 255, 255, 0.14);
+  --lg-border-strong: rgba(255, 255, 255, 0.20);
+  --lg-highlight:     rgba(255, 255, 255, 0.24);
+  --lg-shadow:        0 14px 34px rgba(0, 0, 0, 0.46), 0 4px 10px rgba(0, 0, 0, 0.30);
+  --lg-shadow-hover:  0 18px 44px rgba(0, 0, 0, 0.54), 0 6px 16px rgba(0, 0, 0, 0.36);
+  --lg-shadow-card:   0 20px 60px rgba(0, 0, 0, 0.55), 0 6px 20px rgba(0, 0, 0, 0.35),
+                      0 0 0 1px rgba(255,255,255,0.03) inset;
+  --lg-text:          #eaf3ec;
+  --lg-text-muted:    rgba(234, 243, 236, 0.68);
+  --lg-accent-glow:   rgba(94, 207, 130, 0.40);
+  --lg-blur:          22px;
+  --lg-shine: linear-gradient(
+    115deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.16) 45%,
+    rgba(255, 255, 255, 0.26) 50%,
+    rgba(255, 255, 255, 0.10) 56%,
+    transparent 68%
+  );
+}
+
+/* ── KEYFRAMES: luces reutilizadas de mapa-effects.css / glow-boost.css ── */
+@keyframes loginGlowPulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%       { opacity: 1; transform: scale(1.05); }
+}
+@keyframes loginGlowBreathe {
+  0%, 100% { box-shadow: 0 0 16px 2px var(--glow-color); }
+  50%      { box-shadow: 0 0 30px 7px var(--glow-color); }
+}
+@keyframes loginSparklePop {
+  0%, 100% { transform: scale(0); opacity: 0; }
+  50%      { transform: scale(1); opacity: 1; }
+}
+@keyframes loginRadarPing {
+  0%   { transform: scale(0.5); opacity: 0.6; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+@keyframes loginCardGlow {
+  0%, 100% { box-shadow: var(--lg-shadow-card), 0 0 0 0 rgba(94,207,130,0); }
+  50%       { box-shadow: var(--lg-shadow-card), 0 0 46px 6px rgba(94,207,130,0.10); }
+}
+@keyframes loginBorderFlow {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* ── FONDO: el login siempre vive sobre superficie oscura,
+   igual que el mockup original, para que el glass oscuro fijo
+   tenga contraste consistente en ambos temas ── */
+body:has(.login-main) {
+  background: #0c1610;
+  min-height: 100vh;
+}
+html.dark body:has(.login-main) { background: #0c1610; }
+
+.login-bg {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: -1;
+  pointer-events: none;
+}
+.login-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.16;
+  animation: loginOrbDrift 12s ease-in-out infinite alternate,
+             loginGlowPulse 6s ease-in-out infinite;
+}
+.login-orb--a {
+  width: 560px; height: 560px;
+  top: -12%; left: -10%;
+  background: #2d8c4e;
+}
+.login-orb--b {
+  width: 480px; height: 480px;
+  bottom: 4%; right: 4%;
+  background: #3daa60;
+  animation-delay: -4s, -2s;
+}
+.login-orb--c {
+  width: 380px; height: 380px;
+  top: 42%; left: 32%;
+  background: #5ecf82;
+  animation-delay: -8s, -4s;
+}
+@keyframes loginOrbDrift {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(5%, 8%) scale(1.08); }
+  100% { transform: translate(-4%, 4%) scale(1); }
+}
+
+/* ── Partículas de luz sueltas, mismo patrón que .mapa-lights ── */
+.login-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.login-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(94,207,130,0.85), rgba(94,207,130,0.15) 60%, transparent 75%);
+  box-shadow: 0 0 8px 2px rgba(94,207,130,0.45);
+  animation: loginParticleDrift linear infinite, loginTwinkle ease-in-out infinite;
+}
+@keyframes loginParticleDrift {
+  0%   { transform: translateY(0) translateX(0) scale(1);   opacity: 0.55; }
+  33%  { transform: translateY(-18px) translateX(8px) scale(1.1); }
+  66%  { transform: translateY(-8px) translateX(-6px) scale(0.9); }
+  100% { transform: translateY(-24px) translateX(4px) scale(1); opacity: 0; }
+}
+@keyframes loginTwinkle {
+  0%, 100% { filter: brightness(0.85); }
+  50%       { filter: brightness(1.4); }
+}
+
+/* ── LAYOUT ── */
+.login-main {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 128px 24px 48px;
+}
+
+/* ── CARD: liquid glass oscuro fijo, igual a .legend/.modal/.sidebar
+   en liquid-glass-mapa.css, con el highlight superior curvo.
+   Sombra reforzada (--lg-shadow-card) + glow verde ambiental que
+   respira, igual que .map-wrapper en mapa-effects.css. ── */
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: 44px 40px;
+  border-radius: 32px;
+  background: var(--lg-bg);
+  background-image: var(--lg-shine);
+  background-blend-mode: overlay;
+  backdrop-filter: blur(var(--lg-blur)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(180%);
+  border: 1px solid var(--lg-border);
+  box-shadow:
+    inset 0 1px 0 var(--lg-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.22),
+    var(--lg-shadow-card);
+  color: var(--lg-text);
+  animation: loginCardIn 0.5s cubic-bezier(.4,0,.2,1) both,
+             loginCardGlow 5s ease-in-out 1s infinite;
+}
+.login-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 8%; right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--lg-highlight), transparent);
+  pointer-events: none;
+}
+/* Halo verde ambiental detrás de la card, tipo .acc-card__icon-wrap glow */
+.login-card::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(120deg,
+    transparent 15%,
+    rgba(94,207,130,0.45) 50%,
+    transparent 85%);
+  background-size: 250% 250%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: loginBorderFlow 6s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+@keyframes loginCardIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.login-card__head {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.login-card__title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 700;
+  font-size: 2.2rem;
+  letter-spacing: -0.01em;
+  color: var(--lg-text);
+  margin: 0;
+}
+.login-card__subtitle {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.92rem;
+  color: var(--lg-text-muted);
+  margin: 0;
+}
+
+/* ── FORM ── */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.login-field__label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--lg-text-muted);
+  padding-left: 6px;
+}
+.login-field__wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.login-field__icon {
+  position: absolute;
+  left: 18px;
+  color: rgba(234, 243, 236, 0.40);
+  pointer-events: none;
+  transition: color 0.2s ease;
+}
+.login-field__input {
+  width: 100%;
+  padding: 14px 20px 14px 46px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--lg-text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  transition: background 0.25s cubic-bezier(.4,0,.2,1),
+              border-color 0.25s cubic-bezier(.4,0,.2,1),
+              box-shadow 0.25s cubic-bezier(.4,0,.2,1),
+              transform 0.22s cubic-bezier(.4,0,.2,1);
+}
+.login-field__input::placeholder {
+  color: rgba(234, 243, 236, 0.28);
+}
+.login-field__input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: #3daa60;
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 4px rgba(61, 170, 96, 0.16), 0 4px 20px rgba(45,140,78,.18);
+  animation: loginGlowPulse 2.2s ease-in-out infinite;
+}
+.login-field__input:focus ~ .login-field__icon,
+.login-field__wrap:focus-within .login-field__icon {
+  color: #5ecf82;
+  filter: drop-shadow(0 0 6px rgba(94,207,130,0.65));
+}
+
+.login-forgot {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 6px;
+  margin-top: -4px;
+}
+.login-forgot a {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #5ecf82;
+  text-decoration: none;
+  position: relative;
+  transition: text-shadow 0.25s ease, padding-left 0.2s ease;
+}
+.login-forgot a:hover {
+  text-shadow: 0 0 8px rgba(94,207,130,0.55);
+  padding-left: 3px;
+}
+.login-forgot a::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -2px;
+  width: 0; height: 1px;
+  background: currentColor;
+  box-shadow: 0 0 6px rgba(94,207,130,0.6);
+  transition: width 0.25s cubic-bezier(.4,0,.2,1);
+}
+.login-forgot a:hover::after { width: 100%; }
+
+/* ── SUBMIT: reusa .bubble-nav__cta pero a ancho completo y más alto,
+   + halo pulsante (glow-boost.css) + sparkles + shine sweep en hover ── */
+.login-submit {
+  --glow-color: rgba(126, 232, 154, 0.60);
+  position: relative;
+  width: 100%;
+  justify-content: center;
+  padding: 15px 18px;
+  font-size: 0.95rem;
+  margin-top: 4px;
+  isolation: isolate;
+  overflow: hidden;
+}
+.login-submit::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  box-shadow: 0 0 0 0 var(--glow-color);
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+}
+.login-submit:hover::before {
+  opacity: 1;
+  animation: loginGlowBreathe 1.6s ease-in-out infinite;
+}
+.login-submit:active::before {
+  animation: none;
+  box-shadow: 0 0 34px 9px var(--glow-color);
+}
+/* Shine sweep: barrido diagonal de brillo al pasar el mouse */
+.login-submit .login-submit__shine {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: inherit;
+}
+.login-submit .login-submit__shine::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 40%;
+  height: 200%;
+  background: linear-gradient(115deg, transparent, rgba(255,255,255,0.55), transparent);
+  transform: rotate(20deg);
+  transition: left 0.65s cubic-bezier(.4,0,.2,1);
+}
+.login-submit:hover .login-submit__shine::after {
+  left: 130%;
+}
+/* Sparkles: puntitos de luz que aparecen en hover */
+.login-submit .login-submit__sparkle {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.login-submit:hover .login-submit__sparkle { opacity: 1; }
+.login-submit .login-submit__sparkle::before,
+.login-submit .login-submit__sparkle::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 6px 1px #fff, 0 0 10px 2px var(--glow-color);
+}
+.login-submit .login-submit__sparkle::before { top: 22%; left: 14%; animation: loginSparklePop 1.4s ease-in-out infinite; }
+.login-submit .login-submit__sparkle::after  { top: 68%; left: 84%; animation: loginSparklePop 1.4s ease-in-out 0.6s infinite; }
+
+/* ── SEPARADOR "O continúa con" ── */
+.login-sep {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.login-sep__line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+.login-sep__text {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(234, 243, 236, 0.38);
+  white-space: nowrap;
+}
+
+/* ── SOCIAL BUTTONS ── */
+.login-social {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.login-social__btn {
+  --glow-color: rgba(126, 232, 154, 0.45);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 13px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  background-image: var(--lg-shine);
+  background-blend-mode: overlay;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--lg-text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  isolation: isolate;
+  transition: background 0.25s cubic-bezier(.4,0,.2,1),
+              border-color 0.25s cubic-bezier(.4,0,.2,1),
+              transform 0.25s cubic-bezier(.4,0,.2,1),
+              box-shadow 0.25s cubic-bezier(.4,0,.2,1);
+}
+.login-social__btn::before {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: inherit;
+  box-shadow: 0 0 0 0 var(--glow-color);
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+}
+.login-social__btn:hover {
+  background-color: rgba(255, 255, 255, 0.09);
+  border-color: var(--lg-border-strong);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.30),
+    inset 0 -1px 0 rgba(0,0,0,0.24),
+    var(--lg-shadow-hover);
+}
+.login-social__btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+  filter: grayscale(0.6);
+}
+.login-social__btn:disabled:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.08);
+  transform: none;
+  box-shadow: none;
+}
+.login-social__btn:disabled:hover::before {
+  opacity: 0;
+  animation: none;
+}
+.login-social__btn:hover::before {
+  opacity: 1;
+  animation: loginGlowBreathe 1.8s ease-in-out infinite;
+}
+
+/* ── FOOTER LINK DEL CARD ── */
+.login-footer-link {
+  text-align: center;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.84rem;
+  color: var(--lg-text-muted);
+  margin: 0;
+}
+.login-footer-link a {
+  color: #5ecf82;
+  font-weight: 700;
+  text-decoration: none;
+  margin-left: 4px;
+  position: relative;
+}
+.login-footer-link a::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -2px;
+  width: 0; height: 1px;
+  background: currentColor;
+  transition: width 0.25s cubic-bezier(.4,0,.2,1);
+}
+.login-footer-link a:hover::after { width: 100%; }
+.login-footer-link a:hover { color: #71dc8c; }
+
+/* ── FOOTER DE PÁGINA (mínimo, no el footer completo del sitio) ── */
+.login-footer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 24px 32px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem;
+  color: rgba(234, 243, 236, 0.35);
+}
+.login-footer__brand {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 900;
+  color: rgba(234, 243, 236, 0.55);
+}
+.login-footer__copy::before {
+  content: '·';
+  margin-right: 10px;
+  opacity: 0.6;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 480px) {
+  .login-main { padding-top: 108px; }
+  .login-card { padding: 34px 26px; border-radius: 26px; }
+  .login-card__title { font-size: 1.8rem; }
+  .login-social { grid-template-columns: 1fr; }
+}
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  .login-orb { animation: none !important; }
+  .login-card { animation: none !important; }
+}

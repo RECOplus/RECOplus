@@ -1,0 +1,225 @@
+/* ══════════════════════════════════════════════════════════════
+   MAPA-DARK-THEME.CSS
+   Capa ADITIVA para el modo oscuro del mapa (Dark Mode tipo
+   Google Maps / Mapbox Dark) + soporte visual para rutas en
+   tiempo real (punto azul de usuario, línea de ruta, panel de
+   distancia/ETA, popups oscuros).
+
+   IMPORTANTE: el tile del mapa se elige en app.js según
+   html.dark (claro = OSM original blanco, oscuro = CartoDB dark).
+   Este archivo solo aplica estilos de POPUP oscuro cuando
+   html.dark está activo — en modo claro el popup conserva el
+   blanco de Leaflet por defecto, tal como estaba antes.
+
+   No toca la estructura de #map, .leaflet-*, .result-item ni el
+   resto de la interfaz.
+
+   Cárgalo DESPUÉS de mapa-effects.css y liquid-glass-mapa.css.
+═══════════════════════════════════════════════════════════════ */
+
+/* ── 1. POPUPS DE LEAFLET: solo se oscurecen en modo oscuro ──
+   En modo claro no se toca nada (Leaflet ya pinta blanco por
+   defecto, igual que antes de este cambio). */
+html.dark .leaflet-popup-content-wrapper {
+  background: rgba(15, 23, 17, 0.94) !important;
+  color: #eaf3ec !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+}
+html.dark .leaflet-popup-tip {
+  background: rgba(15, 23, 17, 0.94) !important;
+  box-shadow: none !important;
+}
+.leaflet-popup-content { margin: .8rem .9rem; }
+html.dark .leaflet-popup-close-button {
+  color: #cfe8d6 !important;
+}
+html.dark .leaflet-popup-close-button:hover { color: #fff !important; }
+
+/* Textos internos del popup: solo recoloreados en dark (en claro
+   siguen con el color inline original definido en buildPopup). */
+html.dark .popup-name { color: #eaf3ec !important; }
+html.dark .popup-address { color: #9db8a3 !important; }
+html.dark .popup-distance { color: #5ecf82 !important; }
+html.dark .popup-rating-value { color: #eaf3ec !important; }
+html.dark .popup-tag.reciclaje { background: rgba(45,140,78,0.32) !important; color:#a8f0c0 !important; }
+html.dark .popup-tag.donacion  { background: rgba(60,120,200,0.28) !important; color:#bcd9ff !important; }
+html.dark .popup-tag.acopio    { background: rgba(130,95,210,0.28) !important; color:#e0d4ff !important; }
+
+/* ── 2. BOTÓN "CÓMO LLEGAR" DENTRO DEL POPUP (igual en ambos temas) ── */
+.popup-route-btn {
+  margin-top: .6rem;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .35rem;
+  padding: .48rem .6rem;
+  border: 1px solid rgba(94, 207, 130, 0.45);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(45,140,78,0.92), rgba(23,84,38,0.92));
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .74rem;
+  font-weight: 700;
+  letter-spacing: .01em;
+  cursor: pointer;
+  transition: transform .18s cubic-bezier(.4,0,.2,1), box-shadow .18s ease, filter .18s ease;
+}
+.popup-route-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(45,140,78,0.42);
+  filter: brightness(1.08);
+}
+.popup-route-btn:active { transform: translateY(0) scale(0.98); }
+
+/* ── 3. MARCADOR DE UBICACIÓN DEL USUARIO (punto azul, estilo Google Maps) ──
+   Se ve igual en ambos temas, como en Google Maps real. */
+.user-location-marker {
+  position: relative;
+  width: 18px;
+  height: 18px;
+}
+.user-location-marker .dot-core {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #4c9eff;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 2px rgba(76,158,255,0.35), 0 2px 8px rgba(0,0,0,0.45);
+  z-index: 2;
+}
+.user-location-marker .dot-pulse {
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  background: rgba(76,158,255,0.32);
+  animation: userDotPulse 2.2s ease-out infinite;
+  z-index: 1;
+}
+@keyframes userDotPulse {
+  0%   { transform: scale(0.3); opacity: .75; }
+  100% { transform: scale(1.7); opacity: 0; }
+}
+
+/* ── 4. LÍNEA DE RUTA (azul brillante, como Google Maps) ── */
+.route-line-glow {
+  filter: drop-shadow(0 0 6px rgba(76,158,255,0.9))
+          drop-shadow(0 0 2px rgba(255,255,255,0.5));
+}
+
+/* ── 4.1 Ocultar el panel de itinerario por defecto de Leaflet
+   Routing Machine: usamos nuestro propio panel (route-info-panel)
+   con un diseño coherente con el resto del sitio. La librería
+   sigue calculando la ruta y disparando eventos con normalidad;
+   solo se oculta su UI nativa. ── */
+.leaflet-routing-container {
+  display: none !important;
+}
+
+/* ── 5. PANEL FLOTANTE DE DISTANCIA / TIEMPO ESTIMADO ──
+   Estilo "liquid glass" oscuro fijo, igual en ambos temas —
+   coherente con el resto de botones/chips/sidebar del sitio,
+   que también mantienen el glass oscuro sin importar el tema
+   (ver liquid-glass-mapa.css). */
+.map-wrapper {
+  /* Ancla el panel .route-info-panel (position: absolute) dentro
+     del mapa y no del body. Si styles.css ya definía position en
+     .map-wrapper, esta regla solo refuerza relative sin tocar nada
+     más (no pisa otras propiedades del selector). */
+  position: relative;
+}
+.route-info-panel {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 650;
+  max-width: min(88%, 340px);
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  padding: .7rem .9rem;
+  border-radius: 16px;
+  background: rgba(14, 20, 16, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(0,0,0,0.3);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  color: #eaf3ec;
+  transition: opacity .25s ease, transform .25s ease;
+}
+.route-info-panel.hidden {
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+}
+.route-info-main {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  flex: 1;
+  min-width: 0;
+}
+.route-info-icon {
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+.route-info-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.route-info-name {
+  font-size: .82rem;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.route-info-meta {
+  font-size: .74rem;
+  color: #9db8a3;
+}
+.route-info-time {
+  color: #5ecf82;
+  font-weight: 700;
+}
+.route-info-panel.loading .route-info-name {
+  color: #cfe8d6;
+}
+.route-info-close {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: #cfe8d6;
+  font-size: 1.15rem;
+  line-height: 1;
+  padding: .25rem;
+  cursor: pointer;
+  transition: color .18s ease, transform .18s ease;
+}
+.route-info-close:hover {
+  color: #fff;
+  transform: scale(1.12);
+}
+
+@media (max-width: 640px) {
+  .route-info-panel {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    max-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .user-location-marker .dot-pulse { animation: none !important; }
+  .route-info-panel { transition: none; }
+}

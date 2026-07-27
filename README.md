@@ -1,2 +1,2 @@
-# rEcOPlus-Final
-pagina de recoplus
+# RECO-scanner
+el escanner

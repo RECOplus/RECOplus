@@ -1,0 +1,519 @@
+/* ══════════════════════════════════════════════════════════════
+   LIQUID-GLASS-RECICLAR.CSS  (v2 — sombras MÁS profundas)
+   Capa ADITIVA (no toca reciclar.css ni reciclar.html excepto el
+   <link>). Aplica el mismo "liquid glass" oscuro de mapa.html
+   (ver liquid-glass-mapa.css) a TODOS los botones, paneles, cards
+   de materiales, escáner, proceso, calculadora e historial de
+   reciclar.html — igual en modo claro y modo oscuro.
+
+   v2: sombras reforzadas en 3 capas (contacto + difusa + halo de
+   color) para que cada pieza "flote" mucho más sobre el fondo,
+   igual que en liquid-glass-mapa.css.
+
+   Cárgalo DESPUÉS de reciclar.css:
+   <link rel="stylesheet" href="liquid-glass-reciclar.css" />
+═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --lg-bg:            rgba(18, 26, 20, 0.55);
+  --lg-bg-strong:     rgba(14, 20, 16, 0.68);
+  --lg-border:        rgba(255, 255, 255, 0.14);
+  --lg-border-strong: rgba(255, 255, 255, 0.20);
+  --lg-highlight:     rgba(255, 255, 255, 0.22);
+
+  /* Sombras reforzadas: 3 capas — contacto cercano, difusión amplia
+     y halo de color verde, igual que en liquid-glass-mapa.css pero
+     aún más marcado para que se note el "flotado" del vidrio. */
+  --lg-shadow:        0 4px 10px rgba(0, 0, 0, 0.28),
+                       0 20px 46px rgba(0, 0, 0, 0.50),
+                       0 2px 0 rgba(0, 0, 0, 0.20);
+  --lg-shadow-hover:  0 6px 14px rgba(0, 0, 0, 0.34),
+                       0 28px 60px rgba(0, 0, 0, 0.58),
+                       0 0 30px rgba(45, 140, 78, 0.20);
+  --lg-shadow-sm:     0 3px 8px rgba(0, 0, 0, 0.26),
+                       0 10px 24px rgba(0, 0, 0, 0.38);
+
+  --lg-text:          #eaf3ec;
+  --lg-text-muted:    rgba(234, 243, 236, 0.68);
+  --lg-accent-glow:   rgba(94, 207, 130, 0.35);
+  --lg-blur: 22px;
+
+  --lg-shine: linear-gradient(
+    115deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.16) 45%,
+    rgba(255, 255, 255, 0.26) 50%,
+    rgba(255, 255, 255, 0.10) 56%,
+    transparent 68%
+  );
+}
+
+html.dark {
+  --lg-bg:            rgba(10, 16, 12, 0.62);
+  --lg-bg-strong:     rgba(8, 13, 10, 0.75);
+  --lg-border:        rgba(255, 255, 255, 0.10);
+  --lg-border-strong: rgba(255, 255, 255, 0.16);
+  --lg-shadow:        0 4px 10px rgba(0, 0, 0, 0.42),
+                       0 22px 50px rgba(0, 0, 0, 0.66),
+                       0 2px 0 rgba(0, 0, 0, 0.30);
+  --lg-shadow-hover:  0 6px 16px rgba(0, 0, 0, 0.50),
+                       0 30px 64px rgba(0, 0, 0, 0.74),
+                       0 0 34px rgba(94, 207, 130, 0.26);
+  --lg-shadow-sm:     0 3px 10px rgba(0, 0, 0, 0.40),
+                       0 12px 28px rgba(0, 0, 0, 0.52);
+}
+
+/* ── BASE: fondo glass + blur + borde + highlight superior + sombra profunda ── */
+.rc-panel,
+.rc-btn,
+.rc-material,
+.rc-scanner__drop,
+.rc-scanner__feature,
+.rc-process__icon,
+.rc-result,
+.rc-stat,
+.rc-field .rc-input-wrap,
+.rc-note,
+.rc-history__stats .rc-stat,
+.rc-cta {
+  background: var(--lg-bg) !important;
+  backdrop-filter: blur(var(--lg-blur)) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(160%) !important;
+  border-color: var(--lg-border) !important;
+  box-shadow:
+    inset 0 1px 0 var(--lg-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.24),
+    var(--lg-shadow) !important;
+  color: var(--lg-text);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── ESQUINAS: mismo redondeo generoso que las cards de referencia
+   de mapa.html (cajas de resultado, chips en píldora) ── */
+.rc-panel,
+.rc-scanner__drop,
+.rc-cta {
+  border-radius: 22px !important;
+}
+.rc-material,
+.rc-result,
+.rc-stat,
+.rc-scanner__feature {
+  border-radius: 18px !important;
+}
+.rc-btn,
+.rc-field .rc-input-wrap {
+  border-radius: 999px !important;
+}
+.rc-note {
+  border-radius: 16px !important;
+}
+
+/* Reflejo diagonal de vidrio (banda fija) sobre las piezas grandes */
+.rc-panel,
+.rc-material,
+.rc-scanner__drop,
+.rc-process__icon,
+.rc-result,
+.rc-stat {
+  background-image: var(--lg-shine) !important;
+  background-blend-mode: overlay;
+}
+
+/* El input numérico no lleva reflejo (dificulta lectura) */
+.rc-field .rc-input-wrap {
+  background-image: none !important;
+}
+
+/* ── TEXTOS: legibles sobre fondo oscuro ── */
+.rc-panel__head h2,
+.rc-panel__sub,
+.rc-material span,
+.rc-scanner__drop strong,
+.rc-process__step h4,
+.rc-result span,
+.rc-result em,
+.rc-stat__label,
+.rc-note,
+.rc-history__ring-inner small,
+.rc-history__ring-inner strong,
+.rc-history__progress {
+  color: var(--lg-text) !important;
+}
+.rc-scanner__drop small,
+.rc-process__step p,
+.rc-scanner__feature span {
+  color: var(--lg-text-muted) !important;
+}
+.rc-field label,
+.rc-field .unit {
+  color: var(--lg-text-muted) !important;
+}
+.rc-field input {
+  color: var(--lg-text) !important;
+}
+
+/* ── BOTONES rc-btn: mismo tratamiento glass, sombra propia más honda,
+   conserva acento sólido/outline ── */
+.rc-btn--solid {
+  background-color: rgba(45, 140, 78, 0.55) !important;
+  background-image: linear-gradient(180deg, rgba(45,140,78,0.40), rgba(26,92,42,0.35)), var(--lg-shine) !important;
+  border-color: rgba(94, 207, 130, 0.45) !important;
+  color: #fff !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.24),
+    inset 0 -1px 0 rgba(0,0,0,0.24),
+    0 4px 10px rgba(0,0,0,0.22),
+    0 14px 30px rgba(45,140,78,0.32) !important;
+}
+.rc-btn--outline {
+  background-color: var(--lg-bg) !important;
+  background-image: var(--lg-shine) !important;
+  border-color: var(--lg-border) !important;
+  color: var(--lg-text) !important;
+  box-shadow:
+    inset 0 1px 0 var(--lg-highlight),
+    inset 0 -1px 0 rgba(0,0,0,0.20),
+    0 3px 8px rgba(0,0,0,0.24),
+    0 10px 22px rgba(0,0,0,0.30) !important;
+}
+
+/* ── HOVER: eleva más, aclara highlight, intensifica sombra a 3 capas ── */
+.rc-panel:hover,
+.rc-material:hover,
+.rc-scanner__drop:hover,
+.rc-result:hover,
+.rc-stat:hover {
+  background-color: var(--lg-bg-strong) !important;
+  border-color: var(--lg-border-strong) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.36),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.30),
+    var(--lg-shadow-hover) !important;
+  transform: translateY(-3px);
+}
+.rc-btn--solid:hover {
+  background-color: rgba(45, 140, 78, 0.70) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.30),
+    inset 0 -1px 0 rgba(0,0,0,0.26),
+    0 6px 14px rgba(0,0,0,0.28),
+    0 20px 42px rgba(45,140,78,0.42) !important;
+  transform: translateY(-2px);
+}
+.rc-btn--outline:hover {
+  background-color: var(--lg-bg-strong) !important;
+  border-color: rgba(94, 207, 130, 0.45) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.30),
+    inset 0 -1px 0 rgba(0,0,0,0.24),
+    0 5px 12px rgba(0,0,0,0.28),
+    0 16px 32px rgba(0,0,0,0.36) !important;
+  transform: translateY(-2px);
+}
+
+/* ── MATERIAL ACTIVO: acento verde sobre el mismo glass oscuro + halo propio ── */
+.rc-material.active {
+  background-color: rgba(45, 140, 78, 0.45) !important;
+  background-image: linear-gradient(180deg, rgba(45,140,78,0.32), rgba(26,92,42,0.30)), var(--lg-shine) !important;
+  border-color: rgba(94, 207, 130, 0.55) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.28),
+    inset 0 -1px 0 rgba(0,0,0,0.24),
+    0 4px 10px rgba(0,0,0,0.24),
+    0 16px 34px rgba(45,140,78,0.36) !important;
+}
+.rc-material.active span,
+.rc-material.active .rc-material__icon {
+  color: #fff !important;
+}
+
+/* ── ICONOS: mantener visibles sobre fondo oscuro ── */
+.rc-panel__icon,
+.rc-material__icon,
+.rc-scanner__drop-icon,
+.rc-scanner__feature svg,
+.rc-note svg,
+.rc-stat__label svg,
+.rc-field label svg {
+  filter: brightness(1.15) contrast(1.05);
+}
+
+/* Iconos con caja propia (panel__icon, material__icon, drop-icon):
+   círculo perfecto con fondo translúcido propio + sombra de
+   profundidad, igual al ícono circular verde de las cards de
+   referencia (mapa.html result-item) */
+.rc-panel__icon,
+.rc-material__icon,
+.rc-scanner__drop-icon {
+  border-radius: 50% !important;
+  background: rgba(94, 207, 130, 0.16) !important;
+  box-shadow:
+    inset 0 1px 2px rgba(255,255,255,0.30),
+    inset 0 -2px 3px rgba(0,0,0,0.20),
+    0 6px 14px rgba(0,0,0,0.30) !important;
+}
+.rc-material.active .rc-material__icon {
+  background: rgba(255, 255, 255, 0.18) !important;
+}
+
+/* ── TOP HIGHLIGHT ("gota de vidrio") en piezas grandes ── */
+.rc-panel::after,
+.rc-material::after,
+.rc-scanner__drop::after,
+.rc-result::after,
+.rc-stat::after,
+.rc-cta::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 8%; right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--lg-highlight), transparent);
+  pointer-events: none;
+}
+
+/* ── rc-process__icon: caja de vidrio pequeña, conserva el acento verde
+   + sombra propia más marcada para que resalte del panel contenedor ── */
+.rc-process__icon {
+  color: #8fe0a8 !important;
+  box-shadow:
+    inset 0 1px 2px rgba(255,255,255,0.26),
+    inset 0 -2px 3px rgba(0,0,0,0.22),
+    0 8px 18px rgba(0,0,0,0.32) !important;
+}
+
+/* ── rc-history__ring: se mantiene el conic-gradient de progreso,
+   solo se envuelve el interior en glass + sombra interna para
+   sensación de profundidad ── */
+.rc-history__ring::before {
+  background: var(--lg-bg-strong) !important;
+  box-shadow: inset 0 4px 12px rgba(0,0,0,0.35) !important;
+}
+
+/* ── rc-cta (CTA final): conserva su degradado verde de marca, se le
+   suma el borde/brillo de vidrio + sombra profunda propia para que
+   el banner completo "flote" sobre el resto de la página ── */
+.rc-cta {
+  background: linear-gradient(120deg, rgba(45,140,78,0.92) 0%, rgba(26,92,42,0.92) 100%) !important;
+  background-image: linear-gradient(120deg, rgba(45,140,78,0.92) 0%, rgba(26,92,42,0.92) 100%), var(--lg-shine) !important;
+  border: 1px solid rgba(94, 207, 130, 0.35) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.22),
+    inset 0 -1px 0 rgba(0,0,0,0.24),
+    0 8px 18px rgba(0,0,0,0.30),
+    0 30px 60px rgba(0,0,0,0.42),
+    0 0 46px rgba(45,140,78,0.28) !important;
+}
+.rc-cta .rc-btn--solid {
+  background-color: #fff !important;
+  background-image: var(--lg-shine) !important;
+  color: #1a5c2a !important;
+  border-color: rgba(255,255,255,0.6) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.5),
+    0 6px 14px rgba(0,0,0,0.24),
+    0 16px 32px rgba(0,0,0,0.28) !important;
+}
+.rc-cta .rc-btn--solid:hover {
+  background-color: #eaf7ee !important;
+}
+
+/* ── rc-map-preview: marco de vidrio alrededor del mini-mapa +
+   sombra profunda para que se hunda visualmente en el panel ── */
+.rc-map-preview {
+  border-color: var(--lg-border) !important;
+  box-shadow:
+    inset 0 1px 0 var(--lg-highlight),
+    inset 0 3px 10px rgba(0,0,0,0.30),
+    var(--lg-shadow-sm) !important;
+}
+
+/* ── rc-stat / rc-result: sombra de contacto extra por debajo,
+   como si estuvieran ligeramente elevados del panel padre ── */
+.rc-stat,
+.rc-result {
+  box-shadow:
+    inset 0 1px 0 var(--lg-highlight),
+    inset 0 -1px 0 rgba(0,0,0,0.22),
+    0 3px 8px rgba(0,0,0,0.24),
+    0 10px 22px rgba(0,0,0,0.30) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   v3 — LO QUE FALTABA EN VIDRIO: HERO, PASOS DEL PROCESO, FOOTER
+   Misma filosofía aditiva: solo variables --lg-* ya definidas
+   arriba, sin tocar reciclar.html ni el resto de reglas.
+═══════════════════════════════════════════════════════════════ */
+
+/* ── HERO: se enmarca en vidrio (borde + sombra flotante) sin tapar
+   la foto de fondo (rc-hero__bg va por encima como imagen propia).
+   No se tocan sus ::before/::after: esos ya los usa
+   reciclar-effects.css para los orbes de luz del hero. ── */
+.rc-hero {
+  border: 1px solid var(--lg-border-strong) !important;
+  box-shadow:
+    inset 0 1px 0 var(--lg-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.24),
+    var(--lg-shadow) !important;
+}
+
+/* ── PASOS DEL PROCESO: cada paso pasa de "icono + texto flotando"
+   a su propia tarjeta de vidrio, igual que el resto de "cosas" de
+   la página (material, resultado, stat...). Se apaga la línea
+   conectora de reciclar.css porque ya no encaja visualmente entre
+   tarjetas separadas; la secuencia 1-2-3-4-5 se sigue leyendo por
+   el número de cada tarjeta. ── */
+.rc-process__step {
+  background: var(--lg-bg) !important;
+  background-image: var(--lg-shine) !important;
+  background-blend-mode: overlay;
+  backdrop-filter: blur(var(--lg-blur)) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(160%) !important;
+  border: 1px solid var(--lg-border) !important;
+  border-radius: 18px !important;
+  padding: 22px 12px 16px !important;
+  box-shadow:
+    inset 0 1px 0 var(--lg-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.24),
+    var(--lg-shadow-sm) !important;
+  transition: box-shadow 0.35s ease, transform 0.3s cubic-bezier(.4,0,.2,1), background-color 0.3s ease;
+}
+.rc-process__step:hover {
+  background-color: var(--lg-bg-strong) !important;
+  border-color: var(--lg-border-strong) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.34),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.28),
+    var(--lg-shadow-hover) !important;
+}
+.rc-process__step:not(:last-child)::after {
+  display: none !important;
+}
+.rc-process__step h4,
+.rc-process__step p {
+  color: var(--lg-text) !important;
+}
+.rc-process__step p {
+  color: var(--lg-text-muted) !important;
+}
+
+/* ── HISTORIAL: el anillo también flota como el resto de piezas ── */
+.rc-history__ring {
+  box-shadow: var(--lg-shadow-sm) !important;
+}
+
+/* ── FOOTER: panel de vidrio grande conteniendo, dentro, tarjetas
+   de vidrio más pequeñas para marca / cada columna — mismo patrón
+   de "caja grande con cosas en cajas chicas" que ya usan los
+   rc-panel con sus rc-material / rc-result / rc-stat. ── */
+.footer {
+  background: var(--lg-bg-strong) !important;
+  backdrop-filter: blur(var(--lg-blur)) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(160%) !important;
+  border-top: 1px solid var(--lg-border) !important;
+  color: var(--lg-text-muted) !important;
+}
+
+.footer-brand,
+.footer-col {
+  background: var(--lg-bg) !important;
+  background-image: var(--lg-shine) !important;
+  background-blend-mode: overlay;
+  backdrop-filter: blur(calc(var(--lg-blur) - 8px)) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(calc(var(--lg-blur) - 8px)) saturate(150%) !important;
+  border: 1px solid var(--lg-border) !important;
+  border-radius: 18px !important;
+  padding: 20px 18px !important;
+  box-shadow:
+    inset 0 1px 0 var(--lg-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.22),
+    var(--lg-shadow-sm) !important;
+  transition: box-shadow 0.35s ease, transform 0.3s cubic-bezier(.4,0,.2,1), background-color 0.3s ease;
+}
+.footer-brand:hover,
+.footer-col:hover {
+  background-color: var(--lg-bg-strong) !important;
+  transform: translateY(-3px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.30),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.26),
+    var(--lg-shadow-hover) !important;
+}
+.footer-col h4 {
+  color: var(--lg-text) !important;
+}
+.footer-col a,
+.footer-col p,
+.footer-brand p {
+  color: var(--lg-text-muted) !important;
+}
+.footer-col a:hover {
+  color: #8fe0a8 !important;
+}
+
+/* Newsletter dentro de su footer-col ya de vidrio: que el input y
+   el botón no dupliquen fondo/blur, solo redondeo en píldora */
+.footer-col .newsletter-form {
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+.footer-col .newsletter-form input,
+.footer-col .newsletter-form button {
+  border-radius: 999px !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   GUIRNALDA DE LUCES (string lights) — igual que mapa.html
+   Franja de lucecitas parpadeantes en el borde superior de las
+   cajas grandes (hero, paneles, CTA final, footer), igual que
+   .map-wrapper / .sidebar / .footer-cta / .footer en mapa.html.
+
+   Se aplica sobre un elemento real inyectado por reciclar-effects.js
+   (clase .rc-string-lights), NO sobre ::before/::after: esos dos
+   slots ya están ocupados en rc-panel/rc-hero/rc-cta por los orbes
+   de luz (reciclar-effects.css) y el brillo superior (arriba en
+   este mismo archivo). Así se suma la guirnalda sin pisar nada.
+═══════════════════════════════════════════════════════════════ */
+@keyframes rcLightsFlicker {
+  0%, 100% { opacity: 0.55; }
+  50%       { opacity: 1; }
+}
+
+.rc-string-lights {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 7px;
+  background-image: radial-gradient(circle, rgba(94, 207, 130, 0.95) 0 2.6px, transparent 3px);
+  background-size: 24px 7px;
+  background-repeat: repeat-x;
+  background-position: 4px center;
+  opacity: 0.85;
+  animation: rcLightsFlicker 2.4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+html.dark .rc-string-lights {
+  background-image: radial-gradient(circle, rgba(163, 240, 189, 0.95) 0 2.6px, transparent 3px);
+}
+
+/* El footer no tenía position:relative propio: lo agrega este
+   archivo (ya de vidrio desde la sección anterior) para que la
+   guirnalda se ancle correctamente dentro de su caja. */
+.footer {
+  position: relative;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rc-panel, .rc-btn, .rc-material, .rc-scanner__drop, .rc-result, .rc-stat,
+  .rc-hero, .rc-process__step, .footer-brand, .footer-col {
+    transition: none !important;
+  }
+  .rc-string-lights {
+    animation: none !important;
+  }
+}

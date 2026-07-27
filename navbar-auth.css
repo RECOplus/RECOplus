@@ -1,0 +1,233 @@
+/* ══════════════════════════════════════════════════════════════
+   NAVBAR-AUTH.CSS
+   Capa ADITIVA sobre navbar.css. No lo modifica. Agrega el estado
+   visual de "sesión activa": chip de usuario con inicial/avatar +
+   menú desplegable simple con "Cerrar sesión".
+
+   Cárgalo DESPUÉS de navbar.css en TODAS las páginas del sitio:
+   <link rel="stylesheet" href="navbar-auth.css">
+═══════════════════════════════════════════════════════════════ */
+
+/* ── CHIP DE USUARIO (reemplaza visualmente el link/CTA de login
+   cuando hay sesión activa) ── */
+.nav-user {
+  position: relative;
+  display: inline-flex;
+}
+
+.nav-user__btn {
+  --glow-color: rgba(94, 207, 130, 0.4);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--nav-lang-bg);
+  border: 1px solid var(--nav-lang-border);
+  border-radius: 999px;
+  padding: 4px 14px 4px 4px;
+  min-height: 34px;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-family: 'DM Sans', 'Arial', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--nav-lang-color);
+  isolation: isolate;
+  transition: background 0.18s, border-color 0.25s, box-shadow 0.3s;
+}
+.nav-user__btn::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  box-shadow: 0 0 0 0 var(--glow-color);
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+}
+.nav-user__btn:hover {
+  background: var(--nav-link-hover-bg);
+}
+.nav-user__btn:hover::before,
+.nav-user[data-open="true"] .nav-user__btn::before {
+  opacity: 1;
+  animation: navUserGlowBreathe 1.8s ease-in-out infinite;
+}
+.nav-user[data-open="true"] .nav-user__btn {
+  border-color: rgba(94, 207, 130, 0.5);
+}
+@keyframes navUserGlowBreathe {
+  0%, 100% { box-shadow: 0 0 10px 1px var(--glow-color); }
+  50%      { box-shadow: 0 0 20px 4px var(--glow-color); }
+}
+
+.nav-user__avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2d8c4e, #5ecf82);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  text-transform: uppercase;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.25) inset;
+}
+
+.nav-user__avatar--photo {
+  object-fit: cover;
+  background: var(--nav-lang-bg);
+  border: 1px solid var(--nav-lang-border);
+}
+
+.nav-user__name {
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-user__chevron {
+  opacity: 0.6;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+.nav-user[data-open="true"] .nav-user__chevron {
+  transform: rotate(180deg);
+}
+
+/* ── MENÚ DESPLEGABLE — liquid glass completo, mismo lenguaje
+   visual que .login-card: shine superior, blend de vidrio, borde
+   animado (conic flow) y glow breathing ambiental. ── */
+.nav-user__menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 200px;
+  overflow: hidden;
+  background: var(--nav-bg);
+  background-image:
+    linear-gradient(120deg, var(--lg-shine, rgba(255,255,255,0.3)) 0%, transparent 16%, transparent 84%, var(--lg-shine, rgba(255,255,255,0.3)) 100%),
+    linear-gradient(180deg, var(--lg-tint-strong, rgba(255,255,255,0.09)) 0%, transparent 55%);
+  background-blend-mode: overlay, normal;
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid var(--nav-border);
+  border-radius: 18px;
+  box-shadow: var(--nav-shadow), 0 0 0 0 rgba(94,207,130,0);
+  padding: 6px;
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 1001;
+  animation: navUserMenuIn 0.18s cubic-bezier(.4,0,.2,1) both,
+             navUserMenuGlow 5s ease-in-out 0.4s infinite;
+}
+.nav-user[data-open="true"] .nav-user__menu {
+  display: flex;
+}
+/* Línea de brillo especular arriba, igual que .login-card::after */
+.nav-user__menu::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+  pointer-events: none;
+}
+/* Borde animado tipo conic flow, igual técnica que .login-card::before
+   (mask-composite: exclude deja visible solo el anillo de 1px) */
+.nav-user__menu::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(120deg,
+    transparent 15%,
+    rgba(94,207,130,0.5) 50%,
+    transparent 85%);
+  background-size: 250% 250%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: loginBorderFlowNav 6s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+@keyframes navUserMenuIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes navUserMenuGlow {
+  0%, 100% { box-shadow: var(--nav-shadow), 0 0 0 0 rgba(94,207,130,0); }
+  50%      { box-shadow: var(--nav-shadow), 0 0 30px 4px rgba(94,207,130,0.10); }
+}
+@keyframes loginBorderFlowNav {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.nav-user__menu button {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  padding: 9px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--nav-link-color);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s, color 0.15s, transform 0.15s;
+}
+.nav-user__menu button svg {
+  flex-shrink: 0;
+  opacity: 0.75;
+}
+.nav-user__menu button:hover {
+  background: var(--nav-link-hover-bg);
+  color: var(--nav-link-hover-color);
+  transform: translateX(2px);
+}
+.nav-user__menu button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none !important;
+}
+.nav-user__menu button.nav-user__logout {
+  color: #d95c5c;
+}
+.nav-user__menu button.nav-user__logout svg {
+  opacity: 0.85;
+}
+.nav-user__menu button.nav-user__logout:hover {
+  background: rgba(220, 70, 70, 0.10);
+  color: #d95c5c;
+}
+
+/* ── RESPONSIVE: en móvil, donde .bubble-nav__links ya se oculta,
+   el chip de usuario se mantiene visible junto al resto de acciones. ── */
+@media (max-width: 860px) {
+  .nav-user__name { display: none; }
+  .nav-user__btn { padding: 4px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-user__menu,
+  .nav-user__menu::before,
+  .nav-user__btn::before {
+    animation: none !important;
+  }
+}

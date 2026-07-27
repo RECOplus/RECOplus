@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script src="darkmode.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RECO+ · Escáner de objetos</title>
+
+<!-- ml5.js: DEBE cargar antes que scanner-core.js -->
+<script src="https://unpkg.com/ml5@1/dist/ml5.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="scanner-widget.css" />
+
+<!-- Navbar compartida (idéntica al resto de páginas) -->
+<link rel="stylesheet" href="navbar.css" />
+<link rel="stylesheet" href="liquid-glass-fx.css" />
+<!-- Capa aditiva: vidrio oscuro + luces/animaciones, mismo lenguaje que mapa.html -->
+<link rel="stylesheet" href="liquid-glass-scanner-demo.css" />
+<!-- Capa aditiva: el CTA "Únete" ahora es <a>, no <button> -->
+<link rel="stylesheet" href="nav-cta-link-fix.css" />
+<!-- Capa aditiva: chip de usuario con foto/avatar + menú cuando hay sesión -->
+<link rel="stylesheet" href="navbar-auth.css" />
+
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(circle at 20% -10%, #234c30, #0d1810 60%);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    color: #f2f5f2;
+    padding: 110px 16px 60px;
+  }
+  .contenedor { max-width: 520px; margin: 0 auto; }
+  .encabezado { text-align: center; margin-bottom: 24px; }
+  .encabezado h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.8rem;
+    margin: 0 0 6px;
+  }
+  .encabezado p {
+    color: rgba(242, 245, 242, 0.7);
+    font-size: 0.95rem;
+    margin: 0;
+  }
+  .encabezado .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.72rem;
+    color: #6cbf3f;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .historial {
+    margin-top: 22px;
+  }
+  .historial h2 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(242,245,242,0.55);
+    margin: 0 0 10px;
+  }
+  .historial ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .historial li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 8px 12px;
+  }
+  .historial li span.punto {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--c, #6cbf3f);
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── BUBBLE NAVBAR ── -->
+<div class="bubble-nav-wrapper">
+  <header class="bubble-nav">
+    <!-- Logo -->
+    <div class="bubble-nav__logo">
+      <img src="img/logo modo claro.png" alt="RECO+" class="logo-light">
+      <img src="img/logo modo dark.png" alt="RECO+" class="logo-dark">
+    </div>
+
+    <!-- Links -->
+    <nav class="bubble-nav__links">
+      <a href="https://recoplus.github.io/RECO-v1.32_IA/index.html" data-tooltip="Vuelve a la página principal." data-i18n-tooltip="nav.inicio.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M3 9.5L10 3l7 6.5V17a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M7 18v-6h6v6"/></svg>
+        <span data-i18n="nav.inicio">Inicio</span>
+      </a>
+      <a href="https://reco-v1-32-ia.vercel.app/reciclar.html" data-tooltip="Centros de reciclaje cerca de ti." data-i18n-tooltip="nav.reciclar.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M10 2a6 6 0 016 6c0 4-6 10-6 10S4 12 4 8a6 6 0 016-6z"/><circle cx="10" cy="8" r="2"/></svg>
+        <span data-i18n="nav.reciclar">Reciclar</span>
+      </a>
+      <a href="https://recoplus.github.io/RECO-v1.32_IA/donar.html" data-tooltip="Comparte lo que ya no usas y cambia vidas." data-i18n-tooltip="nav.donar.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M3 11c0-2.5 2-4 4-3l3 1.5 5-1.5c1.2-.2 2.5.6 2.5 2 0 1.2-.8 2-2 2l-3.5.5"/><path d="M3 11l2 5h3l7-4"/></svg>
+        <span data-i18n="nav.donar">Donar</span>
+      </a>
+      <a href="https://recoplus.github.io/RECO-v1.32_IA/guia.html" data-tooltip="Aprende paso a paso cómo reciclar y donar." data-i18n-tooltip="nav.guia.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><rect x="4" y="2" width="12" height="16" rx="1.5"/><path d="M4 5h12M7 2v16"/></svg>
+        <span data-i18n="nav.guia">Guía</span>
+      </a>
+      <a href="http://recoplus.github.io/RECO-v1.32_IA/contacto.html" data-tooltip="Escríbenos, respondemos en menos de 24h." data-i18n-tooltip="nav.contacto.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><rect x="2" y="5" width="16" height="12" rx="1.5"/><path d="M2 7l8 5 8-5"/></svg>
+        <span data-i18n="nav.contacto">Contacto</span>
+      </a>
+      <a href="https://recoplus.github.io/RECO-v1.32_IA/blog.html" data-tooltip="Historias, tips y noticias sobre sostenibilidad." data-i18n-tooltip="nav.blog.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><rect x="3" y="3" width="14" height="14" rx="1.5"/><path d="M6 7h8M6 10h8M6 13h5"/></svg>
+        <span data-i18n="nav.blog">Blog</span>
+      </a>
+    </nav>
+
+    <!-- Right side: dark mode pill + lang toggle + CTA -->
+    <!-- navbar__spacer keeps compatibility with darkmode.js auto-injection -->
+    <div class="bubble-nav__actions navbar__spacer">
+      <!-- Dark mode pill: sun | moon -->
+      <div class="dm-pill" id="darkModeToggle" role="button" title="Cambiar modo claro/oscuro" aria-label="Toggle dark mode">
+        <span class="dm-pill__btn dm-pill__sun dm-sun" id="dmSunBtn">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" width="16" height="16">
+            <circle cx="10" cy="10" r="3.5"/>
+            <line x1="10" y1="2" x2="10" y2="4.5"/><line x1="10" y1="15.5" x2="10" y2="18"/>
+            <line x1="2" y1="10" x2="4.5" y2="10"/><line x1="15.5" y1="10" x2="18" y2="10"/>
+            <line x1="4.4" y1="4.4" x2="6.2" y2="6.2"/><line x1="13.8" y1="13.8" x2="15.6" y2="15.6"/>
+            <line x1="15.6" y1="4.4" x2="13.8" y2="6.2"/><line x1="6.2" y1="13.8" x2="4.4" y2="15.6"/>
+          </svg>
+        </span>
+        <span class="dm-pill__btn dm-pill__moon dm-moon" id="dmMoonBtn">
+          <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15">
+            <path d="M17.3 13.3A8 8 0 016.7 2.7a7 7 0 100 14.6 7.9 7.9 0 0010.6-4z"/>
+          </svg>
+        </span>
+      </div>
+
+      <!-- Language toggle pill -->
+      <button class="lang-pill" onclick="toggleLang()" aria-label="Cambiar idioma" data-current="es">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15">
+          <circle cx="10" cy="10" r="8"/>
+          <ellipse cx="10" cy="10" rx="3.5" ry="8"/>
+          <line x1="2" y1="10" x2="18" y2="10"/>
+        </svg>
+        <span class="lang-pill__label lang-label-es">ES</span>
+        <span class="lang-pill__label lang-label-en" style="display:none">EN</span>
+        <svg class="lang-pill__chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" width="11" height="11" stroke-linecap="round">
+          <path d="M5 7l5 5 5-5"/>
+        </svg>
+      </button>
+
+      <a href="login.html" class="bubble-nav__cta">
+        <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z"/></svg>
+        <span data-i18n="nav.unete">Únete</span>
+      </a>
+    </div>
+  </header>
+</div>
+
+<div class="contenedor">
+  <header class="encabezado">
+    <span class="eyebrow">RECO+ · Escáner</span>
+    <h1>¿Qué estás reciclando?</h1>
+    <p>Apunta la cámara al objeto. Lo identificamos y te decimos en qué categoría va.</p>
+  </header>
+
+  <!-- Widget del escáner -->
+  <div class="reco-scanner" id="recoScanner" data-estado="inactivo">
+    <div class="reco-scanner__stage">
+      <video class="reco-scanner__video" id="recoVideo" autoplay playsinline></video>
+
+      <div class="reco-scanner__visor">
+        <div class="reco-scanner__visor-marco"></div>
+        <div class="reco-scanner__linea-scan"></div>
+      </div>
+
+      <div class="reco-scanner__overlay" id="recoOverlay">
+        <div class="reco-scanner__spinner" id="recoSpinner"></div>
+        <div class="reco-scanner__overlay-texto" id="recoOverlayTexto">
+          Toca "Iniciar escáner" para activar la cámara.
+        </div>
+        <button class="reco-scanner__overlay-boton" id="recoBotonOverlay">Iniciar escáner</button>
+      </div>
+    </div>
+
+    <div class="reco-scanner__resultado" id="recoResultado" data-visible="false">
+      <div class="reco-scanner__resultado-icono" id="recoIcono">♳</div>
+      <div class="reco-scanner__resultado-texto">
+        <div class="reco-scanner__resultado-material" id="recoMaterialNombre">—</div>
+        <div class="reco-scanner__resultado-detalle" id="recoDetalle">Esperando objeto...</div>
+      </div>
+      <div class="reco-scanner__resultado-confianza" id="recoConfianza">—</div>
+    </div>
+
+    <div class="reco-scanner__controles">
+      <button class="reco-scanner__btn" id="recoBtnPausar" disabled>Pausar</button>
+      <button class="reco-scanner__btn reco-scanner__btn--primario" id="recoBtnDetener" disabled>Detener cámara</button>
+    </div>
+
+    <div class="reco-scanner__controles">
+      <button class="reco-scanner__btn reco-scanner__btn--ia" id="recoBtnIA" disabled>
+        ✨ Escaneo preciso (IA)
+      </button>
+    </div>
+  </div>
+
+  <section class="historial">
+    <h2>Detectados en esta sesión</h2>
+    <ul id="recoHistorial">
+      <li style="opacity:.5">Aún no se ha detectado nada.</li>
+    </ul>
+  </section>
+</div>
+
+<!-- Navbar: sesión, idioma, tooltips/preview y efectos de vidrio -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="auth.js"></script>
+<script src="i18n.js"></script>
+<script src="nav-preview.js"></script>
+<script src="navbar.js"></script>
+<script src="liquid-glass-fx.js"></script>
+<script src="navbar-auth.js"></script>
+
+<script type="module">
+  import { RecoScanner, ESTADOS, mensajeErrorLegible } from './scanner-core.js';
+
+  const videoEl = document.getElementById('recoVideo');
+  const contenedor = document.getElementById('recoScanner');
+  const overlay = document.getElementById('recoOverlay');
+  const overlayTexto = document.getElementById('recoOverlayTexto');
+  const spinner = document.getElementById('recoSpinner');
+  const botonOverlay = document.getElementById('recoBotonOverlay');
+  const btnPausar = document.getElementById('recoBtnPausar');
+  const btnDetener = document.getElementById('recoBtnDetener');
+  const btnIA = document.getElementById('recoBtnIA');
+
+  const resultadoEl = document.getElementById('recoResultado');
+  const iconoEl = document.getElementById('recoIcono');
+  const materialNombreEl = document.getElementById('recoMaterialNombre');
+  const detalleEl = document.getElementById('recoDetalle');
+  const confianzaEl = document.getElementById('recoConfianza');
+  const historialEl = document.getElementById('recoHistorial');
+
+  let ultimoMaterialId = null;
+  let historialSet = new Set();
+
+  const scanner = new RecoScanner({
+    videoEl,
+    onEstado: (estado, detalle) => {
+      contenedor.setAttribute('data-estado', estado);
+
+      const textos = {
+        [ESTADOS.INACTIVO]: 'Toca "Iniciar escáner" para activar la cámara.',
+        [ESTADOS.SOLICITANDO_CAMARA]: 'Solicitando acceso a la cámara...',
+        [ESTADOS.CARGANDO_MODELO]: 'Cargando el modelo de reconocimiento (puede tardar unos segundos)...',
+        [ESTADOS.LISTO]: 'Listo. Apunta al objeto.',
+        [ESTADOS.ESCANEANDO]: '',
+        [ESTADOS.ERROR]: 'Ocurrió un problema.',
+      };
+
+      overlayTexto.textContent = textos[estado] || '';
+      spinner.style.display = (estado === ESTADOS.SOLICITANDO_CAMARA || estado === ESTADOS.CARGANDO_MODELO) ? 'block' : 'none';
+      botonOverlay.style.display = (estado === ESTADOS.INACTIVO || estado === ESTADOS.ERROR) ? 'inline-block' : 'none';
+      botonOverlay.textContent = estado === ESTADOS.ERROR ? 'Reintentar' : 'Iniciar escáner';
+
+      btnPausar.disabled = !(estado === ESTADOS.ESCANEANDO);
+      btnDetener.disabled = !(estado === ESTADOS.ESCANEANDO || estado === ESTADOS.LISTO);
+      btnPausar.textContent = 'Pausar';
+
+      // El botón de IA solo tiene sentido con la cámara ya activa
+      // (listo o escaneando). El sub-estado de la propia llamada IA
+      // (capturando/consultando) llega en `detalle`, no en `estado`.
+      const camaraActiva = estado === ESTADOS.LISTO || estado === ESTADOS.ESCANEANDO;
+      const subEstadoIA = detalle && detalle.subEstadoIA;
+
+      if (subEstadoIA) {
+        btnIA.disabled = true;
+        btnIA.textContent = subEstadoIA === 'capturando' ? '📸 Capturando...' : '🔎 Consultando IA...';
+      } else {
+        btnIA.disabled = !camaraActiva;
+        btnIA.textContent = '✨ Escaneo preciso (IA)';
+      }
+    },
+
+    onResultado: (material, prediccionesCrudas, meta) => {
+      resultadoEl.setAttribute('data-visible', 'true');
+      resultadoEl.style.setProperty('--rs-material-color', material.color);
+      iconoEl.textContent = material.icono;
+      materialNombreEl.textContent = material.nombre;
+
+      if (meta && meta.fuente === 'gemini') {
+        // Resultado de un escaneo preciso puntual (una sola muestra,
+        // no hay "votos" de una ventana como en MobileNet).
+        const etiquetaConfianza = { alta: 'IA · confianza alta', media: 'IA · confianza media', baja: 'IA · confianza baja' };
+        confianzaEl.textContent = etiquetaConfianza[meta.confianza] || 'IA';
+        detalleEl.textContent = material.labelOriginal ? `Gemini detectó: ${material.labelOriginal}` : 'Clasificado por IA';
+      } else if (material.id === 'sin_confianza') {
+        confianzaEl.textContent = 'Sin certeza';
+        detalleEl.textContent = 'Acércate más o mejora la iluminación.';
+      } else {
+        const votos = meta ? `${meta.votos}/${meta.deVentana}` : '';
+        confianzaEl.textContent = material.confianzaBaja ? 'Confianza baja' : `Consenso ${votos}`;
+
+        const top1 = prediccionesCrudas[0];
+        detalleEl.textContent = material.coincidenciaKeyword
+          ? `Detectado como "${material.coincidenciaKeyword}"`
+          : `Sin categoría exacta (visto: "${top1.label.split(',')[0]}")`;
+      }
+
+      // Historial (evita duplicados consecutivos, y no registra
+      // "sin_confianza" como una detección real)
+      if (material.id !== ultimoMaterialId && material.id !== 'sin_confianza') {
+        ultimoMaterialId = material.id;
+        agregarAlHistorial(material);
+      }
+    },
+
+    onError: (error, contexto) => {
+      // Un fallo del escaneo preciso (IA) es puntual: la cámara y el
+      // escaneo en vivo con MobileNet siguen funcionando normalmente,
+      // así que NO se toca el overlay principal ni el estado global.
+      // Se muestra el error en el mismo lugar donde aparecen los
+      // resultados, y se restaura solo.
+      if (contexto === 'escaneoPreciso') {
+        detalleEl.textContent = mensajeErrorLegible(error);
+        console.error(`[RecoScanner] Error en "${contexto}":`, error);
+        return;
+      }
+
+      contenedor.setAttribute('data-estado', ESTADOS.ERROR);
+      overlayTexto.textContent = mensajeErrorLegible(error);
+      spinner.style.display = 'none';
+      botonOverlay.style.display = 'inline-block';
+      botonOverlay.textContent = 'Reintentar';
+      console.error(`[RecoScanner] Error en "${contexto}":`, error);
+    },
+  });
+
+  function agregarAlHistorial(material) {
+    if (historialSet.has(material.id)) return;
+    historialSet.add(material.id);
+
+    if (historialEl.children.length === 1 && historialEl.children[0].style.opacity === '0.5') {
+      historialEl.innerHTML = '';
+    }
+    const li = document.createElement('li');
+    li.style.setProperty('--c', material.color);
+    li.innerHTML = `<span class="punto"></span> ${material.icono} ${material.nombre}`;
+    historialEl.prepend(li);
+  }
+
+  botonOverlay.addEventListener('click', () => scanner.iniciar());
+
+  btnPausar.addEventListener('click', () => {
+    if (btnPausar.textContent === 'Pausar') {
+      scanner.pausar();
+      btnPausar.textContent = 'Reanudar';
+    } else {
+      scanner.reanudar();
+      btnPausar.textContent = 'Pausar';
+    }
+  });
+
+  btnDetener.addEventListener('click', () => scanner.detener());
+
+  btnIA.addEventListener('click', () => scanner.escanearPreciso());
+
+  window.addEventListener('beforeunload', () => scanner.destruir());
+</script>
+
+</body>
+</html>

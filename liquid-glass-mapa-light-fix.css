@@ -1,0 +1,85 @@
+/* ══════════════════════════════════════════════════════════════
+   LIQUID-GLASS-MAPA-LIGHT-FIX.CSS
+   Capa ADITIVA sobre liquid-glass-mapa.css. No lo modifica.
+
+   PROBLEMA QUE RESUELVE:
+   liquid-glass-mapa.css define las variables --lg-* SOLO con
+   valores oscuros (en :root, y de nuevo un poco más oscuras en
+   html.dark), y las aplica con !important a .search-bar, .chip,
+   .sidebar, .result-item, .legend, .modal, etc. Como nunca existe
+   una versión clara de esas variables, en modo claro esos elementos
+   siguen mostrando un fondo oscuro translúcido sobre una página
+   clara — se ve como una mancha grisácea sin contraste ("grid feo").
+
+   SOLUCIÓN:
+   Redefinir las mismas variables --lg-* bajo html:not(.dark),
+   usando la misma paleta clara que ya usa el resto del sitio
+   (definida en darkmode.js: --search-bg, --chip-bg, --sidebar-bg,
+   --text-primary, etc., todas blancas/claras en modo claro). Como
+   este archivo se carga DESPUÉS de liquid-glass-mapa.css, sus
+   variables ganan la cascada en modo claro sin tocar ese archivo.
+
+   Cárgalo DESPUÉS de liquid-glass-mapa.css y mapa-dark-theme.css:
+   <link rel="stylesheet" href="liquid-glass-mapa-light-fix.css" />
+═══════════════════════════════════════════════════════════════ */
+
+html:not(.dark) {
+  /* Vidrio claro: blanco translúcido en vez de negro translúcido */
+  --lg-bg:            rgba(255, 255, 255, 0.72);
+  --lg-bg-strong:     rgba(255, 255, 255, 0.90);
+  --lg-border:        rgba(45, 140, 78, 0.20);
+  --lg-border-strong: rgba(45, 140, 78, 0.36);
+  --lg-highlight:     rgba(255, 255, 255, 0.80);
+
+  /* Sombras verdes suaves, coherentes con el resto del sitio en
+     modo claro (mismo lenguaje que login-glass-fx.css) en vez de
+     las sombras negras profundas pensadas para fondo oscuro. */
+  --lg-shadow:        0 14px 34px rgba(30, 80, 40, 0.14), 0 4px 10px rgba(30, 80, 40, 0.08);
+  --lg-shadow-hover:  0 18px 44px rgba(30, 80, 40, 0.18), 0 6px 16px rgba(30, 80, 40, 0.10);
+  --lg-shadow-sm:     0 6px 16px rgba(30, 80, 40, 0.12), 0 2px 6px rgba(30, 80, 40, 0.07);
+
+  --lg-text:          #16261a;
+  --lg-text-muted:    #4a6b52;
+  --lg-accent-glow:   rgba(45, 140, 78, 0.30);
+
+  /* Reflejo diagonal: mismo efecto pero más sutil sobre vidrio
+     claro (una banda blanca muy brillante sobre fondo ya blanco
+     no se notaría; se atenúa). */
+  --lg-shine: linear-gradient(
+    115deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.30) 45%,
+    rgba(255, 255, 255, 0.45) 50%,
+    rgba(255, 255, 255, 0.20) 56%,
+    transparent 68%
+  );
+}
+
+/* ── result-distance en modo claro: el verde claro (#8fe0a8) de
+   liquid-glass-mapa.css se pierde sobre fondo blanco; se oscurece
+   para mantener contraste legible sin tocar el archivo original. ── */
+html:not(.dark) .result-distance {
+  color: #1a5c2a !important;
+}
+
+/* ── type-tag / material-icon: en liquid-glass-mapa.css llevan un
+   fondo blanco al 8% de opacidad pensado para resaltar sobre vidrio
+   oscuro; sobre vidrio claro eso es casi invisible, así que en modo
+   claro usan un verde muy suave en su lugar. ── */
+html:not(.dark) .type-tag,
+html:not(.dark) .material-icon {
+  background-color: rgba(45, 140, 78, 0.08) !important;
+}
+
+/* ── íconos: el filter brightness(1.15) de liquid-glass-mapa.css
+   está pensado para resaltar sobre fondo oscuro; en modo claro
+   aclarar un ícono ya oscuro reduce su contraste, así que se
+   neutraliza. ── */
+html:not(.dark) .locate-btn img,
+html:not(.dark) .legend-icon,
+html:not(.dark) .tooltip-icon img,
+html:not(.dark) .result-icon,
+html:not(.dark) .sidebar-pin img,
+html:not(.dark) .footer-leaf img {
+  filter: none;
+}

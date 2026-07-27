@@ -1,0 +1,667 @@
+/* ═══════════════════════════════════════════════════════════════
+   DONAR-HOME.CSS — RECO+
+   Capa ADITIVA (no modifica donar.css, liquid-glass-donar.css ni
+   donar.html salvo el <link>). Añade las secciones nuevas de la
+   página "Donar" tal como en el mockup: CTAs del hero, "¿Qué
+   quieres hacer hoy?", "Conecta una necesidad", estadísticas,
+   carruseles de donaciones/solicitudes, tracker de seguimiento y
+   banner de contacto.
+
+   Reutiliza EXACTAMENTE los mismos tokens y el mismo mixin de
+   vidrio que donar.css / liquid-glass-donar.css (--accent,
+   --bg-card, --border-muted, --text-heading, --text-secondary,
+   --text-muted, --dn-solicitar, --lg-tint*, --lg-shine, --lg-blur,
+   --lg-shadow) y las mismas animaciones (dnFadeUp, dnIconGlow,
+   dnSubtlePulse, dn-reveal) para que se vea igual que el resto del
+   sitio.
+
+   Cargar DESPUÉS de donar.css y liquid-glass-donar(-light-fix).css:
+   <link rel="stylesheet" href="donar-home.css" />
+═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --dh-blue: var(--dn-solicitar, #2f6fbf);
+  --dh-blue-hover: var(--dn-solicitar-hover, #1f4f8f);
+  --dh-blue-soft: var(--dn-solicitar-soft, rgba(47,111,191,0.10));
+}
+
+/* ──────────────────────────────────────────────────
+   0. UTILIDADES COMUNES
+   ────────────────────────────────────────────────── */
+.dh-section {
+  max-width: 1160px;
+  margin: 0 auto 64px;
+  padding: 0 24px;
+}
+
+.dh-section-heading {
+  text-align: center;
+  margin: 0 auto 32px;
+  max-width: 640px;
+}
+
+.dh-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: var(--text-heading, #16281c);
+  margin: 0 0 8px;
+}
+
+.dh-section-heading p {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.92rem;
+  color: var(--text-secondary, #4b6456);
+  margin: 0;
+}
+
+/* Mixin de vidrio reutilizado — mismo patrón que .donar-form-panel */
+.dh-glass {
+  position: relative;
+  background-color: var(--bg-card, rgba(255,255,255,0.55));
+  background-image:
+    linear-gradient(120deg, var(--lg-shine) 0%, transparent 14%, transparent 86%, var(--lg-shine) 100%),
+    linear-gradient(180deg, var(--lg-tint-strong) 0%, var(--lg-tint) 60%, transparent 100%);
+  background-blend-mode: overlay, normal;
+  backdrop-filter: blur(var(--lg-blur)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(180%);
+  border: 1px solid var(--border-muted, var(--lg-border));
+  box-shadow: var(--lg-shadow);
+  transition: box-shadow 0.35s ease, border-color 0.35s ease, transform 0.3s cubic-bezier(.4,0,.2,1);
+}
+
+/* ──────────────────────────────────────────────────
+   1. HERO — botones de acción principal
+   ────────────────────────────────────────────────── */
+.dh-hero-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.dh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 13px 24px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease, border-color 0.2s ease;
+}
+
+.dh-btn--primary {
+  background: var(--accent, #2d8c4e);
+  color: #fff;
+}
+.dh-btn--primary:hover {
+  background: var(--accent-hover, #1a5c2a);
+  transform: translateY(-2px);
+}
+
+.dh-btn--ghost {
+  background: color-mix(in srgb, var(--accent, #2d8c4e) 8%, transparent);
+  border-color: var(--border-muted, var(--lg-border));
+  color: var(--text-heading, #16281c);
+}
+.dh-btn--ghost:hover {
+  background: color-mix(in srgb, var(--accent, #2d8c4e) 14%, transparent);
+  transform: translateY(-2px);
+}
+
+/* ──────────────────────────────────────────────────
+   2. "¿QUÉ QUIERES HACER HOY?" — 2 tarjetas de elección
+   ────────────────────────────────────────────────── */
+.dh-choice-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.dh-choice-card {
+  border-radius: 26px;
+  padding: 32px 30px;
+  isolation: isolate;
+}
+.dh-choice-card:hover { transform: translateY(-4px); }
+.dh-choice-card > * { position: relative; z-index: 1; }
+
+.dh-choice-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent, #2d8c4e) 14%, transparent);
+  margin-bottom: 18px;
+  animation: dnIconGlow 2.6s ease-in-out infinite;
+}
+.dh-choice-icon img { width: 28px; height: 28px; }
+.dh-choice-icon--blue {
+  background: color-mix(in srgb, var(--dh-blue) 16%, transparent);
+}
+
+.dh-choice-card h3 {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--text-heading, #16281c);
+  margin: 0 0 10px;
+}
+
+.dh-choice-card p {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-secondary, #4b6456);
+  margin: 0 0 22px;
+}
+
+.dh-choice-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 11px 22px;
+  border-radius: 999px;
+  border: none;
+  background: var(--accent, #2d8c4e);
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.dh-choice-btn:hover { background: var(--accent-hover, #1a5c2a); transform: translateX(2px); }
+.dh-choice-btn--blue { background: var(--dh-blue); }
+.dh-choice-btn--blue:hover { background: var(--dh-blue-hover); }
+
+/* ──────────────────────────────────────────────────
+   3. "CONECTA UNA NECESIDAD" — proceso de 4 pasos
+   ────────────────────────────────────────────────── */
+.dh-steps-row {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 14px;
+  border-radius: 28px;
+  padding: 30px 26px;
+  flex-wrap: wrap;
+}
+
+.dh-step {
+  flex: 1 1 200px;
+  text-align: center;
+  padding: 8px;
+}
+
+.dh-step-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent, #2d8c4e) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent, #2d8c4e) 26%, transparent);
+  font-size: 1.3rem;
+  animation: dnSubtlePulse 4s ease-in-out infinite;
+}
+
+.dh-step strong {
+  display: block;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--text-heading, #16281c);
+  margin-bottom: 6px;
+}
+
+.dh-step p {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  color: var(--text-secondary, #4b6456);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.dh-step-arrow {
+  align-self: center;
+  color: var(--accent, #2d8c4e);
+  font-size: 1.3rem;
+  opacity: 0.5;
+}
+
+/* ──────────────────────────────────────────────────
+   4. ESTADÍSTICAS
+   ────────────────────────────────────────────────── */
+.dh-stats-grid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  border-radius: 28px;
+  padding: 34px 40px;
+  flex-wrap: wrap;
+}
+
+.dh-stats-leaf {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+  animation: dnIconGlow 2.4s ease-in-out infinite;
+}
+
+.dh-stat {
+  text-align: center;
+  flex: 1 1 140px;
+}
+
+.dh-stat-num {
+  display: block;
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  color: var(--accent, #2d8c4e);
+  line-height: 1.1;
+}
+
+.dh-stat p {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  color: var(--text-secondary, #4b6456);
+  margin: 6px 0 0;
+}
+
+/* ──────────────────────────────────────────────────
+   5. LISTADOS — Donaciones disponibles / Solicitudes
+   ────────────────────────────────────────────────── */
+.dh-listings-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+.dh-listing-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.dh-listing-head h3 {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text-heading, #16281c);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dh-see-all {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--accent, #2d8c4e);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.dh-see-all:hover { text-decoration: underline; }
+
+.dh-carousel-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dh-carousel {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  padding: 4px 2px 10px;
+  flex: 1;
+  scrollbar-width: thin;
+}
+.dh-carousel::-webkit-scrollbar { height: 6px; }
+.dh-carousel::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--accent, #2d8c4e) 35%, transparent);
+  border-radius: 999px;
+}
+
+.dh-car-btn {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--border-muted, var(--lg-border));
+  background: var(--bg-card, rgba(255,255,255,0.6));
+  color: var(--text-heading, #16281c);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.dh-car-btn:hover {
+  background: color-mix(in srgb, var(--accent, #2d8c4e) 14%, transparent);
+  transform: scale(1.06);
+}
+
+.dh-card {
+  flex: 0 0 200px;
+  border-radius: 20px;
+  padding: 14px;
+  scroll-snap-align: start;
+  isolation: isolate;
+}
+.dh-card > * { position: relative; z-index: 1; }
+.dh-card:hover { transform: translateY(-3px); }
+
+.dh-card-img {
+  position: relative;
+  height: 110px;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  background: color-mix(in srgb, var(--accent, #2d8c4e) 10%, transparent);
+  overflow: hidden;
+}
+.dh-listing-col--solicitudes .dh-card-img {
+  background: color-mix(in srgb, var(--dh-blue) 10%, transparent);
+}
+
+.dh-card-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+}
+.dh-card-badge--good { background: color-mix(in srgb, var(--accent, #2d8c4e) 85%, black 10%); }
+.dh-card-badge--warn { background: #b8860b; }
+
+.dh-card h4 {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-heading, #16281c);
+  margin: 0 0 4px;
+}
+
+.dh-card-meta,
+.dh-card-cat {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.76rem;
+  color: var(--text-muted, #4b6456);
+  margin: 0 0 2px;
+}
+
+.dh-card-btn {
+  margin-top: 10px;
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 999px;
+  border: none;
+  background: color-mix(in srgb, var(--accent, #2d8c4e) 14%, transparent);
+  color: var(--accent, #2d8c4e);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.dh-card-btn:hover { background: var(--accent, #2d8c4e); color: #fff; }
+
+.dh-listing-col--solicitudes .dh-card-btn {
+  background: var(--dh-blue-soft);
+  color: var(--dh-blue);
+}
+.dh-listing-col--solicitudes .dh-card-btn:hover {
+  background: var(--dh-blue);
+  color: #fff;
+}
+
+/* ──────────────────────────────────────────────────
+   6. TRACKER — "Sigue el camino de tu donación"
+   ────────────────────────────────────────────────── */
+.dh-tracker-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  border-radius: 28px;
+  padding: 34px 26px;
+  flex-wrap: wrap;
+}
+
+.dh-tracker-step {
+  flex: 1 1 130px;
+  text-align: center;
+  position: relative;
+}
+
+.dh-tracker-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--accent, #2d8c4e) 45%, transparent);
+  background: color-mix(in srgb, var(--accent, #2d8c4e) 10%, transparent);
+  font-size: 1.3rem;
+  color: var(--accent, #2d8c4e);
+}
+
+.dh-tracker-step strong {
+  display: block;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.86rem;
+  color: var(--accent, #2d8c4e);
+  margin-bottom: 4px;
+}
+
+.dh-tracker-step p {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.76rem;
+  color: var(--text-secondary, #4b6456);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.dh-tracker-line {
+  flex: 0 0 auto;
+  align-self: flex-start;
+  margin-top: 26px;
+  color: var(--accent, #2d8c4e);
+  opacity: 0.4;
+}
+
+/* ──────────────────────────────────────────────────
+   7. CTA BANNER DE CONTACTO
+   ────────────────────────────────────────────────── */
+.dh-cta-banner {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  border-radius: 28px;
+  padding: 28px 34px;
+  flex-wrap: wrap;
+}
+
+.dh-cta-banner__icon {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  background: color-mix(in srgb, var(--accent, #2d8c4e) 14%, transparent);
+}
+
+.dh-cta-banner__text { flex: 1 1 320px; }
+.dh-cta-banner__text h3 {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text-heading, #16281c);
+  margin: 0 0 4px;
+}
+.dh-cta-banner__text p {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-secondary, #4b6456);
+  margin: 0;
+}
+
+/* ──────────────────────────────────────────────────
+   7B. VENTANA FLOTANTE — formularios de donar / solicitar
+   Mismo lenguaje visual que .donar-modal-overlay / .donar-modal
+   (overlay oscuro + panel de vidrio centrado), pero más ancha para
+   alojar el formulario de 2 columnas sin recortarlo.
+   ────────────────────────────────────────────────── */
+.dh-form-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2500;
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 64px 20px;
+  background: var(--dn-overlay-bg, rgba(10, 20, 14, 0.55));
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.dh-form-modal-overlay.open {
+  display: flex;
+  animation: dnFadeIn 0.25s ease both;
+}
+
+body.dh-modal-lock {
+  overflow: hidden;
+}
+
+.dh-form-modal {
+  position: relative;
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  border-radius: 32px;
+  isolation: isolate;
+  animation: dnPopIn 0.35s cubic-bezier(.2,.8,.3,1) both;
+}
+
+/* El wrapper no lleva vidrio propio: los hijos (.donar-tabs-section,
+   .donar-forms-section) ya traen su propio fondo de vidrio, así que
+   .dh-form-modal solo actúa como marco/posicionador. */
+.dh-form-modal .donar-tabs-section {
+  margin-top: 0;
+  padding-top: 28px;
+}
+.dh-form-modal .donar-forms-section {
+  margin-bottom: 0;
+  padding-bottom: 28px;
+}
+
+.dh-form-modal-close {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  z-index: 5;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border-muted, var(--lg-border));
+  background: var(--bg-card, #fff);
+  color: var(--text-heading, #16281c);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.22);
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.dh-form-modal-close:hover {
+  background: color-mix(in srgb, var(--accent, #2d8c4e) 16%, transparent);
+  transform: scale(1.06);
+}
+
+@media (max-width: 560px) {
+  .dh-form-modal-overlay { padding: 24px 12px; }
+  .dh-form-modal-close { top: -10px; right: -6px; width: 36px; height: 36px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dh-form-modal-overlay.open,
+  .dh-form-modal {
+    animation: none !important;
+  }
+}
+
+/* ──────────────────────────────────────────────────
+   8. Reveal / entrada suave (reutiliza dn-reveal ya
+   observado por donar-effects.js — mismo IntersectionObserver)
+   ────────────────────────────────────────────────── */
+.dh-choice-card,
+.dh-step,
+.dh-stat,
+.dh-card,
+.dh-tracker-step {
+  will-change: transform, opacity;
+}
+
+/* ──────────────────────────────────────────────────
+   9. RESPONSIVE
+   ────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .dh-choice-grid { grid-template-columns: 1fr; }
+  .dh-listings-grid { grid-template-columns: 1fr; }
+  .dh-stats-grid { justify-content: center; }
+  .dh-tracker-line { display: none; }
+}
+
+@media (max-width: 560px) {
+  .dh-section { padding: 0 16px; margin-bottom: 48px; }
+  .dh-steps-row { padding: 22px 16px; }
+  .dh-stats-grid { padding: 26px 20px; }
+  .dh-cta-banner { padding: 24px 22px; text-align: center; justify-content: center; }
+  .dh-hero-ctas { justify-content: flex-start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dh-choice-icon, .dh-step-icon, .dh-stats-leaf {
+    animation: none !important;
+  }
+}

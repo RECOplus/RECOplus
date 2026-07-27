@@ -1,0 +1,69 @@
+/* ══════════════════════════════════════════════════════════════
+   LIQUID-GLASS-DONAR-LIGHT-FIX.CSS
+   Capa ADITIVA sobre liquid-glass-donar.css. No lo modifica.
+   Mismo problema y misma solución que
+   liquid-glass-mapa-light-fix.css / liquid-glass-reciclar-light-fix.css:
+   liquid-glass-donar.css define las variables --lg-* solo con
+   valores oscuros; en modo claro eso se vería como una mancha
+   oscura sin contraste sobre una página clara.
+
+   Redefine las mismas variables --lg-* bajo html:not(.dark), con
+   los MISMOS valores exactos que usa mapa.html en modo claro, para
+   que la paleta sea idéntica en ambas páginas.
+
+   Cárgalo DESPUÉS de liquid-glass-donar.css:
+   <link rel="stylesheet" href="liquid-glass-donar-light-fix.css" />
+═══════════════════════════════════════════════════════════════ */
+
+html:not(.dark) {
+  --lg-bg:            rgba(255, 255, 255, 0.72);
+  --lg-bg-strong:     rgba(255, 255, 255, 0.90);
+  --lg-border:        rgba(45, 140, 78, 0.20);
+  --lg-border-strong: rgba(45, 140, 78, 0.36);
+  --lg-highlight:     rgba(255, 255, 255, 0.80);
+
+  --lg-shadow:        0 14px 34px rgba(30, 80, 40, 0.14), 0 4px 10px rgba(30, 80, 40, 0.08);
+  --lg-shadow-hover:  0 18px 44px rgba(30, 80, 40, 0.18), 0 6px 16px rgba(30, 80, 40, 0.10);
+  --lg-shadow-sm:     0 6px 16px rgba(30, 80, 40, 0.12), 0 2px 6px rgba(30, 80, 40, 0.07);
+
+  --lg-text:          #16261a;
+  --lg-text-muted:    #4a6b52;
+  --lg-accent-glow:   rgba(45, 140, 78, 0.30);
+
+  --lg-shine: linear-gradient(
+    115deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.30) 45%,
+    rgba(255, 255, 255, 0.45) 50%,
+    rgba(255, 255, 255, 0.20) 56%,
+    transparent 68%
+  );
+}
+
+/* ── donar-form-note a: el verde claro pierde contraste sobre
+   vidrio claro; se oscurece, igual que .result-distance en
+   liquid-glass-mapa-light-fix.css ── */
+html:not(.dark) .donar-form-note a {
+  color: #1a5c2a !important;
+}
+
+/* ── Iconos circulares: en modo claro usan un verde muy suave en
+   vez del blanco al 8% pensado para vidrio oscuro ── */
+html:not(.dark) .donar-form-icon,
+html:not(.dark) .donar-form-icon2,
+html:not(.dark) .donar-trust-icon,
+html:not(.dark) .donar-hero__card-icon,
+html:not(.dark) .badge-leaf {
+  background-color: rgba(45, 140, 78, 0.08) !important;
+}
+
+/* ── íconos: el brightness(1.15) está pensado para fondo oscuro;
+   en modo claro se neutraliza, igual que en mapa ── */
+html:not(.dark) .donar-tab-icon img,
+html:not(.dark) .donar-trust-icon img,
+html:not(.dark) .donar-hero__card-icon img,
+html:not(.dark) .donar-form-icon img,
+html:not(.dark) .donar-form-icon2 img,
+html:not(.dark) .donar-upload-icon {
+  filter: none;
+}

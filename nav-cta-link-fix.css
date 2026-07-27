@@ -1,0 +1,27 @@
+/* ══════════════════════════════════════════════════════════════
+   NAV-CTA-LINK-FIX.CSS
+   Capa ADITIVA mínima sobre navbar.css. El botón "Únete" del navbar
+   (.bubble-nav__cta) pasó de ser un <button> a un <a href="login.html">
+   en todas las páginas, para que el link funcione de verdad al hacer
+   clic en cualquier parte del botón (antes el <a> estaba vacío o solo
+   envolvía el ícono, así que casi nunca se activaba, y en varias
+   páginas el botón no tenía ningún link).
+
+   Un <a> trae por defecto del navegador subrayado y, en algunos
+   resets de sitio, un color de link nativo que puede pisar
+   var(--nav-cta-color). Esta única regla lo neutraliza sin tocar
+   navbar.css ni el <style> inline que ya existe en varias páginas.
+
+   Cárgalo DESPUÉS de navbar.css (o del <style> inline con
+   .bubble-nav__cta) en TODAS las páginas:
+   <link rel="stylesheet" href="nav-cta-link-fix.css">
+═══════════════════════════════════════════════════════════════ */
+
+.bubble-nav__cta {
+  text-decoration: none;
+}
+.bubble-nav__cta:hover,
+.bubble-nav__cta:visited,
+.bubble-nav__cta:active {
+  text-decoration: none;
+}

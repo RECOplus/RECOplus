@@ -1,0 +1,238 @@
+/* ══════════════════════════════════════════════════════════════
+   LOGIN-GLASS-FX.CSS
+   Capa ADITIVA sobre login.css. No modifica login.css, style.css
+   ni liquid-glass-fx.css. Trae a login.html dos cosas que ya
+   existen en mapa.html y que login.css no tenía:
+
+     1) FONDO IGUAL AL DEL MAPA — login.css fijaba el body siempre
+        en #0c1610 (solo el oscuro de mapa). Aquí se fija el mismo
+        color que usa mapa.html vía --bg-primary en styles.css
+        (#f2faf4 claro / #0c1610 oscuro), pero declarado directo
+        (no a través de esa variable) para no depender de la carrera
+        de carga contra el <style> que inyecta darkmode.js, que
+        redefine --bg-primary con un valor distinto (#0f1a12).
+
+     2) SOMBRA "LIQUID GLASS" DE MAPA.HTML, copiada literal del
+        patrón de .chip/.locate-btn/.search-bar/.result-item en
+        liquid-glass-mapa.css (mismas dos capas inset + var(--lg-shadow),
+        mismo hover con var(--lg-shadow-hover) + translateY(-2px)),
+        aplicada a los elementos equivalentes del login que no la
+        tenían: inputs, botones sociales, y reforzando la card.
+
+   Cárgalo DESPUÉS de login.css:
+   <link rel="stylesheet" href="login-glass-fx.css">
+═══════════════════════════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════════════════════════
+   1) FONDO — mismo color que usa body en mapa.html vía --bg-primary
+   de styles.css (#f2faf4 claro / #0c1610 oscuro).
+
+   OJO: darkmode.js inyecta su propio <style> con
+   "html.dark { --bg-primary: #0f1a12 }" (valor distinto al de
+   styles.css) ANTES de que se carguen login.css/login-glass-fx.css.
+   Para no depender de quién gane esa variable compartida por orden
+   de carga, aquí se fija el background del body con un selector
+   propio y directo (sin pasar por --bg-primary), usando el mismo
+   selector body:has(.login-main) que ya trae login.css pero
+   calzado con html.dark para igualar su especificidad.
+═══════════════════════════════════════════════════════════════ */
+
+body:has(.login-main) {
+  background: #f2faf4;
+  min-height: 100vh;
+}
+/* login.css trae "html.dark body:has(.login-main) { background: #0c1610 }"
+   — ese valor SÍ coincide con --bg-primary oscuro de styles.css/mapa.html,
+   así que se mantiene igual aquí; solo se repite para que esta capa sea
+   la fuente de verdad y no dependa de si login.css se cargó o no. */
+html.dark body:has(.login-main) {
+  background: #0c1610;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   2) SOMBRA LIQUID GLASS — patrón exacto de liquid-glass-mapa.css:
+   inset 0 1px 0 var(--lg-highlight),
+   inset 0 -1px 0 rgba(0,0,0,.20),
+   var(--lg-shadow);
+   y en hover:
+   inset 0 1px 0 rgba(255,255,255,.34),
+   inset 0 -1px 0 rgba(0,0,0,.26),
+   var(--lg-shadow-hover) + translateY(-2px).
+═══════════════════════════════════════════════════════════════ */
+
+.login-field__input,
+.login-social__btn {
+  box-shadow:
+    inset 0 1px 0 var(--lg-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.20),
+    var(--lg-shadow);
+}
+
+.login-field__wrap:focus-within .login-field__input,
+.login-social__btn:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.34),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.26),
+    var(--lg-shadow-hover);
+  transform: translateY(-2px);
+}
+
+/* La card ya usa --lg-shadow-card en login.css (variante propia,
+   más honda, pensada para un panel grande). Aquí solo se añade la
+   segunda capa inset inferior que sí lleva liquid-glass-mapa.css
+   y que login.css no tenía, para que el material sea consistente
+   con el resto de piezas glass del sitio. */
+.login-card {
+  box-shadow:
+    inset 0 1px 0 var(--lg-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.20),
+    var(--lg-shadow-card);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   3) MENOS LUCES — login.css trae 3 orbs grandes (blur 100px) +
+   16 partículas generadas por login.js, que aclaran visualmente
+   el fondo por encima del color plano de mapa.html, sobre todo
+   en modo claro. Se atenúan/reducen aquí para que el color base
+   del body sea lo que realmente se perciba, como en mapa.html.
+═══════════════════════════════════════════════════════════════ */
+
+/* Solo un orb visible, muy tenue, en vez de tres solapados
+   (aplica a modo oscuro; en modo claro se elimina del todo más abajo) */
+.login-orb--a {
+  opacity: 0.05;
+}
+.login-orb--b,
+.login-orb--c {
+  display: none;
+}
+
+/* Las partículas se generan todas por login.js (16 en total);
+   se atenúan como grupo ya que no se puede reducir su cantidad
+   sin tocar login.js. */
+.login-particles {
+  opacity: 0.35;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   4) MODO CLARO — login.css definía --lg-* con un solo valor fijo
+   oscuro (pensado para "solo tema oscuro"). Aquí se redefinen esas
+   mismas variables cuando html NO tiene .dark, usando la misma
+   paleta clara que ya usa mapa.html (styles.css :root, sección
+   "MAPA: tema claro"): fondos blancos, texto oscuro bien saturado,
+   acento verde #2d8c4e. login.css sigue intacto; estas variables
+   ganan la cascada por cargarse después.
+═══════════════════════════════════════════════════════════════ */
+html:not(.dark) {
+  --lg-bg:            rgba(255, 255, 255, 0.68);
+  --lg-bg-strong:     rgba(255, 255, 255, 0.85);
+  --lg-border:        rgba(45, 140, 78, 0.22);
+  --lg-border-strong: rgba(45, 140, 78, 0.38);
+  --lg-highlight:     rgba(255, 255, 255, 0.75);
+  --lg-shadow:        0 14px 34px rgba(30, 80, 40, 0.16), 0 4px 10px rgba(30, 80, 40, 0.09);
+  --lg-shadow-hover:  0 18px 44px rgba(30, 80, 40, 0.20), 0 6px 16px rgba(30, 80, 40, 0.11);
+  --lg-shadow-card:   0 20px 60px rgba(30, 80, 40, 0.18), 0 6px 20px rgba(30, 80, 40, 0.11),
+                      0 0 0 1px rgba(255,255,255,0.6) inset;
+  /* Texto principal bien oscuro y opaco (antes era un gris-verde
+     translúcido difícil de leer sobre el vidrio claro) */
+  --lg-text:          #16261a;
+  --lg-text-muted:    #3d5744;
+  --lg-accent-glow:   rgba(45, 140, 78, 0.35);
+  --lg-shine: linear-gradient(
+    115deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.35) 45%,
+    rgba(255, 255, 255, 0.55) 50%,
+    rgba(255, 255, 255, 0.25) 56%,
+    transparent 68%
+  );
+}
+
+/* ── Sin orb en modo claro: sobre fondo #f2faf4 el halo verde se ve
+   como una mancha en vez de un glow sutil, así que se retira del
+   todo (en modo oscuro sí se conserva, ver sección 3). ── */
+html:not(.dark) .login-orb--a {
+  display: none;
+}
+
+/* ── Colores que login.css dejó fijos fuera de las variables --lg-*
+   (fondo/borde de inputs y botones sociales, separador, links de
+   acento): se sobrescriben solo en modo claro para mantener
+   contraste sobre el fondo --bg-primary claro. ── */
+html:not(.dark) .login-field__icon {
+  color: #4a6b52;
+}
+html:not(.dark) .login-field__input {
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(45, 140, 78, 0.22);
+}
+html:not(.dark) .login-field__input::placeholder {
+  color: #7a9481;
+}
+html:not(.dark) .login-field__input:focus {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #2d8c4e;
+  box-shadow: 0 0 0 4px rgba(45, 140, 78, 0.18), 0 4px 20px rgba(45, 140, 78, .16);
+}
+html:not(.dark) .login-field__input:focus ~ .login-field__icon,
+html:not(.dark) .login-field__wrap:focus-within .login-field__icon {
+  color: #1a5c2a;
+  filter: drop-shadow(0 0 6px rgba(45, 140, 78, 0.45));
+}
+
+html:not(.dark) .login-forgot a,
+html:not(.dark) .login-footer-link a {
+  color: #1a5c2a;
+  font-weight: 700;
+}
+html:not(.dark) .login-footer-link a:hover {
+  color: #123f1c;
+}
+
+html:not(.dark) .login-sep__line {
+  background: rgba(45, 140, 78, 0.25);
+}
+html:not(.dark) .login-sep__text {
+  color: #4a6b52;
+  font-weight: 700;
+}
+
+/* ── BOTONES CON COLOR FUERTE en modo claro ──
+   Antes eran vidrio blanco translúcido casi invisible sobre el
+   fondo también claro. Ahora llevan color sólido con buen contraste. */
+
+/* Submit: verde sólido saturado en vez de heredar el CTA por defecto */
+html:not(.dark) .login-submit {
+  background: linear-gradient(180deg, #34a15c, #1f7a41) !important;
+  color: #fff !important;
+  border: 1px solid rgba(20, 70, 36, 0.35);
+}
+html:not(.dark) .login-submit:hover {
+  background: linear-gradient(180deg, #3bb567, #228548) !important;
+}
+
+/* Botones sociales: fondo blanco sólido con borde y texto fuertes */
+html:not(.dark) .login-social__btn {
+  background: #ffffff;
+  border: 1.5px solid rgba(45, 140, 78, 0.35);
+  color: #16261a;
+  font-weight: 800;
+}
+html:not(.dark) .login-social__btn:hover {
+  background-color: #f2faf4;
+  border-color: #2d8c4e;
+}
+
+html:not(.dark) .login-card__title {
+  color: #16261a;
+}
+html:not(.dark) .login-card__subtitle {
+  color: #3d5744;
+  font-weight: 500;
+}
+html:not(.dark) .login-footer {
+  color: #4a6b52;
+}
+html:not(.dark) .login-footer__brand {
+  color: #1a5c2a;
+}

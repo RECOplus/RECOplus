@@ -1,0 +1,103 @@
+/* ══════════════════════════════════════════════════════════════
+   LIQUID-GLASS-RECICLAR-LIGHT-FIX.CSS
+   Capa ADITIVA sobre liquid-glass-reciclar.css. No lo modifica.
+
+   PROBLEMA QUE RESUELVE (mismo bug que tenía mapa.html, arreglado
+   con liquid-glass-mapa-light-fix.css):
+   liquid-glass-reciclar.css define las variables --lg-* SOLO con
+   valores oscuros (en :root, y de nuevo un poco más oscuras en
+   html.dark), y las aplica con !important a .rc-panel, .rc-material,
+   .rc-btn--outline, .rc-scanner__drop, .rc-result, .rc-stat, .rc-hero,
+   .rc-process__step, .rc-note, etc. Como nunca existe una versión
+   clara de esas variables, en modo claro esos elementos siguen
+   mostrando un fondo oscuro translúcido sobre una página clara — se
+   ve como una mancha grisácea sin contraste.
+
+   EXCEPCIÓN INTENCIONAL: el .footer de reciclar.html reutiliza el
+   footer base del sitio (styles.css), que es oscuro fijo (#1a1a1a)
+   sin importar el tema — igual que en index.html. El vidrio oscuro
+   de liquid-glass-reciclar.css sobre .footer, .footer-brand y
+   .footer-col SÍ es correcto ahí y este archivo NO lo toca.
+
+   SOLUCIÓN:
+   Redefinir las mismas variables --lg-* bajo html:not(.dark), con
+   la misma paleta clara que ya usa mapa.html vía styles.css
+   (sección "MAPA: tema claro (liquid glass)": --bg-card, --bg-muted,
+   --text-primary, --accent, etc.), y algunos ajustes puntuales de
+   contraste donde el original asume fondo oscuro (íconos con
+   brightness boost, color de acento sobre glass oscuro).
+
+   Cárgalo DESPUÉS de liquid-glass-reciclar.css y reciclar-effects.css:
+   <link rel="stylesheet" href="liquid-glass-reciclar-light-fix.css" />
+═══════════════════════════════════════════════════════════════ */
+
+html:not(.dark) {
+  /* Vidrio claro: blanco translúcido en vez de negro translúcido,
+     mismos valores que usa liquid-glass-mapa-light-fix.css para
+     mantener coherencia visual entre mapa.html y reciclar.html. */
+  --lg-bg:            rgba(255, 255, 255, 0.72);
+  --lg-bg-strong:     rgba(255, 255, 255, 0.90);
+  --lg-border:        rgba(45, 140, 78, 0.20);
+  --lg-border-strong: rgba(45, 140, 78, 0.36);
+  --lg-highlight:     rgba(255, 255, 255, 0.80);
+
+  /* Sombras verdes suaves en 3 capas, coherentes con el resto del
+     sitio en modo claro, en vez de las sombras negras profundas
+     pensadas para fondo oscuro. */
+  --lg-shadow:        0 4px 10px rgba(30, 80, 40, 0.10),
+                       0 20px 46px rgba(30, 80, 40, 0.16),
+                       0 2px 0 rgba(30, 80, 40, 0.06);
+  --lg-shadow-hover:  0 6px 14px rgba(30, 80, 40, 0.13),
+                       0 28px 60px rgba(30, 80, 40, 0.20),
+                       0 0 30px rgba(45, 140, 78, 0.14);
+  --lg-shadow-sm:     0 3px 8px rgba(30, 80, 40, 0.09),
+                       0 10px 24px rgba(30, 80, 40, 0.13);
+
+  --lg-text:          #16261a;
+  --lg-text-muted:    #4a6b52;
+  --lg-accent-glow:   rgba(45, 140, 78, 0.30);
+
+  /* Reflejo diagonal: mismo efecto pero más sutil sobre vidrio
+     claro (una banda blanca muy brillante sobre fondo ya blanco
+     casi no se notaría). */
+  --lg-shine: linear-gradient(
+    115deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.30) 45%,
+    rgba(255, 255, 255, 0.45) 50%,
+    rgba(255, 255, 255, 0.20) 56%,
+    transparent 68%
+  );
+}
+
+/* ── ÍCONOS: el filter brightness(1.15) contrast(1.05) de
+   liquid-glass-reciclar.css está pensado para resaltar sobre fondo
+   oscuro; en modo claro aclarar un ícono ya oscuro reduce su
+   contraste, así que se neutraliza igual que en el fix del mapa. ── */
+html:not(.dark) .rc-panel__icon,
+html:not(.dark) .rc-material__icon,
+html:not(.dark) .rc-scanner__drop-icon,
+html:not(.dark) .rc-scanner__feature svg,
+html:not(.dark) .rc-note svg,
+html:not(.dark) .rc-stat__label svg,
+html:not(.dark) .rc-field label svg {
+  filter: none;
+}
+
+/* ── ICONOS CON CAJA PROPIA: el fondo verde translúcido al 16% ya
+   funciona igual en ambos temas (no depende de --lg-*), se deja
+   intacto. Solo se ajusta rc-process__icon, cuyo color de acento
+   #8fe0a8 (verde claro pensado para contrastar con vidrio oscuro)
+   se pierde sobre vidrio blanco. ── */
+html:not(.dark) .rc-process__icon {
+  color: #1a5c2a !important;
+}
+
+/* ── rc-material.active: el mismo verde translúcido de acento
+   funciona bien en ambos temas (ya lleva su propio color sólido
+   #fff para el texto), no requiere ajuste adicional. ── */
+
+/* ── rc-hero: en el diseño original el hero lleva una foto de fondo
+   propia (rc-hero__bg); el marco de vidrio solo aporta borde y
+   sombra, que ya siguen --lg-border/--lg-shadow correctamente con
+   este fix. Sin cambios adicionales necesarios aquí. ── */

@@ -1,0 +1,235 @@
+/* ═══════════════════════════════════════════════════════════════
+   LIQUID GLASS — RECO+
+   Capa aditiva final: aplica el efecto "liquid glass" (vidrio líquido
+   estilo iOS/visionOS: blur, saturación, refracción de borde, brillo
+   especular superior y distorsión sutil) a TODOS los botones y
+   secciones del index. No modifica colores base ni elimina estilos
+   existentes — se superpone con backdrop-filter + capas de luz.
+   Cargar AL FINAL, después de style.css / index.css / interactive.css.
+═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --lg-tint:        rgba(255, 255, 255, 0.08);
+  --lg-tint-strong:  rgba(255, 255, 255, 0.14);
+  --lg-border:       rgba(255, 255, 255, 0.28);
+  --lg-border-soft:  rgba(255, 255, 255, 0.14);
+  --lg-shine:        rgba(255, 255, 255, 0.55);
+  --lg-shadow:       0 8px 32px rgba(0, 0, 0, 0.28), 0 1.5px 0 rgba(255,255,255,0.10) inset,
+                      0 -1px 0 rgba(0,0,0,0.18) inset;
+  --lg-blur:         18px;
+}
+
+html.dark {
+  --lg-tint:        rgba(255, 255, 255, 0.05);
+  --lg-tint-strong:  rgba(255, 255, 255, 0.09);
+  --lg-border:       rgba(255, 255, 255, 0.16);
+  --lg-border-soft:  rgba(255, 255, 255, 0.08);
+  --lg-shine:        rgba(255, 255, 255, 0.30);
+  --lg-shadow:       0 8px 32px rgba(0, 0, 0, 0.45), 0 1.5px 0 rgba(255,255,255,0.06) inset,
+                      0 -1px 0 rgba(0,0,0,0.30) inset;
+}
+
+/* ──────────────────────────────────────────────────
+   1. MIXIN VISUAL — capa de vidrio vía background-image
+   compuesto (sin pseudo-elementos, para no chocar con
+   los ::before/::after ya usados por cada componente)
+   ────────────────────────────────────────────────── */
+.bubble-nav__cta,
+.lang-pill,
+.dm-pill,
+.search-glass,
+.search-glass__btn,
+.acc-arrow,
+.acc-card__cta,
+.cta-btn,
+.mini-nav,
+.mini-nav__chip,
+.newsletter-form,
+.newsletter-form input,
+.newsletter-form button,
+.rd-banner,
+.rd-banner__cta,
+.acc-card,
+.curiosidad-card,
+.material-chip,
+.test-card,
+.aliado,
+.cf-step,
+.stat-item,
+.redes a {
+  position: relative;
+  background-image:
+    linear-gradient(120deg, var(--lg-shine) 0%, transparent 16%, transparent 84%, var(--lg-shine) 100%),
+    linear-gradient(180deg, var(--lg-tint-strong) 0%, var(--lg-tint) 55%, transparent 100%);
+  background-blend-mode: overlay, normal;
+  backdrop-filter: blur(var(--lg-blur)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(180%);
+  border: 1px solid var(--lg-border);
+  box-shadow: var(--lg-shadow);
+  transition: box-shadow 0.35s ease, border-color 0.35s ease, transform 0.25s ease, backdrop-filter 0.35s ease;
+}
+
+/* Realce de refracción al hover: más blur, más brillo de borde */
+.bubble-nav__cta:hover,
+.lang-pill:hover,
+.dm-pill:hover,
+.search-glass:focus-within,
+.search-glass__btn:hover,
+.acc-arrow:hover,
+.acc-card__cta:hover,
+.cta-btn:hover,
+.mini-nav__chip:hover,
+.newsletter-form:focus-within,
+.rd-banner:hover,
+.acc-card:hover,
+.curiosidad-card:hover,
+.material-chip:hover,
+.test-card:hover,
+.aliado:hover,
+.cf-step:hover {
+  border-color: var(--lg-border);
+  backdrop-filter: blur(calc(var(--lg-blur) + 6px)) saturate(200%);
+  -webkit-backdrop-filter: blur(calc(var(--lg-blur) + 6px)) saturate(200%);
+}
+
+/* ──────────────────────────────────────────────────
+   2. BOTONES — capa de vidrio + contenido por encima
+   ────────────────────────────────────────────────── */
+.bubble-nav__cta > *,
+.lang-pill > *,
+.search-glass__btn > *,
+.acc-arrow,
+.cta-btn,
+.mini-nav__chip > *,
+.acc-card__cta,
+.rd-banner__cta {
+  position: relative;
+  z-index: 1;
+}
+
+.acc-arrow {
+  background-image: linear-gradient(180deg, var(--lg-tint-strong) 0%, var(--lg-tint) 100%);
+  color: #7ee89a;
+}
+
+.newsletter-form {
+  border-radius: 999px;
+  overflow: hidden;
+  display: flex;
+  padding: 4px;
+}
+
+.newsletter-form input {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.newsletter-form button {
+  border-radius: 999px !important;
+}
+
+.mini-nav {
+  border-radius: 20px;
+  padding: 10px 14px;
+}
+
+.mini-nav__chip {
+  border-radius: 999px;
+}
+
+/* ──────────────────────────────────────────────────
+   3. SECCIONES — capa de vidrio superpuesta directamente
+   sobre el fondo de cada sección (sin pseudo-elementos,
+   ya que ::before/::after están ocupados por efectos
+   ambientales existentes: luces, partículas, halos)
+   ────────────────────────────────────────────────── */
+.hero,
+.curiosidades,
+.rd-banners,
+.acciones,
+.stats,
+.como-funciona,
+.aliados,
+.testimonios,
+.cta-banner,
+.footer {
+  background-image:
+    linear-gradient(180deg, var(--lg-tint) 0%, transparent 22%, transparent 78%, var(--lg-tint) 100%);
+  background-blend-mode: overlay;
+}
+
+.rd-banners {
+  gap: 22px;
+}
+
+.rd-banner {
+  border-radius: 22px;
+  overflow: hidden;
+}
+
+.rd-banner__cta {
+  border-radius: 999px;
+  padding: 6px 14px;
+  display: inline-block;
+}
+
+.cta-banner {
+  border-radius: 28px;
+  margin: 0 auto;
+}
+
+.cf-step {
+  border-radius: 18px;
+  padding: 20px 16px;
+}
+
+.stat-item {
+  border-radius: 18px;
+  padding: 18px 14px;
+}
+
+/* ──────────────────────────────────────────────────
+   4. Redes sociales del footer — pastillas de vidrio
+   ────────────────────────────────────────────────── */
+.redes a {
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ──────────────────────────────────────────────────
+   5. Reduced motion / accesibilidad
+   ────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .bubble-nav__cta,
+  .lang-pill,
+  .dm-pill,
+  .search-glass,
+  .acc-arrow,
+  .acc-card,
+  .curiosidad-card,
+  .material-chip,
+  .test-card,
+  .aliado,
+  .cf-step,
+  .rd-banner,
+  .cta-btn,
+  .mini-nav__chip {
+    transition: none;
+  }
+}
+
+/* ──────────────────────────────────────────────────
+   6. Mobile: reducir intensidad de blur (rendimiento)
+   ────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  :root {
+    --lg-blur: 10px;
+  }
+}

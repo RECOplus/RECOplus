@@ -1,0 +1,370 @@
+/* ══════════════════════════════════════════════════════════════
+   LIQUID-GLASS-MAPA.CSS
+   Capa ADITIVA (no toca styles.css ni mapa-effects.css).
+   Aplica el mismo "liquid glass" oscuro de las cards de
+   Acceso Rápido del index a TODOS los botones, chips, search bar
+   y cards de mapa.html — igual en modo claro y modo oscuro.
+
+   v2: + reflejo diagonal (shine) fijo sobre el vidrio, para que
+   se note más el material glass; + cada .result-item de la lista
+   de resultados pasa a ser su propia caja de vidrio (antes eran
+   filas separadas por línea); + sombras más profundas en todo
+   para que las piezas resalten sobre el fondo.
+
+   Cárgalo DESPUÉS de styles.css y mapa-effects.css en mapa.html:
+   <link rel="stylesheet" href="liquid-glass-mapa.css" />
+═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Paleta liquid glass oscura reutilizable */
+  --lg-bg:            rgba(18, 26, 20, 0.55);
+  --lg-bg-strong:     rgba(14, 20, 16, 0.68);
+  --lg-border:        rgba(255, 255, 255, 0.14);
+  --lg-border-strong: rgba(255, 255, 255, 0.20);
+  --lg-highlight:     rgba(255, 255, 255, 0.22);
+
+  /* Sombras reforzadas: más difusas y más oscuras para que cada
+     pieza "flote" sobre el fondo con mayor contraste. */
+  --lg-shadow:        0 14px 34px rgba(0, 0, 0, 0.46), 0 4px 10px rgba(0, 0, 0, 0.30);
+  --lg-shadow-hover:  0 18px 44px rgba(0, 0, 0, 0.54), 0 6px 16px rgba(0, 0, 0, 0.36);
+  --lg-shadow-sm:     0 6px 16px rgba(0, 0, 0, 0.34), 0 2px 6px rgba(0, 0, 0, 0.22);
+
+  --lg-text:          #eaf3ec;
+  --lg-text-muted:    rgba(234, 243, 236, 0.68);
+  --lg-accent-glow:   rgba(94, 207, 130, 0.35);
+  --lg-blur: 22px;
+
+  /* Reflejo diagonal: banda de brillo fija (no animada) tipo vidrio curvo */
+  --lg-shine: linear-gradient(
+    115deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.16) 45%,
+    rgba(255, 255, 255, 0.26) 50%,
+    rgba(255, 255, 255, 0.10) 56%,
+    transparent 68%
+  );
+}
+
+/* Mismo valor en modo oscuro: el liquid glass oscuro no cambia con el tema,
+   igual que en la referencia (las cards de Acceso Rápido se ven oscuras
+   tanto en claro como en oscuro). */
+html.dark {
+  --lg-bg:            rgba(10, 16, 12, 0.62);
+  --lg-bg-strong:     rgba(8, 13, 10, 0.75);
+  --lg-border:        rgba(255, 255, 255, 0.10);
+  --lg-border-strong: rgba(255, 255, 255, 0.16);
+  --lg-shadow:        0 14px 34px rgba(0, 0, 0, 0.62), 0 4px 10px rgba(0, 0, 0, 0.42);
+  --lg-shadow-hover:  0 18px 44px rgba(0, 0, 0, 0.68), 0 6px 16px rgba(0, 0, 0, 0.46);
+  --lg-shadow-sm:     0 6px 16px rgba(0, 0, 0, 0.48), 0 2px 6px rgba(0, 0, 0, 0.30);
+}
+
+/* ── BASE: mismo tratamiento glass en todos los elementos objetivo ──
+   Botones pequeños, chips, search bar y cards grandes comparten:
+   fondo oscuro translúcido + blur fuerte + borde claro sutil +
+   highlight superior tipo "gota de vidrio" + sombra profunda. */
+.search-bar,
+.chip,
+.locate-btn,
+.more-filters-btn,
+.see-all-btn,
+.suggest-btn,
+.modal-close,
+.modal-submit,
+.modal-input,
+.sort-select,
+.legend,
+.map-tooltip,
+.modal,
+.sidebar,
+.result-item {
+  background: var(--lg-bg) !important;
+  backdrop-filter: blur(var(--lg-blur)) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(160%) !important;
+  border-color: var(--lg-border) !important;
+  box-shadow:
+    inset 0 1px 0 var(--lg-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.20),
+    var(--lg-shadow) !important;
+  color: var(--lg-text);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── REFLEJO DE VIDRIO ── banda diagonal fija sobre cada pieza,
+   simula la curvatura y el brillo de un panel de vidrio real.
+   Se aplica como background-image adicional (no toca el ::before
+   de shimmer que ya usa styles.css para el hover). */
+.search-bar,
+.chip,
+.locate-btn,
+.more-filters-btn,
+.see-all-btn,
+.suggest-btn,
+.modal-close,
+.modal-submit,
+.legend,
+.map-tooltip,
+.modal,
+.sidebar,
+.result-item {
+  background-image: var(--lg-shine) !important;
+  background-blend-mode: overlay;
+}
+
+/* El sort-select y los inputs no llevan reflejo (son campos de formulario,
+   el brillo encima dificultaría leer el texto) */
+.modal-input,
+.sort-select {
+  background-image: none !important;
+}
+
+/* ── Texto secundario legible sobre el fondo oscuro ── */
+.chip,
+.more-filters-btn,
+.see-all-btn,
+.sort-select,
+.search-bar input,
+.search-icon {
+  color: var(--lg-text) !important;
+}
+.search-bar input::placeholder { color: var(--lg-text-muted) !important; }
+
+.legend-item,
+.map-tooltip .tooltip-text,
+.result-item,
+.sidebar-header strong,
+.results-count {
+  color: var(--lg-text) !important;
+}
+.results-count,
+.map-tooltip .tooltip-text span {
+  color: var(--lg-text-muted) !important;
+}
+
+/* ── CHIP ACTIVO: acento verde sobre el mismo fondo glass oscuro ── */
+.chip.active {
+  background-color: rgba(45, 140, 78, 0.55) !important;
+  background-image: linear-gradient(180deg, rgba(45,140,78,0.35), rgba(26,92,42,0.35)), var(--lg-shine) !important;
+  border-color: rgba(94, 207, 130, 0.55) !important;
+  color: #fff !important;
+}
+
+/* ── SUGGEST / MODAL-SUBMIT: mantienen acento verde, glass oscuro de fondo ── */
+.suggest-btn,
+.modal-submit {
+  background-color: rgba(45, 140, 78, 0.55) !important;
+  background-image: linear-gradient(180deg, rgba(45,140,78,0.40), rgba(26,92,42,0.35)), var(--lg-shine) !important;
+  border-color: rgba(94, 207, 130, 0.45) !important;
+  color: #fff !important;
+}
+
+/* ── HOVER: eleva, aclara el highlight, intensifica sombra ── */
+.search-bar:focus-within,
+.chip:hover,
+.locate-btn:hover,
+.more-filters-btn:hover,
+.see-all-btn:hover,
+.suggest-btn:hover,
+.modal-close:hover,
+.modal-submit:hover,
+.legend:hover,
+.result-item:hover {
+  background-color: var(--lg-bg-strong) !important;
+  border-color: var(--lg-border-strong) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.34),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.26),
+    var(--lg-shadow-hover) !important;
+  transform: translateY(-2px);
+}
+.chip.active:hover {
+  background-color: rgba(45, 140, 78, 0.66) !important;
+}
+.suggest-btn:hover,
+.modal-submit:hover {
+  background-color: rgba(45, 140, 78, 0.70) !important;
+}
+.locate-btn:hover { transform: scale(1.08) translateY(-2px); }
+
+/* ── TOP HIGHLIGHT ("gota de vidrio") en cards grandes ──
+   Línea de brillo curva en el borde superior, igual que el filo
+   iluminado de las cards de Acceso Rápido en la referencia. */
+.legend::after,
+.map-tooltip::after,
+.modal::after,
+.sidebar::after,
+.result-item::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 8%; right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--lg-highlight), transparent);
+  pointer-events: none;
+}
+
+/* ── ICONOS dentro de botones/chips: mantener visibles sobre fondo oscuro ── */
+.locate-btn img,
+.legend-icon,
+.tooltip-icon img,
+.result-icon,
+.sidebar-pin img,
+.footer-leaf img {
+  filter: brightness(1.15) contrast(1.05);
+}
+
+/* ── MODAL OVERLAY: fondo detrás del modal, más oscuro para contraste ── */
+.modal-overlay {
+  background: rgba(6, 10, 8, 0.55) !important;
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+}
+
+/* ── SELECT / INPUT dentro del modal y sidebar: texto e iconos legibles ── */
+.modal-input,
+.sort-select {
+  color: var(--lg-text) !important;
+}
+.modal-input::placeholder { color: var(--lg-text-muted) !important; }
+
+/* ══════════════════════════════════════════════════════════════
+   RESULT-ITEM → cada resultado de la lista de la derecha pasa a
+   ser su propia caja de vidrio independiente, con separación,
+   esquinas redondeadas y sombra propia (antes eran filas unidas
+   por un simple border-bottom).
+═══════════════════════════════════════════════════════════════ */
+.results-list {
+  padding: .7rem .7rem 1rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: .55rem;
+  overflow-y: auto !important;
+  overflow-x: hidden;
+  max-height: 500px !important;
+  min-height: 0;
+  /* asegura que el scroll funcione con el mouse/trackpad y no quede
+     "atrapado" por el overflow:hidden del .sidebar padre */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  transition: max-height .45s cubic-bezier(.4,0,.2,1);
+}
+
+/* ── VISTA EXPANDIDA ("Ver todos los resultados") ──
+   Quita el límite de 500px para desplegar cada card sin scroll
+   interno; el propio documento hace scroll en su lugar. Mantiene
+   el mismo estilo de vidrio en cada .result-item, solo cambia el
+   contenedor. */
+.results-list.results-list--expanded {
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* Botón "Ver todos" en su estado activo ("Ver menos"): mismo glass,
+   acento verde sutil para indicar que la vista está expandida. */
+.see-all-btn.is-expanded {
+  background-color: rgba(45, 140, 78, 0.20) !important;
+  border-color: rgba(94, 207, 130, 0.45) !important;
+}
+
+.result-item {
+  grid-template-columns: 40px 1fr !important;
+  border-bottom: none !important;
+  border: 1px solid var(--lg-border) !important;
+  border-radius: 16px !important;
+  padding: .75rem .85rem !important;
+  box-shadow:
+    inset 0 1px 0 var(--lg-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.20),
+    var(--lg-shadow-sm) !important;
+  /* CLAVE: al ser .results-list un flex column, cada <li> es un
+     flex item; sin esto el navegador comprime todas las cards
+     para que "quepan" en vez de dejarlas a su alto real y
+     scrollear el contenedor. */
+  flex-shrink: 0;
+  width: 100%;
+  transition:
+    box-shadow 0.25s cubic-bezier(.4,0,.2,1),
+    transform 0.2s cubic-bezier(.4,0,.2,1),
+    background-color 0.22s,
+    border-color 0.22s;
+}
+
+.result-item:last-child {
+  border-bottom: 1px solid var(--lg-border) !important;
+}
+
+.result-item:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.30),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.24),
+    var(--lg-shadow) !important;
+  transform: translateY(-2px);
+}
+
+.result-item:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Nombre, dirección y demás textos internos, legibles sobre vidrio oscuro */
+.result-name { color: var(--lg-text) !important; }
+.result-address { color: var(--lg-text-muted) !important; }
+.result-distance { color: #8fe0a8 !important; }
+
+/* ── RATING (estrellas) dentro de cada card de resultado ── */
+.result-rating {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  margin: .15rem 0 .4rem;
+  line-height: 1;
+}
+.result-rating-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  color: #f0b429;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35));
+}
+.result-rating-stars .star-icon {
+  fill: currentColor;
+  stroke: currentColor;
+  flex-shrink: 0;
+}
+.result-rating-stars .star-empty {
+  color: rgba(240, 180, 41, 0.35);
+}
+.result-rating-value {
+  font-size: .75rem;
+  font-weight: 700;
+  color: var(--lg-text);
+}
+.result-rating-count {
+  font-size: .7rem;
+  color: var(--lg-text-muted);
+}
+
+/* type-tag y material-icon: fondo glass propio, más pequeño, con su reflejo */
+.type-tag,
+.material-icon {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  background-image: var(--lg-shine) !important;
+  border: 1px solid var(--lg-border) !important;
+  color: var(--lg-text) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+/* result-icon conserva su color por tipo pero con sombra reforzada */
+.result-icon {
+  box-shadow:
+    inset 0 1px 2px rgba(255,255,255,0.30),
+    inset 0 -2px 3px rgba(0,0,0,0.18),
+    0 4px 10px rgba(0,0,0,0.28) !important;
+}
+
+/* ── RESPONSIVE: sin cambios estructurales, solo hereda lo de arriba ── */
+@media (prefers-reduced-motion: reduce) {
+  .search-bar, .chip, .locate-btn, .more-filters-btn, .see-all-btn,
+  .suggest-btn, .modal-close, .modal-submit, .legend, .map-tooltip, .modal,
+  .result-item {
+    transition: none !important;
+  }
+}

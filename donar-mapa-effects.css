@@ -1,0 +1,145 @@
+/* ══════════════════════════════════════════════════════════════
+   DONAR-MAPA-EFFECTS.CSS
+   Capa ADITIVA. Completa en donar.html las luces y animaciones que
+   ya existen en mapa.html (ver mapa-effects.css) y que donar.css
+   todavía no cubría: orbes de fondo en la barra de tabs y en la
+   sección de confianza (igual que .controls / .footer-cta en
+   mapa), guirnalda de luces en el footer, glow en los links del
+   footer al hover, y anillo de luz en el modal mientras está
+   abierto.
+
+   No toca donar.css ni donar-effects.css/js; solo se apoya en las
+   mismas clases que ya inyecta donar-effects.js (.dn-lights,
+   .dn-dot) y en los mismos keyframes dn* que ya define donar.css.
+
+   Cárgalo DESPUÉS de donar.css, liquid-glass-donar.css y
+   liquid-glass-donar-light-fix.css:
+   <link rel="stylesheet" href="donar-mapa-effects.css" />
+═══════════════════════════════════════════════════════════════ */
+
+@keyframes dnLightsFlicker {
+  0%, 100% { opacity: 0.55; }
+  50%       { opacity: 1; }
+}
+
+/* ── 1. GLOW ORBS DE FONDO — igual que .controls / .footer-cta en
+   mapa-effects.css. .donar-hero ya tiene los suyos propios en
+   donar.css; aquí se añaden a la barra de tabs (equivalente a la
+   barra de búsqueda/filtros) y a la sección de confianza
+   (equivalente al footer-cta). ── */
+.donar-tabs-section,
+.donar-forms-section,
+.donar-trust {
+  position: relative;
+}
+.donar-tabs-section::before,
+.donar-tabs-section::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(46px);
+  pointer-events: none;
+  z-index: 0;
+  animation: dnFloatSlow 10s ease-in-out infinite;
+}
+.donar-tabs-section::before {
+  width: 180px; height: 180px;
+  top: -70px; left: 10%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent, #2d8c4e) 16%, transparent), transparent 70%);
+}
+.donar-tabs-section::after {
+  width: 150px; height: 150px;
+  top: -60px; right: 10%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent, #5ecf82) 14%, transparent), transparent 70%);
+  animation-delay: 2.2s;
+}
+
+.donar-trust::before,
+.donar-trust::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: 0;
+  animation: dnFloatSlow 9s ease-in-out infinite;
+}
+.donar-trust::before {
+  width: 200px; height: 200px;
+  top: -60px; left: 6%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent, #2d8c4e) 14%, transparent), transparent 70%);
+  animation-delay: 1s;
+}
+.donar-trust::after {
+  width: 170px; height: 170px;
+  bottom: -60px; right: 8%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent, #5ecf82) 12%, transparent), transparent 70%);
+  animation-delay: 3s;
+}
+html.dark .donar-tabs-section::before,
+html.dark .donar-tabs-section::after,
+html.dark .donar-trust::before,
+html.dark .donar-trust::after {
+  filter: blur(54px);
+  opacity: 1.4;
+}
+
+/* Contenido de esas secciones por encima de los orbes */
+.donar-tabs,
+.donar-trust-grid {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── 2. GUIRNALDA DE LUCES en el borde superior del footer —
+   igual que .footer::before en mapa-effects.css ── */
+.footer {
+  position: relative;
+}
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 7px;
+  background-image: radial-gradient(circle, rgba(94,207,130,0.95) 0 2.6px, transparent 3px);
+  background-size: 24px 7px;
+  background-repeat: repeat-x;
+  background-position: 4px center;
+  opacity: 0.85;
+  animation: dnLightsFlicker 2.4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* ── 3. FOOTER: links con glow al hover — igual que .footer-col a
+   en mapa-effects.css ── */
+.footer-col a {
+  transition: color 0.2s ease, transform 0.2s ease, padding-left 0.2s ease, text-shadow 0.2s ease !important;
+  display: inline-block;
+}
+.footer-col a:hover {
+  padding-left: 4px;
+  text-shadow: 0 0 8px rgba(76,175,80,0.45);
+}
+
+/* ── 4. MODAL: anillo de luz mientras está abierto — igual que
+   .modal-overlay.open .modal en mapa-effects.css ── */
+.donar-modal-overlay.open .donar-modal {
+  animation: dnPopIn 0.35s cubic-bezier(.2,.8,.3,1) both, dnGlowPulse 3s ease-in-out 0.35s infinite;
+}
+
+/* ── 5. REVEAL ON SCROLL del footer: donar-effects.js le añade la
+   clase .dn-reveal (igual que a cada .donar-trust-item); el
+   comportamiento opacity/transform ya lo aporta la regla genérica
+   .dn-reveal / .dn-reveal.is-visible que define donar.css, así que
+   no hace falta duplicarla aquí. ── */
+
+/* ── 6. RESPETAR REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  .donar-tabs-section::before, .donar-tabs-section::after,
+  .donar-trust::before, .donar-trust::after,
+  .footer::before,
+  .donar-modal-overlay.open .donar-modal {
+    animation: none !important;
+  }
+}

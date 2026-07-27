@@ -1,0 +1,270 @@
+/**
+ * scanner-widget.css
+ * ---------------------------------------------------------------
+ * Estilos del escáner de objetos, en línea con el sistema
+ * "liquid glass" de RECO+. Es un archivo ADITIVO: no sobreescribe
+ * variables globales, solo declara fallbacks locales por si este
+ * archivo se usa fuera del sitio principal (ej. standalone demo).
+ * ---------------------------------------------------------------
+ */
+
+.reco-scanner {
+  /* Fallbacks: si estas variables ya existen en tu :root global
+     (style.css / liquid-glass.css), esas tienen prioridad porque
+     este bloque solo las define a nivel de .reco-scanner */
+  --rs-verde: var(--color-primario, #2d8c4e);
+  --rs-verde-oscuro: var(--color-primario-oscuro, #1a5c2a);
+  --rs-glass-bg: var(--glass-bg, rgba(255, 255, 255, 0.08));
+  --rs-glass-border: var(--glass-border, rgba(255, 255, 255, 0.18));
+  --rs-glass-blur: var(--glass-blur, 18px);
+  --rs-texto: var(--color-texto, #1c231f);
+  --rs-texto-suave: var(--color-texto-suave, rgba(28, 35, 31, 0.65));
+  --rs-radio: 20px;
+
+  max-width: 480px;
+  margin: 0 auto;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  color: var(--rs-texto);
+}
+
+/* ---------- Contenedor de cámara ---------- */
+.reco-scanner__stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--rs-radio);
+  overflow: hidden;
+  background: linear-gradient(160deg, #0e1a12, #182a1c);
+  border: 1px solid var(--rs-glass-border);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.reco-scanner__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1); /* espejo, sensación natural frente a cámara */
+  display: block;
+}
+
+/* Marco tipo "visor" superpuesto sobre el video */
+.reco-scanner__visor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reco-scanner__visor-marco {
+  width: 62%;
+  height: 62%;
+  border-radius: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 0 0 999px rgba(0, 0, 0, 0.28);
+  position: relative;
+}
+
+.reco-scanner__visor-marco::before,
+.reco-scanner__visor-marco::after {
+  content: '';
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-color: var(--rs-verde);
+  border-style: solid;
+}
+.reco-scanner__visor-marco::before {
+  top: -2px;
+  left: -2px;
+  border-width: 3px 0 0 3px;
+  border-top-left-radius: 12px;
+}
+.reco-scanner__visor-marco::after {
+  bottom: -2px;
+  right: -2px;
+  border-width: 0 3px 3px 0;
+  border-bottom-right-radius: 12px;
+}
+
+/* Línea de escaneo animada, solo visible mientras estado = escaneando */
+.reco-scanner[data-estado='escaneando'] .reco-scanner__linea-scan {
+  opacity: 1;
+  animation: reco-scan-sweep 2.2s ease-in-out infinite;
+}
+.reco-scanner__linea-scan {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  height: 2px;
+  top: 19%;
+  background: linear-gradient(90deg, transparent, var(--rs-verde), transparent);
+  opacity: 0;
+  filter: drop-shadow(0 0 6px var(--rs-verde));
+}
+@keyframes reco-scan-sweep {
+  0% { top: 19%; }
+  50% { top: 79%; }
+  100% { top: 19%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reco-scanner__linea-scan { animation: none !important; opacity: 0 !important; }
+}
+
+/* ---------- Overlay de estado (cargando / error) ---------- */
+.reco-scanner__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+  padding: 24px;
+  background: rgba(10, 18, 12, 0.72);
+  backdrop-filter: blur(6px);
+  color: #f2f5f2;
+  transition: opacity 0.25s ease;
+}
+.reco-scanner[data-estado='escaneando'] .reco-scanner__overlay,
+.reco-scanner[data-estado='listo'] .reco-scanner__overlay {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.reco-scanner__spinner {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.25);
+  border-top-color: var(--rs-verde);
+  animation: reco-spin 0.9s linear infinite;
+}
+@keyframes reco-spin { to { transform: rotate(360deg); } }
+
+.reco-scanner__overlay-texto {
+  font-size: 0.95rem;
+  max-width: 30ch;
+  line-height: 1.4;
+}
+
+.reco-scanner__overlay-boton {
+  margin-top: 6px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.reco-scanner__overlay-boton:hover { background: rgba(255, 255, 255, 0.2); }
+.reco-scanner__overlay-boton:active { transform: scale(0.97); }
+
+/* ---------- Tarjeta de resultado (liquid glass) ---------- */
+.reco-scanner__resultado {
+  margin-top: 16px;
+  padding: 18px 20px;
+  border-radius: var(--rs-radio);
+  background: var(--rs-glass-bg);
+  border: 1px solid var(--rs-glass-border);
+  backdrop-filter: blur(var(--rs-glass-blur));
+  -webkit-backdrop-filter: blur(var(--rs-glass-blur));
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.reco-scanner__resultado[data-visible='true'] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reco-scanner__resultado-icono {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  background: color-mix(in srgb, var(--rs-material-color, var(--rs-verde)) 22%, transparent);
+  border: 1px solid color-mix(in srgb, var(--rs-material-color, var(--rs-verde)) 45%, transparent);
+}
+
+.reco-scanner__resultado-texto { flex: 1; min-width: 0; }
+
+.reco-scanner__resultado-material {
+  font-family: 'Fraunces', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--rs-material-color, var(--rs-texto));
+  line-height: 1.2;
+}
+
+.reco-scanner__resultado-detalle {
+  font-size: 0.82rem;
+  color: var(--rs-texto-suave);
+  margin-top: 2px;
+}
+
+.reco-scanner__resultado-confianza {
+  font-size: 0.72rem;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ---------- Controles ---------- */
+.reco-scanner__controles {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.reco-scanner__btn {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--rs-glass-border);
+  background: var(--rs-glass-bg);
+  backdrop-filter: blur(var(--rs-glass-blur));
+  -webkit-backdrop-filter: blur(var(--rs-glass-blur));
+  color: var(--rs-texto);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+.reco-scanner__btn:hover { transform: translateY(-1px); }
+.reco-scanner__btn:active { transform: translateY(0) scale(0.98); }
+.reco-scanner__btn--primario {
+  background: linear-gradient(135deg, var(--rs-verde), var(--rs-verde-oscuro));
+  color: #fff;
+  border: none;
+}
+.reco-scanner__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.reco-scanner__btn--ia {
+  background: linear-gradient(135deg, #7b4de0, #4d6ee0);
+  color: #fff;
+  border: none;
+  width: 100%;
+}
+
+@media (max-width: 480px) {
+  .reco-scanner__resultado-material { font-size: 1rem; }
+}

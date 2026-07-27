@@ -1,0 +1,219 @@
+/* ══════════════════════════════════════════════════════════════
+   RECICLAR-SHIMMER.CSS
+   Destello diagonal para TODOS los botones y elementos
+   interactivos de reciclar.html.
+
+   Ahora son DOS elementos independientes por host, para que la
+   línea fija y la animación de hover nunca se pisen entre sí:
+
+   1. .rc-shine-static — la franja de luz fija y tenue. Se ve
+      SIEMPRE, centrada sobre el elemento, y JAMÁS se anima ni se
+      mueve (no tiene animation, no reacciona al hover). Es pura
+      decoración estática.
+
+   2. .rc-shine-sweep — el destello que recorre el elemento de
+      punta a punta. Vive siempre en el DOM pero solo es visible
+      (opacity/transform) mientras tiene la clase .rc-shine--play,
+      que reciclar-shimmer.js añade en mouseenter y retira al
+      terminar la animación (animationend). Es rápida y fluida:
+      0.45s con una curva de easing tipo "salida" (cubic-bezier)
+      para que se sienta ágil, no mecánica.
+
+   Cárgalo DESPUÉS de reciclar.css, liquid-glass-reciclar.css y
+   reciclar-effects.css:
+   <link rel="stylesheet" href="reciclar-shimmer.css" />
+═══════════════════════════════════════════════════════════════ */
+
+@keyframes rcShineSweep {
+  0%   { transform: translateX(-160%) skewX(-20deg); opacity: 0; }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { transform: translateX(220%) skewX(-20deg); opacity: 0; }
+}
+
+/* Contenedor: asegura que ningún destello se salga del elemento y
+   que el elemento tenga posición para anclar los spans absolutos. */
+.rc-shine-host {
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── 1. LÍNEA FIJA (independiente, nunca se anima) ──
+   Centrada sobre el elemento, bien tenue. No lleva animation ni
+   transition de ningún tipo: es un elemento puramente estático. */
+.rc-shine-static {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 45%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  transform: translateX(-25%) skewX(-20deg);
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0) 35%,
+    rgba(255, 255, 255, 0.14) 48%,
+    rgba(255, 255, 255, 0.22) 50%,
+    rgba(255, 255, 255, 0.14) 52%,
+    rgba(255, 255, 255, 0) 65%,
+    transparent 100%
+  );
+  mix-blend-mode: overlay;
+}
+
+/* ── 2. DESTELLO DE HOVER (independiente, solo vive en .rc-shine--play) ──
+   En reposo: invisible y fuera de posición, sin animation corriendo
+   (evita gasto de GPU cuando nadie interactúa). */
+.rc-shine-sweep {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 45%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+  transform: translateX(-160%) skewX(-20deg);
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.55) 48%,
+    rgba(255, 255, 255, 0.85) 50%,
+    rgba(255, 255, 255, 0.55) 52%,
+    rgba(255, 255, 255, 0) 70%,
+    transparent 100%
+  );
+  mix-blend-mode: overlay;
+}
+
+/* Disparo de UNA sola pasada: rápida y fluida (0.45s, easing tipo
+   "ease-out" con ligero overshoot de velocidad al inicio). */
+.rc-shine-sweep.rc-shine--play {
+  animation: rcShineSweep 0.45s cubic-bezier(.22, .61, .36, 1) 1;
+}
+
+/* Sobre fondos oscuros/sólidos (botones verdes, cta) el overlay
+   se ve mejor en "screen" que en "overlay" para no oscurecer */
+.rc-btn--solid .rc-shine-static,
+.rc-cta .rc-shine-static,
+.rc-material.active .rc-shine-static,
+.rc-btn--full .rc-shine-static {
+  mix-blend-mode: screen;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0) 35%,
+    rgba(255, 255, 255, 0.12) 48%,
+    rgba(255, 255, 255, 0.18) 50%,
+    rgba(255, 255, 255, 0.12) 52%,
+    rgba(255, 255, 255, 0) 65%,
+    transparent 100%
+  );
+}
+.rc-btn--solid .rc-shine-sweep,
+.rc-cta .rc-shine-sweep,
+.rc-material.active .rc-shine-sweep,
+.rc-btn--full .rc-shine-sweep {
+  mix-blend-mode: screen;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.45) 48%,
+    rgba(255, 255, 255, 0.75) 50%,
+    rgba(255, 255, 255, 0.45) 52%,
+    rgba(255, 255, 255, 0) 70%,
+    transparent 100%
+  );
+}
+
+/* Sutil en superficies de vidrio claro (paneles, cards, stats) */
+.rc-panel .rc-shine-static,
+.rc-result .rc-shine-static,
+.rc-stat .rc-shine-static,
+.rc-material:not(.active) .rc-shine-static,
+.rc-scanner__drop .rc-shine-static,
+.rc-scanner__feature .rc-shine-static,
+.rc-note .rc-shine-static,
+.rc-map-preview .rc-shine-static {
+  width: 35%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0) 38%,
+    rgba(255, 255, 255, 0.10) 48%,
+    rgba(255, 255, 255, 0.16) 50%,
+    rgba(255, 255, 255, 0.10) 52%,
+    rgba(255, 255, 255, 0) 62%,
+    transparent 100%
+  );
+}
+.rc-panel .rc-shine-sweep,
+.rc-result .rc-shine-sweep,
+.rc-stat .rc-shine-sweep,
+.rc-material:not(.active) .rc-shine-sweep,
+.rc-scanner__drop .rc-shine-sweep,
+.rc-scanner__feature .rc-shine-sweep,
+.rc-note .rc-shine-sweep,
+.rc-map-preview .rc-shine-sweep {
+  width: 35%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0) 35%,
+    rgba(255, 255, 255, 0.35) 48%,
+    rgba(255, 255, 255, 0.55) 50%,
+    rgba(255, 255, 255, 0.35) 52%,
+    rgba(255, 255, 255, 0) 65%,
+    transparent 100%
+  );
+}
+
+/* rc-panel ya tiene border-radius de 24px; el host necesita
+   heredar el radio para que ningún destello se salga de las esquinas */
+.rc-panel.rc-shine-host,
+.rc-material.rc-shine-host,
+.rc-scanner__drop.rc-shine-host,
+.rc-result.rc-shine-host,
+.rc-stat.rc-shine-host,
+.rc-cta.rc-shine-host,
+.rc-note.rc-shine-host,
+.rc-map-preview.rc-shine-host,
+.rc-scanner__feature.rc-shine-host {
+  border-radius: inherit;
+}
+
+/* rc-btn ya usa overflow:visible!important para el glow ::after;
+   necesitamos un wrapper interno para recortar los destellos sin
+   afectar el glow externo. Ver reciclar-shimmer.js: en botones
+   se envuelve el contenido en .rc-btn__clip. */
+.rc-btn__clip {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+.rc-btn__clip .rc-shine-static { z-index: 1; }
+.rc-btn__clip .rc-shine-sweep  { z-index: 2; }
+
+/* Accesibilidad: respeta reduced motion — la línea fija sigue
+   visible (no es movimiento), solo se anula la animación de hover. */
+@media (prefers-reduced-motion: reduce) {
+  .rc-shine-sweep.rc-shine--play {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+}
+
+/* Mobile: destellos un poco más anchos para pantallas chicas */
+@media (max-width: 600px) {
+  .rc-shine-static,
+  .rc-shine-sweep { width: 55%; }
+}

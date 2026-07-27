@@ -1,0 +1,220 @@
+/* ══════════════════════════════════════════════════════════════
+   RECICLAR-MATERIAL-INFO.CSS
+   Panel de información que se despliega bajo la grid de materiales
+   (sección "¿Qué deseas reciclar?") al seleccionar uno. Capa
+   100% aditiva: no modifica reciclar.css, se inyecta y estiliza
+   por separado, reutilizando las variables de color de style.css
+   (--bg-muted, --border-muted, --accent, --text-*).
+
+   Cárgalo DESPUÉS de reciclar.css y reciclar-effects.css:
+   <link rel="stylesheet" href="reciclar-material-info.css" />
+═══════════════════════════════════════════════════════════════ */
+
+.rc-minfo {
+  margin-top: 18px;
+  border-radius: 18px;
+  background: var(--bg-muted);
+  border: 1px solid var(--border-muted);
+  overflow: hidden;
+  /* Colapsado por defecto; JS alterna .rc-minfo--open */
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: max-height 0.42s cubic-bezier(.4,0,.2,1),
+              opacity 0.32s ease,
+              transform 0.32s cubic-bezier(.4,0,.2,1);
+}
+
+.rc-minfo--open {
+  max-height: 900px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.rc-minfo__inner {
+  padding: 20px 22px 22px;
+}
+
+/* Encabezado: ícono del material + nombre + categoría */
+.rc-minfo__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.rc-minfo__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.rc-minfo__title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 700;
+  font-size: 1.08rem;
+  color: var(--text-heading);
+  line-height: 1.2;
+}
+
+.rc-minfo__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 3px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  padding: 2px 9px;
+  border-radius: 999px;
+  width: fit-content;
+}
+
+.rc-minfo__badge.warn {
+  color: #d98a1f;
+  background: rgba(217, 138, 31, 0.14);
+}
+
+/* Grid de 3 bloques: Preparación / Dónde llevarlo / Qué obtienes */
+.rc-minfo__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 16px;
+}
+
+@media (max-width: 720px) {
+  .rc-minfo__grid { grid-template-columns: 1fr; }
+}
+
+.rc-minfo__block {
+  background: var(--bg-card);
+  border: 1px solid var(--border-muted);
+  border-radius: 14px;
+  padding: 14px 15px;
+}
+
+.rc-minfo__block-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-heading);
+}
+
+.rc-minfo__block-head svg {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.rc-minfo__block ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rc-minfo__block li {
+  position: relative;
+  padding-left: 14px;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.rc-minfo__block li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* Bloque "dónde llevarlo": lista de puntos con acción rápida */
+.rc-minfo__points {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rc-minfo__point {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.rc-minfo__point strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Footer: CTA hacia el mapa filtrado por este material */
+.rc-minfo__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.rc-minfo__impact {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rc-minfo__impact strong {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.rc-minfo__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.82rem;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(.4,0,.2,1), background 0.2s;
+}
+
+.rc-minfo__cta:hover {
+  background: #1a5c2a;
+  transform: translateY(-2px);
+}
+
+.rc-minfo__cta svg { flex-shrink: 0; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .rc-minfo {
+    transition: none;
+  }
+}

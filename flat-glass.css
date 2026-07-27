@@ -1,0 +1,839 @@
+/* ═══════════════════════════════════════════════════════════════
+   FLAT GLASS — RECO+
+   Capa aditiva FINAL (cargar después de liquid-glass.css).
+
+   1) Fondo de página plano: blanco puro (claro) / negro puro (oscuro).
+   2) Cada sección del index queda envuelta en su propia "caja" de
+      vidrio (borde redondeado + blur + sombra sutil), separada del
+      fondo plano — así se nota la división entre secciones, igual
+      que la referencia visual.
+   3) Botones, tarjetas y chips flotan encima con vidrio reforzado
+      (blur + brillo especular), más intenso al hover.
+   4) Corrige el contenedor "Acceso rápido" (mini-nav), que tenía
+      border-radius:0 por un reset en style.css.
+
+   No borra reglas existentes: sobreescribe con mayor especificidad
+   y apaga (opacity/display) los efectos ambientales vía selector,
+   sin tocar los archivos originales.
+═══════════════════════════════════════════════════════════════ */
+
+/* ──────────────────────────────────────────────────
+   0. FONDO PLANO GLOBAL — blanco puro / negro puro
+   ────────────────────────────────────────────────── */
+body {
+  background: #ffffff !important;
+}
+
+html.dark body {
+  background: #000000 !important;
+}
+
+/* ──────────────────────────────────────────────────
+   1. SECCIONES — cada una se convierte en su propia
+   "caja" de vidrio, separada visualmente del fondo
+   plano de la página (blanco puro / negro puro),
+   con borde redondeado + blur, igual que la referencia.
+   El .hero se deja fuera: usa foto de banner propia.
+   ────────────────────────────────────────────────── */
+.acciones,
+.curiosidades,
+.rd-banners,
+.stats,
+.como-funciona,
+.aliados,
+.testimonios,
+.cta-banner,
+.footer,
+.materiales {
+  box-sizing: border-box;
+  max-width: 1160px;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-bottom: 28px !important;
+  border-radius: 28px !important;
+  background-color: transparent;
+  background-image:
+    linear-gradient(180deg, rgba(20,35,26,0.035) 0%, transparent 45%) !important;
+  background-blend-mode: normal;
+  border: 1px solid rgba(20,35,26,0.10) !important;
+  box-shadow:
+    0 2px 4px rgba(20,35,26,0.05),
+    0 10px 24px rgba(20,35,26,0.09),
+    0 28px 56px rgba(20,35,26,0.10),
+    inset 0 1px 0 rgba(255,255,255,0.65) !important;
+  backdrop-filter: blur(14px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(140%) !important;
+  --aliados-section: #ffffff;
+  --testimonios-bg: #ffffff;
+}
+
+html.dark .acciones,
+html.dark .curiosidades,
+html.dark .rd-banners,
+html.dark .stats,
+html.dark .como-funciona,
+html.dark .aliados,
+html.dark .testimonios,
+html.dark .cta-banner,
+html.dark .footer,
+html.dark .materiales {
+  background-image:
+    linear-gradient(180deg, rgba(255,255,255,0.045) 0%, transparent 45%) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.40) !important;
+  --aliados-section: #0c0c0c;
+  --testimonios-bg: #0c0c0c;
+}
+
+/* rd-banners y footer tienen su propio padding lateral pensado para
+   ancho completo; al convertirlos en caja contenida se les da aire
+   interno para que el contenido no toque el nuevo borde redondeado. */
+.rd-banners,
+.footer {
+  padding-left: 32px !important;
+  padding-right: 32px !important;
+}
+
+/* aliados y testimonios no tenían padding lateral (pensados para
+   ancho completo de página) — se les agrega ahora que son cajas. */
+.aliados,
+.testimonios {
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+}
+
+@media (max-width: 860px) {
+  .acciones,
+  .curiosidades,
+  .rd-banners,
+  .stats,
+  .como-funciona,
+  .aliados,
+  .testimonios,
+  .cta-banner,
+  .footer,
+  .materiales {
+    max-width: calc(100% - 24px);
+    border-radius: 20px !important;
+  }
+}
+
+/* Apagar luces ambientales, partículas y halos decorativos de fondo
+   (pseudo-elementos ::before / ::after usados solo para atmósfera,
+   no para el borde/spotlight de las tarjetas — esos se preservan
+   más abajo re-activándolos explícitamente). */
+.acciones::before,
+.acciones::after,
+.curiosidades::before,
+.curiosidades::after,
+.como-funciona::before,
+.como-funciona::after,
+.aliados::before,
+.aliados::after,
+.stats::before,
+.stats::after,
+.testimonios::before,
+.testimonios::after,
+.cta-banner::before,
+.cta-banner::after,
+.footer::before,
+.footer::after,
+.materiales::before,
+.materiales::after,
+.hero-particles,
+.curiosidades-lights,
+.materiales-lights {
+  display: none !important;
+}
+
+/* ──────────────────────────────────────────────────
+   2. TÍTULOS DE SECCIÓN — texto plano legible sobre
+   el nuevo fondo blanco/negro (sin glow de color).
+   ────────────────────────────────────────────────── */
+.acciones h2,
+.curiosidades__title,
+.como-funciona h2,
+.aliados h2,
+.testimonios h2 {
+  color: #14231a !important;
+  text-shadow: none !important;
+}
+
+html.dark .acciones h2,
+html.dark .curiosidades__title,
+html.dark .como-funciona h2,
+html.dark .aliados h2,
+html.dark .testimonios h2 {
+  color: #f4faf5 !important;
+}
+
+/* El footer siempre fue oscuro con texto claro; en modo claro ahora
+   el fondo es blanco, así que su texto necesita pasar a oscuro. */
+.footer,
+.footer-logo,
+.footer-col h4 {
+  color: #14231a !important;
+}
+
+.footer-brand p,
+.footer-col a,
+.footer-col p {
+  color: #4a5c50 !important;
+}
+
+.footer-col a:hover {
+  color: #1b7a3d !important;
+}
+
+html.dark .footer,
+html.dark .footer-logo,
+html.dark .footer-col h4 {
+  color: #f4faf5 !important;
+}
+
+html.dark .footer-brand p,
+html.dark .footer-col a,
+html.dark .footer-col p {
+  color: #aaaaaa !important;
+}
+
+html.dark .footer-col a:hover {
+  color: #4CAF50 !important;
+}
+
+/* ──────────────────────────────────────────────────
+   3. LIQUID GLASS REFORZADO — todos los botones,
+   tarjetas, chips y contenedores tipo "pill" flotando
+   sobre el fondo plano, con blur + brillo especular
+   más marcado (como la referencia visual).
+   ────────────────────────────────────────────────── */
+:root {
+  --fg-tint:          rgba(255, 255, 255, 0.55);
+  --fg-tint-soft:      rgba(255, 255, 255, 0.30);
+  --fg-border:         rgba(20, 35, 26, 0.10);
+  --fg-shine:          rgba(255, 255, 255, 0.75);
+  --fg-shadow:
+    0 2px 4px rgba(20, 35, 26, 0.06),
+    0 8px 16px rgba(20, 35, 26, 0.10),
+    0 20px 40px rgba(20, 35, 26, 0.12),
+    0 1.5px 0 rgba(255,255,255,0.50) inset;
+  --fg-blur:           22px;
+}
+
+html.dark {
+  --fg-tint:          rgba(255, 255, 255, 0.06);
+  --fg-tint-soft:      rgba(255, 255, 255, 0.03);
+  --fg-border:         rgba(255, 255, 255, 0.14);
+  --fg-shine:          rgba(255, 255, 255, 0.22);
+  --fg-shadow:         0 8px 32px rgba(0, 0, 0, 0.55), 0 1.5px 0 rgba(255,255,255,0.06) inset;
+}
+
+.bubble-nav,
+.bubble-nav__cta,
+.lang-pill,
+.dm-pill,
+.search-glass,
+.search-glass__btn,
+.acc-arrow,
+.acc-card__cta,
+.acc-card,
+.cta-btn,
+.mini-nav,
+.mini-nav__chip,
+.newsletter-form,
+.rd-banner,
+.rd-banner__cta,
+.curiosidad-card,
+.material-chip,
+.test-card,
+.aliado,
+.aliados-marquee,
+.aliados-marquee-wrapper,
+.cf-step,
+.stat-item,
+.redes a {
+  background-color: transparent;
+  background-image:
+    linear-gradient(120deg, var(--fg-shine) 0%, transparent 22%, transparent 78%, var(--fg-shine) 100%),
+    linear-gradient(180deg, var(--fg-tint) 0%, var(--fg-tint-soft) 60%, transparent 100%) !important;
+  background-blend-mode: overlay, normal;
+  backdrop-filter: blur(var(--fg-blur)) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(var(--fg-blur)) saturate(180%) !important;
+  border: 1px solid var(--fg-border) !important;
+  box-shadow: var(--fg-shadow) !important;
+}
+
+/* Realce al hover: más blur, brillo de borde más presente */
+.bubble-nav__cta:hover,
+.lang-pill:hover,
+.dm-pill:hover,
+.search-glass:focus-within,
+.search-glass__btn:hover,
+.acc-arrow:hover,
+.acc-card__cta:hover,
+.acc-card:hover,
+.cta-btn:hover,
+.mini-nav__chip:hover,
+.newsletter-form:focus-within,
+.rd-banner:hover,
+.curiosidad-card:hover,
+.material-chip:hover,
+.test-card:hover,
+.aliado:hover,
+.cf-step:hover,
+.stat-item:hover,
+.redes a:hover {
+  backdrop-filter: blur(calc(var(--fg-blur) + 8px)) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(calc(var(--fg-blur) + 8px)) saturate(200%) !important;
+  border-color: var(--fg-border) !important;
+}
+
+/* Modo claro: sombra de hover más marcada, para compensar que el
+   blur claro-sobre-blanco se nota bastante menos que el blur
+   claro-sobre-negro del modo oscuro. */
+html:not(.dark) .bubble-nav__cta:hover,
+html:not(.dark) .lang-pill:hover,
+html:not(.dark) .dm-pill:hover,
+html:not(.dark) .search-glass:focus-within,
+html:not(.dark) .search-glass__btn:hover,
+html:not(.dark) .acc-arrow:hover,
+html:not(.dark) .acc-card__cta:hover,
+html:not(.dark) .acc-card:hover,
+html:not(.dark) .cta-btn:hover,
+html:not(.dark) .mini-nav__chip:hover,
+html:not(.dark) .newsletter-form:focus-within,
+html:not(.dark) .rd-banner:hover,
+html:not(.dark) .curiosidad-card:hover,
+html:not(.dark) .material-chip:hover,
+html:not(.dark) .test-card:hover,
+html:not(.dark) .aliado:hover,
+html:not(.dark) .cf-step:hover,
+html:not(.dark) .stat-item:hover,
+html:not(.dark) .redes a:hover {
+  box-shadow:
+    0 4px 8px rgba(20,35,26,0.08),
+    0 12px 24px rgba(20,35,26,0.12),
+    0 24px 48px rgba(20,35,26,0.14),
+    0 1.5px 0 rgba(255,255,255,0.55) inset !important;
+}
+
+/* ── Aliados marquee: la cápsula de vidrio "estilo referencia" ── */
+.aliados-marquee-wrapper {
+  border-radius: 999px;
+  padding: 4px;
+}
+
+.aliado {
+  border-radius: 999px !important;
+}
+
+.redes a {
+  color: #14231a !important;
+}
+
+html.dark .redes a {
+  color: #f4faf5 !important;
+}
+
+/* Navbar: sombra reforzada solo en modo claro (el modo oscuro ya
+   tiene suficiente contraste natural contra el fondo negro). */
+html:not(.dark) .bubble-nav {
+  box-shadow:
+    0 2px 4px rgba(20,35,26,0.06),
+    0 8px 20px rgba(20,35,26,0.10),
+    0 20px 40px rgba(20,35,26,0.12) !important;
+}
+
+/* ── Acceso rápido (mini-nav): el bloque v3 en style.css resetea
+   el contenedor a border-radius:0 y padding:0 con !important —
+   se corrige aquí. Sin padding, el texto "Acceso rápido" quedaba
+   pegado justo al borde/esquina redondeada de la caja de vidrio,
+   dando la sensación de estar recortado o "fuera" de la caja. ── */
+.mini-nav {
+  border-radius: 20px !important;
+  padding: 10px 16px !important;
+}
+
+/* ── CTA banner: su botón usaba blanco-sobre-verde; con el nuevo
+   fondo de vidrio claro necesita su propio acento sólido. ── */
+.cta-btn {
+  background: #1b7a3d !important;
+  color: #ffffff !important;
+  border-color: transparent !important;
+}
+
+.cta-btn:hover {
+  background: #145c2e !important;
+}
+
+html.dark .cta-btn {
+  background: #ffffff !important;
+  color: #14231a !important;
+}
+
+html.dark .cta-btn:hover {
+  background: #e8f5ec !important;
+}
+
+/* ──────────────────────────────────────────────────
+   4. Texto de tarjetas/chips sobre el nuevo fondo
+   plano — se mantiene oscuro en claro / claro en
+   oscuro, para no perder legibilidad al quitar los
+   fondos oscuros propios de cada tarjeta.
+   ────────────────────────────────────────────────── */
+.acc-card__title,
+.acc-card__desc,
+.curiosidad-card__text,
+.cf-step__title,
+.cf-step__desc,
+.test-card__text,
+.aliado span,
+.stat-item .stat-label,
+.cta-banner,
+.cta-texto h2,
+.cta-texto p {
+  color: #14231a;
+}
+
+html.dark .acc-card__title,
+html.dark .acc-card__desc,
+html.dark .curiosidad-card__text,
+html.dark .cf-step__title,
+html.dark .cf-step__desc,
+html.dark .test-card__text,
+html.dark .aliado span,
+html.dark .stat-item .stat-label,
+html.dark .cta-banner,
+html.dark .cta-texto h2,
+html.dark .cta-texto p {
+  color: #f4faf5;
+}
+
+/* ──────────────────────────────────────────────────
+   5. Reduced motion
+   ────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .bubble-nav__cta,
+  .lang-pill,
+  .dm-pill,
+  .search-glass,
+  .acc-arrow,
+  .acc-card,
+  .curiosidad-card,
+  .material-chip,
+  .test-card,
+  .aliado,
+  .cf-step,
+  .rd-banner,
+  .cta-btn,
+  .mini-nav__chip,
+  .stat-item {
+    transition: none;
+  }
+}
+
+/* ──────────────────────────────────────────────────
+   6. Mobile: reducir intensidad de blur (rendimiento)
+   ────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  :root {
+    --fg-blur: 14px;
+  }
+}
+
+/* ──────────────────────────────────────────────────
+   7b. MODO CLARO — CORRECCIÓN DE TEXTO EN COMPONENTES
+   QUE SOLO TENÍAN COLOR DEFINIDO PARA FONDO OSCURO.
+
+   Estos selectores (barra de búsqueda "search-glass" y
+   los chips de "Acceso rápido" / mini-nav) fueron escritos
+   en style.css con texto claro fijo (blanco / rgba blanco)
+   y solo recibieron su override html.dark en algunos casos,
+   nunca uno para html:not(.dark). Al pasar el fondo de esas
+   secciones a blanco puro (bloque 0 de este archivo), ese
+   texto quedó claro-sobre-claro: invisible o casi invisible,
+   y en :hover se forzaba aún más a blanco puro (#fff).
+   ────────────────────────────────────────────────── */
+
+/* Barra de búsqueda: input, icono, placeholder y botón */
+html:not(.dark) .search-glass__icon {
+  color: rgba(20, 35, 26, 0.55) !important;
+}
+
+html:not(.dark) .search-glass:focus-within .search-glass__icon {
+  color: rgba(20, 35, 26, 0.80) !important;
+}
+
+html:not(.dark) .search-glass__input {
+  color: #14231a !important;
+}
+
+html:not(.dark) .search-glass__input::placeholder {
+  color: rgba(20, 35, 26, 0.45) !important;
+}
+
+html:not(.dark) .search-glass__divider {
+  background: rgba(20, 35, 26, 0.16) !important;
+}
+
+html:not(.dark) .search-glass__btn {
+  color: #14231a !important;
+}
+
+/* Acceso rápido (mini-nav__chip): color base y estado hover.
+   Sin esto, el texto quedaba claro sobre el chip claro, y al
+   pasar el mouse encima se forzaba a #fff (texto en blanco). */
+html:not(.dark) .mini-nav__label {
+  color: rgba(20, 35, 26, 0.45) !important;
+}
+
+html:not(.dark) .mini-nav__chip {
+  color: #14231a !important;
+}
+
+html:not(.dark) .mini-nav__chip:hover {
+  color: #0c1a10 !important;
+}
+
+html:not(.dark) .mini-nav__chip--map {
+  color: #1a5c2a !important;
+}
+
+html:not(.dark) .mini-nav__chip--donate {
+  color: #a13030 !important;
+}
+
+html:not(.dark) .mini-nav__chip--store {
+  color: #9a6206 !important;
+}
+
+html:not(.dark) .mini-nav__chip--help {
+  color: #1d5fc4 !important;
+}
+
+html:not(.dark) .mini-nav__chip--scanner {
+  color: #5b3aa8 !important;
+}
+
+/* Tarjetas rd-banner (reciclar / donar): título, descripción y CTA
+   estaban en blanco/casi blanco fijo (pensados para fondo verde
+   oscuro sólido), pero .rd-banner individual usa el tratamiento
+   glass claro/transparente de la sección 3, así que en modo claro
+   el texto quedaba casi invisible sobre fondo claro. */
+html:not(.dark) .rd-banner__text h3 {
+  color: #14231a !important;
+}
+
+html:not(.dark) .rd-banner__text p {
+  color: rgba(20, 35, 26, 0.72) !important;
+}
+
+html:not(.dark) .rd-banner__cta {
+  color: #1b7a3d !important;
+}
+
+html:not(.dark) .rd-banner--recycle .rd-banner__icon {
+  color: #1b7a3d !important;
+}
+
+html:not(.dark) .rd-banner--donate .rd-banner__icon {
+  color: #b23a3a !important;
+}
+
+/* ──────────────────────────────────────────────────
+   3b. FONDO CLARO PARA TARJETAS QUE TENÍAN FONDO
+   OSCURO FIJO (nunca tuvieron versión clara).
+
+   .acc-card--map/donate/help/guide/allies/contact/blog
+   y .test-card definen su fondo oscuro directamente en
+   style.css (sin depender de html.dark), así que el tinte
+   glass blanco translúcido de la sección 3 quedaba encima
+   de un gradiente oscuro y el resultado seguía oscuro —
+   por eso el texto (ya corregido a color oscuro) no se
+   apreciaba: era oscuro sobre oscuro.
+
+   Aquí se les da un fondo claro opaco propio en modo claro,
+   uno por variante para conservar su identidad de color.
+   ────────────────────────────────────────────────── */
+html:not(.dark) .acc-card--map {
+  background: linear-gradient(160deg, #eafbf0 0%, #dcf3e4 55%, #d0edd9 100%) !important;
+}
+
+html:not(.dark) .acc-card--donate {
+  background: linear-gradient(160deg, #fdecec 0%, #fbdcdc 55%, #f8cfcf 100%) !important;
+}
+
+html:not(.dark) .acc-card--help {
+  background: linear-gradient(160deg, #e9f1fd 0%, #dbe9fb 55%, #cee0f8 100%) !important;
+}
+
+html:not(.dark) .acc-card--guide {
+  background: linear-gradient(160deg, #fdf3e6 0%, #fbe7cf 55%, #f8dcb9 100%) !important;
+}
+
+html:not(.dark) .acc-card--allies {
+  background: linear-gradient(160deg, #f2ecfd 0%, #e6dbfb 55%, #dbcbf8 100%) !important;
+}
+
+html:not(.dark) .acc-card--contact {
+  background: linear-gradient(160deg, #e6f9fc 0%, #d3f1f7 55%, #c1e9f2 100%) !important;
+}
+
+html:not(.dark) .acc-card--blog {
+  background: linear-gradient(160deg, #fbf8e3 0%, #f6f0c9 55%, #f1e8ae 100%) !important;
+}
+
+/* .test-card usa var(--test-card-bg, #1c1c1e) — la variable nunca
+   se define en ningún lado, así que siempre cae al fallback oscuro
+   #1c1c1e, incluso en modo claro. Se fija un fondo claro real. */
+html:not(.dark) .test-card {
+  background: #ffffff !important;
+  border-color: rgba(20, 35, 26, 0.10) !important;
+}
+
+/* Texto de estas tarjetas: ya se fija en #14231a más abajo (bloque
+   4 de este archivo), que ahora sí es legible sobre estos fondos
+   claros. .acc-card__desc usa una versión suavizada del mismo tono. */
+html:not(.dark) .acc-card__desc {
+  color: rgba(20, 35, 26, 0.75) !important;
+}
+
+html:not(.dark) .test-card__text {
+  color: #14231a !important;
+}
+
+html:not(.dark) .test-card__x {
+  color: rgba(20, 35, 26, 0.45) !important;
+}
+
+/* .test-card__handle usa var(--test-card-handle, #e0e0e0) — mismo
+   problema de variable nunca definida, gris claro sobre fondo claro. */
+html:not(.dark) .test-card__handle {
+  color: rgba(20, 35, 26, 0.55) !important;
+}
+
+/* ──────────────────────────────────────────────────
+   3c. LISTAS/CHIPS INTERNOS DE LAS TARJETAS DE ACCIÓN
+   (Donar, Guía práctica, Alianzas, Contáctanos, Blog).
+
+   Todos estos textos usaban el mismo verde muy pálido
+   rgba(212,234,216, 0.7x), pensado para leerse sobre el
+   fondo oscuro original de cada acc-card. Con el fondo
+   claro que ya se les dio arriba, ese texto pálido quedaba
+   casi invisible — es justamente lo que se ve "en blanco/
+   sin apreciarse" en los scrolls internos de las tarjetas.
+   Se pasa a negro/oscuro real para que contraste bien.
+   ────────────────────────────────────────────────── */
+html:not(.dark) .acc-card__scroll-list span {
+  color: #14231a !important;
+  background: rgba(20, 35, 26, 0.05) !important;
+}
+
+html:not(.dark) .acc-card__guide-label {
+  color: #14231a !important;
+}
+
+html:not(.dark) .acc-card__contact-text {
+  color: #14231a !important;
+}
+
+html:not(.dark) .acc-card__blog-tag {
+  color: #14231a !important;
+}
+
+
+/* ──────────────────────────────────────────────────
+   7. CTA-BANNER y RD-BANNERS — mismo fondo VERDE que
+   .stats en modo oscuro (var(--bg-muted) = #182618,
+   definida en darkmode.js), fijo en AMBOS modos (no
+   depende de html.dark). Se mantiene el mismo gradiente
+   sutil / borde / sombra que ya usa .stats en oscuro.
+   ────────────────────────────────────────────────── */
+.cta-banner,
+.rd-banners {
+  background-color: #182618 !important;
+  background-image:
+    linear-gradient(180deg, rgba(255,255,255,0.045) 0%, transparent 45%) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.40) !important;
+}
+
+/* El texto del cta-banner cambiaba de color según el tema (oscuro
+   en modo claro / claro en modo oscuro). Como el fondo ahora es
+   siempre este verde oscuro, el texto se fija al mismo color claro
+   que usa .stats en modo oscuro (var(--text-primary): #d4ead8). */
+.cta-banner,
+.cta-texto h2,
+.cta-texto p {
+  color: #d4ead8 !important;
+}
+
+/* ──────────────────────────────────────────────────
+   8. SOMBRAS REFORZADAS — solo toggles del nav
+   (.bubble-nav__cta, .lang-pill, .dm-pill).
+
+   Se agrega sobre --fg-shadow (no la reemplaza en el resto de la
+   página) para no afectar tarjetas/secciones. Estructura de capas,
+   de más cercana/oscura a más lejana/difusa, siempre terminando en
+   el mismo inset de borde especular que ya usa el liquid glass —
+   eso es lo que mantiene la lectura de "vidrio" y no se toca:
+
+     1) contacto:  sombra corta y algo más oscura, da sensación de
+                   que la pastilla flota justo sobre el fondo.
+     2) elevación: capa media, la profundidad "de botón".
+     3) halo:      capa ancha y muy difusa, el resplandor ambiental
+                    alrededor de la pastilla.
+     4) inset:     el brillo de borde superior del vidrio (sin tocar).
+   ────────────────────────────────────────────────── */
+:root {
+  --nav-toggle-shadow:
+    0 1px 2px rgba(20, 35, 26, 0.14),
+    0 6px 14px rgba(20, 35, 26, 0.16),
+    0 18px 40px rgba(20, 35, 26, 0.14),
+    0 1.5px 0 rgba(255,255,255,0.50) inset;
+  --nav-toggle-shadow-hover:
+    0 2px 4px rgba(20, 35, 26, 0.18),
+    0 10px 22px rgba(20, 35, 26, 0.20),
+    0 26px 56px rgba(20, 35, 26, 0.18),
+    0 1.5px 0 rgba(255,255,255,0.55) inset;
+}
+
+html.dark {
+  --nav-toggle-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.45),
+    0 8px 18px rgba(0, 0, 0, 0.40),
+    0 22px 48px rgba(0, 0, 0, 0.38),
+    0 1.5px 0 rgba(255,255,255,0.06) inset;
+  --nav-toggle-shadow-hover:
+    0 2px 5px rgba(0, 0, 0, 0.55),
+    0 12px 26px rgba(0, 0, 0, 0.48),
+    0 30px 64px rgba(0, 0, 0, 0.44),
+    0 1.5px 0 rgba(255,255,255,0.10) inset;
+}
+
+.bubble-nav__cta,
+.lang-pill,
+.dm-pill {
+  box-shadow: var(--nav-toggle-shadow) !important;
+}
+
+.bubble-nav__cta:hover,
+.lang-pill:hover,
+.dm-pill:hover {
+  box-shadow: var(--nav-toggle-shadow-hover) !important;
+}
+
+/* :active después de :hover en la cascada y con !important para
+   que el efecto de "presión" (sombra hundida) siga ganando incluso
+   mientras el cursor sigue en :hover al hacer click. */
+.bubble-nav__cta:active,
+.lang-pill:active,
+.dm-pill:active {
+  box-shadow:
+    inset 0 1px 3px rgba(0, 0, 0, 0.22),
+    0 1px 2px rgba(20, 35, 26, 0.12),
+    0 4px 12px rgba(20, 35, 26, 0.10) !important;
+}
+
+html.dark .bubble-nav__cta:active,
+html.dark .lang-pill:active,
+html.dark .dm-pill:active {
+  box-shadow:
+    inset 0 1px 3px rgba(0, 0, 0, 0.40),
+    0 1px 2px rgba(0, 0, 0, 0.30),
+    0 4px 14px rgba(0, 0, 0, 0.28) !important;
+}
+
+/* ──────────────────────────────────────────────────
+   9. NAV — un poco más borroso que el resto del vidrio.
+   Solo .bubble-nav (la píldora del header), sin tocar --fg-blur
+   global para no afectar tarjetas/botones/secciones. Un ligero
+   incremento sobre el blur base que ya trae de la sección 3.
+   ────────────────────────────────────────────────── */
+.bubble-nav {
+  backdrop-filter: blur(calc(var(--fg-blur) + 16px)) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(calc(var(--fg-blur) + 16px)) saturate(180%) !important;
+}
+
+@media (max-width: 600px) {
+  .bubble-nav {
+    backdrop-filter: blur(calc(var(--fg-blur) + 10px)) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(calc(var(--fg-blur) + 10px)) saturate(180%) !important;
+  }
+}
+
+/* ──────────────────────────────────────────────────
+   10. ACCESO RÁPIDO — de píldora horizontal a tarjeta
+   vertical (ícono en círculo arriba, título en negrita,
+   descripción debajo), mismo espíritu que las tarjetas
+   de "¿Qué puedes hacer?". El liquid glass (blur, tinte,
+   shimmer, sombra) NO se toca — ya lo aplica la sección 3
+   de este archivo sobre .mini-nav__chip; aquí solo se
+   cambia la geometría/layout interno y tipografía.
+   ────────────────────────────────────────────────── */
+.mini-nav__chips {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px !important;
+  width: 100%;
+  max-width: 620px;
+}
+
+.mini-nav__chip {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 4px !important;
+  padding: 16px 16px 14px !important;
+  border-radius: 18px !important;
+  white-space: normal !important;
+  text-align: left;
+  min-height: 130px;
+}
+
+.mini-nav__chip-icon {
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 10px !important;
+  margin-bottom: 4px;
+}
+
+.mini-nav__chip-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.mini-nav__chip-title {
+  display: block;
+  font-size: 0.80rem;
+  font-weight: 700;
+  line-height: 1.25;
+  min-height: 2.5em;
+}
+
+.mini-nav__chip-desc {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 400;
+  line-height: 1.35;
+  opacity: 0.72;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.mini-nav__chip:hover {
+  transform: translateY(-3px) !important;
+}
+
+@media (max-width: 640px) {
+  .mini-nav__chips {
+    grid-template-columns: 1fr 1fr;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .mini-nav__chips {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,234 @@
+/* ══════════════════════════════════════════════════════════════
+   LIQUID-GLASS-SCANNER-DEMO.CSS
+   Capa ADITIVA — lleva scanner-demo.html al mismo lenguaje visual
+   "liquid glass" oscuro + luces/animaciones que ya usa mapa.html
+   (ver liquid-glass-mapa.css) reutilizando las keyframes lgfx-*
+   de liquid-glass-fx.css. No sobrescribe scanner-widget.css: en su
+   mayoría solo redefine las variables --rs-* que ese archivo ya
+   expone, así que todo lo que ya está construido sobre ellas
+   (botones, tarjeta de resultado) hereda el vidrio oscuro gratis.
+
+   Requiere, en este orden:
+     <link rel="stylesheet" href="scanner-widget.css" />
+     <link rel="stylesheet" href="liquid-glass-fx.css" />
+     <link rel="stylesheet" href="liquid-glass-scanner-demo.css" />
+═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --lg-bg:            rgba(18, 26, 20, 0.55);
+  --lg-border:        rgba(255, 255, 255, 0.14);
+  --lg-border-strong: rgba(255, 255, 255, 0.20);
+  --lg-highlight:     rgba(255, 255, 255, 0.22);
+  --lg-shadow:        0 14px 34px rgba(0, 0, 0, 0.46), 0 4px 10px rgba(0, 0, 0, 0.30);
+  --lg-shadow-hover:  0 18px 44px rgba(0, 0, 0, 0.54), 0 6px 16px rgba(0, 0, 0, 0.36);
+  --lg-shadow-sm:     0 6px 16px rgba(0, 0, 0, 0.34), 0 2px 6px rgba(0, 0, 0, 0.22);
+  --lg-blur: 22px;
+  --lg-shine: linear-gradient(
+    115deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.16) 45%,
+    rgba(255, 255, 255, 0.26) 50%,
+    rgba(255, 255, 255, 0.10) 56%,
+    transparent 68%
+  );
+  --lg-ia-glow:      rgba(139, 105, 233, 0.55);
+  --lg-ia-glow-soft: rgba(139, 105, 233, 0.28);
+}
+
+/* ── VARIABLES BASE DEL WIDGET → vidrio oscuro + texto claro legible ──
+   scanner-widget.css ya construye botones y tarjeta de resultado sobre
+   estas custom properties; con solo redefinirlas aquí, todo hereda el
+   mismo vidrio profundo y contraste que mapa.html. */
+.reco-scanner {
+  --rs-glass-bg: var(--lg-bg);
+  --rs-glass-border: var(--lg-border);
+  --rs-glass-blur: var(--lg-blur);
+  --rs-texto: #eaf3ec;
+  --rs-texto-suave: rgba(234, 243, 236, 0.68);
+}
+
+/* ── ENCABEZADO: entrada suave + eyebrow con glow ── */
+.encabezado .eyebrow,
+.encabezado h1,
+.encabezado p {
+  animation: lgfx-fade-up .7s cubic-bezier(.2,.7,.3,1) both;
+}
+.encabezado h1 { animation-delay: .06s; }
+.encabezado p  { animation-delay: .12s; }
+.encabezado .eyebrow { text-shadow: 0 0 12px var(--fx-glow-green-soft); }
+
+/* ── STAGE (cámara): borde luminoso tipo mapa + entrada ── */
+.reco-scanner__stage {
+  position: relative;
+  animation: lgfx-fade-up .7s cubic-bezier(.2,.7,.3,1) .05s both;
+  transition: box-shadow .35s ease;
+}
+.reco-scanner__stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px var(--fx-glow-green-soft), inset 0 0 30px rgba(94, 207, 130, .08);
+  z-index: 2;
+}
+.reco-scanner[data-estado='escaneando'] .reco-scanner__stage,
+.reco-scanner[data-estado='listo'] .reco-scanner__stage {
+  animation: lgfx-glow-pulse 2.8s ease-in-out infinite;
+}
+
+/* Esquinas del visor: brillo pulsante mientras hay cámara activa */
+.reco-scanner[data-estado='escaneando'] .reco-scanner__visor-marco::before,
+.reco-scanner[data-estado='escaneando'] .reco-scanner__visor-marco::after,
+.reco-scanner[data-estado='listo'] .reco-scanner__visor-marco::before,
+.reco-scanner[data-estado='listo'] .reco-scanner__visor-marco::after {
+  animation: lgfx-underline-glow 1.8s ease-in-out infinite;
+}
+
+/* ── OVERLAY: botón "Iniciar escáner" con shimmer + glow + ripple ── */
+.reco-scanner__overlay-boton {
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow .3s ease, transform .2s ease, background .2s ease;
+}
+.reco-scanner__overlay-boton::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 20%, rgba(255,255,255,.5) 45%, transparent 60%);
+  background-size: 250% 100%;
+  animation: lgfx-sheen-sweep 3.2s ease-in-out infinite;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+.reco-scanner__overlay-boton::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  border: 1.5px solid var(--fx-glow-green-soft);
+  opacity: 0;
+  pointer-events: none;
+}
+.reco-scanner__overlay-boton:active::after {
+  animation: lgfx-ring-ping .6s ease-out;
+}
+.reco-scanner__overlay-boton:hover {
+  box-shadow: 0 0 0 3px var(--fx-glow-green-soft), 0 8px 22px rgba(26, 92, 42, .35);
+  transform: translateY(-2px);
+}
+
+/* ── TARJETA DE RESULTADO: reflejo de vidrio + top highlight + pop-in ── */
+.reco-scanner__resultado {
+  position: relative;
+  overflow: hidden;
+  background-image: var(--lg-shine);
+  background-blend-mode: overlay;
+}
+.reco-scanner__resultado::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 8%; right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--lg-highlight), transparent);
+  pointer-events: none;
+}
+.reco-scanner__resultado[data-visible='true'] {
+  animation: lgfx-pop-in .45s cubic-bezier(.2,.9,.3,1.2) both;
+}
+
+.reco-scanner__resultado-icono {
+  position: relative;
+  box-shadow:
+    inset 0 1px 2px rgba(255,255,255,.30),
+    inset 0 -2px 3px rgba(0,0,0,.18),
+    0 0 14px 2px color-mix(in srgb, var(--rs-material-color, var(--rs-verde)) 55%, transparent);
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.reco-scanner__resultado:hover .reco-scanner__resultado-icono {
+  transform: scale(1.1) rotate(-6deg);
+}
+
+.reco-scanner__resultado-confianza {
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid var(--lg-border);
+  color: #eaf3ec;
+}
+
+/* ── CONTROLES: glow al pasar el mouse + shimmer en los CTA ── */
+.reco-scanner__btn {
+  position: relative;
+  transition: box-shadow .3s ease, transform .15s ease, background .2s ease;
+}
+.reco-scanner__btn:hover:not(:disabled) {
+  box-shadow: 0 0 0 2px var(--fx-glow-green-soft), var(--lg-shadow-hover);
+}
+
+.reco-scanner__btn--primario,
+.reco-scanner__btn--ia {
+  overflow: hidden;
+}
+.reco-scanner__btn--primario::before,
+.reco-scanner__btn--ia::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 20%, rgba(255,255,255,.5) 45%, transparent 60%);
+  background-size: 250% 100%;
+  animation: lgfx-sheen-sweep 3.2s ease-in-out infinite;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+.reco-scanner__btn--primario:hover:not(:disabled) {
+  box-shadow: 0 0 0 3px var(--fx-glow-green-soft), 0 10px 26px rgba(26, 92, 42, .35);
+  transform: translateY(-2px);
+}
+
+/* Botón de IA: mismo lenguaje pero con acento violeta propio, y un
+   respiro de glow continuo mientras está disponible (para que se note
+   que es la acción "especial" del escáner). */
+.reco-scanner__btn--ia:not(:disabled) {
+  animation: lgfx-ia-glow-pulse 2.8s ease-in-out infinite;
+}
+.reco-scanner__btn--ia:hover:not(:disabled) {
+  box-shadow: 0 0 0 3px var(--lg-ia-glow-soft), 0 10px 26px rgba(77, 55, 150, .4);
+  transform: translateY(-2px);
+}
+@keyframes lgfx-ia-glow-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--lg-ia-glow-soft); }
+  50%      { box-shadow: 0 0 20px 3px var(--lg-ia-glow-soft); }
+}
+
+/* ── HISTORIAL: cada detección es su propia caja de vidrio, con
+   entrada escalonada igual que las cards de resultados del mapa ── */
+.historial li {
+  position: relative;
+  overflow: hidden;
+  background: var(--lg-bg);
+  border-color: var(--lg-border);
+  border-radius: 12px;
+  box-shadow:
+    inset 0 1px 0 var(--lg-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, .20),
+    var(--lg-shadow-sm);
+  background-image: var(--lg-shine);
+  background-blend-mode: overlay;
+  transition: box-shadow .25s ease, transform .2s ease, border-color .22s ease;
+  animation: lgfx-fade-up .45s cubic-bezier(.2,.8,.3,1) backwards;
+}
+.historial li:nth-child(1) { animation-delay: .02s; }
+.historial li:nth-child(2) { animation-delay: .06s; }
+.historial li:nth-child(3) { animation-delay: .10s; }
+.historial li:nth-child(4) { animation-delay: .14s; }
+.historial li:nth-child(n+5) { animation-delay: .16s; }
+.historial li:hover {
+  border-color: var(--lg-border-strong);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.30),
+    inset 0 -1px 0 rgba(0,0,0,.24),
+    0 0 0 1px var(--fx-glow-green-soft),
+    var(--lg-shadow);
+  transform: translateY(-2px);
+}
+.historial li span.punto {
+  box-shadow: 0 0 8px 1px var(--c, #6cbf3f);
+}

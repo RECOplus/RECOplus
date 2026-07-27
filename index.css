@@ -1,0 +1,844 @@
+/* ── FUENTE DM SANS ── */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+*, *::before, *::after { font-family: 'DM Sans', Arial, sans-serif; }
+
+/* ── 1. HERO: animación de entrada ── */
+@keyframes heroFadeUp {
+  from { opacity: 0; transform: translateY(36px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes heroReveal {
+  from { opacity: 0; transform: translateY(22px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes heroBgPan {
+  0%   { background-position: center 50%; }
+  100% { background-position: center 44%; }
+}
+@keyframes heroShine {
+  0%   { opacity: 0; transform: translateX(-120%) skewX(-10deg); }
+  40%  { opacity: 1; }
+  100% { opacity: 0; transform: translateX(220%) skewX(-10deg); }
+}
+@keyframes subtlePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(45,140,78,0); }
+  50%       { box-shadow: 0 0 0 8px rgba(45,140,78,0.12); }
+}
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%       { transform: translateY(-10px) rotate(1deg); }
+}
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50%       { opacity: 1; transform: scale(1.08); }
+}
+@keyframes shimmerPass {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.88); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes navSlideDown {
+  from { opacity: 0; transform: translate(-50%, -18px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+@keyframes heroTextGlow {
+  0%, 100% { text-shadow: 0 2px 20px rgba(255,255,255,0.18), 0 0 40px rgba(45,200,100,0.10); }
+  50%       { text-shadow: 0 2px 30px rgba(255,255,255,0.32), 0 0 60px rgba(45,200,100,0.22); }
+}
+@keyframes particleDrift {
+  0%   { transform: translateY(0) translateX(0) scale(1);   opacity: 0.6; }
+  33%  { transform: translateY(-18px) translateX(8px) scale(1.1); }
+  66%  { transform: translateY(-8px) translateX(-5px) scale(0.95); }
+  100% { transform: translateY(-24px) translateX(4px) scale(1); opacity: 0; }
+}
+@keyframes ctaBtnPulse {
+  0%, 100% { box-shadow: 0 4px 20px rgba(45,140,78,0.30), 0 0 0 0 rgba(45,140,78,0.20); }
+  50%       { box-shadow: 0 8px 32px rgba(45,140,78,0.45), 0 0 0 8px rgba(45,140,78,0); }
+}
+@keyframes borderFlow {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* ── 2. NAV ENTRY ANIMATION ── */
+.bubble-nav-wrapper {
+  animation: navSlideDown 0.55s cubic-bezier(0.34,1.56,0.64,1) both;
+  animation-delay: 0.1s;
+}
+
+/* ── 3. HERO: parallax-like animated bg ── */
+.hero {
+  animation: heroBgPan 12s ease-in-out infinite alternate;
+  background-attachment: fixed;
+  position: relative;
+  /* overflow:hidden quitado a propósito: recortaba el dropdown de
+     resultados de búsqueda (.search-glass__dropdown), que es hijo
+     de .hero-content. Los efectos decorativos (::before/::after con
+     inset:0 y .hero-particles con su propio overflow:hidden) no
+     dependen de este recorte, así que es seguro quitarlo. */
+}
+
+/* Overlay gradient mejorado */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0,20,8,0.62) 0%,
+      rgba(0,30,12,0.38) 50%,
+      rgba(0,10,5,0.55) 100%
+    );
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Rayo de luz cruzando el hero ocasionalmente */
+.hero::after {
+  content: '';
+  position: absolute;
+  top: -10%;
+  left: -20%;
+  width: 45%;
+  height: 130%;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    rgba(255,255,255,0.04) 40%,
+    rgba(100,255,150,0.06) 50%,
+    rgba(255,255,255,0.04) 60%,
+    transparent 100%
+  );
+  transform: skewX(-8deg);
+  animation: heroShine 9s ease-in-out infinite;
+  animation-delay: 2s;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* ── 4. HERO CONTENT: entradas escalonadas ── */
+.hero-content h1 {
+  animation: heroReveal 0.8s cubic-bezier(0.22,1,0.36,1) both;
+  animation-delay: 0.35s;
+  animation: heroReveal 0.8s cubic-bezier(0.22,1,0.36,1) 0.35s both,
+             heroTextGlow 5s ease-in-out 1.2s infinite;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.hero-content > p {
+  animation: fadeInUp 0.7s ease-out 0.6s both;
+  font-size: clamp(0.95rem, 2vw, 1.08rem);
+  line-height: 1.65;
+  opacity: 0.92;
+}
+
+.search-glass {
+  animation: fadeInUp 0.7s ease-out 0.8s both;
+}
+
+#heroMiniNav {
+  animation: fadeInUp 0.6s ease-out 1.05s both;
+}
+
+/* ── 5. SEARCH BAR mejorada ── */
+.search-glass {
+  background: rgba(255,255,255,0.10) !important;
+  border: 1px solid rgba(255,255,255,0.24) !important;
+  transition: all 0.30s cubic-bezier(0.22,1,0.36,1) !important;
+}
+.search-glass:hover {
+  background: rgba(255,255,255,0.14) !important;
+  border-color: rgba(255,255,255,0.34) !important;
+  transform: translateY(-1px);
+  box-shadow:
+    0 14px 44px rgba(0,0,0,0.22),
+    0 4px 14px rgba(45,140,78,0.14),
+    inset 0 1px 0 rgba(255,255,255,0.22) !important;
+}
+.search-glass:focus-within {
+  transform: translateY(-2px) !important;
+}
+.search-glass__btn {
+  background: linear-gradient(135deg, rgba(45,140,78,0.42) 0%, rgba(30,100,55,0.42) 100%) !important;
+  border-color: rgba(80,200,110,0.40) !important;
+  backdrop-filter: blur(10px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(160%) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 4px 14px rgba(0,0,0,0.18) !important;
+  transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+.search-glass__btn:hover {
+  background: linear-gradient(135deg, rgba(45,140,78,0.60) 0%, rgba(30,100,55,0.60) 100%) !important;
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.24), 0 6px 20px rgba(45,140,78,0.35), 0 0 0 1px rgba(80,200,110,0.30) !important;
+}
+
+/* ── 6. ACCIONES: entradas on-scroll con IntersectionObserver (JS abajo) ── */
+.acc-card {
+  opacity: 0;
+  transform: translateY(24px) scale(0.97);
+  transition:
+    opacity 0.55s cubic-bezier(0.22,1,0.36,1),
+    transform 0.55s cubic-bezier(0.22,1,0.36,1),
+    box-shadow 0.28s ease,
+    border-color 0.28s ease;
+}
+.acc-card.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Efecto 3D tilt sutil en hover */
+.acc-card:hover {
+  transform: translateY(-6px) scale(1.01) !important;
+}
+
+/* ── 7. STATS: mejor hover con glow de color ── */
+.stat-item {
+  transition: transform 0.30s cubic-bezier(0.34,1.56,0.64,1), filter 0.28s ease !important;
+}
+.stat-item:hover {
+  transform: translateY(-6px) !important;
+  filter: brightness(1.05);
+}
+.stat-item:hover .stat-number {
+  background: linear-gradient(135deg, #2d8c4e 0%, #5ecf82 50%, #2d8c4e 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmerPass 1.8s linear infinite;
+}
+html.dark .stat-item:hover .stat-number {
+  background: linear-gradient(135deg, #5ecf82 0%, #a3f0bd 50%, #5ecf82 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmerPass 1.8s linear infinite;
+}
+
+/* Stats: reveal animation */
+.stats {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.stats.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── 8. ALIADOS SECTION: reveal ── */
+.aliados {
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+.aliados.is-visible { opacity: 1; }
+
+/* Hover en cards de aliados: glow verde */
+.aliado {
+  transition: transform 0.28s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.28s ease, filter 0.28s ease !important;
+}
+.aliado:hover {
+  transform: translateY(-4px) scale(1.03) !important;
+  filter: brightness(1.06);
+}
+
+/* ── 9. TESTIMONIOS: reveal + mejor hover ── */
+.testimonios {
+  opacity: 0;
+  transition: opacity 0.7s ease 0.1s;
+}
+.testimonios.is-visible { opacity: 1; }
+
+.test-card {
+  transition: transform 0.28s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.28s ease !important;
+}
+.test-card:hover {
+  transform: translateY(-5px) scale(1.015) !important;
+}
+
+/* ── 10. CTA BANNER: botón animado ── */
+.cta-btn {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease !important;
+  animation: ctaBtnPulse 3s ease-in-out infinite;
+}
+.cta-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255,255,255,0.22) 50%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.5s ease;
+}
+.cta-btn:hover::before {
+  transform: translateX(130%);
+}
+.cta-btn:hover {
+  transform: translateY(-3px) scale(1.02) !important;
+  box-shadow: 0 12px 36px rgba(45,140,78,0.45) !important;
+  animation: none;
+}
+.cta-btn:active {
+  transform: translateY(0) scale(0.97) !important;
+}
+
+/* Reveal CTA */
+.cta-banner {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.cta-banner.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── 11. FOOTER: reveal links ── */
+.footer {
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+.footer.is-visible { opacity: 1; }
+
+.footer-col a {
+  transition: color 0.2s ease, transform 0.2s ease, padding-left 0.2s ease !important;
+  display: inline-block;
+}
+.footer-col a:hover {
+  color: #2d8c4e !important;
+  padding-left: 4px;
+}
+html.dark .footer-col a:hover { color: #5ecf82 !important; }
+
+/* ── 12. NAV LINK: indicador activo mejorado ── */
+.bubble-nav__links a {
+  position: relative;
+  transition: color 0.22s ease, background 0.22s ease, transform 0.18s ease !important;
+}
+.bubble-nav__links a:hover {
+  transform: translateY(-1px);
+}
+.bubble-nav__links a.active::after {
+  content: '';
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #2d8c4e;
+  box-shadow: 0 0 6px rgba(45,140,78,0.60);
+}
+html.dark .bubble-nav__links a.active::after {
+  background: #5ecf82;
+  box-shadow: 0 0 6px rgba(94,207,130,0.60);
+}
+
+/* ── 13. PARTICLES BG en el hero ── */
+.hero-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.hero-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(100,220,130,0.55), transparent 70%);
+  animation: particleDrift linear infinite;
+  pointer-events: none;
+}
+
+/* ── 14. MINI-NAV CHIPS mejor hover ── */
+.mini-nav__chip {
+  transition:
+    transform 0.25s cubic-bezier(0.34,1.56,0.64,1),
+    box-shadow 0.20s ease,
+    background 0.20s ease,
+    border-color 0.20s ease !important;
+}
+.mini-nav__chip:hover {
+  transform: translateY(-3px) scale(1.04) !important;
+}
+
+/* ── 15. SCROLL PROGRESS BAR ── */
+#reco-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2.5px;
+  width: 0%;
+  background: linear-gradient(90deg, #2d8c4e, #5ecf82, #2d8c4e);
+  background-size: 200% auto;
+  animation: borderFlow 2s linear infinite;
+  z-index: 9999;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 8px rgba(45,140,78,0.50);
+  border-radius: 0 2px 2px 0;
+}
+
+/* ── 16. ACCIONES section title reveal ── */
+.acciones h2, .stats-title, .aliados h2, .testimonios h2, .cta-banner .cta-texto h2, .footer-brand {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+.acciones h2.is-visible, .aliados h2.is-visible, .testimonios h2.is-visible,
+.cta-banner.is-visible .cta-texto h2,
+.footer.is-visible .footer-brand {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── 17. SMOOTH SCROLL ── */
+html { scroll-behavior: smooth; }
+
+/* ── 18. GLASS EFFECT MEJORADO en cards ── */
+.acc-card {
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+/* ── 19. CTA AVATARES: hover mejorado ── */
+.cta-avatares > div {
+  transition: transform 0.28s cubic-bezier(0.34,1.56,0.64,1), z-index 0s !important;
+}
+.cta-avatares > div:hover {
+  transform: translateY(-6px) scale(1.12) !important;
+  z-index: 10 !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   21. DATOS CURIOSOS / CÓMO FUNCIONA / MATERIALES
+   Luces, glass y animaciones consistentes con el resto del index
+   (glow orbs de fondo, shine sweep tipo cta-btn, pulse tipo stat-item,
+   partículas suaves y reveal escalonado por tarjeta).
+═══════════════════════════════════════════════════════════════ */
+
+/* ── 21.1 GLOW ORBS DE FONDO ── */
+.curiosidades,
+.como-funciona,
+.materiales {
+  position: relative;
+  overflow: hidden;
+}
+
+.curiosidades::before,
+.curiosidades::after,
+.como-funciona::before,
+.como-funciona::after,
+.materiales::before,
+.materiales::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(48px);
+  pointer-events: none;
+  z-index: 0;
+  animation: floatSlow 10s ease-in-out infinite;
+}
+
+.curiosidades::before {
+  width: 240px; height: 240px;
+  top: -70px; left: -60px;
+  background: radial-gradient(circle, rgba(45,140,78,0.20), transparent 70%);
+}
+.curiosidades::after {
+  width: 190px; height: 190px;
+  bottom: -60px; right: -40px;
+  background: radial-gradient(circle, rgba(94,207,130,0.18), transparent 70%);
+  animation-delay: 2.4s;
+}
+.como-funciona::before {
+  width: 220px; height: 220px;
+  top: -60px; right: 6%;
+  background: radial-gradient(circle, rgba(45,140,78,0.16), transparent 70%);
+  animation-delay: 1s;
+}
+.como-funciona::after {
+  width: 180px; height: 180px;
+  bottom: -70px; left: 4%;
+  background: radial-gradient(circle, rgba(94,207,130,0.14), transparent 70%);
+  animation-delay: 3.2s;
+}
+.materiales::before {
+  width: 230px; height: 230px;
+  top: -65px; left: 8%;
+  background: radial-gradient(circle, rgba(45,140,78,0.18), transparent 70%);
+  animation-delay: 0.6s;
+}
+.materiales::after {
+  width: 200px; height: 200px;
+  bottom: -65px; right: 6%;
+  background: radial-gradient(circle, rgba(94,207,130,0.16), transparent 70%);
+  animation-delay: 2.8s;
+}
+
+html.dark .curiosidades::before,
+html.dark .curiosidades::after,
+html.dark .como-funciona::before,
+html.dark .como-funciona::after,
+html.dark .materiales::before,
+html.dark .materiales::after {
+  filter: blur(54px);
+  opacity: 1.4;
+}
+
+/* Contenido por encima de los glow orbs */
+.curiosidades__title,
+.curiosidades-grid,
+.como-funciona h2,
+.como-funciona__steps,
+.materiales h2,
+.materiales-grid {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── 21.2 PARTÍCULAS SUAVES (Datos curiosos / Materiales) ── */
+.curiosidades-lights,
+.materiales-lights {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.curiosidades-lights .light-dot,
+.materiales-lights .light-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(94,207,130,0.65), transparent 70%);
+  animation: particleDrift linear infinite;
+  pointer-events: none;
+}
+html.dark .curiosidades-lights .light-dot,
+html.dark .materiales-lights .light-dot {
+  background: radial-gradient(circle, rgba(163,240,189,0.6), transparent 70%);
+}
+
+/* ── 21.3 TARJETAS "GLASS" CON SHINE SWEEP ── */
+.curiosidad-card,
+.material-chip {
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  opacity: 0;
+  transform: translateY(20px) scale(0.96);
+  transition:
+    opacity 0.55s cubic-bezier(0.22,1,0.36,1),
+    transform 0.4s cubic-bezier(0.34,1.56,0.64,1),
+    box-shadow 0.28s ease,
+    border-color 0.22s ease,
+    background 0.28s ease;
+}
+.curiosidad-card.is-visible,
+.material-chip.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.curiosidad-card::before,
+.material-chip::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255,255,255,0.30) 50%,
+    transparent 70%
+  );
+  transform: translateX(-120%) skewX(-8deg);
+  transition: transform 0.6s ease;
+  pointer-events: none;
+}
+.curiosidad-card:hover::before,
+.material-chip:hover::before {
+  transform: translateX(130%) skewX(-8deg);
+}
+
+.curiosidad-card:hover,
+.material-chip.is-visible:hover {
+  transform: translateY(-6px) scale(1.015) !important;
+  box-shadow: 0 14px 34px rgba(45,140,78,0.22) !important;
+}
+
+/* ── 21.4 ÍCONOS: glass + glow pulse ── */
+.curiosidad-card__icon,
+.material-chip__icon,
+.curiosidades__title-icon {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 0 0 0 rgba(45,140,78,0);
+}
+.curiosidad-card:hover .curiosidad-card__icon,
+.material-chip:hover .material-chip__icon {
+  animation: subtlePulse 1.6s ease-in-out infinite;
+}
+.curiosidades__title-icon {
+  animation: glowPulse 4s ease-in-out infinite;
+}
+
+/* ── 21.5 CÓMO FUNCIONA: pasos con glass + anillo de luz ── */
+.cf-step {
+  opacity: 0;
+  transform: translateY(18px) scale(0.96);
+  transition:
+    opacity 0.55s cubic-bezier(0.22,1,0.36,1),
+    transform 0.45s cubic-bezier(0.34,1.56,0.64,1);
+}
+.cf-step.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.cf-step__num {
+  position: relative;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.cf-step__num::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1px solid rgba(45,140,78,0.35);
+  animation: glowPulse 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+html.dark .cf-step__num::after {
+  border-color: rgba(94,207,130,0.45);
+}
+.cf-step:hover .cf-step__num {
+  box-shadow: 0 0 22px rgba(45,140,78,0.45);
+}
+html.dark .cf-step:hover .cf-step__num {
+  box-shadow: 0 0 22px rgba(94,207,130,0.50);
+}
+
+.cf-step__arrow {
+  transition: color 0.28s ease, text-shadow 0.28s ease;
+}
+.cf-step__arrow:hover {
+  color: var(--accent, #2d8c4e);
+  text-shadow: 0 0 10px rgba(45,140,78,0.45);
+}
+
+/* ── 21.6 MATERIALES: ícono con acento glass tipo search-glass__btn al hover ── */
+.material-chip:hover .material-chip__icon {
+  background: linear-gradient(135deg, rgba(45,140,78,0.22) 0%, rgba(30,100,55,0.22) 100%);
+  color: var(--accent, #2d8c4e);
+}
+html.dark .material-chip:hover .material-chip__icon {
+  background: linear-gradient(135deg, rgba(94,207,130,0.28) 0%, rgba(60,150,90,0.28) 100%);
+}
+
+/* ── 21.7 RESPETAR REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  .curiosidades::before, .curiosidades::after,
+  .como-funciona::before, .como-funciona::after,
+  .materiales::before, .materiales::after,
+  .curiosidades__title-icon,
+  .cf-step__num::after {
+    animation: none !important;
+  }
+  .curiosidades-lights, .materiales-lights { display: none; }
+}
+
+/* ── 20. REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.1ms !important;
+  }
+  .hero-particles { display: none; }
+}
+
+/* ══════════════════════════════════════════════════════════
+   22. RD-BANNERS — Reciclar / Donar (glass, dos columnas)
+   ══════════════════════════════════════════════════════════ */
+.rd-banners {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 44px 40px 8px;
+}
+
+.rd-banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 26px 26px;
+  border-radius: 22px;
+  text-decoration: none;
+  overflow: hidden;
+  isolation: isolate;
+  opacity: 0;
+  transform: translateY(24px) scale(0.98);
+  transition:
+    opacity 0.55s cubic-bezier(0.22,1,0.36,1),
+    transform 0.40s cubic-bezier(0.34,1.56,0.64,1),
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid transparent;
+}
+.rd-banner.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Fondo glass coloreado por tipo, degradado sutil sobre el fondo oscuro */
+.rd-banner--recycle {
+  background: linear-gradient(120deg, rgba(45,140,78,0.38) 0%, rgba(20,60,35,0.30) 100%);
+  border-color: rgba(126,232,154,0.28);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.10), 0 8px 28px rgba(0,0,0,0.28);
+}
+.rd-banner--donate {
+  background: linear-gradient(120deg, rgba(239,68,68,0.30) 0%, rgba(90,20,20,0.28) 100%);
+  border-color: rgba(252,165,165,0.26);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.10), 0 8px 28px rgba(0,0,0,0.28);
+}
+
+.rd-banner:hover {
+  transform: translateY(-5px) scale(1.01);
+}
+.rd-banner--recycle:hover {
+  border-color: rgba(126,232,154,0.50);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.16), 0 16px 44px rgba(45,140,78,0.28);
+}
+.rd-banner--donate:hover {
+  border-color: rgba(252,165,165,0.45);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.16), 0 16px 44px rgba(239,68,68,0.22);
+}
+
+/* Shine sweep, coherente con los otros botones glass del sitio */
+.rd-banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.14) 50%, transparent 70%);
+  transform: translateX(-120%) skewX(-8deg);
+  transition: transform 0.55s cubic-bezier(0.4,0,0.2,1);
+  pointer-events: none;
+  z-index: 1;
+}
+.rd-banner:hover::after {
+  transform: translateX(140%) skewX(-8deg);
+}
+
+.rd-banner__icon {
+  flex-shrink: 0;
+  width: 62px;
+  height: 62px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  position: relative;
+  z-index: 2;
+}
+.rd-banner--recycle .rd-banner__icon {
+  background: rgba(126,232,154,0.18);
+  color: #a3f0bd;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.14);
+}
+.rd-banner--donate .rd-banner__icon {
+  background: rgba(252,165,165,0.18);
+  color: #fca5a5;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.14);
+}
+.rd-banner:hover .rd-banner__icon {
+  transform: scale(1.1) rotate(-6deg);
+}
+
+.rd-banner__text {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  z-index: 2;
+}
+.rd-banner__text h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #eafff1;
+  margin: 0 0 4px;
+  letter-spacing: -0.01em;
+}
+.rd-banner__text p {
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: rgba(234,255,241,0.72);
+  margin: 0;
+}
+
+.rd-banner__cta {
+  flex-shrink: 0;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  position: relative;
+  z-index: 2;
+  transition: letter-spacing 0.22s ease;
+}
+.rd-banner:hover .rd-banner__cta {
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 720px) {
+  .rd-banners {
+    grid-template-columns: 1fr;
+    padding: 34px 20px 4px;
+  }
+  .rd-banner {
+    flex-wrap: wrap;
+    padding: 22px 20px;
+  }
+  .rd-banner__cta {
+    width: 100%;
+    padding-left: 80px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rd-banner {
+    transition: opacity 0.3s ease;
+  }
+  .rd-banner::after { display: none; }
+}

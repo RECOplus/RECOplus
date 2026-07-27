@@ -1,0 +1,331 @@
+/* ═══════════════════════════════════════════════════════════════
+   GLOW BOOST — capa adicional de luces y efectos
+   Se suma al sistema existente (acc-card lights + bubble buttons)
+   sin tocar backgrounds, opacity ni colores base.
+   Solo agrega: halos animados, glow pulsante, destellos y
+   brillo de borde extra en hover/focus.
+═══════════════════════════════════════════════════════════════ */
+
+/* ──────────────────────────────────────────────────
+   1. HALO PULSANTE PARA BOTONES
+   Un resplandor que "respira" alrededor del botón al
+   hacer hover, además del shimmer que ya existe.
+   ────────────────────────────────────────────────── */
+.btn,
+.search button,
+.ver-todos-btn,
+.ver-producto-btn,
+.cta-btn,
+.newsletter-form button,
+.bubble-nav__cta,
+.acc-arrow,
+.lang-pill,
+.dm-pill,
+.mini-nav a,
+.redes a {
+  --glow-color: rgba(126, 232, 154, 0.55);
+}
+
+.cta-btn        { --glow-color: rgba(126, 232, 154, 0.60); }
+.bubble-nav__cta{ --glow-color: rgba(126, 232, 154, 0.55); }
+.dm-pill        { --glow-color: rgba(255, 209, 102, 0.45); }
+.lang-pill      { --glow-color: rgba(96, 165, 250, 0.45); }
+.mini-nav a     { --glow-color: rgba(126, 232, 154, 0.50); }
+.redes a        { --glow-color: rgba(126, 232, 154, 0.50); }
+.acc-arrow      { --glow-color: rgba(126, 232, 154, 0.55); }
+
+.btn::after,
+.search button::after,
+.ver-todos-btn::after,
+.ver-producto-btn::after,
+.cta-btn::after,
+.newsletter-form button::after,
+.bubble-nav__cta::after,
+.acc-arrow::after,
+.lang-pill::after,
+.dm-pill::after,
+.mini-nav a::after,
+.redes a::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  background: transparent;
+  box-shadow: 0 0 0 0 var(--glow-color);
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+}
+
+.btn:hover::after,
+.search button:hover::after,
+.ver-todos-btn:hover::after,
+.ver-producto-btn:hover::after,
+.cta-btn:hover::after,
+.newsletter-form button:hover::after,
+.bubble-nav__cta:hover::after,
+.acc-arrow:hover::after,
+.lang-pill:hover::after,
+.dm-pill:hover::after,
+.mini-nav a:hover::after,
+.redes a:hover::after {
+  opacity: 1;
+  animation: glowBreathe 1.6s ease-in-out infinite;
+}
+
+@keyframes glowBreathe {
+  0%, 100% { box-shadow: 0 0 14px 2px var(--glow-color); }
+  50%      { box-shadow: 0 0 26px 6px var(--glow-color); }
+}
+
+/* Brillo extra al presionar */
+.btn:active::after,
+.search button:active::after,
+.ver-todos-btn:active::after,
+.ver-producto-btn:active::after,
+.cta-btn:active::after,
+.newsletter-form button:active::after,
+.bubble-nav__cta:active::after,
+.acc-arrow:active::after,
+.lang-pill:active::after,
+.dm-pill:active::after,
+.mini-nav a:active::after,
+.redes a:active::after {
+  animation: none;
+  box-shadow: 0 0 30px 8px var(--glow-color);
+}
+
+/* ──────────────────────────────────────────────────
+   2. DESTELLOS (sparkles) en botones principales
+   Puntitos de luz que aparecen al hover — puramente
+   decorativo, no afecta el fondo del botón.
+   ────────────────────────────────────────────────── */
+.cta-btn,
+.bubble-nav__cta {
+  isolation: isolate;
+}
+
+.cta-btn::before,
+.bubble-nav__cta::before {
+  z-index: 2;
+}
+
+.cta-btn > *,
+.bubble-nav__cta > * {
+  position: relative;
+  z-index: 3;
+}
+
+/* Contenedor de chispas inyectado sólo vía CSS con box-shadow múltiple */
+.cta-btn,
+.bubble-nav__cta {
+  position: relative;
+}
+
+.cta-btn .btn-sparkle,
+.bubble-nav__cta .btn-sparkle {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.cta-btn:hover .btn-sparkle,
+.bubble-nav__cta:hover .btn-sparkle {
+  opacity: 1;
+}
+
+.cta-btn .btn-sparkle::before,
+.cta-btn .btn-sparkle::after,
+.bubble-nav__cta .btn-sparkle::before,
+.bubble-nav__cta .btn-sparkle::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 6px 1px #fff, 0 0 10px 2px var(--glow-color);
+}
+
+.cta-btn .btn-sparkle::before { top: 18%; left: 12%; animation: sparklePop 1.4s ease-in-out infinite; }
+.cta-btn .btn-sparkle::after  { top: 65%; left: 85%; animation: sparklePop 1.4s ease-in-out 0.6s infinite; }
+.bubble-nav__cta .btn-sparkle::before { top: 15%; left: 15%; animation: sparklePop 1.3s ease-in-out infinite; }
+.bubble-nav__cta .btn-sparkle::after  { top: 70%; left: 80%; animation: sparklePop 1.3s ease-in-out 0.55s infinite; }
+
+@keyframes sparklePop {
+  0%, 100% { transform: scale(0); opacity: 0; }
+  50%      { transform: scale(1); opacity: 1; }
+}
+
+/* ──────────────────────────────────────────────────
+   3. TARJETAS: borde luminoso animado extra
+   Se suma al glow existente de .acc-card sin tocar
+   background ni opacity — solo box-shadow y un
+   pseudo-elemento de brillo en el borde.
+   ────────────────────────────────────────────────── */
+.test-card,
+.curiosidad-card,
+.material-chip,
+.cf-step__num {
+  position: relative;
+  isolation: isolate;
+}
+
+.test-card::after,
+.curiosidad-card::after,
+.material-chip::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(120deg,
+    transparent 20%,
+    rgba(126,232,154,0.55) 50%,
+    transparent 80%);
+  background-size: 250% 250%;
+  background-position: 0% 0%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;      
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.test-card:hover::after,
+.curiosidad-card:hover::after,
+.material-chip:hover::after {
+  opacity: 1;
+  animation: sheenSlide 1.6s ease-in-out infinite;
+}
+
+@keyframes sheenSlide {
+  0%   { background-position: 0% 0%; }
+  100% { background-position: 100% 100%; }
+}
+
+/* Glow extra al hover (adicional al box-shadow ya existente) */
+.test-card:hover {
+  box-shadow:
+    0 6px 28px rgba(76,175,80,0.15),
+    0 0 24px rgba(76,175,80,0.20),
+    0 0 2px rgba(76,175,80,0.4);
+}
+
+.curiosidad-card:hover,
+.material-chip:hover {
+  box-shadow:
+    0 10px 26px rgba(45,140,78,0.16),
+    0 0 22px rgba(45,140,78,0.18),
+    0 0 2px rgba(45,140,78,0.35);
+}
+
+/* cf-step__num: anillo de luz pulsante al hover del step completo */
+.cf-step__num::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(45,140,78,0.4);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.cf-step:hover .cf-step__num::after {
+  opacity: 1;
+  animation: ringPulse 1.3s ease-out infinite;
+}
+
+@keyframes ringPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(45,140,78,0.45); }
+  100% { box-shadow: 0 0 0 10px rgba(45,140,78,0); }
+}
+
+/* ── material-chip__icon y curiosidad-card__icon: glow al hover ── */
+.material-chip:hover .material-chip__icon,
+.curiosidad-card:hover .curiosidad-card__icon {
+  box-shadow: 0 0 16px 3px rgba(45,140,78,0.35);
+}
+
+/* ── acc-card: aumentar el glow del halo existente en hover, mismo color por tema ── */
+.acc-card--map:hover    { filter: drop-shadow(0 0 22px rgba(52,211,100,0.10)); }
+.acc-card--donate:hover { filter: drop-shadow(0 0 22px rgba(248,113,113,0.10)); }
+.acc-card--help:hover   { filter: drop-shadow(0 0 22px rgba(96,165,250,0.10)); }
+
+/* ── acc-card__icon-wrap: pulso de luz ambiental extra, no reemplaza el existente ── */
+.acc-card__icon-wrap {
+  position: relative;
+}
+
+.acc-card__icon-wrap::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.acc-card--map:hover    .acc-card__icon-wrap::after { opacity: 1; box-shadow: 0 0 0 0 rgba(52,211,100,0.45);  animation: ringPulseGreen 1.3s ease-out infinite; }
+.acc-card--donate:hover .acc-card__icon-wrap::after { opacity: 1; box-shadow: 0 0 0 0 rgba(248,113,113,0.45); animation: ringPulseRed 1.3s ease-out infinite; }
+.acc-card--help:hover   .acc-card__icon-wrap::after  { opacity: 1; box-shadow: 0 0 0 0 rgba(96,165,250,0.45);  animation: ringPulseBlue 1.3s ease-out infinite; }
+
+@keyframes ringPulseGreen { 0% { box-shadow: 0 0 0 0 rgba(52,211,100,0.45); } 100% { box-shadow: 0 0 0 12px rgba(52,211,100,0); } }
+@keyframes ringPulseRed   { 0% { box-shadow: 0 0 0 0 rgba(248,113,113,0.45); } 100% { box-shadow: 0 0 0 12px rgba(248,113,113,0); } }
+@keyframes ringPulseBlue  { 0% { box-shadow: 0 0 0 0 rgba(96,165,250,0.45); } 100% { box-shadow: 0 0 0 12px rgba(96,165,250,0); } }
+
+/* ──────────────────────────────────────────────────
+   4. Dark mode: intensificar levemente los glows
+   ────────────────────────────────────────────────── */
+html.dark .test-card:hover {
+  box-shadow:
+    0 6px 28px rgba(76,175,80,0.22),
+    0 0 30px rgba(76,175,80,0.28),
+    0 0 2px rgba(76,175,80,0.5);
+}
+
+html.dark .curiosidad-card:hover,
+html.dark .material-chip:hover {
+  box-shadow:
+    0 10px 26px rgba(45,140,78,0.24),
+    0 0 28px rgba(45,140,78,0.26),
+    0 0 2px rgba(45,140,78,0.45);
+}
+
+/* ──────────────────────────────────────────────────
+   5. Reduced motion: desactivar animaciones nuevas
+   ────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .btn::after,
+  .search button::after,
+  .ver-todos-btn::after,
+  .ver-producto-btn::after,
+  .cta-btn::after,
+  .newsletter-form button::after,
+  .bubble-nav__cta::after,
+  .acc-arrow::after,
+  .lang-pill::after,
+  .dm-pill::after,
+  .mini-nav a::after,
+  .redes a::after,
+  .test-card::after,
+  .curiosidad-card::after,
+  .material-chip::after,
+  .cf-step__num::after,
+  .acc-card__icon-wrap::after,
+  .cta-btn .btn-sparkle::before,
+  .cta-btn .btn-sparkle::after,
+  .bubble-nav__cta .btn-sparkle::before,
+  .bubble-nav__cta .btn-sparkle::after {
+    animation: none !important;
+  }
+}

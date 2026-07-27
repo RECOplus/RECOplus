@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <script src="darkmode.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear cuenta — RECO+</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="navbar.css">
+  <link rel="stylesheet" href="liquid-glass-fx.css">
+  <!-- Capa aditiva propia de esta página: no toca style.css ni navbar.css.
+       Reutiliza login.css tal cual (mismas clases .login-*) para que
+       registro.html sea visualmente idéntico a login.html. -->
+  <link rel="stylesheet" href="login.css">
+  <!-- Capa aditiva: sombra profunda + fondo igualado a mapa.html -->
+  <link rel="stylesheet" href="login-glass-fx.css">
+  <!-- Capa aditiva: estados de error/éxito/carga del formulario -->
+  <link rel="stylesheet" href="login-auth-fx.css">
+  <!-- Capa aditiva: chip de usuario en la navbar cuando hay sesión -->
+  <link rel="stylesheet" href="navbar-auth.css">
+</head>
+<body>
+
+<!-- ── FONDO AMBIENTAL: glow orbs + partículas, mismo lenguaje visual del sitio ── -->
+<div class="login-bg" aria-hidden="true">
+  <div class="login-orb login-orb--a"></div>
+  <div class="login-orb login-orb--b"></div>
+  <div class="login-orb login-orb--c"></div>
+  <div class="login-particles" id="loginParticles"></div>
+</div>
+
+<!-- ── BUBBLE NAVBAR (idéntica a index.html / mapa.html / login.html) ── -->
+<div class="bubble-nav-wrapper">
+  <header class="bubble-nav">
+    <div class="bubble-nav__logo">
+      <img src="img/logo modo claro.png" alt="RECO+" class="logo-light">
+      <img src="img/logo modo dark.png" alt="RECO+" class="logo-dark">
+    </div>
+
+    <nav class="bubble-nav__links">
+      <a href="https://RECOplus.github.io/rEcOPlus-Final/index.html" data-tooltip="Vuelve a la página principal." data-i18n-tooltip="nav.inicio.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M3 9.5L10 3l7 6.5V17a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M7 18v-6h6v6"/></svg>
+        <span data-i18n="nav.inicio">Inicio</span>
+      </a>
+      <a href="https://RECOplus.github.io/rEcOPlus-Final/reciclar.html" data-tooltip="Centros de reciclaje cerca de ti." data-i18n-tooltip="nav.reciclar.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M10 2a6 6 0 016 6c0 4-6 10-6 10S4 12 4 8a6 6 0 016-6z"/><circle cx="10" cy="8" r="2"/></svg>
+        <span data-i18n="nav.reciclar">Reciclar</span>
+      </a>
+      <a href="https://RECOplus.github.io/rEcOPlus-Final/donar.html" data-tooltip="Comparte lo que ya no usas y cambia vidas." data-i18n-tooltip="nav.donar.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M3 11c0-2.5 2-4 4-3l3 1.5 5-1.5c1.2-.2 2.5.6 2.5 2 0 1.2-.8 2-2 2l-3.5.5"/><path d="M3 11l2 5h3l7-4"/></svg>
+        <span data-i18n="nav.donar">Donar</span>
+      </a>
+      <a href="https://RECOplus.github.io/rEcOPlus-Final/guia.html" data-tooltip="Aprende paso a paso cómo reciclar y donar." data-i18n-tooltip="nav.guia.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><rect x="4" y="2" width="12" height="16" rx="1.5"/><path d="M4 5h12M7 2v16"/></svg>
+        <span data-i18n="nav.guia">Guía</span>
+      </a>
+      <a href="https://RECOplus.github.io/rEcOPlus-Final/blog.html" data-tooltip="Historias, tips y noticias sobre sostenibilidad." data-i18n-tooltip="nav.blog.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><rect x="3" y="3" width="14" height="14" rx="1.5"/><path d="M6 7h8M6 10h8M6 13h5"/></svg>
+        <span data-i18n="nav.blog">Blog</span>
+      </a>
+    </nav>
+
+    <div class="bubble-nav__actions navbar__spacer">
+      <div class="dm-pill" id="darkModeToggle" role="button" title="Cambiar modo claro/oscuro" aria-label="Toggle dark mode">
+        <span class="dm-pill__btn dm-pill__sun dm-sun" id="dmSunBtn">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" width="16" height="16">
+            <circle cx="10" cy="10" r="3.5"/>
+            <line x1="10" y1="2" x2="10" y2="4.5"/><line x1="10" y1="15.5" x2="10" y2="18"/>
+            <line x1="2" y1="10" x2="4.5" y2="10"/><line x1="15.5" y1="10" x2="18" y2="10"/>
+            <line x1="4.4" y1="4.4" x2="6.2" y2="6.2"/><line x1="13.8" y1="13.8" x2="15.6" y2="15.6"/>
+            <line x1="15.6" y1="4.4" x2="13.8" y2="6.2"/><line x1="6.2" y1="13.8" x2="4.4" y2="15.6"/>
+          </svg>
+        </span>
+        <span class="dm-pill__btn dm-pill__moon dm-moon" id="dmMoonBtn">
+          <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15">
+            <path d="M17.3 13.3A8 8 0 016.7 2.7a7 7 0 100 14.6 7.9 7.9 0 0010.6-4z"/>
+          </svg>
+        </span>
+      </div>
+
+      <button class="lang-pill" onclick="toggleLang()" aria-label="Cambiar idioma" data-current="es">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15">
+          <circle cx="10" cy="10" r="8"/>
+          <ellipse cx="10" cy="10" rx="3.5" ry="8"/>
+          <line x1="2" y1="10" x2="18" y2="10"/>
+        </svg>
+        <span class="lang-pill__label lang-label-es">ES</span>
+        <span class="lang-pill__label lang-label-en" style="display:none">EN</span>
+        <svg class="lang-pill__chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" width="11" height="11" stroke-linecap="round">
+          <path d="M5 7l5 5 5-5"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+</div>
+
+<!-- ── REGISTER CARD (misma estructura .login-* que login.html, para
+     heredar login.css / login-glass-fx.css / login.js sin cambios) ── -->
+<main class="login-main">
+  <div class="login-card">
+
+    <div class="login-card__head">
+      <h1 class="login-card__title" data-i18n="register.title">Crea tu cuenta</h1>
+      <p class="login-card__subtitle" data-i18n="register.subtitle">Únete y empieza a darle una segunda vida a lo que ya no usas.</p>
+    </div>
+
+    <form class="login-form" onsubmit="return false">
+      <div class="login-field">
+        <label class="login-field__label" for="registerName" data-i18n="register.name">Nombre completo</label>
+        <div class="login-field__wrap">
+          <svg class="login-field__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16">
+            <circle cx="10" cy="6.5" r="3.2"/><path d="M3.5 17c0-3.3 2.9-5.5 6.5-5.5s6.5 2.2 6.5 5.5"/>
+          </svg>
+          <input class="login-field__input" id="registerName" type="text" data-i18n="register.name.placeholder" placeholder="Tu nombre" autocomplete="name">
+        </div>
+      </div>
+
+      <div class="login-field">
+        <label class="login-field__label" for="registerEmail" data-i18n="login.email">Email</label>
+        <div class="login-field__wrap">
+          <svg class="login-field__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16">
+            <rect x="2" y="4" width="16" height="12" rx="2"/><path d="M2.5 5l7.5 6 7.5-6"/>
+          </svg>
+          <input class="login-field__input" id="registerEmail" type="email" data-i18n="login.email.placeholder" placeholder="nombre@ejemplo.com" autocomplete="email">
+        </div>
+      </div>
+
+      <div class="login-field">
+        <label class="login-field__label" for="registerPass" data-i18n="login.password">Contraseña</label>
+        <div class="login-field__wrap">
+          <svg class="login-field__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16">
+            <rect x="4" y="9" width="12" height="8" rx="2"/><path d="M6.5 9V6a3.5 3.5 0 017 0v3"/>
+          </svg>
+          <input class="login-field__input" id="registerPass" type="password" data-i18n="login.password.placeholder" placeholder="••••••••" autocomplete="new-password">
+        </div>
+      </div>
+
+      <div class="login-field">
+        <label class="login-field__label" for="registerPassConfirm" data-i18n="register.confirmPassword">Confirmar contraseña</label>
+        <div class="login-field__wrap">
+          <svg class="login-field__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16">
+            <rect x="4" y="9" width="12" height="8" rx="2"/><path d="M6.5 9V6a3.5 3.5 0 017 0v3"/>
+          </svg>
+          <input class="login-field__input" id="registerPassConfirm" type="password" data-i18n="login.password.placeholder" placeholder="••••••••" autocomplete="new-password">
+        </div>
+      </div>
+
+      <button class="bubble-nav__cta login-submit" type="submit">
+        <span data-i18n="register.submit">Crear cuenta</span>
+        <span class="login-submit__shine" aria-hidden="true"></span>
+        <span class="login-submit__sparkle" aria-hidden="true"></span>
+      </button>
+    </form>
+
+    <div class="login-sep">
+      <span class="login-sep__line"></span>
+      <span class="login-sep__text" data-i18n="login.or">O continúa con</span>
+      <span class="login-sep__line"></span>
+    </div>
+
+    <div class="login-social">
+      <button class="login-social__btn" type="button">
+        <svg viewBox="0 0 20 20" width="17" height="17"><path fill="#4285F4" d="M19.6 10.23c0-.68-.06-1.32-.17-1.94H10v3.68h5.4a4.62 4.62 0 01-2 3.03v2.5h3.23c1.9-1.75 2.97-4.32 2.97-7.27z"/><path fill="#34A853" d="M10 20c2.7 0 4.96-.9 6.62-2.43l-3.23-2.5c-.9.6-2.05.96-3.39.96-2.6 0-4.8-1.76-5.6-4.12H1.06v2.59A10 10 0 0010 20z"/><path fill="#FBBC05" d="M4.4 11.9a5.99 5.99 0 010-3.8V5.5H1.06a10 10 0 000 8.99l3.34-2.6z"/><path fill="#EA4335" d="M10 3.96c1.47 0 2.79.5 3.83 1.5l2.87-2.87C14.95.99 12.7 0 10 0A10 10 0 001.06 5.5l3.34 2.6C5.2 5.72 7.4 3.96 10 3.96z"/></svg>
+        <span data-i18n="login.google">Google</span>
+      </button>
+      <button class="login-social__btn" type="button">
+        <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor"><path d="M13.9 10.4c0-2.02 1.65-2.99 1.72-3.03-0.94-1.37-2.4-1.56-2.92-1.58-1.24-.13-2.43.73-3.06.73-.64 0-1.6-.71-2.64-.69-1.36.02-2.62.79-3.32 2-1.42 2.46-.36 6.1 1.02 8.1.67.98 1.48 2.08 2.53 2.04 1.02-.04 1.4-.66 2.63-.66 1.22 0 1.57.66 2.64.64 1.09-.02 1.79-.99 2.46-1.98.77-1.14 1.09-2.24 1.11-2.3-.02-.01-2.13-.82-2.15-3.27z"/><path d="M11.8 4.24c.56-.68.94-1.62.83-2.56-.81.03-1.79.54-2.37 1.21-.52.6-.97 1.56-.85 2.48.9.07 1.82-.46 2.39-1.13z"/></svg>
+        <span data-i18n="login.apple">Apple</span>
+      </button>
+    </div>
+
+    <p class="login-footer-link">
+      <span data-i18n="register.hasAccount">¿Ya tienes cuenta?</span>
+      <a href="https://RECOplus.github.io/rEcOPlus-Final/login.html" data-i18n="register.login">Inicia sesión</a>
+    </p>
+
+  </div>
+</main>
+
+<footer class="login-footer">
+  <span class="login-footer__brand" data-i18n="login.brand">RECO+</span>
+  <span class="login-footer__copy">© 2026 RECO+ · Panamá</span>
+</footer>
+
+<!-- Supabase debe cargarse ANTES de supabase-config.js / auth.js -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="auth.js"></script>
+
+<script src="i18n.js"></script>
+<script src="nav-preview.js"></script>
+<script src="search.js"></script>
+<script src="login.js"></script>
+<!-- Capas aditivas: conectan el form real a Supabase y la navbar a la sesión -->
+<script src="registro-auth.js"></script>
+<script src="navbar-auth.js"></script>
+</body>
+</html>

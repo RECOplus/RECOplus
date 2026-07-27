@@ -1,0 +1,278 @@
+/* ═══════════════════════════════════════════════════════════════
+   RECO+ — BUBBLE NAVBAR (shared across all pages)
+   Variables CSS para modo claro/oscuro, estilos del navbar burbuja,
+   dark-mode pill, language pill, CTA button y responsive.
+═══════════════════════════════════════════════════════════════ */
+
+/* ── MODO CLARO (default) ── */
+:root {
+  --nav-bg:               rgba(242, 250, 244, 0.55);
+  --nav-border:           rgba(168, 218, 181, 0.55);
+  --nav-shadow:           0 8px 32px rgba(30, 80, 40, 0.14), 0 2px 8px rgba(30, 80, 40, 0.08);
+  --nav-link-color:       #2a4a34;
+  --nav-link-hover-bg:    rgba(45, 140, 78, 0.10);
+  --nav-link-hover-color: #1a5c2a;
+  --nav-link-active-bg:   rgba(45, 140, 78, 0.14);
+  --nav-lang-bg:          rgba(45, 140, 78, 0.08);
+  --nav-lang-border:      rgba(45, 140, 78, 0.22);
+  --nav-lang-color:       #2a4a34;
+  --nav-dm-bg:            rgba(45, 140, 78, 0.08);
+  --nav-dm-border:        rgba(45, 140, 78, 0.22);
+  --nav-cta-bg:           #2d8c4e;
+  --nav-cta-color:        #fff;
+  --nav-cta-hover:        #1a5c2a;
+  --nav-cta-glass-bg:          rgba(45, 140, 78, 0.55);
+  --nav-cta-glass-border:      rgba(126, 232, 154, 0.45);
+  --nav-cta-glass-hover:       rgba(45, 140, 78, 0.72);
+  --nav-cta-glass-border-hover: rgba(126, 232, 154, 0.70);
+}
+
+/* ── MODO OSCURO ── */
+html.dark {
+  --nav-bg:               rgba(12, 22, 14, 0.55);
+  --nav-border:           rgba(61, 170, 96, 0.20);
+  --nav-shadow:           0 8px 32px rgba(0, 0, 0, 0.40), 0 2px 8px rgba(0, 0, 0, 0.28);
+  --nav-link-color:       rgba(212, 234, 216, 0.80);
+  --nav-link-hover-bg:    rgba(255, 255, 255, 0.08);
+  --nav-link-hover-color: #d4ead8;
+  --nav-link-active-bg:   rgba(255, 255, 255, 0.11);
+  --nav-lang-bg:          rgba(255, 255, 255, 0.07);
+  --nav-lang-border:      rgba(255, 255, 255, 0.15);
+  --nav-lang-color:       rgba(212, 234, 216, 0.80);
+  --nav-dm-bg:            rgba(255, 255, 255, 0.07);
+  --nav-dm-border:        rgba(255, 255, 255, 0.15);
+  --nav-cta-bg:           #fff;
+  --nav-cta-color:        #eafff1;
+  --nav-cta-hover:        #e8f5ec;
+  --nav-cta-glass-bg:          rgba(61, 170, 96, 0.28);
+  --nav-cta-glass-border:      rgba(111, 207, 138, 0.40);
+  --nav-cta-glass-hover:       rgba(61, 170, 96, 0.42);
+  --nav-cta-glass-border-hover: rgba(111, 207, 138, 0.65);
+}
+
+/* ── WRAPPER ── */
+.bubble-nav-wrapper {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: calc(100% - 48px);
+  max-width: 1160px;
+}
+
+/* ── PILL (navbar principal) ── */
+.bubble-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--nav-bg);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid var(--nav-border);
+  border-radius: 999px;
+  padding: 10px 14px 10px 20px;
+  box-shadow: var(--nav-shadow);
+  gap: 16px;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+/* ── LOGO ──
+   Dos <img>: .logo-light y .logo-dark, superpuestas en el mismo
+   contenedor y alternadas por opacidad según el tema (html.dark).
+   Idéntico al logo del index (mismo recorte 140x40 + escala 126px). */
+.bubble-nav__logo {
+  position: relative;
+  height: 40px;
+  width: 140px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.bubble-nav__logo img {
+  height: 126px;
+  width: auto;
+  display: block;
+  flex-shrink: 0;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+/* Modo claro: se ve el logo "dark"; modo oscuro: se ve el logo "light" */
+html:not(.dark) .logo-dark  { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; }
+html:not(.dark) .logo-light { opacity: 0; transform: translate(-50%, -50%) scale(0.92); pointer-events: none; }
+html.dark .logo-light { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; }
+html.dark .logo-dark  { opacity: 0; transform: translate(-50%, -50%) scale(0.92); pointer-events: none; }
+
+/* Feedback de click al togglear el tema: usa una clase (no inline
+   style) para no pisar el translate(-50%,-50%) que centra el logo;
+   si se sobreescribiera "transform" directo por JS, el logo saltaría
+   de posición durante el pulso. */
+.bubble-nav__logo img.logo-pulse {
+  transform: translate(-50%, -50%) scale(0.92) !important;
+}
+
+/* ── LINKS DE NAVEGACIÓN ── */
+.bubble-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  justify-content: center;
+}
+
+.bubble-nav__links a {
+  font-family: 'DM Sans', 'Arial', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--nav-link-color);
+  text-decoration: none;
+  padding: 6px 11px;
+  border-radius: 999px;
+  white-space: nowrap;
+  transition: color 0.18s, background 0.18s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.bubble-nav__links a svg {
+  opacity: 0.75;
+  flex-shrink: 0;
+  transition: opacity 0.18s;
+}
+
+.bubble-nav__links a:hover {
+  color: var(--nav-link-hover-color);
+  background: var(--nav-link-hover-bg);
+}
+
+.bubble-nav__links a:hover svg { opacity: 1; }
+
+.bubble-nav__links a.active {
+  color: var(--nav-link-hover-color);
+  background: var(--nav-link-active-bg);
+  font-weight: 600;
+}
+
+.bubble-nav__links a.active svg { opacity: 1; }
+
+/* ── ACCIONES DERECHAS (dark mode pill + lang pill + CTA) ── */
+.bubble-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ── DARK MODE PILL ── */
+.dm-pill {
+  display: inline-flex;
+  align-items: center;
+  background: var(--nav-dm-bg);
+  border: 1px solid var(--nav-dm-border);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s;
+}
+
+.dm-pill__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  transition: background 0.2s, color 0.2s, opacity 0.2s;
+  color: var(--nav-link-color);
+  opacity: 0.45;
+}
+
+.dm-pill__btn.dm-pill--active {
+  opacity: 1;
+  background: rgba(45, 140, 78, 0.18);
+  color: var(--nav-link-hover-color);
+}
+
+html.dark .dm-pill__btn.dm-pill--active {
+  background: rgba(61, 170, 96, 0.22);
+  color: #6fcf8a;
+}
+
+/* Estado del sol/luna según modo */
+html:not(.dark) .dm-pill__sun { opacity: 1; background: rgba(45,140,78,0.15); color: #d4a017; }
+html:not(.dark) .dm-pill__moon { opacity: 0.38; }
+html.dark .dm-pill__moon { opacity: 1; background: rgba(61,170,96,0.18); color: #c8d8ff; }
+html.dark .dm-pill__sun { opacity: 0.38; }
+
+/* ── LANGUAGE PILL ──
+   Alto igualado al de .dm-pill (34px: padding 3px + botones de 28px)
+   para que ambos toggles del nav se vean del mismo tamaño. */
+.lang-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 34px;
+  box-sizing: border-box;
+  background: var(--nav-lang-bg);
+  border: 1px solid var(--nav-lang-border);
+  border-radius: 999px;
+  padding: 5px 14px;
+  cursor: pointer;
+  font-family: 'DM Sans', 'Arial', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--nav-lang-color);
+  transition: background 0.18s;
+  letter-spacing: 0.02em;
+}
+
+.lang-pill:hover { background: var(--nav-link-hover-bg); }
+.lang-pill svg { opacity: 0.8; flex-shrink: 0; }
+.lang-pill__chevron { opacity: 0.6; }
+.lang-pill__label { color: var(--nav-lang-color); }
+
+/* ── CTA BUTTON ── */
+.bubble-nav__cta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--nav-cta-glass-bg, var(--nav-cta-bg));
+  color: var(--nav-cta-color);
+  border: 1px solid var(--nav-cta-glass-border, transparent);
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-family: 'DM Sans', 'Arial', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.16), 0 4px 16px rgba(45,140,78,0.18);
+  transform: translateY(0) scale(1);
+  transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.25s, transform 0.15s;
+}
+
+.bubble-nav__cta:hover {
+  background: var(--nav-cta-glass-hover, var(--nav-cta-hover));
+  border-color: var(--nav-cta-glass-border-hover, var(--nav-cta-glass-border, transparent));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), 0 8px 26px rgba(45,140,78,0.30);
+  transform: translateY(-2px) scale(1.025);
+}
+
+.bubble-nav__cta:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), inset 0 2px 4px rgba(0,0,0,0.18), 0 1px 3px rgba(0,0,0,0.12);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 860px) {
+  .bubble-nav-wrapper { width: calc(100% - 24px); top: 10px; }
+  .bubble-nav__links { display: none; }
+  .bubble-nav { padding: 10px 14px; }
+}

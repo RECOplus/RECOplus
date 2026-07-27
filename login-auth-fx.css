@@ -1,0 +1,111 @@
+/* ══════════════════════════════════════════════════════════════
+   LOGIN-AUTH-FX.CSS
+   Capa ADITIVA sobre login.css / login-glass-fx.css. No modifica
+   ningún archivo existente. Agrega los estados visuales que login.css
+   no tenía porque el form no estaba conectado a nada: mensajes de
+   error/éxito, estado de carga en el botón submit, y helper de campo
+   inválido — todo con el mismo lenguaje visual liquid glass del sitio.
+
+   Cárgalo DESPUÉS de login-glass-fx.css:
+   <link rel="stylesheet" href="login-auth-fx.css">
+═══════════════════════════════════════════════════════════════ */
+
+/* ── MENSAJE DE ALERTA (error o éxito), inyectado por JS arriba del form ── */
+.login-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  line-height: 1.4;
+  animation: loginAlertIn 0.3s cubic-bezier(.4,0,.2,1) both;
+}
+.login-alert svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+@keyframes loginAlertIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.login-alert--error {
+  background: rgba(220, 70, 70, 0.12);
+  border: 1px solid rgba(220, 70, 70, 0.32);
+  color: #ff8a8a;
+}
+.login-alert--success {
+  background: rgba(45, 140, 78, 0.14);
+  border: 1px solid rgba(94, 207, 130, 0.35);
+  color: #7ee6a0;
+}
+
+html:not(.dark) .login-alert--error {
+  background: rgba(220, 70, 70, 0.08);
+  border-color: rgba(200, 60, 60, 0.30);
+  color: #b23434;
+}
+html:not(.dark) .login-alert--success {
+  background: rgba(45, 140, 78, 0.10);
+  border-color: rgba(45, 140, 78, 0.30);
+  color: #1a5c2a;
+}
+
+/* ── CAMPO INVÁLIDO ── */
+.login-field--invalid .login-field__input {
+  border-color: rgba(220, 70, 70, 0.55) !important;
+  box-shadow: 0 0 0 4px rgba(220, 70, 70, 0.12) !important;
+}
+.login-field--invalid .login-field__icon {
+  color: rgba(220, 70, 70, 0.75) !important;
+}
+
+/* ── ESTADO DE CARGA DEL BOTÓN SUBMIT ──
+   Oculta el texto y el ícono, muestra un spinner circular. */
+.login-submit[data-loading="true"] {
+  pointer-events: none;
+  opacity: 0.85;
+}
+.login-submit[data-loading="true"] > span:not(.login-submit__spinner) {
+  visibility: hidden;
+}
+.login-submit__spinner {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  animation: loginSpin 0.7s linear infinite;
+}
+.login-submit[data-loading="true"] .login-submit__spinner {
+  display: block;
+}
+@keyframes loginSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── ESTADO DE CARGA DE BOTONES SOCIALES ── */
+.login-social__btn[data-loading="true"] {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* ── DESHABILITADO GENÉRICO (mientras se procesa el form) ── */
+.login-field__input:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  .login-alert { animation: none !important; }
+  .login-submit__spinner { animation: none !important; }
+}

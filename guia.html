@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <script src="darkmode.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RECO+ | Guía</title>
+  <link rel="stylesheet" href="paginaguiastyle.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<style>
+/* ── BUBBLE NAV — CSS variables for light/dark ── */
+
+/* MODO CLARO */
+:root {
+  --nav-bg:               rgba(242, 250, 244, 0.55);
+  --nav-border:           rgba(168, 218, 181, 0.55);
+  --nav-shadow:           0 8px 32px rgba(30, 80, 40, 0.14), 0 2px 8px rgba(30, 80, 40, 0.08);
+  --nav-link-color:       #2a4a34;
+  --nav-link-hover-bg:    rgba(45, 140, 78, 0.10);
+  --nav-link-hover-color: #1a5c2a;
+  --nav-link-active-bg:   rgba(45, 140, 78, 0.14);
+  --nav-lang-bg:          rgba(45, 140, 78, 0.08);
+  --nav-lang-border:      rgba(45, 140, 78, 0.22);
+  --nav-lang-color:       #2a4a34;
+  --nav-dm-bg:            rgba(45, 140, 78, 0.08);
+  --nav-dm-border:        rgba(45, 140, 78, 0.22);
+  --nav-cta-bg:           #2d8c4e;
+  --nav-cta-color:        #fff;
+  --nav-cta-hover:        #1a5c2a;
+}
+
+/* MODO OSCURO */
+html.dark {
+  --nav-bg:               rgba(12, 22, 14, 0.55);
+  --nav-border:           rgba(61, 170, 96, 0.20);
+  --nav-shadow:           0 8px 32px rgba(0, 0, 0, 0.40), 0 2px 8px rgba(0, 0, 0, 0.28);
+  --nav-link-color:       rgba(212, 234, 216, 0.80);
+  --nav-link-hover-bg:    rgba(255, 255, 255, 0.08);
+  --nav-link-hover-color: #d4ead8;
+  --nav-link-active-bg:   rgba(255, 255, 255, 0.11);
+  --nav-lang-bg:          rgba(255, 255, 255, 0.07);
+  --nav-lang-border:      rgba(255, 255, 255, 0.15);
+  --nav-lang-color:       rgba(212, 234, 216, 0.80);
+  --nav-dm-bg:            rgba(255, 255, 255, 0.07);
+  --nav-dm-border:        rgba(255, 255, 255, 0.15);
+  --nav-cta-bg:           #fff;
+  --nav-cta-color:        #111;
+  --nav-cta-hover:        #e8f5ec;
+}
+
+/* ── WRAPPER ── */
+.bubble-nav-wrapper {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: calc(100% - 48px);
+  max-width: 1160px;
+}
+
+/* ── PILL ── */
+.bubble-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--nav-bg);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid var(--nav-border);
+  border-radius: 999px;
+  padding: 10px 14px 10px 20px;
+  box-shadow: var(--nav-shadow);
+  gap: 16px;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+/* ── LOGO ── */
+.bubble-nav__logo img {
+  height: 34px;
+  width: auto;
+  display: block;
+  flex-shrink: 0;
+  transition: filter 0.3s;
+}
+
+/* ── LINKS ── */
+.bubble-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  justify-content: center;
+}
+
+.bubble-nav__links a {
+  font-family: 'DM Sans', 'Arial', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--nav-link-color);
+  text-decoration: none;
+  padding: 6px 11px;
+  border-radius: 999px;
+  white-space: nowrap;
+  transition: color 0.18s, background 0.18s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.bubble-nav__links a svg {
+  opacity: 0.75;
+  flex-shrink: 0;
+  transition: opacity 0.18s;
+}
+
+.bubble-nav__links a:hover {
+  color: var(--nav-link-hover-color);
+  background: var(--nav-link-hover-bg);
+}
+
+.bubble-nav__links a:hover svg { opacity: 1; }
+
+.bubble-nav__links a.active {
+  color: var(--nav-link-hover-color);
+  background: var(--nav-link-active-bg);
+  font-weight: 600;
+}
+
+.bubble-nav__links a.active svg { opacity: 1; }
+
+/* ── RIGHT ACTIONS ── */
+.bubble-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ── DARK MODE PILL ── */
+.dm-pill {
+  display: inline-flex;
+  align-items: center;
+  background: var(--nav-dm-bg);
+  border: 1px solid var(--nav-dm-border);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s;
+}
+
+.dm-pill__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  transition: background 0.2s, color 0.2s, opacity 0.2s;
+  color: var(--nav-link-color);
+  opacity: 0.45;
+}
+
+html:not(.dark) .dm-pill__sun { opacity: 1; background: rgba(45,140,78,0.15); color: #d4a017; }
+html:not(.dark) .dm-pill__moon { opacity: 0.38; }
+html.dark .dm-pill__moon { opacity: 1; background: rgba(61,170,96,0.18); color: #c8d8ff; }
+html.dark .dm-pill__sun { opacity: 0.38; }
+
+/* ── LANG PILL ── */
+.lang-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--nav-lang-bg);
+  border: 1px solid var(--nav-lang-border);
+  border-radius: 999px;
+  padding: 5px 11px 5px 9px;
+  cursor: pointer;
+  font-family: 'DM Sans', 'Arial', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--nav-lang-color);
+  transition: background 0.18s;
+  letter-spacing: 0.02em;
+}
+
+.lang-pill:hover { background: var(--nav-link-hover-bg); }
+.lang-pill svg { opacity: 0.8; flex-shrink: 0; }
+.lang-pill__chevron { opacity: 0.6; }
+.lang-pill__label { color: var(--nav-lang-color); }
+
+/* ── CTA BUTTON ── */
+.bubble-nav__cta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--nav-cta-bg);
+  color: var(--nav-cta-color);
+  border: none;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-family: 'DM Sans', 'Arial', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s, transform 0.15s;
+}
+
+.bubble-nav__cta:hover {
+  background: var(--nav-cta-hover);
+  transform: translateY(-1px);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 860px) {
+  .bubble-nav-wrapper { width: calc(100% - 24px); top: 10px; }
+  .bubble-nav__links { display: none; }
+  .bubble-nav { padding: 10px 14px; }
+}
+</style>
+<!-- Capa aditiva: el CTA "Únete" ahora es <a>, no <button> -->
+<link rel="stylesheet" href="nav-cta-link-fix.css">
+<script>
+/* ── DM-PILL: manejado por darkmode.js (injectToggleButton conecta el .dm-pill) ── */
+
+/* ── LANG PILL ── */
+(function () {
+  function syncLangPill(lang) {
+    var esLabel = document.querySelector('.lang-pill .lang-label-es');
+    var enLabel = document.querySelector('.lang-pill .lang-label-en');
+    var btn     = document.querySelector('.lang-pill');
+    if (!btn) return;
+    if (lang === 'en') {
+      if (esLabel) esLabel.style.display = 'none';
+      if (enLabel) enLabel.style.display = 'inline';
+      btn.setAttribute('data-current', 'en');
+    } else {
+      if (esLabel) esLabel.style.display = 'inline';
+      if (enLabel) enLabel.style.display = 'none';
+      btn.setAttribute('data-current', 'es');
+    }
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    var saved = localStorage.getItem('reco-lang') || 'es';
+    syncLangPill(saved);
+    var origToggle = window.toggleLang;
+    if (origToggle) {
+      window.toggleLang = function () {
+        origToggle();
+        syncLangPill(localStorage.getItem('reco-lang') || 'es');
+      };
+    }
+  });
+  window.addEventListener('load', function () {
+    var origToggle = window.toggleLang;
+    if (origToggle && !origToggle._patched) {
+      window.toggleLang = function () {
+        origToggle();
+        syncLangPill(localStorage.getItem('reco-lang') || 'es');
+      };
+      window.toggleLang._patched = true;
+    }
+  });
+})();
+</script>
+<!-- Capa aditiva: chip de usuario con foto/avatar + menú cuando hay sesión -->
+<link rel="stylesheet" href="navbar-auth.css">
+</head>
+<body>
+
+ <!-- ── BUBBLE NAVBAR ── -->
+<div class="bubble-nav-wrapper">
+  <header class="bubble-nav">
+    <div class="bubble-nav__logo">
+      <img src="img/logo png nombre.png" alt="RECO+">
+    </div>
+
+    <nav class="bubble-nav__links">
+      <a href="https://RECOplus.github.io/rEcOPlus-Final/index.html" data-tooltip="Vuelve a la página principal." data-i18n-tooltip="nav.inicio.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M3 9.5L10 3l7 6.5V17a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M7 18v-6h6v6"/></svg>
+        <span data-i18n="nav.inicio">Inicio</span>
+      </a>
+      <a href="https://RECOplus.github.io/rEcOPlus-Final/reciclar.html" data-tooltip="Centros de reciclaje cerca de ti." data-i18n-tooltip="nav.reciclar.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M10 2a6 6 0 016 6c0 4-6 10-6 10S4 12 4 8a6 6 0 016-6z"/><circle cx="10" cy="8" r="2"/></svg>
+        <span data-i18n="nav.reciclar">Reciclar</span>
+      </a>
+      <a href="https://RECOplus.github.io/rEcOPlus-Final/donar.html" data-tooltip="Comparte lo que ya no usas y cambia vidas." data-i18n-tooltip="nav.donar.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M3 11c0-2.5 2-4 4-3l3 1.5 5-1.5c1.2-.2 2.5.6 2.5 2 0 1.2-.8 2-2 2l-3.5.5"/><path d="M3 11l2 5h3l7-4"/></svg>
+        <span data-i18n="nav.donar">Donar</span>
+      </a>
+      <a href="https://RECOplus.github.io/rEcOPlus-Final/guia.html" class="active" data-tooltip="Aprende paso a paso cómo reciclar y donar." data-i18n-tooltip="nav.guia.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><rect x="4" y="2" width="12" height="16" rx="1.5"/><path d="M4 5h12M7 2v16"/></svg>
+        <span data-i18n="nav.guia">Guía</span>
+      </a>
+      <a href="https://RECOplus.github.io/rEcOPlus-Final/contacto.html" data-tooltip="Escríbenos, respondemos en menos de 24h." data-i18n-tooltip="nav.contacto.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><rect x="2" y="5" width="16" height="12" rx="1.5"/><path d="M2 7l8 5 8-5"/></svg>
+        <span data-i18n="nav.contacto">Contacto</span>
+      </a>
+      <a href="https://RECOplus.github.io/rEcOPlus-Final/blog.html" data-tooltip="Historias, tips y noticias sobre sostenibilidad." data-i18n-tooltip="nav.blog.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><rect x="3" y="3" width="14" height="14" rx="1.5"/><path d="M6 7h8M6 10h8M6 13h5"/></svg>
+        <span data-i18n="nav.blog">Blog</span>
+      </a>
+    </nav>
+
+    <!-- Right side: dark mode pill + lang pill + CTA -->
+    <!-- navbar__spacer keeps compatibility with darkmode.js auto-injection -->
+    <div class="bubble-nav__actions navbar__spacer">
+
+      <!-- Dark mode pill -->
+      <div class="dm-pill" id="darkModeToggle" role="button" title="Cambiar modo claro/oscuro" aria-label="Toggle dark mode">
+        <span class="dm-pill__btn dm-pill__sun dm-sun" id="dmSunBtn">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" width="16" height="16">
+            <circle cx="10" cy="10" r="3.5"/>
+            <line x1="10" y1="2" x2="10" y2="4.5"/><line x1="10" y1="15.5" x2="10" y2="18"/>
+            <line x1="2" y1="10" x2="4.5" y2="10"/><line x1="15.5" y1="10" x2="18" y2="10"/>
+            <line x1="4.4" y1="4.4" x2="6.2" y2="6.2"/><line x1="13.8" y1="13.8" x2="15.6" y2="15.6"/>
+            <line x1="15.6" y1="4.4" x2="13.8" y2="6.2"/><line x1="6.2" y1="13.8" x2="4.4" y2="15.6"/>
+          </svg>
+        </span>
+        <span class="dm-pill__btn dm-pill__moon dm-moon" id="dmMoonBtn">
+          <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15">
+            <path d="M17.3 13.3A8 8 0 016.7 2.7a7 7 0 100 14.6 7.9 7.9 0 0010.6-4z"/>
+          </svg>
+        </span>
+      </div>
+
+      <!-- Language pill -->
+      <button class="lang-pill" onclick="toggleLang()" aria-label="Cambiar idioma" data-current="es">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15">
+          <circle cx="10" cy="10" r="8"/>
+          <ellipse cx="10" cy="10" rx="3.5" ry="8"/>
+          <line x1="2" y1="10" x2="18" y2="10"/>
+        </svg>
+        <span class="lang-pill__label lang-label-es">ES</span>
+        <span class="lang-pill__label lang-label-en" style="display:none">EN</span>
+        <svg class="lang-pill__chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" width="11" height="11" stroke-linecap="round">
+          <path d="M5 7l5 5 5-5"/>
+        </svg>
+      </button>
+
+      <a href="https://RECOplus.github.io/rEcOPlus-Final/login.html" class="bubble-nav__cta" data-i18n="nav.unete">
+        <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z"/></svg>
+        Únete
+      </a>
+
+    </div>
+  </header>
+</div>
+  <!-- ========== HERO ========== -->
+  <section class="hero">
+    <div class="hero__content">
+      <h1 class="hero__title" data-i18n="guia.hero.title">Guía</h1>
+      <p class="hero__subtitle" data-i18n="guia.hero.subtitle">
+        Todo lo que necesitas saber para conectar,<br>
+        reciclar y transformar tu comunidad.
+      </p>
+      <div class="hero__divider"></div>
+      <div class="hero__badge">
+        <span class="badge-leaf"><img src="img/reciclaje.png" alt="reciclaje"></span>
+        <span data-i18n="guia.hero.badge">Aprende, actúa y genera impacto positivo.</span>
+      </div>
+    </div>
+    <div class="hero__illustration">
+      <div class="hero__float-icons">
+        <span class="float-icon fi--recycle"><img src="img/reciclaje.png" alt="reciclaje"></span>
+        <span class="float-icon fi--pin"><img src="img/ubicacion v2.png" alt="ubicación"></span>
+        <span class="float-icon fi--heart"><img src="img/mano con corazon.png" alt="corazón"></span>
+      </div>
+      <img src="img/banner guia.png" alt="banner guía" class="hero__banner-img">
+    </div>
+  </section>
+
+  <!-- ========== STEPS INTRO ========== -->
+  <section class="steps-intro">
+    <p class="steps-intro__text">
+      <img src="img/librito con hoja.png" alt="libreto con hoja">
+      <span data-i18n="guia.steps.intro"><strong>Explora nuestras guías prácticas en solo <span class="highlight">3 pasos clave</span></strong></span>
+      <span class="steps-intro__wave">〰</span>
+    </p>
+  </section>
+
+  <!-- ========== GUIDE CARDS ========== -->
+  <section class="cards">
+
+    <!-- Card 1 -->
+    <article class="card">
+      <div class="card__header">
+        <span class="card__number">1</span>
+        <span class="card__icon"><img src="img/ubicacion v2.png" alt="ubicación"></span>
+        <h2 class="card__title" data-i18n="guia.card1.title">Cómo encontrar<br>puntos de reciclaje</h2>
+      </div>
+      <p class="card__desc" data-i18n="guia.card1.desc">
+        Descubre cómo ubicar centros de reciclaje cercanos y contribuir al cuidado del planeta.
+      </p>
+      <ul class="card__list">
+        <li data-i18n="guia.card1.li1">✅ Usa el mapa interactivo</li>
+        <li data-i18n="guia.card1.li2">✅ Filtra por tipo de material</li>
+        <li data-i18n="guia.card1.li3">✅ Obtén direcciones y horarios</li>
+      </ul>
+      <a href="https://RECOplus.github.io/rEcOPlus-Final/mapa.html" class="card__link" data-i18n="guia.card1.cta">Ver guía completa →</a>
+      <div class="card__illustration card__illustration--phone">
+        <div class="phone-mockup">
+          <div class="phone-screen"><img src="img/celular con ubicacion.png" alt="ubicación"></div>
+        </div>
+        <div class="card__deco-leaf"></div>
+      </div>
+    </article>
+
+    <!-- Card 2 -->
+    <article class="card">
+      <div class="card__header">
+        <span class="card__number">2</span>
+        <span class="card__icon"><img src="img/corazon.png" alt="corazón"></span>
+        <h2 class="card__title" data-i18n="guia.card2.title">Cómo donar o<br>solicitar ayuda</h2>
+      </div>
+      <p class="card__desc" data-i18n="guia.card2.desc">
+        Conecta con tu comunidad donando objetos o pidiendo ayuda cuando lo necesites.
+      </p>
+      <ul class="card__list">
+        <li data-i18n="guia.card2.li1">✅ Publica tu solicitud o donación</li>
+        <li data-i18n="guia.card2.li2">✅ Conecta con personas cercanas</li>
+        <li data-i18n="guia.card2.li3">✅ Genera impacto social</li>
+      </ul>
+      <a href="https://RECOplus.github.io/rEcOPlus-Final/guia.html" class="card__link" data-i18n="guia.card2.cta">Ver guía completa →</a>
+      <div class="card__illustration card__illustration--box">
+        <div class="donation-box"><img src="img/caja.png" alt="caja"></div>
+        <div class="card__deco-leaf"></div>
+      </div>
+    </article>
+
+    <!-- Card 3 -->
+    <article class="card">
+      <div class="card__header">
+        <span class="card__number">3</span>
+        <span class="card__icon"><img src="img/manos v2.png" alt="manos"></span>
+        <h2 class="card__title" data-i18n="guia.card3.title">Cómo pagar y obtener<br>beneficios premium</h2>
+      </div>
+      <p class="card__desc" data-i18n="guia.card3.desc">
+        Conoce las opciones de pago disponibles y disfruta de beneficios exclusivos en RECO+.
+      </p>
+      <ul class="card__list">
+        <li data-i18n="guia.card3.li1">✅ Métodos de pago seguros</li>
+        <li data-i18n="guia.card3.li2">✅ Beneficios por ser premium</li>
+        <li data-i18n="guia.card3.li3">✅ Gestiona tu suscripción</li>
+      </ul>
+      <a href="#" class="card__link" data-i18n="guia.card3.cta">Ver guía completa →</a>
+      <div class="card__illustration card__illustration--card">
+        <span class="credit-card"><img src="img/librito con hoja.png" alt="tarjeta de crédito"></span>
+        <div class="card__deco-leaf">🌿</div>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- ========== CÓMO FUNCIONA ========== -->
+  <section class="como-funciona">
+    <h2 data-i18n="guia.como.title">¿Cómo funciona la Tienda EcoTech?</h2>
+    <div class="pasos">
+      <div class="paso">
+        <div class="paso-num">1</div>
+        <div class="paso-icono">📱</div>
+        <h3 data-i18n="guia.paso1.title">Publica tu producto</h3>
+        <p data-i18n="guia.paso1.desc">Sube fotos, describe tu producto y establece tu precio.</p>
+      </div>
+      <div class="paso-arrow">→</div>
+      <div class="paso">
+        <div class="paso-num">2</div>
+        <div class="paso-icono">💬</div>
+        <h3 data-i18n="guia.paso2.title">Encuentra compradores</h3>
+        <p data-i18n="guia.paso2.desc">Personas interesadas te contactarán a través de la plataforma.</p>
+      </div>
+      <div class="paso-arrow">→</div>
+      <div class="paso">
+        <div class="paso-num">3</div>
+        <div class="paso-icono">💵</div>
+        <h3 data-i18n="guia.paso3.title">Gana dinero reciclando</h3>
+        <p data-i18n="guia.paso3.desc">Cierra la venta y recibe tu dinero. Nosotros tomamos una pequeña comisión para mantener la plataforma.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ========== HELP BANNER ========== -->
+    <div class="help-banner__globe"><img src="img/mundo.png" alt="planeta"></div>
+    <div class="help-banner__text">
+      <h3 class="help-banner__title" data-i18n="guia.help.title">¿Necesitas más ayuda?</h3>
+      <p class="help-banner__subtitle" data-i18n="guia.help.subtitle">
+        Estamos aquí para acompañarte en cada paso<br>hacia un mundo más sostenible.
+      </p>
+    </div>
+    <div class="help-banner__features">
+      <div class="help-feature">
+        <span class="help-feature__icon"><img src="img/mensaje.png" alt="mensaje"></span>
+        <span class="help-feature__label" data-i18n="guia.help.soporte">Soporte<br>personalizado</span>
+      </div>
+      <div class="help-feature__divider"></div>
+      <div class="help-feature">
+        <span class="help-feature__icon"><img src="img/librito con hoja.png" alt="recursos"></span>
+        <span class="help-feature__label" data-i18n="guia.help.recursos">Recursos y<br>tutoriales</span>
+      </div>
+      <div class="help-feature__divider"></div>
+      <div class="help-feature">
+        <span class="help-feature__icon"><img src="img/personas.png" alt="personas"></span>
+        <span class="help-feature__label" data-i18n="guia.help.comunidad">Comunidad<br>activa</span>
+      </div>
+    </div>
+    <a href="#" class="help-banner__cta" data-i18n="guia.help.cta">Ir a Centro de Ayuda →</a>
+  </section>
+
+  <section class="tienda" id="tienda">
+    <div class="tienda-header">
+        <div class="tienda-title">
+            <span class="tienda-icon"><img src="img/bolsa.png" alt="tienda"></span>
+            <div>
+                <h2 data-i18n="tienda.title">Tienda RECOTech</h2>
+                <p data-i18n="tienda.subtitle">Reutiliza tecnología y reduce residuos.</p>
+            </div>
+        </div>
+        <a href="#" class="ver-todos-btn" data-i18n="tienda.ver-todos">Ver todos los productos →</a>
+    </div>
+
+    <div class="productos-carousel-wrapper">
+    <div class="productos-grid">
+
+        <div class="producto destacado-badge">
+            <span class="badge" data-i18n="tienda.badge">Destacado</span>
+            <div class="producto-img"><img src="https://www.laptopcentercr.com/cdn/shop/products/RU100202-2_large.jpeg?v=1490650031" alt="placa madre"></div>
+            <p class="producto-nombre" data-i18n="prod1.nombre">Tarjeta madre<br>Laptop HP</p>
+            <p class="producto-estado" data-i18n="prod1.estado">Buen estado</p>
+            <p class="producto-precio">$450.00</p>
+            <a href="#" class="ver-producto-btn" data-i18n="tienda.ver-prod">Ver producto</a>
+        </div>
+
+        <div class="producto">
+            <div class="producto-img"><img src="img/motor de lavadora.png" alt="motor de lavadora"></div>
+            <p class="producto-nombre" data-i18n="prod2.nombre">Motor de lavadora<br>Whirlpool</p>
+            <p class="producto-estado" data-i18n="prod2.estado">Usado</p>
+            <p class="producto-precio">$380.00</p>
+            <a href="#" class="ver-producto-btn" data-i18n="tienda.ver-prod">Ver producto</a>
+        </div>
+
+        <div class="producto">
+            <div class="producto-img"><img src="img/webcam.png" alt="webcam"></div>
+            <p class="producto-nombre" data-i18n="prod3.nombre">Webcam<br>Logitech C920</p>
+            <p class="producto-estado" data-i18n="prod3.estado">Buen estado</p>
+            <p class="producto-precio">$250.00</p>
+            <a href="#" class="ver-producto-btn" data-i18n="tienda.ver-prod">Ver producto</a>
+        </div>
+
+        <div class="producto">
+            <div class="producto-img"><img src="img/pantalla de celular.png" alt="pantalla de celular"></div>
+            <p class="producto-nombre" data-i18n="prod4.nombre">Pantalla de celular<br>Samsung A50</p>
+            <p class="producto-estado" data-i18n="prod4.estado">Usado</p>
+            <p class="producto-precio">$300.00</p>
+            <a href="#" class="ver-producto-btn" data-i18n="tienda.ver-prod">Ver producto</a>
+        </div>
+
+        <div class="producto">
+            <div class="producto-img"><img src="img/fuente de poder.png" alt="fuente de poder"></div>
+            <p class="producto-nombre" data-i18n="prod5.nombre">Fuente de poder<br>600W</p>
+            <p class="producto-estado" data-i18n="prod5.estado">Buen estado</p>
+            <p class="producto-precio">$350.00</p>
+            <a href="#" class="ver-producto-btn" data-i18n="tienda.ver-prod">Ver producto</a>
+        </div>
+
+        <div class="producto">
+            <div class="producto-img"><img src="img/memoria ram.png" alt="memoria ram"></div>
+            <p class="producto-nombre" data-i18n="prod6.nombre">Memoria RAM<br>8GB DDR4</p>
+            <p class="producto-estado" data-i18n="prod6.estado">Buen estado</p>
+            <p class="producto-precio">$400.00</p>
+            <a href="#" class="ver-producto-btn" data-i18n="tienda.ver-prod">Ver producto</a>
+        </div>
+
+    </div>
+    </div>
+
+    <!-- Badges de confianza -->
+    <div class="trust-badges">
+        <div class="badge-item">
+            <span class="badge-icon"><img src="img/escudo.png" alt="escudo"></span>
+            <div>
+                <strong data-i18n="trust.segura">Compra segura</strong>
+                <p data-i18n="trust.segura.desc">Productos verificados</p>
+            </div>
+        </div>
+        <div class="badge-item">
+            <span class="badge-icon"><img src="img/reciclaje.png" alt="reciclar"></span>
+            <div>
+                <strong data-i18n="trust.ahorra">Ahorra y reutiliza</strong>
+                <p data-i18n="trust.ahorra.desc">Dale una segunda vida</p>
+            </div>
+        </div>
+        <div class="badge-item">
+            <span class="badge-icon"><img src="img/dinero.png" alt="dinero"></span>
+            <div>
+                <strong data-i18n="trust.vende">Vende fácil</strong>
+                <p data-i18n="trust.vende.desc">Publica en minutos</p>
+            </div>
+        </div>
+        <div class="badge-item">
+            <span class="badge-icon">%</span>
+            <div>
+                <strong data-i18n="trust.comision">Comisión accesible</strong>
+                <p data-i18n="trust.comision.desc">Solo 10% por venta</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+  <!-- ========== MATERIALES ========== -->
+  <section class="materiales">
+    <div class="materiales__header">
+      <span class="materiales__icon"><img src="img/caja.png" alt="donación"></span>
+      <div>
+        <h2 class="materiales__title" data-i18n="guia.mat.title">¿Qué puedes donar?</h2>
+        <p class="materiales__subtitle" data-i18n="guia.mat.subtitle">Conoce qué materiales aceptamos y cuáles no para mantener un proceso seguro y sostenible.</p>
+      </div>
+    </div>
+
+    <div class="materiales__grid">
+
+      <!-- SÍ SE PUEDE -->
+      <div class="materiales__col materiales__col--si">
+        <div class="materiales__col-header">
+          <span class="materiales__badge materiales__badge--si" data-i18n="guia.mat.si">SÍ se puede donar</span>
+        </div>
+        <ul class="materiales__list">
+          <li class="mat-item">
+            <span class="mat-item__icon">👕</span>
+            <div>
+              <strong data-i18n="guia.si.item1.title">Ropa y calzado</strong>
+              <p data-i18n="guia.si.item1.desc">En buen estado, limpia y sin roturas graves.</p>
+            </div>
+          </li>
+          <li class="mat-item">
+            <span class="mat-item__icon">📱</span>
+            <div>
+              <strong data-i18n="guia.si.item2.title">Electrónicos funcionales</strong>
+              <p data-i18n="guia.si.item2.desc">Celulares, tablets, computadores que aún funcionen.</p>
+            </div>
+          </li>
+          <li class="mat-item">
+            <span class="mat-item__icon">📚</span>
+            <div>
+              <strong data-i18n="guia.si.item3.title">Libros y útiles escolares</strong>
+              <p data-i18n="guia.si.item3.desc">Libros de texto, cuadernos, colores y materiales de estudio.</p>
+            </div>
+          </li>
+          <li class="mat-item">
+            <span class="mat-item__icon">🪑</span>
+            <div>
+              <strong data-i18n="guia.si.item4.title">Muebles en buen estado</strong>
+              <p data-i18n="guia.si.item4.desc">Sillas, mesas, estantes sin daños estructurales.</p>
+            </div>
+          </li>
+          <li class="mat-item">
+            <span class="mat-item__icon">🧸</span>
+            <div>
+              <strong data-i18n="guia.si.item5.title">Juguetes</strong>
+              <p data-i18n="guia.si.item5.desc">Completos, limpios y sin piezas peligrosas.</p>
+            </div>
+          </li>
+          <li class="mat-item">
+            <span class="mat-item__icon">🥫</span>
+            <div>
+              <strong data-i18n="guia.si.item6.title">Alimentos no perecederos</strong>
+              <p data-i18n="guia.si.item6.desc">Enlatados, granos y productos con fecha de vencimiento vigente.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- NO SE PUEDE -->
+      <div class="materiales__col materiales__col--no">
+        <div class="materiales__col-header">
+          <span class="materiales__badge materiales__badge--no" data-i18n="guia.mat.no">NO se puede donar</span>
+        </div>
+        <ul class="materiales__list">
+          <li class="mat-item">
+            <span class="mat-item__icon">🔋</span>
+            <div>
+              <strong data-i18n="guia.no.item1.title">Baterías y pilas sueltas</strong>
+              <p data-i18n="guia.no.item1.desc">Representan un riesgo ambiental y deben ir a puntos especializados.</p>
+            </div>
+          </li>
+          <li class="mat-item">
+            <span class="mat-item__icon">💊</span>
+            <div>
+              <strong data-i18n="guia.no.item2.title">Medicamentos</strong>
+              <p data-i18n="guia.no.item2.desc">Vencidos o sin vencer; su manejo requiere protocolos especiales.</p>
+            </div>
+          </li>
+          <li class="mat-item">
+            <span class="mat-item__icon">🧪</span>
+            <div>
+              <strong data-i18n="guia.no.item3.title">Productos químicos o inflamables</strong>
+              <p data-i18n="guia.no.item3.desc">Pinturas, solventes, aerosoles u otros materiales peligrosos.</p>
+            </div>
+          </li>
+          <li class="mat-item">
+            <span class="mat-item__icon">🪟</span>
+            <div>
+              <strong data-i18n="guia.no.item4.title">Vidrios rotos o espejos</strong>
+              <p data-i18n="guia.no.item4.desc">Representan un riesgo de lesiones durante el transporte.</p>
+            </div>
+          </li>
+          <li class="mat-item">
+            <span class="mat-item__icon">🗑️</span>
+            <div>
+              <strong data-i18n="guia.no.item5.title">Ropa en muy mal estado</strong>
+              <p data-i18n="guia.no.item5.desc">Prendas con manchas permanentes, rasgaduras graves o mal olor.</p>
+            </div>
+          </li>
+          <li class="mat-item">
+            <span class="mat-item__icon">🍞</span>
+            <div>
+              <strong data-i18n="guia.no.item6.title">Alimentos perecederos o vencidos</strong>
+              <p data-i18n="guia.no.item6.desc">Comida fresca sin refrigeración o productos caducados.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="materiales__nota">
+      <span>💡</span>
+      <p data-i18n="guia.mat.nota">¿Tienes dudas sobre un artículo específico? <a href="https://RECOplus.github.io/rEcOPlus-Final/contacto.html">Contáctanos</a> y te ayudamos a decidir.</p>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo"><img src="img/hoja.png" alt="hoja"> <strong>RECO+</strong></div>
+        <p data-i18n="footer.tagline">El plus que el planeta necesita.</p>
+        <div class="redes">
+          <a href="#">f</a>
+          <a href="#">in</a>
+          <a href="#">tk</a>
+          <a href="#">▶</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="footer.nav">Navegación</h4>
+        <a href="https://RECOplus.github.io/rEcOPlus-Final/mapa.html"     data-i18n="nav.mapa">Mapa</a>
+        <a href="https://RECOplus.github.io/rEcOPlus-Final/guia.html"     data-i18n="nav.guia">Guía</a>
+        <a href="https://RECOplus.github.io/rEcOPlus-Final/donar.html"    data-i18n="nav.donar">Donar / Ayuda</a>
+        <a href="#tienda"       data-i18n="tienda.title">Tienda EcoTech</a>
+        <a href="https://RECOplus.github.io/rEcOPlus-Final/blog.html"     data-i18n="nav.blog">Blog</a>
+        <a href="https://RECOplus.github.io/rEcOPlus-Final/alianzas.html" data-i18n="nav.alianzas">Alianzas</a>
+        <a href="https://RECOplus.github.io/rEcOPlus-Final/contacto.html" data-i18n="nav.contacto">Contacto</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="footer.recursos">Recursos</h4>
+        <a href="#" data-i18n="footer.ayuda">Centro de ayuda</a>
+        <a href="#" data-i18n="footer.faq">Preguntas frecuentes</a>
+        <a href="#" data-i18n="footer.terminos">Términos y condiciones</a>
+        <a href="#" data-i18n="footer.privacidad">Política de privacidad</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="footer.contacto">Contacto</h4>
+        <p>soporte.recoplus@gmail.com</p>
+        <p>+507 6399-1249</p>
+        <p>David, Panama</p>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="footer.newsletter">Newsletter</h4>
+        <p data-i18n="footer.nl.desc">Recibe tips, noticias y oportunidades para ayudar.</p>
+        <div class="newsletter-form">
+          <input type="email" data-i18n="footer.nl.ph" placeholder="Tu correo electrónico">
+          <button data-i18n="footer.nl.btn">Suscribirme</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p data-i18n="footer.copy">© 2026 RECO+. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="auth.js"></script>
+  <script src="i18n.js"></script>
+  <script src="nav-preview.js"></script>
+  <script src="search.js"></script>
+  <script src="script.js"></script>
+  <script src="navbar-auth.js"></script>
+</body>
+</html>

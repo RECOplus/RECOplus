@@ -1,0 +1,243 @@
+/* ══════════════════════════════════════════════════════════════
+   LIQUID-GLASS-DONAR.CSS
+   Capa ADITIVA (no toca donar.css ni donar.html excepto el <link>).
+   Aplica el MISMO "liquid glass" oscuro de mapa.html (ver
+   liquid-glass-mapa.css) y reciclar.html (ver
+   liquid-glass-reciclar.css) a TODOS los botones, tabs, paneles,
+   cards de confianza, dropzone, modal e inputs de donar.html —
+   mismas variables --lg-*, mismos valores, igual en modo claro y
+   modo oscuro.
+
+   Cárgalo DESPUÉS de donar.css:
+   <link rel="stylesheet" href="liquid-glass-donar.css" />
+═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Paleta liquid glass oscura — idéntica a liquid-glass-mapa.css
+     y liquid-glass-reciclar.css (misma fuente de verdad en todo
+     el sitio). */
+  --lg-bg:            rgba(18, 26, 20, 0.55);
+  --lg-bg-strong:     rgba(14, 20, 16, 0.68);
+  --lg-border:        rgba(255, 255, 255, 0.14);
+  --lg-border-strong: rgba(255, 255, 255, 0.20);
+  --lg-highlight:     rgba(255, 255, 255, 0.22);
+
+  --lg-shadow:        0 14px 34px rgba(0, 0, 0, 0.46), 0 4px 10px rgba(0, 0, 0, 0.30);
+  --lg-shadow-hover:  0 18px 44px rgba(0, 0, 0, 0.54), 0 6px 16px rgba(0, 0, 0, 0.36);
+  --lg-shadow-sm:     0 6px 16px rgba(0, 0, 0, 0.34), 0 2px 6px rgba(0, 0, 0, 0.22);
+
+  --lg-text:          #eaf3ec;
+  --lg-text-muted:    rgba(234, 243, 236, 0.68);
+  --lg-accent-glow:   rgba(94, 207, 130, 0.35);
+  --lg-blur: 22px;
+
+  --lg-shine: linear-gradient(
+    115deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.16) 45%,
+    rgba(255, 255, 255, 0.26) 50%,
+    rgba(255, 255, 255, 0.10) 56%,
+    transparent 68%
+  );
+}
+
+/* Mismo valor en modo oscuro, igual que en mapa/reciclar: el
+   liquid glass oscuro no cambia con el tema. */
+html.dark {
+  --lg-bg:            rgba(10, 16, 12, 0.62);
+  --lg-bg-strong:     rgba(8, 13, 10, 0.75);
+  --lg-border:        rgba(255, 255, 255, 0.10);
+  --lg-border-strong: rgba(255, 255, 255, 0.16);
+  --lg-shadow:        0 14px 34px rgba(0, 0, 0, 0.62), 0 4px 10px rgba(0, 0, 0, 0.42);
+  --lg-shadow-hover:  0 18px 44px rgba(0, 0, 0, 0.68), 0 6px 16px rgba(0, 0, 0, 0.46);
+  --lg-shadow-sm:     0 6px 16px rgba(0, 0, 0, 0.48), 0 2px 6px rgba(0, 0, 0, 0.30);
+}
+
+/* ── BASE: mismo tratamiento glass en todas las piezas objetivo ──
+   Tabs, dropzone, panel de formulario, cards de confianza, modal,
+   inputs y botones comparten: fondo oscuro translúcido + blur
+   fuerte + borde claro sutil + highlight superior + sombra
+   profunda — igual que en mapa.html. */
+.donar-tabs,
+.donar-tab,
+.donar-upload,
+.donar-form-panel,
+.donar-trust-item,
+.donar-modal,
+.donar-modal-close-btn,
+.donar-hero__card-float,
+.donar-input {
+  background: var(--lg-bg) !important;
+  backdrop-filter: blur(var(--lg-blur)) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(160%) !important;
+  border-color: var(--lg-border) !important;
+  box-shadow:
+    inset 0 1px 0 var(--lg-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.20),
+    var(--lg-shadow) !important;
+  color: var(--lg-text);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── REFLEJO DE VIDRIO — banda diagonal fija, igual que en mapa ── */
+.donar-tabs,
+.donar-upload,
+.donar-form-panel,
+.donar-trust-item,
+.donar-modal,
+.donar-hero__card-float {
+  background-image: var(--lg-shine) !important;
+  background-blend-mode: overlay;
+}
+
+/* El input no lleva reflejo (campo de formulario, igual que
+   .modal-input en liquid-glass-mapa.css) */
+.donar-input {
+  background-image: none !important;
+}
+
+/* ── Textos legibles sobre el fondo oscuro ── */
+.donar-tab,
+.donar-label,
+.donar-form-header h2,
+.donar-form-header p,
+.donar-trust-item strong,
+.donar-trust-item p,
+.donar-modal h3,
+.donar-modal p,
+.donar-hero__card-float strong,
+.donar-hero__card-float p,
+.donar-form-note,
+.donar-input {
+  color: var(--lg-text) !important;
+}
+.donar-input::placeholder { color: var(--lg-text-muted) !important; }
+.donar-optional,
+.donar-form-header p,
+.donar-trust-item p,
+.donar-modal p,
+.donar-hero__card-float p,
+.donar-form-note {
+  color: var(--lg-text-muted) !important;
+}
+.donar-form-note a { color: #8fe0a8 !important; }
+
+/* ── TAB ACTIVA: acento verde sobre el mismo fondo glass oscuro,
+   igual que .chip.active en mapa ── */
+.donar-tab.active {
+  background-color: rgba(45, 140, 78, 0.55) !important;
+  background-image: linear-gradient(180deg, rgba(45,140,78,0.35), rgba(26,92,42,0.35)), var(--lg-shine) !important;
+  border-color: rgba(94, 207, 130, 0.55) !important;
+  color: #fff !important;
+}
+
+/* ── BOTÓN DE ENVÍO (donar): mantiene acento verde, glass oscuro
+   de fondo, igual que .suggest-btn / .modal-submit en mapa ── */
+.donar-submit-btn {
+  background: var(--lg-bg) !important;
+  background-color: rgba(45, 140, 78, 0.55) !important;
+  background-image: linear-gradient(180deg, rgba(45,140,78,0.40), rgba(26,92,42,0.35)), var(--lg-shine) !important;
+  backdrop-filter: blur(var(--lg-blur)) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(160%) !important;
+  border: 1px solid rgba(94, 207, 130, 0.45) !important;
+  box-shadow:
+    inset 0 1px 0 var(--lg-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.20),
+    var(--lg-shadow) !important;
+  color: #fff !important;
+}
+
+/* ── BOTÓN DE ENVÍO (solicitar): mismo material de vidrio oscuro,
+   acento azul propio para diferenciar la acción (no existe en
+   mapa un equivalente de dos acciones; se conserva el color
+   semántico pero con el mismo tratamiento de vidrio) ── */
+.donar-submit-btn--solicitar {
+  background: var(--lg-bg) !important;
+  background-color: rgba(47, 111, 191, 0.55) !important;
+  background-image: linear-gradient(180deg, rgba(47,111,191,0.40), rgba(31,79,143,0.35)), var(--lg-shine) !important;
+  backdrop-filter: blur(var(--lg-blur)) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(160%) !important;
+  border: 1px solid rgba(111, 168, 255, 0.45) !important;
+  box-shadow:
+    inset 0 1px 0 var(--lg-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.20),
+    var(--lg-shadow) !important;
+  color: #fff !important;
+}
+
+/* ── HOVER: eleva, aclara el highlight, intensifica sombra —
+   igual que en mapa ── */
+.donar-tabs:hover,
+.donar-tab:hover,
+.donar-upload:hover,
+.donar-form-panel:hover,
+.donar-trust-item:hover,
+.donar-modal-close-btn:hover {
+  background-color: var(--lg-bg-strong) !important;
+  border-color: var(--lg-border-strong) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.34),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.26),
+    var(--lg-shadow-hover) !important;
+}
+.donar-tab.active:hover {
+  background-color: rgba(45, 140, 78, 0.66) !important;
+}
+.donar-submit-btn:hover {
+  background-color: rgba(45, 140, 78, 0.70) !important;
+}
+.donar-submit-btn--solicitar:hover {
+  background-color: rgba(47, 111, 191, 0.70) !important;
+}
+
+/* ── TOP HIGHLIGHT ("gota de vidrio") en cards grandes — igual
+   que en mapa (.legend::after, .sidebar::after, etc.) ── */
+.donar-form-panel::after,
+.donar-trust-item::after,
+.donar-modal::after,
+.donar-hero__card-float::after,
+.donar-upload::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 8%; right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--lg-highlight), transparent);
+  pointer-events: none;
+}
+
+/* ── ICONOS dentro de tarjetas/botones: visibles sobre fondo
+   oscuro, igual que en mapa ── */
+.donar-tab-icon img,
+.donar-trust-icon img,
+.donar-hero__card-icon img,
+.donar-form-icon img,
+.donar-form-icon2 img,
+.donar-upload-icon {
+  filter: brightness(1.15) contrast(1.05);
+}
+
+/* ── OVERLAY DEL MODAL: fondo detrás del modal, más oscuro para
+   contraste, igual que .modal-overlay en mapa ── */
+.donar-modal-overlay {
+  background: rgba(6, 10, 8, 0.55) !important;
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+}
+
+/* ── Iconos circulares (donar-form-icon, donar-trust-icon): fondo
+   glass propio y más pequeño, coherente con el resto ── */
+.donar-form-icon,
+.donar-form-icon2,
+.donar-trust-icon,
+.donar-hero__card-icon,
+.badge-leaf {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .donar-tabs, .donar-tab, .donar-upload, .donar-form-panel,
+  .donar-trust-item, .donar-modal-close-btn {
+    transition: none !important;
+  }
+}
