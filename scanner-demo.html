@@ -210,6 +210,12 @@
         ✨ Escaneo preciso (IA)
       </button>
     </div>
+
+    <div class="reco-scanner__controles" id="recoVolverEscanearWrap" hidden>
+      <button class="reco-scanner__btn reco-scanner__btn--primario" id="recoBtnVolverEscanear">
+        🔄 Volver a escanear
+      </button>
+    </div>
   </div>
 
   <section class="historial">
@@ -242,6 +248,8 @@
   const btnPausar = document.getElementById('recoBtnPausar');
   const btnDetener = document.getElementById('recoBtnDetener');
   const btnIA = document.getElementById('recoBtnIA');
+  const volverEscanearWrap = document.getElementById('recoVolverEscanearWrap');
+  const btnVolverEscanear = document.getElementById('recoBtnVolverEscanear');
 
   const resultadoEl = document.getElementById('recoResultado');
   const iconoEl = document.getElementById('recoIcono');
@@ -278,16 +286,29 @@
 
       // El botón de IA solo tiene sentido con la cámara ya activa
       // (listo o escaneando). El sub-estado de la propia llamada IA
-      // (capturando/consultando) llega en `detalle`, no en `estado`.
+      // (capturando/consultando/pausado_tras_resultado) llega en
+      // `detalle`, no en `estado`.
       const camaraActiva = estado === ESTADOS.LISTO || estado === ESTADOS.ESCANEANDO;
       const subEstadoIA = detalle && detalle.subEstadoIA;
+      const pausadoTrasIA = subEstadoIA === 'pausado_tras_resultado';
 
-      if (subEstadoIA) {
+      if (pausadoTrasIA) {
+        // El bucle local quedó pausado a propósito tras un escaneo IA
+        // exitoso: se oculta el botón de IA y "Pausar" (redundantes en
+        // este estado) y se muestra "Volver a escanear" como única vía
+        // para reactivar la clasificación en vivo.
+        btnIA.disabled = true;
+        btnIA.textContent = '✨ Escaneo preciso (IA)';
+        btnPausar.disabled = true;
+        volverEscanearWrap.hidden = false;
+      } else if (subEstadoIA) {
         btnIA.disabled = true;
         btnIA.textContent = subEstadoIA === 'capturando' ? '📸 Capturando...' : '🔎 Consultando IA...';
+        volverEscanearWrap.hidden = true;
       } else {
         btnIA.disabled = !camaraActiva;
         btnIA.textContent = '✨ Escaneo preciso (IA)';
+        volverEscanearWrap.hidden = true;
       }
     },
 
@@ -373,6 +394,8 @@
   btnDetener.addEventListener('click', () => scanner.detener());
 
   btnIA.addEventListener('click', () => scanner.escanearPreciso());
+
+  btnVolverEscanear.addEventListener('click', () => scanner.volverAEscanear());
 
   window.addEventListener('beforeunload', () => scanner.destruir());
 </script>

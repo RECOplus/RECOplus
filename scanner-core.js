@@ -469,6 +469,18 @@ export class RecoScanner {
       return;
     }
 
+    // El bucle local (MobileNet, cada intervaloClasificacionMs) sigue
+    // corriendo salvo que lo pausemos explícitamente: si no se pausa,
+    // puede reportar un nuevo consenso MIENTRAS esperamos la respuesta
+    // de Gemini y pisar visualmente ese resultado en cuanto llega (el
+    // usuario ve "parpadear" el resultado). Por eso el escaneo preciso
+    // pausa el bucle local ANTES de capturar el frame, y lo deja
+    // pausado incluso después de terminar: el resultado de la IA debe
+    // quedar estable en pantalla hasta que el usuario pida explícitamente
+    // reanudar (ver reanudar() / botón "Volver a escanear" en la UI).
+    const bucleLocalEstabaActivo = !!this.intervaloId;
+    this.pausar();
+
     this._escaneandoIA = true;
     this._setEstadoIA('capturando');
 
@@ -502,12 +514,25 @@ export class RecoScanner {
         fuente: 'gemini',
         confianza: datos.confianza,
       });
+      // Éxito: el bucle local se queda pausado a propósito (no se
+      // reanuda aquí). Se avisa a la UI vía subEstadoIA='pausado_tras_resultado'
+      // para que muestre el botón "Volver a escanear" en vez de que el
+      // usuario vea el resultado de la IA cambiar solo unos segundos
+      // después por culpa del bucle local.
+      this._pausadoPorIA = true;
     } catch (error) {
       console.error('[RecoScanner] Fallo en escaneo preciso (IA):', error);
       this.onError(error, 'escaneoPreciso');
+
+      // Si el escaneo IA falla, no tiene sentido dejar el bucle local
+      // pausado y sin resultado nuevo que mostrar: se reanuda solo si
+      // ya estaba corriendo antes de este intento.
+      if (bucleLocalEstabaActivo) {
+        this.reanudar();
+      }
     } finally {
       this._escaneandoIA = false;
-      this._setEstadoIA(null);
+      this._setEstadoIA(this._pausadoPorIA ? 'pausado_tras_resultado' : null);
     }
   }
 
@@ -547,6 +572,20 @@ export class RecoScanner {
     if (!this.intervaloId && this.clasificador && this.estadoActual !== ESTADOS.ERROR) {
       this._empezarBucleClasificacion();
     }
+  }
+
+  /**
+   * Reactiva el bucle local después de que quedó pausado por un
+   * escaneo preciso (IA) exitoso. Pensado para conectarse al botón
+   * "Volver a escanear" de la UI: limpia el flag _pausadoPorIA, avisa
+   * el cambio de sub-estado, reinicia la ventana de votación (para no
+   * arrastrar votos del objeto anterior) y reanuda la clasificación.
+   */
+  volverAEscanear() {
+    this._pausadoPorIA = false;
+    this.reiniciarVotacion();
+    this.reanudar();
+    this._setEstadoIA(null);
   }
 
   /** Libera cámara y detiene el bucle. El modelo permanece en memoria. */
