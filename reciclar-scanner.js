@@ -33,11 +33,21 @@
  * IA generativa vía una Edge Function de Supabase (para no exponer la
  * API key en el cliente).
  *
+ * FUENTE DE VERDAD DE "¿ES RECICLABLE?" (tabla `categorias`):
+ * -------------------------------------------------------------
+ * El badge (Reciclable / Reutilizable / Requiere punto especial) y el
+ * mensaje explícito que ve el usuario ya NO están hardcodeados aquí:
+ * se cargan una vez, al iniciar la página, desde la tabla `categorias`
+ * de Supabase (misma fuente que usa api/classify.js para el escaneo
+ * preciso con IA). Si Supabase no responde a tiempo (sin internet,
+ * error temporal), se usa un respaldo local mínimo para que el
+ * escáner nunca se quede sin poder mostrar un resultado.
+ *
  * Requiere (ya presentes en reciclar.html tras esta integración):
  *   <script src="reciclar-scanner.js"></script>
  * Debe cargarse DESPUÉS de reciclar-material-info.js (para poder usar
  * window.recoMaterialInfo) y, si existen, auth.js / supabase-config.js
- * (para el registro opcional de escaneos).
+ * (para el registro opcional de escaneos y la carga de categorías).
  */
 (function () {
   "use strict";
@@ -129,6 +139,92 @@
     baterias: [],
     bombillos: []
   };
+
+  /* ──────────────────────────────────────────────────────────
+     Categorías desde Supabase (tabla `categorias`)
+     -------------------------------------------------------------
+     Se cargan UNA sola vez al abrir la página (no en cada escaneo:
+     son datos de referencia que casi nunca cambian). Mientras tanto,
+     o si falla la carga, se usa un respaldo mínimo local para que el
+     escáner nunca se quede sin badge/mensaje que mostrar.
+     ────────────────────────────────────────────────────────── */
+  var BADGE_INFO_RESPALDO = {
+    plastico: { badge: "Reciclable", warn: false, mensaje_escaner: "" },
+    vidrio: { badge: "Reciclable", warn: false, mensaje_escaner: "" },
+    metal: { badge: "Reciclable", warn: false, mensaje_escaner: "" },
+    papel: { badge: "Reciclable", warn: false, mensaje_escaner: "" },
+    libros: { badge: "Reutilizable", warn: false, mensaje_escaner: "" },
+    ropa: { badge: "Reciclable / Donable", warn: false, mensaje_escaner: "" },
+    muebles: { badge: "Reutilizable", warn: false, mensaje_escaner: "" },
+    juguetes: { badge: "Reutilizable", warn: false, mensaje_escaner: "" },
+    electronicos: { badge: "Requiere punto especial", warn: true, mensaje_escaner: "" },
+    celulares: { badge: "Requiere punto especial", warn: true, mensaje_escaner: "" },
+    baterias: { badge: "Requiere punto especial", warn: true, mensaje_escaner: "" },
+    bombillos: { badge: "Requiere punto especial", warn: true, mensaje_escaner: "" }
+  };
+
+  var categoriasCache = null; // se llena con loadCategorias(); null mientras carga o si falló
+  var categoriasPromise = null;
+
+  function loadCategorias() {
+    if (categoriasPromise) return categoriasPromise;
+
+    if (!window.recoSupabase) {
+      categoriasPromise = Promise.resolve(null);
+      return categoriasPromise;
+    }
+
+    categoriasPromise = window.recoSupabase
+      .from("categorias")
+      .select("id, nombre, reciclable, requiere_punto_especial, badge, mensaje_escaner")
+      .then(function (res) {
+        if (res.error || !res.data) {
+          console.warn("[RECO+ escáner] No se pudieron cargar categorías de Supabase, usando respaldo local:", res.error && res.error.message);
+          return null;
+        }
+        var mapa = {};
+        res.data.forEach(function (fila) {
+          mapa[fila.id] = fila;
+        });
+        categoriasCache = mapa;
+        return mapa;
+      })
+      .catch(function (err) {
+        console.warn("[RECO+ escáner] Error consultando categorías de Supabase, usando respaldo local:", err);
+        return null;
+      });
+
+    return categoriasPromise;
+  }
+
+  // Dispara la carga inmediatamente (no espera al DOM: solo depende
+  // de que supabase-config.js ya haya corrido, y ese script va antes
+  // que este en reciclar.html).
+  loadCategorias();
+
+  /* Devuelve { badge, warn, mensaje, reciclable, requierePuntoEspecial }
+     para una clave de material, priorizando los datos ya cargados de
+     Supabase y cayendo al respaldo local si aún no están listos. */
+  function getInfoCategoria(key) {
+    var fila = categoriasCache && categoriasCache[key];
+    if (fila) {
+      return {
+        badge: fila.badge,
+        warn: !!fila.requiere_punto_especial,
+        mensaje: fila.mensaje_escaner || "",
+        reciclable: fila.reciclable !== false,
+        requierePuntoEspecial: !!fila.requiere_punto_especial
+      };
+    }
+    var respaldo = BADGE_INFO_RESPALDO[key] || { badge: "", warn: false, mensaje_escaner: "" };
+    return {
+      badge: respaldo.badge,
+      warn: respaldo.warn,
+      mensaje: "",
+      reciclable: true,
+      requierePuntoEspecial: respaldo.warn
+    };
+  }
 
   /* ──────────────────────────────────────────────────────────
      Estado del módulo
@@ -276,6 +372,7 @@
               '<span class="rc-scan-result__eyebrow">Escaneo preciso (IA) detectó</span>' +
               '<div class="rc-scan-result__title">' + label + "</div>" +
               '<span class="rc-minfo__badge">' + etiquetaConfianza + "</span>" +
+              (datos.mensaje ? '<p class="rc-scan-result__hint rc-scan-result__hint--ok">' + datos.mensaje + "</p>" : "") +
               (datos.razon ? '<p class="rc-scan-result__hint">' + datos.razon + "</p>" : "") +
             "</div>";
           window.recoMaterialInfo.showByKey(key);
@@ -391,9 +488,17 @@
       var label = (window.recoMaterialInfo && window.recoMaterialInfo.has(match.key))
         ? window.recoMaterialInfo.getLabel(match.key)
         : match.key;
-      var data = MATERIAL_LOOKUP_BADGE(match.key);
+      var data = getInfoCategoria(match.key);
       var pct = Math.round(match.probability * 100);
       var lowConfidence = match.probability < MIN_CONFIDENCE;
+
+      // Mensaje explícito de reciclable/no reciclable: prioriza el
+      // texto que viene de Supabase (mensaje_escaner); si todavía no
+      // cargó, se arma uno equivalente con el badge del respaldo local.
+      var mensajeReciclable = data.mensaje
+        || (data.requierePuntoEspecial
+          ? "⚠️ Esto se recicla, pero necesita un punto especial."
+          : "✅ Esto se recicla.");
 
       result.className = "rc-scan-result rc-scan-result--match";
       result.innerHTML =
@@ -402,13 +507,14 @@
           '<span class="rc-scan-result__eyebrow">' + tr("reciclar.escaner.detectamos", "Detectamos") + '</span>' +
           '<div class="rc-scan-result__title">' + label + '</div>' +
           '<span class="' + (data.warn ? "rc-minfo__badge warn" : "rc-minfo__badge") + '">' + data.badge + '</span>' +
+          '<p class="rc-scan-result__hint rc-scan-result__hint--ok">' + mensajeReciclable + '</p>' +
           '<div class="rc-scan-result__confidence">' +
             '<div class="rc-scan-result__confidence-bar"><span style="width:' + pct + '%"></span></div>' +
             '<small>' + tr("reciclar.escaner.confianza", "Confianza") + ': ' + pct + '%</small>' +
           '</div>' +
           (lowConfidence
             ? '<p class="rc-scan-result__hint">' + tr("reciclar.escaner.bajaConfianza", "No estamos muy seguros. Si no coincide, prueba con otra foto o elige el material manualmente arriba.") + '</p>'
-            : '<p class="rc-scan-result__hint rc-scan-result__hint--ok">' + tr("reciclar.escaner.verAbajo", "Mira los detalles completos en el panel de abajo ↓") + '</p>'
+            : '<p class="rc-scan-result__hint">' + tr("reciclar.escaner.verAbajo", "Mira los detalles completos en el panel de abajo ↓") + '</p>'
           ) +
         '</div>';
     }
@@ -430,31 +536,6 @@
           '<div class="rc-scan-result__title">' + tr("reciclar.escaner.error", "No pudimos analizar la imagen") + '</div>' +
           '<p class="rc-scan-result__hint">' + message + '</p>' +
         '</div>';
-    }
-
-    // Pequeño helper: badge/warn viven en MATERIALS dentro del otro
-    // archivo (closure privado), así que para no duplicar esa data
-    // completa aquí, inferimos warn/badge desde el propio botón
-    // .rc-material (que ya trae la clase visual correcta una vez
-    // que showByKey() lo activa). Como fallback simple, usamos un
-    // pequeño mapa local solo para badge/warn (dato liviano, sin
-    // duplicar preparación/lugares/obtienes).
-    var BADGE_INFO = {
-      plastico: { badge: "Reciclable", warn: false },
-      vidrio: { badge: "Reciclable", warn: false },
-      metal: { badge: "Reciclable", warn: false },
-      papel: { badge: "Reciclable", warn: false },
-      libros: { badge: "Reutilizable", warn: false },
-      ropa: { badge: "Reciclable / Donable", warn: false },
-      muebles: { badge: "Reutilizable", warn: false },
-      juguetes: { badge: "Reutilizable", warn: false },
-      electronicos: { badge: "Requiere punto especial", warn: true },
-      celulares: { badge: "Requiere punto especial", warn: true },
-      baterias: { badge: "Requiere punto especial", warn: true },
-      bombillos: { badge: "Requiere punto especial", warn: true }
-    };
-    function MATERIAL_LOOKUP_BADGE(key) {
-      return BADGE_INFO[key] || { badge: "", warn: false };
     }
 
     function processFile(file) {
@@ -483,7 +564,13 @@
         if (firstLoad) renderLoadingModel();
         else renderAnalyzing(loaded.dataUrl);
 
-        return getModel().then(function (model) {
+        // Se espera también a que las categorías de Supabase estén
+        // listas (normalmente ya lo están: la carga arrancó al abrir
+        // la página, mucho antes de que el usuario suba una foto).
+        // Si tarda o falla, igual se sigue: renderMatch cae al
+        // respaldo local automáticamente.
+        return Promise.all([getModel(), categoriasPromise]).then(function (resultados) {
+          var model = resultados[0];
           if (firstLoad) renderAnalyzing(loaded.dataUrl);
           return model.classify(loaded.img, 5);
         }).then(function (predictions) {

@@ -10,6 +10,21 @@
  * solo alterna la clase .active) e inserta/actualiza un panel
  * .rc-minfo justo después de .rc-note dentro de .rc-panel.
  *
+ * FUENTE DE VERDAD (tabla `categorias` en Supabase):
+ * -------------------------------------------------------------
+ * Todo el contenido (badge, preparación, lugares, qué se obtiene,
+ * impacto, y el mensaje de "es/no es reciclable") se carga una vez
+ * desde la tabla `categorias` de Supabase — la MISMA que usa el
+ * escáner (reciclar-scanner.js) y el escaneo con IA (api/classify.js).
+ * Así los tres quedan siempre sincronizados con un solo lugar donde
+ * editar la información.
+ *
+ * Mientras esa carga termina (o si falla, ej. sin internet), se usa
+ * un respaldo local (MATERIALS_RESPALDO) idéntico al contenido
+ * original, para que el panel nunca se muestre vacío. En cuanto los
+ * datos de Supabase llegan, el panel visible se refresca solo con la
+ * versión más actualizada.
+ *
  * Cárgalo DESPUÉS de reciclar.js:
  * <script src="reciclar-material-info.js"></script>
  */
@@ -36,13 +51,15 @@
     return span ? span.textContent.trim() : "";
   }
 
-  // ── Base de datos de materiales ──
+  // ── Respaldo local ──
+  // Se usa mientras cargan los datos de Supabase, o si la carga
+  // falla. Mismo contenido que tenía este archivo originalmente.
   // reciclable: true/false controla el badge (verde "Reciclable" /
   // ámbar "Requiere punto especial").
   // impacto: frase corta de cierre, coherente con la calculadora
   // de impacto de la misma página (no repite cifras exactas, solo
   // contextualiza).
-  var MATERIALS = {
+  var MATERIALS_RESPALDO = {
     electronicos: {
       badge: "Requiere punto especial",
       warn: true,
@@ -274,6 +291,72 @@
     }
   };
 
+  // ── Carga desde Supabase (tabla `categorias`) ──
+  var categoriasCache = null; // se llena cuando responde Supabase; null mientras tanto
+  var categoriasPromise = null;
+
+  function loadCategorias() {
+    if (categoriasPromise) return categoriasPromise;
+
+    if (!window.recoSupabase) {
+      categoriasPromise = Promise.resolve(null);
+      return categoriasPromise;
+    }
+
+    categoriasPromise = window.recoSupabase
+      .from("categorias")
+      .select("id, badge, requiere_punto_especial, mensaje_escaner, preparacion, lugares, obtienes, impacto")
+      .then(function (res) {
+        if (res.error || !res.data) {
+          console.warn("[RECO+ info materiales] No se pudieron cargar categorías de Supabase, usando respaldo local:", res.error && res.error.message);
+          return null;
+        }
+        var mapa = {};
+        res.data.forEach(function (fila) {
+          mapa[fila.id] = fila;
+        });
+        categoriasCache = mapa;
+        return mapa;
+      })
+      .catch(function (err) {
+        console.warn("[RECO+ info materiales] Error consultando categorías de Supabase, usando respaldo local:", err);
+        return null;
+      });
+
+    return categoriasPromise;
+  }
+
+  // Dispara la carga de inmediato (no espera al DOM).
+  loadCategorias();
+
+  /** Devuelve los datos de un material, priorizando Supabase y
+   *  cayendo al respaldo local si aún no está listo o falló. */
+  function getMaterialData(materialKey) {
+    var fila = categoriasCache && categoriasCache[materialKey];
+    if (fila) {
+      return {
+        badge: fila.badge,
+        warn: !!fila.requiere_punto_especial,
+        mensaje: fila.mensaje_escaner || "",
+        preparacion: Array.isArray(fila.preparacion) ? fila.preparacion : [],
+        lugares: Array.isArray(fila.lugares) ? fila.lugares : [],
+        obtienes: Array.isArray(fila.obtienes) ? fila.obtienes : [],
+        impacto: fila.impacto || ""
+      };
+    }
+    var respaldo = MATERIALS_RESPALDO[materialKey];
+    if (!respaldo) return null;
+    return {
+      badge: respaldo.badge,
+      warn: respaldo.warn,
+      mensaje: "",
+      preparacion: respaldo.preparacion,
+      lugares: respaldo.lugares,
+      obtienes: respaldo.obtienes,
+      impacto: respaldo.impacto
+    };
+  }
+
   var ICONS = {
     prep: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" width="14" height="14"><path d="M10 2l1.5 3.5L15 7l-3.5 1.5L10 12l-1.5-3.5L5 7l3.5-1.5L10 2z"/><circle cx="15.5" cy="14.5" r="2"/></svg>',
     lugar: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" width="14" height="14"><path d="M10 2a6 6 0 016 6c0 4-6 10-6 10S4 12 4 8a6 6 0 016-6z"/><circle cx="10" cy="8" r="2"/></svg>',
@@ -294,7 +377,7 @@
   }
 
   function buildPanelHTML(materialKey, materialEl) {
-    var data = MATERIALS[materialKey];
+    var data = getMaterialData(materialKey);
     if (!data) return "";
 
     var label = getMaterialLabel(materialEl);
@@ -313,6 +396,8 @@
             '<span class="' + badgeClass + '">' + badgeIcon + data.badge + "</span>" +
           "</div>" +
         "</div>" +
+
+        (data.mensaje ? '<p class="rc-minfo__mensaje">' + data.mensaje + "</p>" : "") +
 
         '<div class="rc-minfo__grid">' +
           '<div class="rc-minfo__block">' +
@@ -361,9 +446,18 @@
       }
     }
 
+    // Clave y elemento del material mostrado actualmente, para poder
+    // refrescar el panel en vivo cuando lleguen los datos de Supabase
+    // (si el usuario ya estaba viendo un material antes de que
+    // terminara de cargar).
+    var currentKey = null;
+    var currentEl = null;
+
     function showMaterial(materialEl, opts) {
       var key = materialEl.getAttribute("data-material");
-      if (!key || !MATERIALS[key]) return;
+      if (!key || !MATERIALS_RESPALDO[key]) return;
+      currentKey = key;
+      currentEl = materialEl;
       panel.innerHTML = buildPanelHTML(key, materialEl);
       panel.classList.add("rc-minfo--open");
       if (!opts || !opts.silent) {
@@ -378,6 +472,15 @@
         });
       }
     }
+
+    // Cuando terminan de cargar las categorías de Supabase, si el
+    // usuario ya tiene un panel abierto, se refresca en el sitio con
+    // el contenido actualizado (sin scroll ni parpadeo brusco).
+    categoriasPromise.then(function (mapa) {
+      if (mapa && currentKey && currentEl) {
+        showMaterial(currentEl, { silent: true });
+      }
+    });
 
     // El listener existente en reciclar.js ya alterna .active; aquí
     // solo añadimos el despliegue de información, sin interferir.
@@ -405,8 +508,8 @@
     // con IA) reutilicen esta misma base de datos y panel de info
     // sin duplicar contenido ni reconstruir el HTML por su cuenta.
     window.recoMaterialInfo = {
-      keys: Object.keys(MATERIALS),
-      has: function (key) { return !!MATERIALS[key]; },
+      keys: Object.keys(MATERIALS_RESPALDO),
+      has: function (key) { return !!MATERIALS_RESPALDO[key]; },
       getLabel: function (key) {
         var el = document.querySelector('.rc-material[data-material="' + key + '"]');
         return el ? getMaterialLabel(el) : key;
@@ -415,7 +518,7 @@
       // y despliega su panel de información, igual que un click manual.
       showByKey: function (key, opts) {
         var el = document.querySelector('.rc-material[data-material="' + key + '"]');
-        if (!el || !MATERIALS[key]) return false;
+        if (!el || !MATERIALS_RESPALDO[key]) return false;
         document.querySelectorAll(".rc-material").forEach(function (x) {
           x.classList.remove("active");
         });
