@@ -20,6 +20,73 @@
 import { resolverMaterialDesdePredicciones, MATERIALES } from './material-map.js';
 
 /**
+ * Categorías reales desde la tabla `categorias` de Supabase.
+ * -------------------------------------------------------------
+ * Fuente de verdad de "¿es reciclable?", el badge (Reciclable /
+ * Reutilizable / Requiere punto especial) y el mensaje que ve el
+ * usuario. MATERIALES (material-map.js) solo aporta color/icono y
+ * sirve de respaldo si esta carga falla o aún no ha terminado.
+ *
+ * Se carga UNA sola vez por sesión de página (son datos de
+ * referencia que casi nunca cambian), en paralelo a todo lo demás,
+ * usando el cliente global window.recoSupabase que ya expone
+ * supabase-config.js. Si ese script no corrió (página sin Supabase
+ * configurado) o la consulta falla, se cae silenciosamente al
+ * respaldo local en MATERIALES — el escáner nunca debe quedar sin
+ * poder mostrar un resultado por esto.
+ */
+let _categoriasSupabasePromise = null;
+
+function _cargarCategoriasSupabase() {
+  if (_categoriasSupabasePromise) return _categoriasSupabasePromise;
+
+  if (typeof window === 'undefined' || !window.recoSupabase) {
+    _categoriasSupabasePromise = Promise.resolve(null);
+    return _categoriasSupabasePromise;
+  }
+
+  _categoriasSupabasePromise = window.recoSupabase
+    .from('categorias')
+    .select('id, nombre, reciclable, requiere_punto_especial, badge, mensaje_escaner')
+    .then((res) => {
+      if (res.error || !res.data) {
+        console.warn('[RecoScanner] No se pudieron cargar categorías de Supabase, usando respaldo local:', res.error && res.error.message);
+        return null;
+      }
+      const mapa = {};
+      res.data.forEach((fila) => { mapa[fila.id] = fila; });
+      return mapa;
+    })
+    .catch((err) => {
+      console.warn('[RecoScanner] Error consultando categorías de Supabase, usando respaldo local:', err);
+      return null;
+    });
+
+  return _categoriasSupabasePromise;
+}
+
+/**
+ * Enriquece un material ya resuelto (por MobileNet o por Gemini) con
+ * los datos reales de Supabase, si ya están disponibles: badge,
+ * mensaje_escaner y si requiere punto especial. Si Supabase todavía
+ * no respondió o la fila no existe, el material se devuelve tal cual
+ * (con su color/icono/nombre de respaldo de MATERIALES).
+ */
+function _enriquecerConCategoriaSupabase(material, categoriasMapa) {
+  if (!material || !categoriasMapa) return material;
+  const fila = categoriasMapa[material.id];
+  if (!fila) return material;
+  return {
+    ...material,
+    nombre: fila.nombre || material.nombre,
+    badge: fila.badge || material.badge,
+    mensaje: fila.mensaje_escaner || material.mensaje,
+    reciclable: fila.reciclable !== false,
+    requierePuntoEspecial: !!fila.requiere_punto_especial,
+  };
+}
+
+/**
  * Estados posibles del escáner, útiles para pintar la UI.
  */
 export const ESTADOS = {
@@ -118,6 +185,16 @@ export class RecoScanner {
     // temporal por votación (ver _procesarResultados).
     this._ventanaVotacion = [];
     this._ultimoMaterialReportado = null;
+
+    // Dispara la carga de categorías reales (tabla `categorias` de
+    // Supabase) ya mismo, en paralelo a cámara/modelo: para cuando el
+    // usuario tenga el primer resultado, lo normal es que esto ya haya
+    // resuelto. _categoriasMapa se rellena cuando la promesa resuelve;
+    // mientras tanto queda null y se usa el respaldo de MATERIALES.
+    this._categoriasMapa = null;
+    _cargarCategoriasSupabase().then((mapa) => {
+      this._categoriasMapa = mapa;
+    });
 
     this._setEstado(ESTADOS.INACTIVO);
   }
@@ -423,8 +500,12 @@ export class RecoScanner {
 
     this._ultimoMaterialReportado = idGanador;
     const esGanadorParcial = votosGanador < this.config.minimoVotosParaReportar;
-    this.onResultado(
+    const materialFinal = _enriquecerConCategoriaSupabase(
       { ...entradaGanadora.material, confianzaBaja: entradaGanadora.material.confianzaBaja || esGanadorParcial },
+      this._categoriasMapa
+    );
+    this.onResultado(
+      materialFinal,
       entradaGanadora.resultadosCrudos,
       { votos: votosGanador, deVentana: this._ventanaVotacion.length, parcial: esGanadorParcial }
     );
@@ -502,13 +583,23 @@ export class RecoScanner {
       }
 
       const base = MATERIALES[datos.id] || MATERIALES.no_reciclable;
-      const material = {
+      const materialCrudo = {
         ...base,
         nombre: base.nombre,
         labelOriginal: datos.razon || '',
         coincidenciaKeyword: datos.razon || null,
         confianzaBaja: datos.confianza === 'baja',
       };
+      // api/classify.js ya valida datos.id contra la tabla `categorias`
+      // y devuelve mensaje/reciclable/requierePuntoEspecial en la misma
+      // respuesta; se usan como fuente más fresca posible, pero si por
+      // alguna razón faltan (respuesta antigua del backend en caché,
+      // etc.) se completa igual con el mapa de Supabase cargado en el
+      // cliente.
+      const material = _enriquecerConCategoriaSupabase(materialCrudo, this._categoriasMapa);
+      if (datos.mensaje) material.mensaje = datos.mensaje;
+      if (typeof datos.reciclable === 'boolean') material.reciclable = datos.reciclable;
+      if (typeof datos.requierePuntoEspecial === 'boolean') material.requierePuntoEspecial = datos.requierePuntoEspecial;
 
       this.onResultado(material, [{ label: datos.razon || '', confidence: 1 }], {
         fuente: 'gemini',

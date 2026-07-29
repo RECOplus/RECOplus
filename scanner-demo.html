@@ -195,6 +195,7 @@
       <div class="reco-scanner__resultado-icono" id="recoIcono">♳</div>
       <div class="reco-scanner__resultado-texto">
         <div class="reco-scanner__resultado-material" id="recoMaterialNombre">—</div>
+        <span class="reco-scanner__resultado-badge" id="recoBadge" style="display:none"></span>
         <div class="reco-scanner__resultado-detalle" id="recoDetalle">Esperando objeto...</div>
       </div>
       <div class="reco-scanner__resultado-confianza" id="recoConfianza">—</div>
@@ -254,6 +255,7 @@
   const resultadoEl = document.getElementById('recoResultado');
   const iconoEl = document.getElementById('recoIcono');
   const materialNombreEl = document.getElementById('recoMaterialNombre');
+  const badgeEl = document.getElementById('recoBadge');
   const detalleEl = document.getElementById('recoDetalle');
   const confianzaEl = document.getElementById('recoConfianza');
   const historialEl = document.getElementById('recoHistorial');
@@ -318,12 +320,27 @@
       iconoEl.textContent = material.icono;
       materialNombreEl.textContent = material.nombre;
 
+      // Badge de reciclabilidad (Reciclable / Reutilizable / Requiere
+      // punto especial): viene de la tabla `categorias` de Supabase.
+      // Estados especiales ('sin_confianza', 'no_reciclable') no tienen
+      // fila real en la tabla, así que no se muestra badge para ellos.
+      const esEstadoEspecial = material.id === 'sin_confianza' || material.id === 'no_reciclable';
+      if (!esEstadoEspecial && material.badge) {
+        badgeEl.textContent = material.badge;
+        badgeEl.setAttribute('data-warn', material.requierePuntoEspecial ? 'true' : 'false');
+        badgeEl.style.display = 'inline-block';
+      } else {
+        badgeEl.style.display = 'none';
+      }
+
       if (meta && meta.fuente === 'gemini') {
         // Resultado de un escaneo preciso puntual (una sola muestra,
         // no hay "votos" de una ventana como en MobileNet).
         const etiquetaConfianza = { alta: 'IA · confianza alta', media: 'IA · confianza media', baja: 'IA · confianza baja' };
         confianzaEl.textContent = etiquetaConfianza[meta.confianza] || 'IA';
-        detalleEl.textContent = material.labelOriginal ? `Gemini detectó: ${material.labelOriginal}` : 'Clasificado por IA';
+        detalleEl.textContent = material.mensaje
+          ? material.mensaje
+          : (material.labelOriginal ? `Gemini detectó: ${material.labelOriginal}` : 'Clasificado por IA');
       } else if (material.id === 'sin_confianza') {
         confianzaEl.textContent = 'Sin certeza';
         detalleEl.textContent = 'Acércate más o mejora la iluminación.';
@@ -331,10 +348,16 @@
         const votos = meta ? `${meta.votos}/${meta.deVentana}` : '';
         confianzaEl.textContent = material.confianzaBaja ? 'Confianza baja' : `Consenso ${votos}`;
 
-        const top1 = prediccionesCrudas[0];
-        detalleEl.textContent = material.coincidenciaKeyword
-          ? `Detectado como "${material.coincidenciaKeyword}"`
-          : `Sin categoría exacta (visto: "${top1.label.split(',')[0]}")`;
+        // Prioriza el mensaje real de Supabase (mensaje_escaner); si
+        // aún no cargó, cae al detalle técnico de qué vio el modelo.
+        if (material.mensaje) {
+          detalleEl.textContent = material.mensaje;
+        } else {
+          const top1 = prediccionesCrudas[0];
+          detalleEl.textContent = material.coincidenciaKeyword
+            ? `Detectado como "${material.coincidenciaKeyword}"`
+            : `Sin categoría exacta (visto: "${top1.label.split(',')[0]}")`;
+        }
       }
 
       // Historial (evita duplicados consecutivos, y no registra

@@ -6,6 +6,18 @@
  * "water bottle, water flask") a las 12 categorías de materiales
  * de RECO+.
  *
+ * IMPORTANTE — Fuente de verdad de "¿es reciclable?":
+ * Los `id` usados aquí (plastico, vidrio, metal, papel, libros,
+ * electronicos, celulares, ropa, muebles, juguetes, baterias,
+ * bombillos) son EXACTAMENTE los mismos que los `id` de la tabla
+ * `categorias` en Supabase. Esto es a propósito: MATERIALES de este
+ * archivo solo aporta el color/icono para la UI del escáner y sirve
+ * de respaldo si Supabase no responde; el badge, el mensaje al
+ * usuario y si requiere punto especial se cargan en vivo desde
+ * Supabase por scanner-core.js (ver `_categoriasSupabase`). Si algún
+ * día cambias/agregas una categoría, hazlo en la tabla `categorias`
+ * y agrega aquí solo el color/icono correspondiente con el MISMO id.
+ *
  * Uso:
  *   import { mapLabelToMaterial } from './material-map.js';
  *   const material = mapLabelToMaterial("water bottle, water flask");
@@ -17,21 +29,25 @@
  */
 
 // -----------------------------------------------------------------
-// 1. Tus 12 materiales (ajusta nombres/ids si difieren de tu overlay)
+// 1. Los 12 materiales reales de la tabla `categorias` de Supabase.
+//    nombre/color/icono son solo presentación local (respaldo); el
+//    resto de metadatos (badge, mensaje, reciclable, punto especial)
+//    se sobreescriben en vivo desde Supabase cuando están disponibles.
 // -----------------------------------------------------------------
 export const MATERIALES = {
   plastico: { id: 'plastico', nombre: 'Plástico', color: '#3aa8ff', icono: '♳' },
   vidrio: { id: 'vidrio', nombre: 'Vidrio', color: '#2fbf71', icono: '🍾' },
+  metal: { id: 'metal', nombre: 'Metal', color: '#b0b7c0', icono: '🥫' },
   papel: { id: 'papel', nombre: 'Papel', color: '#d9b26a', icono: '📄' },
-  carton: { id: 'carton', nombre: 'Cartón', color: '#b5793a', icono: '📦' },
-  metal_aluminio: { id: 'metal_aluminio', nombre: 'Aluminio', color: '#b0b7c0', icono: '🥫' },
-  metal_ferroso: { id: 'metal_ferroso', nombre: 'Metal ferroso', color: '#8a8f98', icono: '🔩' },
-  organico: { id: 'organico', nombre: 'Orgánico', color: '#6cbf3f', icono: '🍂' },
-  electronico: { id: 'electronico', nombre: 'Electrónico (RAEE)', color: '#c04dcc', icono: '🔌' },
-  textil: { id: 'textil', nombre: 'Textil', color: '#e07a9c', icono: '👕' },
-  bateria: { id: 'bateria', nombre: 'Pilas / Baterías', color: '#e0483a', icono: '🔋' },
-  aceite: { id: 'aceite', nombre: 'Aceite usado', color: '#caa62f', icono: '🛢️' },
-  no_reciclable: { id: 'no_reciclable', nombre: 'No reciclable', color: '#7a7a7a', icono: '🚫' },
+  libros: { id: 'libros', nombre: 'Libros', color: '#b5793a', icono: '📚' },
+  electronicos: { id: 'electronicos', nombre: 'Electrónicos', color: '#c04dcc', icono: '🔌' },
+  celulares: { id: 'celulares', nombre: 'Celulares', color: '#9b59d6', icono: '📱' },
+  ropa: { id: 'ropa', nombre: 'Ropa', color: '#e07a9c', icono: '👕' },
+  muebles: { id: 'muebles', nombre: 'Muebles', color: '#8a6d4a', icono: '🪑' },
+  juguetes: { id: 'juguetes', nombre: 'Juguetes', color: '#f2994a', icono: '🧸' },
+  baterias: { id: 'baterias', nombre: 'Baterías', color: '#e0483a', icono: '🔋' },
+  bombillos: { id: 'bombillos', nombre: 'Bombillos', color: '#e8c547', icono: '💡' },
+  no_reciclable: { id: 'no_reciclable', nombre: 'No identificado', color: '#7a7a7a', icono: '🚫' },
   // Estado especial: no es que el objeto no sea reciclable, es que el
   // modelo no tiene confianza suficiente en NINGUNA de sus predicciones
   // para siquiera aventurar una categoría. Se distingue de
@@ -42,7 +58,8 @@ export const MATERIALES = {
 
 // -----------------------------------------------------------------
 // 2. Reglas de matching: keyword -> id de material
-//    Se evalúan en orden; la primera coincidencia gana.
+//    Se evalúan en orden; la primera coincidencia gana. Los ids de
+//    `material` deben ser exactamente los de la tabla `categorias`.
 //    Las keywords están en inglés porque MobileNet/ImageNet
 //    devuelve labels en inglés.
 // -----------------------------------------------------------------
@@ -52,75 +69,92 @@ const REGLAS = [
   // plástica retornable (n=1L), no de vidrio. "wine bottle"/"beer bottle"
   // sí son casi siempre de vidrio.
   { material: 'vidrio', keywords: [
-    'wine bottle', 'beer bottle', 'glass', 'jar', 'vase', 'goblet', 'beaker',
+    'wine bottle', 'beer bottle', 'beer glass', 'glass', 'jar', 'vase', 'goblet', 'beaker',
   ]},
 
   // --- Plástico ---
   { material: 'plastico', keywords: [
     'water bottle', 'water jug', 'pop bottle', 'soda bottle',
     'plastic bag', 'shopping basket',
-    'pill bottle', 'soap dispenser', 'bucket', 'washbasin',
+    'pill bottle', 'soap dispenser', 'bucket', 'pail', 'washbasin',
     'lotion', 'syringe',
   ]},
 
-  // --- Cartón (antes que "paper" para que no lo capture papel) ---
-  { material: 'carton', keywords: [
-    'carton', 'cardboard', 'packet', 'crate', 'box turtle', // nota abajo
-  ], excluye: ['box turtle'] }, // evita falso positivo con animal
-
-  // --- Papel ---
+  // --- Papel (incluye cartón: en la tabla `categorias` no existe
+  //     'carton' como categoría propia, va dentro de 'papel') ---
   { material: 'papel', keywords: [
-    'envelope', 'menu', 'book jacket', 'comic book', 'notebook',
-    'binder', 'paper towel', 'toilet tissue', 'newspaper',
+    'carton', 'cardboard', 'packet', 'crate',
+    'envelope', 'menu', 'notebook',
+    'binder', 'paper towel', 'toilet tissue', 'newspaper', 'paper bag',
   ]},
 
-  // --- Aluminio / latas ---
-  { material: 'metal_aluminio', keywords: [
+  // --- Libros ---
+  // OJO: la clase de ImageNet "notebook, notebook computer" es en
+  // realidad una laptop, no un cuaderno de papel — por eso NO se
+  // incluye aquí (evita falsos positivos "libro" con computadoras).
+  { material: 'libros', keywords: [
+    'book jacket', 'comic book',
+  ]},
+
+  // --- Metal (latas, utensilios, metal en general) ---
+  { material: 'metal', keywords: [
     'pop can', 'beer can', 'soda can', 'tin can', 'can opener',
-    'aluminum', 'foil',
-  ]},
-
-  // --- Metal ferroso / metal genérico ---
-  { material: 'metal_ferroso', keywords: [
+    'aluminum', 'foil', 'milk can', 'barrel', 'cask',
     'nail', 'screw', 'chain', 'padlock', 'safety pin', 'paperclip',
     'wrench', 'hammer', 'screwdriver', 'frying pan', 'wok', 'radiator',
   ]},
 
-  // --- Electrónico / RAEE ---
-  { material: 'electronico', keywords: [
-    'cellular telephone', 'mobile phone', 'laptop', 'notebook computer',
-    'desktop computer', 'keyboard', 'computer mouse', 'joystick',
-    'remote control', 'cassette player', 'CD player', 'ipod',
-    'modem', 'monitor', 'printer', 'hard disc', 'projector',
-    'microwave', 'toaster', 'hair dryer', 'electric fan',
-    'dial telephone', 'digital watch', 'digital clock', 'calculator',
-    'space heater',
+  // --- Celulares (antes que electrónicos para que gane la categoría
+  //     más específica) ---
+  { material: 'celulares', keywords: [
+    'cellular telephone', 'mobile phone', 'ipod', 'hand-held computer',
   ]},
 
-  // --- Pilas / Baterías ---
-  { material: 'bateria', keywords: [
+  // --- Electrónicos ---
+  { material: 'electronicos', keywords: [
+    'laptop', 'notebook computer',
+    'desktop computer', 'keyboard', 'computer mouse', 'joystick',
+    'remote control', 'cassette player', 'tape player', 'CD player',
+    'modem', 'monitor', 'printer', 'scanner', 'hard disc', 'projector',
+    'microwave', 'toaster', 'hair dryer', 'electric fan', 'space heater',
+    'dishwasher', 'washer, automatic washer', 'vacuum, vacuum cleaner',
+    'iron, smoothing iron',
+    'dial telephone', 'digital watch', 'digital clock', 'calculator',
+    'television', 'radio, wireless',
+  ]},
+
+  // --- Baterías ---
+  { material: 'baterias', keywords: [
     'battery',
   ]},
 
-  // --- Textil ---
-  { material: 'textil', keywords: [
-    'jersey', 'sweatshirt', 'cardigan', 'kimono', 'poncho',
-    'trench coat', 'jean', 'wool', 'apron', 'diaper', 'bath towel',
-    'handkerchief', 'sock', 'pajama', 'sarong', 'sombrero', 'shoe',
-    'running shoe', 'sandal', 'backpack',
+  // --- Ropa ---
+  { material: 'ropa', keywords: [
+    'jersey', 't-shirt', 'sweatshirt', 'cardigan', 'kimono', 'poncho',
+    'trench coat', 'jean', 'blue jean', 'denim', 'wool', 'apron',
+    'diaper', 'bath towel', 'handkerchief', 'sock', 'pajama', 'sarong',
+    'sombrero', 'shoe', 'running shoe', 'loafer', 'sandal', 'cowboy boot',
+    'backpack', 'brassiere', 'miniskirt', 'gown', 'cloak',
+    'suit, suit of clothes', 'swimming trunks', 'maillot', 'military uniform',
   ]},
 
-  // --- Orgánico ---
-  { material: 'organico', keywords: [
-    'banana', 'orange', 'lemon', 'apple', 'pineapple', 'strawberry',
-    'fig', 'corn', 'mushroom', 'artichoke', 'cucumber', 'zucchini',
-    'broccoli', 'cauliflower', 'head cabbage', 'bell pepper', 'squash',
+  // --- Muebles ---
+  { material: 'muebles', keywords: [
+    'studio couch', 'rocking chair', 'folding chair', 'wardrobe, closet',
+    'file, file cabinet', 'desk', 'dining table', 'four-poster',
+    'crib, cot', 'bookcase', 'chiffonier, commode', 'china cabinet',
   ]},
 
-  // --- Aceite usado ---
-  { material: 'aceite', keywords: [
-    'oil filter', 'cream', // heurística débil, ver nota
+  // --- Juguetes ---
+  { material: 'juguetes', keywords: [
+    'teddy, teddy bear', 'toyshop', 'jigsaw puzzle', 'yo-yo',
+    "rubik's cube", 'balloon', 'kite', 'punching bag',
   ]},
+
+  // Nota: 'bombillos' no tiene una clase directa y fiable en ImageNet,
+  // por lo que se deja sin reglas a propósito (igual que en
+  // reciclar-scanner.js). El usuario siempre puede elegirlo a mano; el
+  // escáneo preciso con IA (Gemini) sí puede identificarlo por contexto.
 ];
 
 // -----------------------------------------------------------------
