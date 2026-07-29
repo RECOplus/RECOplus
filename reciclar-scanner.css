@@ -208,3 +208,38 @@
   color: #d98a1f;
 }
 
+/* ── Chips clicables: ¿Es reciclable? / Categoría / Dónde llevarlo /
+   Cómo prepararlo ──
+   Capa aditiva sobre .rc-scanner__feature (definido en reciclar.css):
+   solo agrega affordance de clic, sin tocar el archivo base.
+   Activado por reciclar-scanner-features.js, que hace scroll hacia
+   la sección correspondiente del panel de info. */
+.rc-scanner__feature--clickable {
+  cursor: pointer;
+  transition: transform 0.18s cubic-bezier(.4,0,.2,1), background 0.18s ease;
+  border-radius: 12px;
+}
+
+.rc-scanner__feature--clickable:hover {
+  transform: translateY(-2px);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+.rc-scanner__feature--clickable:active {
+  transform: translateY(0);
+}
+
+.rc-scanner__feature--clickable:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rc-scanner__feature--clickable {
+    transition: none;
+  }
+  .rc-scanner__feature--clickable:hover {
+    transform: none;
+  }
+}
+
