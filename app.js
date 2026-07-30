@@ -248,18 +248,39 @@ function supabaseHeaders() {
 
 // Trae todos los puntos sugeridos ya guardados en Supabase (visibles
 // para todos los visitantes). Si Supabase no está configurado aún, o
-// falla la red, seguimos solo con POINTS sin romper nada.
+// falla la red, seguimos solo con POINTS sin romper nada — pero ahora
+// SIEMPRE dejamos rastro en consola (antes el catch silenciaba todo
+// error real: CORS, red caída, JSON malformado, etc. — lo que hacía
+// imposible saber por qué la lista aparecía vacía o incompleta).
 async function fetchPublishedSuggestions() {
-  if (!SUPABASE_CONFIGURED) return [];
+  if (!SUPABASE_CONFIGURED) {
+    console.warn("[RECO+] Supabase no configurado: SUPABASE_URL/ANON_KEY faltan o son placeholders.");
+    return [];
+  }
   try {
     const res = await fetch(
       `${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}?select=*&order=created_at.desc`,
       { headers: supabaseHeaders() }
     );
-    if (!res.ok) return [];
+    if (!res.ok) {
+      const errBody = await res.text().catch(() => "");
+      console.error(
+        `[RECO+] Supabase respondió ${res.status} ${res.statusText} al pedir "${SUPABASE_TABLE}":`,
+        errBody
+      );
+      return [];
+    }
     const rows = await res.json();
+    if (!Array.isArray(rows)) {
+      console.error("[RECO+] Supabase devolvió algo inesperado (no es un array):", rows);
+      return [];
+    }
     return rows.map(supabaseRowToPoint);
   } catch (e) {
+    // Errores de RED reales: CORS bloqueado, DNS, sin internet, o la
+    // página abierta con file:// en vez de http://localhost (Live
+    // Server). Antes esto se tragaba en silencio.
+    console.error("[RECO+] fetchPublishedSuggestions() falló (red/CORS/parse):", e);
     return [];
   }
 }

@@ -125,5 +125,47 @@
       revealTargets.forEach(function (el) { el.classList.add('is-visible'); });
     }
 
+    /* ── FIX: reveal de .sidebar / .footer-cta / .footer en mapa.html ──
+       mapa-effects.css (sección 9) define estas tres como
+       "opacity:0; transform:translateY(18px)" en reposo, visibles
+       solo al ganar la clase .is-visible — pensado para un reveal
+       on-scroll. Pero este archivo es una copia de donar-effects.js
+       que nunca observa estos tres selectores (solo conoce clases de
+       donar.html), así que en mapa.html .sidebar se quedaba con
+       opacity:0 para siempre: la lista de resultados existía en el
+       DOM (JS la poblaba bien) pero era invisible y el contenedor no
+       bloqueaba clics, por eso se sentía "interactivo pero vacío".
+       Esto agrega el mismo patrón IntersectionObserver, apuntando a
+       los selectores reales que existen en mapa.html. Aditivo: no
+       toca mapa-effects.css ni el resto de este archivo. */
+    var mapaRevealTargets = document.querySelectorAll('.sidebar, .footer-cta, .footer');
+    if (mapaRevealTargets.length) {
+      if ('IntersectionObserver' in window) {
+        var mapaObserver = new IntersectionObserver(function (entries, obs) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('is-visible');
+            obs.unobserve(entry.target);
+          });
+        }, { threshold: 0.1 });
+        mapaRevealTargets.forEach(function (el) { mapaObserver.observe(el); });
+      } else {
+        mapaRevealTargets.forEach(function (el) { el.classList.add('is-visible'); });
+      }
+      // La sidebar vive en el viewport inicial (no requiere scroll para
+      // verse) en la mayoría de tamaños de pantalla; con threshold:0.1
+      // el IntersectionObserver ya dispara casi de inmediato al cargar,
+      // pero por si el layout tarda en asentarse (fuentes, imágenes,
+      // Leaflet redimensionando el mapa) forzamos una revalidación tras
+      // el primer frame para que nunca quede colgada en opacity:0.
+      requestAnimationFrame(function () {
+        mapaRevealTargets.forEach(function (el) {
+          var rect = el.getBoundingClientRect();
+          var inViewport = rect.top < window.innerHeight && rect.bottom > 0;
+          if (inViewport) el.classList.add('is-visible');
+        });
+      });
+    }
+
   });
 })();
