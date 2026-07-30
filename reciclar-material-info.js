@@ -305,7 +305,7 @@
 
     categoriasPromise = window.recoSupabase
       .from("categorias")
-      .select("id, badge, requiere_punto_especial, mensaje_escaner, preparacion, lugares, obtienes, impacto")
+      .select("id, badge, requiere_punto_especial, mensaje_escaner, preparacion, lugares, obtienes, impacto, tipo_objeto, materiales_compuestos, tiempo_descomposicion, tips_extra, alerta_seguridad, dato_curioso")
       .then(function (res) {
         if (res.error || !res.data) {
           console.warn("[RECO+ info materiales] No se pudieron cargar categorías de Supabase, usando respaldo local:", res.error && res.error.message);
@@ -341,7 +341,13 @@
         preparacion: Array.isArray(fila.preparacion) ? fila.preparacion : [],
         lugares: Array.isArray(fila.lugares) ? fila.lugares : [],
         obtienes: Array.isArray(fila.obtienes) ? fila.obtienes : [],
-        impacto: fila.impacto || ""
+        impacto: fila.impacto || "",
+        tipoObjeto: fila.tipo_objeto || "",
+        materialesCompuestos: Array.isArray(fila.materiales_compuestos) ? fila.materiales_compuestos : [],
+        tiempoDescomposicion: fila.tiempo_descomposicion || "",
+        tipsExtra: Array.isArray(fila.tips_extra) ? fila.tips_extra : [],
+        alertaSeguridad: fila.alerta_seguridad || "",
+        datoCurioso: fila.dato_curioso || ""
       };
     }
     var respaldo = MATERIALS_RESPALDO[materialKey];
@@ -353,7 +359,13 @@
       preparacion: respaldo.preparacion,
       lugares: respaldo.lugares,
       obtienes: respaldo.obtienes,
-      impacto: respaldo.impacto
+      impacto: respaldo.impacto,
+      tipoObjeto: "",
+      materialesCompuestos: [],
+      tiempoDescomposicion: "",
+      tipsExtra: [],
+      alertaSeguridad: "",
+      datoCurioso: ""
     };
   }
 
@@ -387,9 +399,12 @@
       ? '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" width="11" height="11"><path d="M10 3l8 14H2L10 3z"/><line x1="10" y1="8.5" x2="10" y2="12"/><circle cx="10" cy="14.5" r="0.6" fill="currentColor"/></svg>'
       : '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M4 10l4 4 8-8"/></svg>';
 
+    var tieneCompuestos = data.materialesCompuestos && data.materialesCompuestos.length > 0;
+    var tieneTipsExtra = data.tipsExtra && data.tipsExtra.length > 0;
+
     return (
       '<div class="rc-minfo__inner">' +
-        '<div class="rc-minfo__head">' +
+        '<div class="rc-minfo__head" data-minfo-section="reciclable">' +
           '<span class="rc-minfo__icon">' + iconSVG + "</span>" +
           "<div>" +
             '<div class="rc-minfo__title">' + label + "</div>" +
@@ -399,13 +414,24 @@
 
         (data.mensaje ? '<p class="rc-minfo__mensaje">' + data.mensaje + "</p>" : "") +
 
+        (data.alertaSeguridad ? '<p class="rc-minfo__alerta">⚠️ ' + data.alertaSeguridad + "</p>" : "") +
+
+        '<div class="rc-minfo__section" data-minfo-section="categoria">' +
+          (data.tipoObjeto ? '<div class="rc-minfo__categoria"><strong>Tipo de objeto:</strong> ' + data.tipoObjeto + "</div>" : "") +
+          (tieneCompuestos
+            ? '<div class="rc-minfo__compuestos"><strong>Materiales que lo componen:</strong> ' + data.materialesCompuestos.join(", ") + "</div>"
+            : "") +
+          (data.tiempoDescomposicion ? '<div class="rc-minfo__descomp"><strong>Tiempo de descomposición:</strong> ' + data.tiempoDescomposicion + "</div>" : "") +
+        "</div>" +
+
         '<div class="rc-minfo__grid">' +
-          '<div class="rc-minfo__block">' +
+          '<div class="rc-minfo__block" data-minfo-section="preparar">' +
             '<div class="rc-minfo__block-head">' + ICONS.prep + "<span>Cómo prepararlo</span></div>" +
             "<ul>" + renderList(data.preparacion) + "</ul>" +
+            (tieneTipsExtra ? '<div class="rc-minfo__tipsextra"><strong>Tips extra:</strong><ul>' + renderList(data.tipsExtra) + "</ul></div>" : "") +
           "</div>" +
 
-          '<div class="rc-minfo__block">' +
+          '<div class="rc-minfo__block" data-minfo-section="lugares">' +
             '<div class="rc-minfo__block-head">' + ICONS.lugar + "<span>Dónde llevarlo</span></div>" +
             '<div class="rc-minfo__points">' + renderLugares(data.lugares) + "</div>" +
           "</div>" +
@@ -415,6 +441,8 @@
             "<ul>" + renderList(data.obtienes) + "</ul>" +
           "</div>" +
         "</div>" +
+
+        (data.datoCurioso ? '<p class="rc-minfo__curioso">💡 <strong>¿Sabías que…?</strong> ' + data.datoCurioso + "</p>" : "") +
 
         '<div class="rc-minfo__footer">' +
           '<span class="rc-minfo__impact">' + ICONS.obtienes + '<strong>Impacto:</strong>&nbsp;' + data.impacto + "</span>" +

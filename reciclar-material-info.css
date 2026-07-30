@@ -212,9 +212,120 @@
 
 .rc-minfo__cta svg { flex-shrink: 0; }
 
+/* Alerta de seguridad (baterías, bombillos, electrónicos, etc.) */
+.rc-minfo__alerta {
+  margin: 10px 0 0;
+  padding: 10px 13px;
+  border-radius: 12px;
+  background: rgba(217, 138, 31, 0.12);
+  border: 1px solid rgba(217, 138, 31, 0.28);
+  color: #a85f0f;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+/* Bloque de sección "Categoría": tipo de objeto, materiales que lo
+   componen, tiempo de descomposición. Vive entre el header y la
+   grilla de 3 bloques; es el destino del scroll del botón
+   "Categoría" del escáner. */
+.rc-minfo__section {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rc-minfo__categoria,
+.rc-minfo__compuestos,
+.rc-minfo__descomp {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.rc-minfo__categoria strong,
+.rc-minfo__compuestos strong,
+.rc-minfo__descomp strong {
+  color: var(--text-heading);
+  font-weight: 600;
+}
+
+/* Tips extra dentro del bloque "Cómo prepararlo" */
+.rc-minfo__tipsextra {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border-muted);
+  font-size: 0.8rem;
+}
+
+.rc-minfo__tipsextra strong {
+  color: var(--text-heading);
+  font-weight: 600;
+}
+
+.rc-minfo__tipsextra ul {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rc-minfo__tipsextra li {
+  position: relative;
+  padding-left: 14px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.rc-minfo__tipsextra li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* Dato curioso educativo, cierre antes del footer */
+.rc-minfo__curioso {
+  margin: 14px 0 0;
+  padding: 10px 13px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  border: 1px solid var(--border-muted);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.rc-minfo__curioso strong {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Resalta brevemente la sección a la que se hizo scroll desde los
+   chips del escáner (¿Es reciclable? / Categoría / Dónde llevarlo /
+   Cómo prepararlo). Clase temporal añadida por JS. */
+.rc-minfo__flash {
+  animation: rcMinfoFlash 1.4s ease;
+}
+
+@keyframes rcMinfoFlash {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent); border-radius: 12px; }
+  30% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 22%, transparent); border-radius: 12px; }
+  100% { box-shadow: 0 0 0 0 transparent; border-radius: 12px; }
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .rc-minfo {
     transition: none;
+  }
+  .rc-minfo__flash {
+    animation: none;
   }
 }
