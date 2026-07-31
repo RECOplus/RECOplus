@@ -46,6 +46,12 @@
     return CATEGORY_EMOJI[categoria] || '📦';
   }
 
+  /* ── Caché en memoria de las filas ya cargadas (donaciones y
+     solicitudes), indexada por id. Se usa para llenar el modal de
+     detalle sin tener que volver a pedirle el registro a Supabase
+     cuando el usuario toca "Ver donación" / "Ayudar". ── */
+  var rowsCache = {};
+
   /* ── Texto legible para el badge de disponibilidad ── */
   function disponibilidadBadge(disponibilidad) {
     if (!disponibilidad) return null;
@@ -122,9 +128,114 @@
       return;
     }
 
+    rows.forEach(function (row) { rowsCache[String(row.id)] = row; });
+
     track.innerHTML = rows.map(function (row) {
       return buildCardHTML(row, actionLabel);
     }).join('');
+  }
+
+  /* ── Fecha legible para el modal de detalle (distinta de timeAgo,
+     que se usa en la tarjeta chica) ── */
+  function formatFechaLarga(dateStr) {
+    try {
+      return new Date(dateStr).toLocaleDateString('es-PA', { day: 'numeric', month: 'long', year: 'numeric' });
+    } catch (e) {
+      return '';
+    }
+  }
+
+  /* ── Imagen grande (o emoji) para la cabecera del modal de detalle ── */
+  function imageOrEmojiLarge(row) {
+    if (row.imagen_base64) {
+      return '<img src="' + row.imagen_base64 + '" alt="' + escapeHtml(row.categoria) + '">';
+    }
+    return '<span class="donar-detail-emoji">' + emojiFor(row.categoria) + '</span>';
+  }
+
+  /* ── Llena y abre el modal de detalle con los datos de una fila.
+     Se llama desde el click delegado en las tarjetas ("Ver donación
+     →" o "Ayudar →"). ── */
+  function openDetailModal(row) {
+    var overlay = document.getElementById('donarDetailModal');
+    if (!overlay || !row) return;
+
+    var isDonar = row.tipo === 'donar';
+
+    var kicker = document.getElementById('donarDetailKicker');
+    if (kicker) kicker.textContent = isDonar ? '🌿 Donación disponible' : '🙋 Solicitud de ayuda';
+
+    var imgWrap = document.getElementById('donarDetailImg');
+    if (imgWrap) {
+      var badge = disponibilidadBadge(row.disponibilidad);
+      var badgeHTML = badge ? '<span class="dh-card-badge ' + badge.cls + '">' + escapeHtml(badge.text) + '</span>' : '';
+      imgWrap.innerHTML = badgeHTML + imageOrEmojiLarge(row);
+    }
+
+    var titleEl = document.getElementById('donarDetailTitle');
+    if (titleEl) titleEl.textContent = row.categoria || (isDonar ? 'Donación' : 'Solicitud');
+
+    var metaEl = document.getElementById('donarDetailMeta');
+    if (metaEl) {
+      var metaRows = [];
+      metaRows.push('<div><span class="donar-detail-meta-ic">📍</span>' + escapeHtml(row.ubicacion || 'Ubicación no especificada') + '</div>');
+      if (row.punto_funcional) {
+        var puntoLabel = isDonar ? 'Punto de entrega' : 'Punto de recepción';
+        metaRows.push('<div><span class="donar-detail-meta-ic">📌</span>' + puntoLabel + ': ' + escapeHtml(row.punto_funcional) + '</div>');
+      }
+      metaRows.push('<div><span class="donar-detail-meta-ic">🙋</span>Publicado por ' + escapeHtml(row.autor_nombre || 'Usuario RECO+') + '</div>');
+      if (row.created_at) {
+        metaRows.push('<div><span class="donar-detail-meta-ic">📅</span>' + formatFechaLarga(row.created_at) + '</div>');
+      }
+      metaEl.innerHTML = metaRows.join('');
+    }
+
+    var descEl = document.getElementById('donarDetailDesc');
+    if (descEl) descEl.textContent = row.descripcion || 'Sin descripción adicional.';
+
+    overlay.classList.add('open');
+    document.body.classList.add('dh-modal-lock');
+  }
+
+  function closeDetailModal() {
+    var overlay = document.getElementById('donarDetailModal');
+    if (!overlay) return;
+    overlay.classList.remove('open');
+    document.body.classList.remove('dh-modal-lock');
+  }
+
+  /* ── Conecta los clicks de "Ver donación →" / "Ayudar →" (delegado
+     sobre los carruseles, así funciona igual con las tarjetas que
+     donar-listings.js va reemplazando cada vez que recarga) y los
+     cierres del modal (X, click fuera, Escape). ── */
+  function setupDetailModal() {
+    ['dhCarouselDonaciones', 'dhCarouselSolicitudes'].forEach(function (trackId) {
+      var track = document.getElementById(trackId);
+      if (!track) return;
+      track.addEventListener('click', function (e) {
+        var btn = e.target.closest ? e.target.closest('.dh-card-btn') : null;
+        if (!btn) return;
+        var card = btn.closest('.dh-card[data-donacion-id]');
+        if (!card) return;
+        var row = rowsCache[card.getAttribute('data-donacion-id')];
+        if (row) openDetailModal(row);
+      });
+    });
+
+    var overlay = document.getElementById('donarDetailModal');
+    var closeX = document.getElementById('donarDetailClose');
+    var closeBtn = document.getElementById('donarDetailCloseBtn');
+
+    if (closeX) closeX.addEventListener('click', closeDetailModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeDetailModal);
+    if (overlay) {
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeDetailModal();
+      });
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && overlay && overlay.classList.contains('open')) closeDetailModal();
+    });
   }
 
   function getClient() {
@@ -174,4 +285,5 @@
   window.dhRefreshListings = loadListings;
 
   ready(loadListings);
+  ready(setupDetailModal);
 })();

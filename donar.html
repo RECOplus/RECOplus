@@ -14,6 +14,8 @@
   <link rel="stylesheet" href="donar-mapa-effects.css" />
   <!-- Secciones nuevas del homepage de Donar: elección, pasos, stats, carruseles, tracker y CTA -->
   <link rel="stylesheet" href="DonarHome.css" />
+  <!-- Capa aditiva: ventana de detalle de donación/solicitud (botón "Ver donación" / "Ayudar") -->
+  <link rel="stylesheet" href="donar-detail-modal.css" />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <style>
 /* ── BUBBLE NAV — CSS variables for light/dark ── */
@@ -806,6 +808,27 @@ html.dark .dm-pill__sun { opacity: 0.38; }
       <h3 id="modalTitle">¡Publicación enviada!</h3>
       <p id="modalMsg">Tu donación ha sido publicada exitosamente. La comunidad RECO+ ya puede verla.</p>
       <button class="donar-modal-close-btn" id="closeModal">Cerrar</button>
+    </div>
+  </div>
+
+  <!-- ========== MODAL DETALLE DE DONACIÓN / SOLICITUD ==========
+       Se abre al tocar "Ver donación →" o "Ayudar →" en las tarjetas
+       de donar-listings.js. Ese mismo archivo lo llena con los datos
+       reales de Supabase y lo abre/cierra (openDetailModal /
+       closeDetailModal). -->
+  <div class="donar-detail-overlay" id="donarDetailModal">
+    <div class="donar-detail-modal">
+      <button class="donar-detail-close" id="donarDetailClose" aria-label="Cerrar">✕</button>
+      <div class="donar-detail-img" id="donarDetailImg"></div>
+      <div class="donar-detail-body">
+        <span class="donar-detail-kicker" id="donarDetailKicker">Donación</span>
+        <h3 class="donar-detail-title" id="donarDetailTitle"></h3>
+        <div class="donar-detail-meta" id="donarDetailMeta"></div>
+        <p class="donar-detail-desc" id="donarDetailDesc"></p>
+      </div>
+      <div class="donar-detail-footer">
+        <button class="donar-modal-close-btn" id="donarDetailCloseBtn">Cerrar</button>
+      </div>
     </div>
   </div>
 
