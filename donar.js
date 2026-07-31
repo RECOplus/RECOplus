@@ -104,6 +104,14 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.classList.add('open');
   }
 
+  /* Modal reutilizado para avisar que hace falta iniciar sesión antes
+     de publicar (mismo overlay/estructura visual que el de éxito). */
+  function openLoginRequiredModal() {
+    modalTitle.textContent = 'Inicia sesión para continuar';
+    modalMsg.textContent = 'Necesitas tener una cuenta para publicar una donación o solicitud en RECO+.';
+    modal.classList.add('open');
+  }
+
   if (closeModal) {
     closeModal.addEventListener('click', () => modal.classList.remove('open'));
   }
@@ -112,24 +120,163 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target === modal) modal.classList.remove('open');
   });
 
+  /* ---- Helper: obtiene el cliente Supabase o avisa si no está listo ---- */
+  function getSupabaseClient() {
+    if (!window.recoSupabase) {
+      console.error('[RECO+] recoSupabase no está inicializado. Revisa que supabase-config.js se cargó antes que donar.js.');
+      return null;
+    }
+    return window.recoSupabase;
+  }
+
+  /* ---- Helper: pone un botón en estado "publicando..." ---- */
+  function setBtnLoading(btn, loadingText) {
+    if (!btn) return null;
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = loadingText;
+    return function restore() {
+      btn.disabled = false;
+      btn.textContent = originalText;
+    };
+  }
+
+  /* ---- Helper: lee el input de imagen (si hay archivo) como base64 ---- */
+  function readImageAsBase64(fileInputId) {
+    const input = document.getElementById(fileInputId);
+    const file = input && input.files && input.files[0];
+    if (!file) return Promise.resolve(null);
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => resolve(e.target.result);
+      reader.onerror = () => resolve(null);
+      reader.readAsDataURL(file);
+    });
+  }
+
   /* ---- SUBMIT DONAR ---- */
   const btnDonar = document.getElementById('btnDonar');
   if (btnDonar) {
-    btnDonar.addEventListener('click', () => {
-      const categoria = document.getElementById('donacion-categoria').value;
+    btnDonar.addEventListener('click', async () => {
+      const categoriaEl = document.getElementById('donacion-categoria');
+      const categoria = categoriaEl ? categoriaEl.value : '';
       if (!categoria) {
         shakeBtn(btnDonar);
         return;
       }
+
+      const client = getSupabaseClient();
+      if (!client || !window.recoAuth) {
+        openLoginRequiredModal();
+        return;
+      }
+
+      const session = await window.recoAuth.getSession();
+      if (!session || !session.user) {
+        openLoginRequiredModal();
+        return;
+      }
+
+      const restoreBtn = setBtnLoading(btnDonar, 'Publicando...');
+
+      const disponibilidad = (document.getElementById('donacion-disponibilidad') || {}).value || null;
+      const descripcion = (document.getElementById('donacion-descripcion') || {}).value || null;
+      const ubicacion = (document.getElementById('donacion-ubicacion') || {}).value || null;
+      const punto = (document.getElementById('donacion-punto') || {}).value || null;
+      const imagenBase64 = await readImageAsBase64('fileInput');
+
+      const autorNombre =
+        (session.user.user_metadata && (session.user.user_metadata.nombre || session.user.user_metadata.full_name)) ||
+        session.user.email ||
+        'Usuario RECO+';
+
+      const { error } = await client.from('donaciones').insert({
+        user_id: session.user.id,
+        tipo: 'donar',
+        categoria: categoria,
+        disponibilidad: disponibilidad,
+        descripcion: descripcion,
+        ubicacion: ubicacion,
+        punto_funcional: punto,
+        imagen_base64: imagenBase64,
+        autor_nombre: autorNombre
+      });
+
+      if (restoreBtn) restoreBtn();
+
+      if (error) {
+        console.error('[RECO+] Error al publicar donación:', error);
+        modalTitle.textContent = 'No se pudo publicar';
+        modalMsg.textContent = 'Ocurrió un error al guardar tu donación. Intenta de nuevo en unos segundos.';
+        modal.classList.add('open');
+        return;
+      }
+
       openModal(true);
+      if (window.dhRefreshListings) window.dhRefreshListings();
     });
   }
 
   /* ---- SUBMIT SOLICITAR ---- */
   const btnSolicitar = document.getElementById('btnSolicitar');
   if (btnSolicitar) {
-    btnSolicitar.addEventListener('click', () => {
+    btnSolicitar.addEventListener('click', async () => {
+      const categoriaEl = document.getElementById('solicitud-categoria');
+      const categoria = categoriaEl ? categoriaEl.value : '';
+      if (!categoria) {
+        shakeBtn(btnSolicitar);
+        return;
+      }
+
+      const client = getSupabaseClient();
+      if (!client || !window.recoAuth) {
+        openLoginRequiredModal();
+        return;
+      }
+
+      const session = await window.recoAuth.getSession();
+      if (!session || !session.user) {
+        openLoginRequiredModal();
+        return;
+      }
+
+      const restoreBtn = setBtnLoading(btnSolicitar, 'Publicando...');
+
+      const disponibilidad = (document.getElementById('solicitud-disponibilidad') || {}).value || null;
+      const descripcion = (document.getElementById('solicitud-descripcion') || {}).value || null;
+      const ubicacion = (document.getElementById('solicitud-ubicacion') || {}).value || null;
+      const punto = (document.getElementById('solicitud-punto') || {}).value || null;
+      const imagenBase64 = await readImageAsBase64('fileInput2');
+
+      const autorNombre =
+        (session.user.user_metadata && (session.user.user_metadata.nombre || session.user.user_metadata.full_name)) ||
+        session.user.email ||
+        'Usuario RECO+';
+
+      const { error } = await client.from('donaciones').insert({
+        user_id: session.user.id,
+        tipo: 'solicitar',
+        categoria: categoria,
+        disponibilidad: disponibilidad,
+        descripcion: descripcion,
+        ubicacion: ubicacion,
+        punto_funcional: punto,
+        imagen_base64: imagenBase64,
+        autor_nombre: autorNombre
+      });
+
+      if (restoreBtn) restoreBtn();
+
+      if (error) {
+        console.error('[RECO+] Error al publicar solicitud:', error);
+        modalTitle.textContent = 'No se pudo publicar';
+        modalMsg.textContent = 'Ocurrió un error al guardar tu solicitud. Intenta de nuevo en unos segundos.';
+        modal.classList.add('open');
+        return;
+      }
+
       openModal(false);
+      if (window.dhRefreshListings) window.dhRefreshListings();
     });
   }
 

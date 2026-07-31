@@ -553,6 +553,64 @@
         el.classList.add("active");
         showMaterial(el, opts);
         return true;
+      },
+      // Devuelve el material actualmente mostrado en el panel (o null
+      // si aún no se ha mostrado ninguno), sin exponer el HTMLElement
+      // interno — solo la clave, útil para que otros scripts sepan a
+      // qué material referirse sin acoplarse al DOM de este panel.
+      getCurrentKey: function () { return currentKey; },
+      // Devuelve el bloque de HTML de UNA sola sección ("reciclable",
+      // "categoria", "preparar" o "lugares") para una clave de
+      // material dada, tal cual se ve dentro del panel principal —
+      // pensado para reusarse en otros contenedores (ej. el panel
+      // del escáner) sin duplicar la lógica de buildPanelHTML ni la
+      // fuente de datos (Supabase / respaldo local).
+      getSectionHTML: function (key, sectionKey) {
+        var data = getMaterialData(key);
+        if (!data) return "";
+        var el = document.querySelector('.rc-material[data-material="' + key + '"]');
+        var label = el ? getMaterialLabel(el) : key;
+
+        if (sectionKey === "reciclable") {
+          var badgeClass = data.warn ? "rc-minfo__badge warn" : "rc-minfo__badge";
+          var badgeIcon = data.warn
+            ? '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" width="11" height="11"><path d="M10 3l8 14H2L10 3z"/><line x1="10" y1="8.5" x2="10" y2="12"/><circle cx="10" cy="14.5" r="0.6" fill="currentColor"/></svg>'
+            : '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M4 10l4 4 8-8"/></svg>';
+          var mensaje = data.mensaje || (data.warn ? "⚠️ Esto se recicla, pero necesita un punto especial." : "✅ Esto se recicla.");
+          return (
+            '<div class="rc-minfo__head">' +
+              "<div>" +
+                '<div class="rc-minfo__title">' + label + "</div>" +
+                '<span class="' + badgeClass + '">' + badgeIcon + data.badge + "</span>" +
+              "</div>" +
+            "</div>" +
+            '<p class="rc-minfo__mensaje">' + mensaje + "</p>" +
+            (data.alertaSeguridad ? '<p class="rc-minfo__alerta">⚠️ ' + data.alertaSeguridad + "</p>" : "")
+          );
+        }
+
+        if (sectionKey === "categoria") {
+          var tieneCompuestos = data.materialesCompuestos && data.materialesCompuestos.length > 0;
+          var out =
+            (data.tipoObjeto ? '<div class="rc-minfo__categoria"><strong>Tipo de objeto:</strong> ' + data.tipoObjeto + "</div>" : "") +
+            (tieneCompuestos ? '<div class="rc-minfo__compuestos"><strong>Materiales que lo componen:</strong> ' + data.materialesCompuestos.join(", ") + "</div>" : "") +
+            (data.tiempoDescomposicion ? '<div class="rc-minfo__descomp"><strong>Tiempo de descomposición:</strong> ' + data.tiempoDescomposicion + "</div>" : "");
+          return out || '<p class="rc-minfo__categoria">Sin datos de categoría para este material todavía.</p>';
+        }
+
+        if (sectionKey === "preparar") {
+          var tieneTipsExtra = data.tipsExtra && data.tipsExtra.length > 0;
+          return (
+            "<ul>" + renderList(data.preparacion) + "</ul>" +
+            (tieneTipsExtra ? '<div class="rc-minfo__tipsextra"><strong>Tips extra:</strong><ul>' + renderList(data.tipsExtra) + "</ul></div>" : "")
+          );
+        }
+
+        if (sectionKey === "lugares") {
+          return '<div class="rc-minfo__points">' + renderLugares(data.lugares) + "</div>";
+        }
+
+        return "";
       }
     };
   });

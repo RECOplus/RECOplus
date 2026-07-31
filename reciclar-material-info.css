@@ -329,3 +329,82 @@
     animation: none;
   }
 }
+
+/* ───────────────────────────────────────────────────────
+   PANEL DE DETALLE EN EL ESCÁNER (reciclar-scanner-features.js)
+   #rcFeaturePanel reutiliza la clase base .rc-minfo (mismo fondo,
+   bordes y animación de apertura que el panel izquierdo), viviendo
+   dentro del panel derecho del escáner, justo debajo de los 4 chips
+   "¿Es reciclable? / Categoría / Dónde llevarlo / Cómo prepararlo".
+   Capa aditiva: no toca las reglas de .rc-minfo ya definidas arriba.
+════════════════════════════════════════════════════════════════════════ */
+.rc-feature-panel {
+  margin-top: 14px;
+}
+
+.rc-feature-panel .rc-feature-panel__head {
+  padding: 16px 18px 0;
+}
+
+.rc-feature-panel .rc-feature-panel__eyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.rc-feature-panel .rc-feature-panel__body {
+  padding: 10px 18px 18px;
+}
+
+/* Dentro del panel de detalle, las secciones reusan .rc-minfo__block
+   pero sin la caja/fondo extra (ya están dentro de .rc-feature-panel,
+   que ya tiene su propio fondo vía .rc-minfo) para no duplicar el
+   "caja dentro de caja". */
+.rc-feature-panel .rc-minfo__head {
+  margin-bottom: 6px;
+}
+
+.rc-feature-panel ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rc-feature-panel li {
+  position: relative;
+  padding-left: 14px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.rc-feature-panel li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* Chip activo: mismo lenguaje visual que .rc-material.active, para
+   dejar claro cuál de los 4 está mostrándose ahora mismo abajo. */
+.rc-scanner__feature--active {
+  color: var(--accent) !important;
+  background: color-mix(in srgb, var(--accent) 12%, transparent) !important;
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rc-feature-panel {
+    transition: none;
+  }
+}

@@ -652,7 +652,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
           </select>
 
           <label class="donar-label" data-i18n="donar.form.label.disponibilidad">¿Disponibilidad?</label>
-          <select class="donar-input">
+          <select class="donar-input" id="donacion-disponibilidad">
             <option value="" data-i18n="donar.form.opt.disponibilidad">Selecciona disponibilidad</option>
             <option data-i18n="donar.form.opt.inmediata">Inmediata</option>
             <option data-i18n="donar.form.opt.semana">Esta semana</option>
@@ -660,16 +660,16 @@ html.dark .dm-pill__sun { opacity: 0.38; }
           </select>
 
           <label class="donar-label" data-i18n="donar.form.label.descripcion">Descripción</label>
-          <textarea class="donar-input donar-textarea" placeholder="Describe el artículo: estado, cantidad, detalles importantes..." data-i18n="donar.form1.ph.desc"></textarea>
+          <textarea class="donar-input donar-textarea" id="donacion-descripcion" placeholder="Describe el artículo: estado, cantidad, detalles importantes..." data-i18n="donar.form1.ph.desc"></textarea>
         </div>
 
         <!-- Col derecha -->
         <div class="donar-form-col">
           <label class="donar-label" data-i18n="donar.form.label.ubicacion">Ubicación</label>
-          <input type="text" class="donar-input" placeholder="Tu ciudad o barrio" data-i18n="donar.form.ph.ubicacion" />
+          <input type="text" class="donar-input" id="donacion-ubicacion" placeholder="Tu ciudad o barrio" data-i18n="donar.form.ph.ubicacion" />
 
           <label class="donar-label" data-i18n="donar.form.label.punto">Punto funcional</label>
-          <select class="donar-input">
+          <select class="donar-input" id="donacion-punto">
             <option value="" data-i18n="donar.form.opt.punto1">Selecciona punto</option>
             <option data-i18n="donar.form.opt.domicilio">Entrega en mi domicilio</option>
             <option data-i18n="donar.form.opt.acopio">Punto de acopio cercano</option>
@@ -710,7 +710,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
       <div class="donar-form-grid">
         <div class="donar-form-col">
           <label class="donar-label" data-i18n="donar.form.label.categoria2">¿Qué necesitas?</label>
-          <select class="donar-input">
+          <select class="donar-input" id="solicitud-categoria">
             <option value="" data-i18n="donar.form.opt.categoria">Selecciona una categoría</option>
             <option data-i18n="donar.form.opt.ropa">Ropa y calzado</option>
             <option data-i18n="donar.form.opt.electronicos">Electrónicos</option>
@@ -721,7 +721,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
           </select>
 
           <label class="donar-label" data-i18n="donar.form.label.disponibilidad">¿Disponibilidad?</label>
-          <select class="donar-input">
+          <select class="donar-input" id="solicitud-disponibilidad">
             <option value="" data-i18n="donar.form.opt.disponibilidad">Selecciona disponibilidad</option>
             <option data-i18n="donar.form.opt.cuanto-antes">Lo antes posible</option>
             <option data-i18n="donar.form.opt.semana">Esta semana</option>
@@ -729,15 +729,15 @@ html.dark .dm-pill__sun { opacity: 0.38; }
           </select>
 
           <label class="donar-label" data-i18n="donar.form.label.descripcion">Descripción</label>
-          <textarea class="donar-input donar-textarea" placeholder="Describe qué necesitas, para qué y cualquier detalle relevante..." data-i18n="donar.form2.ph.desc"></textarea>
+          <textarea class="donar-input donar-textarea" id="solicitud-descripcion" placeholder="Describe qué necesitas, para qué y cualquier detalle relevante..." data-i18n="donar.form2.ph.desc"></textarea>
         </div>
 
         <div class="donar-form-col">
           <label class="donar-label" data-i18n="donar.form.label.ubicacion">Ubicación</label>
-          <input type="text" class="donar-input" placeholder="Tu ciudad o barrio" data-i18n="donar.form.ph.ubicacion" />
+          <input type="text" class="donar-input" id="solicitud-ubicacion" placeholder="Tu ciudad o barrio" data-i18n="donar.form.ph.ubicacion" />
 
           <label class="donar-label" data-i18n="donar.form.label.punto">Punto funcional</label>
-          <select class="donar-input">
+          <select class="donar-input" id="solicitud-punto">
             <option value="" data-i18n="donar.form.opt.punto2">Selecciona punto de recepción</option>
             <option data-i18n="donar.form.opt.visita">Me pueden visitar</option>
             <option data-i18n="donar.form.opt.recojo">Recojo en punto de acopio</option>
@@ -868,6 +868,8 @@ html.dark .dm-pill__sun { opacity: 0.38; }
   <script src="donar-effects.js"></script>
   <!-- Funciones del nuevo homepage: ir a tab, carruseles, contador de stats -->
   <script src="DonarHome.js"></script>
+  <!-- Carga las tarjetas reales de donaciones/solicitudes desde Supabase -->
+  <script src="donar-listings.js"></script>
   <script src="donar-shimmer.js"></script>
   <script src="search.js"></script>
   <script src="navbar-auth.js"></script>
