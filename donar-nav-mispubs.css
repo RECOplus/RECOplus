@@ -1,0 +1,167 @@
+/* ═══════════════════════════════════════════════════════════════
+   DONAR-NAV-MISPUBS.CSS — RECO+
+   Capa ADITIVA: mini menú en la navbar de donar.html (SOLO esta
+   página) con el símbolo de reciclaje, donde el usuario ve sus
+   propias publicaciones activas (donaciones y solicitudes de
+   ayuda que él mismo publicó, tabla `donaciones`, estado='activa').
+
+   Reutiliza las variables del bubble-nav ya definidas inline en
+   donar.html (--nav-bg, --nav-border, --nav-shadow, --nav-dm-bg,
+   --nav-dm-border, --nav-link-color) — no define ninguna nueva.
+
+   Cargar DESPUÉS del <style> inline del bubble-nav:
+   <link rel="stylesheet" href="donar-nav-mispubs.css">
+═══════════════════════════════════════════════════════════════ */
+
+.mis-pubs-wrap {
+  position: relative;
+}
+
+.mis-pubs-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--nav-dm-bg);
+  border: 1px solid var(--nav-dm-border);
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0;
+  transition: background 0.18s, transform 0.15s;
+}
+.mis-pubs-btn:hover { transform: scale(1.06); }
+.mis-pubs-btn.has-items {
+  background: color-mix(in srgb, var(--nav-cta-bg, #2d8c4e) 16%, var(--nav-dm-bg));
+}
+
+.mis-pubs-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 320px;
+  max-width: calc(100vw - 48px);
+  max-height: 420px;
+  overflow: hidden;
+  display: none;
+  flex-direction: column;
+  border-radius: 20px;
+  background: var(--nav-bg);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid var(--nav-border);
+  box-shadow: var(--nav-shadow);
+  z-index: 1001;
+  animation: misPubsFadeIn 0.18s ease both;
+}
+.mis-pubs-dropdown.open { display: flex; }
+
+@keyframes misPubsFadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.mis-pubs-dropdown-header {
+  flex-shrink: 0;
+  padding: 14px 16px 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--nav-link-color);
+  border-bottom: 1px solid var(--nav-border);
+}
+
+.mis-pubs-dropdown-body {
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.mis-pubs-group-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--nav-link-color);
+  opacity: 0.65;
+  padding: 8px 8px 4px;
+}
+
+.mis-pubs-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  border: none;
+  background: transparent;
+  border-radius: 12px;
+  padding: 8px;
+  cursor: pointer;
+  text-align: left;
+  font-family: 'DM Sans', sans-serif;
+  transition: background 0.15s;
+}
+.mis-pubs-item:hover { background: var(--nav-link-hover-bg); }
+
+.mis-pubs-item-emoji {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  background: color-mix(in srgb, var(--nav-cta-bg, #2d8c4e) 12%, transparent);
+  overflow: hidden;
+}
+.mis-pubs-item-emoji img { width: 100%; height: 100%; object-fit: cover; }
+
+.mis-pubs-item-text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.mis-pubs-item-text strong {
+  font-size: 0.82rem;
+  color: var(--nav-link-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mis-pubs-item-text small {
+  font-size: 0.72rem;
+  color: var(--nav-link-color);
+  opacity: 0.65;
+}
+
+.mis-pubs-empty {
+  padding: 16px 12px;
+  text-align: center;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  color: var(--nav-link-color);
+  opacity: 0.75;
+  line-height: 1.5;
+}
+
+.mis-pubs-empty-btn {
+  display: inline-block;
+  margin-top: 8px;
+  border: none;
+  background: var(--nav-cta-bg, #2d8c4e);
+  color: var(--nav-cta-color, #fff);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 7px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+@media (max-width: 860px) {
+  .mis-pubs-dropdown { right: -8px; }
+}

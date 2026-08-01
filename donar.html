@@ -277,6 +277,8 @@ html.dark .dm-pill__sun { opacity: 0.38; }
 </script>
 <!-- Capa aditiva: chip de usuario con foto/avatar + menú cuando hay sesión -->
 <link rel="stylesheet" href="navbar-auth.css">
+  <!-- Capa aditiva: mini menú "tus publicaciones activas" en la navbar (SOLO esta página) -->
+  <link rel="stylesheet" href="donar-nav-mispubs.css">
 </head>
 <body>
 
@@ -317,6 +319,19 @@ html.dark .dm-pill__sun { opacity: 0.38; }
     <!-- Right side: dark mode pill + lang pill + CTA -->
     <!-- navbar__spacer keeps compatibility with darkmode.js auto-injection -->
     <div class="bubble-nav__actions navbar__spacer">
+
+      <!-- Capa aditiva: mini menú "tus publicaciones activas" (SOLO esta página) -->
+      <div class="mis-pubs-wrap" id="misPubsWrap">
+        <button class="mis-pubs-btn" id="misPubsBtn" type="button" aria-haspopup="true" aria-expanded="false" title="Tus publicaciones activas">
+          ♻️
+        </button>
+        <div class="mis-pubs-dropdown" id="misPubsDropdown">
+          <div class="mis-pubs-dropdown-header">Tus publicaciones activas</div>
+          <div class="mis-pubs-dropdown-body" id="misPubsBody">
+            <div class="mis-pubs-empty">Cargando...</div>
+          </div>
+        </div>
+      </div>
 
       <!-- Dark mode pill -->
       <div class="dm-pill" id="darkModeToggle" role="button" title="Cambiar modo claro/oscuro" aria-label="Toggle dark mode">
@@ -678,6 +693,11 @@ html.dark .dm-pill__sun { opacity: 0.38; }
             <option data-i18n="donar.form.opt.centro">Centro comunitario</option>
           </select>
 
+          <label class="donar-label">Empresa a la que se enviará <span class="donar-optional">(opcional)</span></label>
+          <select class="donar-input" id="donacion-empresa">
+            <option value="">Selecciona una empresa (opcional)</option>
+          </select>
+
           <!-- Zona de imagen -->
           <label class="donar-label" data-i18n="donar.form1.label.foto">Foto del artículo</label>
           <div class="donar-upload" id="dropzone">
@@ -744,6 +764,11 @@ html.dark .dm-pill__sun { opacity: 0.38; }
             <option data-i18n="donar.form.opt.visita">Me pueden visitar</option>
             <option data-i18n="donar.form.opt.recojo">Recojo en punto de acopio</option>
             <option data-i18n="donar.form.opt.acuerdo">Acuerdo con donante</option>
+          </select>
+
+          <label class="donar-label">Empresa a la que se enviará <span class="donar-optional">(opcional)</span></label>
+          <select class="donar-input" id="solicitud-empresa">
+            <option value="">Selecciona una empresa (opcional)</option>
           </select>
 
           <label class="donar-label" data-i18n="donar.form2.label.foto">Foto de referencia <span class="donar-optional" data-i18n="donar.form.opcional">(opcional)</span></label>
@@ -887,6 +912,10 @@ html.dark .dm-pill__sun { opacity: 0.38; }
   <script src="i18n.js"></script>
   <script src="nav-preview.js"></script>
   <script src="donar.js"></script>
+  <!-- Fuente única de los puntos oficiales del mapa (recicladoras,
+       acopios, ONGs) + selector de empresa en los formularios -->
+  <script src="map-points-data.js"></script>
+  <script src="donar-empresas.js"></script>
   <!-- Luces, partículas, glow y doble destello — mismo lenguaje visual que mapa.html -->
   <script src="donar-effects.js"></script>
   <!-- Funciones del nuevo homepage: ir a tab, carruseles, contador de stats -->
@@ -896,5 +925,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
   <script src="donar-shimmer.js"></script>
   <script src="search.js"></script>
   <script src="navbar-auth.js"></script>
+  <!-- Capa aditiva: mini menú "tus publicaciones activas" en la navbar (SOLO esta página) -->
+  <script src="donar-mis-publicaciones.js"></script>
 </body>
 </html>

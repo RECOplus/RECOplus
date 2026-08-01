@@ -184,6 +184,9 @@
         metaRows.push('<div><span class="donar-detail-meta-ic">📌</span>' + puntoLabel + ': ' + escapeHtml(row.punto_funcional) + '</div>');
       }
       metaRows.push('<div><span class="donar-detail-meta-ic">🙋</span>Publicado por ' + escapeHtml(row.autor_nombre || 'Usuario RECO+') + '</div>');
+      if (row.empresa_destino) {
+        metaRows.push('<div><span class="donar-detail-meta-ic">🏢</span>Empresa: ' + escapeHtml(row.empresa_destino) + '</div>');
+      }
       if (row.created_at) {
         metaRows.push('<div><span class="donar-detail-meta-ic">📅</span>' + formatFechaLarga(row.created_at) + '</div>');
       }
@@ -203,6 +206,12 @@
     overlay.classList.remove('open');
     document.body.classList.remove('dh-modal-lock');
   }
+
+  // Expuesto globalmente para que otras capas aditivas (ej.
+  // donar-mis-publicaciones.js, el menú de "tus publicaciones
+  // activas" en la navbar) puedan abrir el mismo modal de detalle
+  // sin duplicar su HTML/lógica.
+  window.dhOpenDetailModal = openDetailModal;
 
   /* ── Conecta los clicks de "Ver donación →" / "Ayudar →" (delegado
      sobre los carruseles, así funciona igual con las tarjetas que

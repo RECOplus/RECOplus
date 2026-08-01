@@ -183,6 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const descripcion = (document.getElementById('donacion-descripcion') || {}).value || null;
       const ubicacion = (document.getElementById('donacion-ubicacion') || {}).value || null;
       const punto = (document.getElementById('donacion-punto') || {}).value || null;
+      const empresaDestino = (document.getElementById('donacion-empresa') || {}).value || null;
       const imagenBase64 = await readImageAsBase64('fileInput');
 
       const autorNombre =
@@ -198,6 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
         descripcion: descripcion,
         ubicacion: ubicacion,
         punto_funcional: punto,
+        empresa_destino: empresaDestino,
         imagen_base64: imagenBase64,
         autor_nombre: autorNombre
       });
@@ -246,6 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const descripcion = (document.getElementById('solicitud-descripcion') || {}).value || null;
       const ubicacion = (document.getElementById('solicitud-ubicacion') || {}).value || null;
       const punto = (document.getElementById('solicitud-punto') || {}).value || null;
+      const empresaDestino = (document.getElementById('solicitud-empresa') || {}).value || null;
       const imagenBase64 = await readImageAsBase64('fileInput2');
 
       const autorNombre =
@@ -261,6 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
         descripcion: descripcion,
         ubicacion: ubicacion,
         punto_funcional: punto,
+        empresa_destino: empresaDestino,
         imagen_base64: imagenBase64,
         autor_nombre: autorNombre
       });
