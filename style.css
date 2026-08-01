@@ -3400,20 +3400,20 @@ html.dark .dm-pill__sun { opacity: 0.38; }
             box-shadow: 0 6px 20px rgba(239,68,68,0.18), inset 0 1px 0 rgba(255,255,255,0.14);
         }
 
-        /* Store chip — ámbar */
-        .mini-nav__chip--store {
-            background: rgba(245,158,11,0.14);
-            border-color: rgba(245,158,11,0.26);
-            color: rgba(255,230,160,0.90);
+        /* Allies chip — púrpura/violeta, a juego con acc-card--allies */
+        .mini-nav__chip--allies {
+            background: rgba(167,139,250,0.16);
+            border-color: rgba(167,139,250,0.30);
+            color: rgba(216,200,250,0.90);
         }
-        .mini-nav__chip--store .mini-nav__chip-icon {
-            background: rgba(245,158,11,0.22);
-            color: #fcd34d;
+        .mini-nav__chip--allies .mini-nav__chip-icon {
+            background: rgba(167,139,250,0.26);
+            color: #c4b5fd;
         }
-        .mini-nav__chip--store:hover {
-            background: rgba(245,158,11,0.24);
-            border-color: rgba(245,158,11,0.45);
-            box-shadow: 0 6px 20px rgba(245,158,11,0.16), inset 0 1px 0 rgba(255,255,255,0.14);
+        .mini-nav__chip--allies:hover {
+            background: rgba(167,139,250,0.28);
+            border-color: rgba(167,139,250,0.50);
+            box-shadow: 0 6px 20px rgba(167,139,250,0.20), inset 0 1px 0 rgba(255,255,255,0.16);
         }
 
         /* Help chip — azul */
