@@ -30,7 +30,7 @@
 :root {
   --lg-tint:         rgba(255, 255, 255, 0.10);
   --lg-tint-strong:  rgba(255, 255, 255, 0.22);
-  --lg-shine:        rgba(255, 255, 255, 0.65);
+  --lg-shine-color:  rgba(255, 255, 255, 0.65);
   --lg-border:       color-mix(in srgb, var(--accent, #2d8c4e) 22%, transparent);
   --lg-shadow:       0 8px 32px rgba(20, 60, 35, 0.10), 0 2px 8px rgba(20, 60, 35, 0.06);
   --lg-blur:         18px;
@@ -44,7 +44,7 @@
 html.dark {
   --lg-tint:         rgba(255, 255, 255, 0.05);
   --lg-tint-strong:  rgba(255, 255, 255, 0.09);
-  --lg-shine:        rgba(255, 255, 255, 0.30);
+  --lg-shine-color:  rgba(255, 255, 255, 0.30);
   --lg-border:       color-mix(in srgb, var(--accent, #5ecf82) 20%, transparent);
   --lg-shadow:       0 8px 32px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.30);
 
@@ -70,7 +70,7 @@ html.dark {
   position: relative;
   background-color: var(--bg-card, rgba(255,255,255,0.55));
   background-image:
-    linear-gradient(120deg, var(--lg-shine) 0%, transparent 14%, transparent 86%, var(--lg-shine) 100%),
+    linear-gradient(120deg, var(--lg-shine-color) 0%, transparent 14%, transparent 86%, var(--lg-shine-color) 100%),
     linear-gradient(180deg, var(--lg-tint-strong) 0%, var(--lg-tint) 60%, transparent 100%);
   background-blend-mode: overlay, normal;
   backdrop-filter: blur(var(--lg-blur)) saturate(180%);

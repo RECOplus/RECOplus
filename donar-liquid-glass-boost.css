@@ -7,7 +7,10 @@
    hover con sombra intensificada + elevación en TODAS las tarjetas de
    vidrio (mismo patrón que .result-item:hover en liquid-glass-mapa.css),
    anillo de luz en el tab activo (mismo que .chip.active::after en
-   mapa-effects.css) y glow orbs adicionales en las secciones nuevas.
+   mapa-effects.css), glow orbs adicionales en las secciones nuevas, y
+   el reflejo diagonal fijo + línea de luz superior ("gota de vidrio")
+   de liquid-glass-mapa.css aplicados a TODAS las piezas de vidrio de
+   donar.html que aún no los tenían (bloques 11 y 12).
 
    Reutiliza las variables --lg-* (de liquid-glass-donar.css /
    liquid-glass-donar-light-fix.css) y --fx-glow-* (de liquid-glass-fx.css),
@@ -226,6 +229,19 @@ html.dark .dh-listings::after {
   z-index: 1;
 }
 
+/* dh-cta-banner: necesita position:relative + overflow:hidden para
+   alojar las partículas .dn-lights que ahora también inyecta
+   donar-effects.js en esta sección (mismo patrón que .donar-hero). */
+.dh-cta-banner {
+  position: relative;
+  overflow: hidden;
+}
+.dh-cta-banner__icon,
+.dh-cta-banner__text {
+  position: relative;
+  z-index: 1;
+}
+
 /* ══════════════════════════════════════════════════════════════
    8. SUBRAYADO CON GLOW — mismo efecto que .bubble-nav__links
    a::after en liquid-glass-fx.css, aplicado al link "Ver todas"
@@ -262,6 +278,88 @@ html.dark .dh-listings::after {
 .donar-upload.dragover {
   box-shadow: 0 0 0 3px var(--fx-glow-green-soft, rgba(94,207,130,.28)), var(--lg-shadow-hover);
 }
+
+/* ══════════════════════════════════════════════════════════════
+   11. REFLEJO DIAGONAL DE VIDRIO (--lg-shine) EN TODO EL RESTO DE
+   donar.html — la misma banda de brillo diagonal fija que ya usa
+   mapa.html en TODAS sus piezas de vidrio (.search-bar, .chip,
+   .legend, .modal, .sidebar, .result-item, etc. en
+   liquid-glass-mapa.css, sección "REFLEJO DE VIDRIO"). En donar,
+   liquid-glass-donar.css solo la aplicó a un subconjunto (tabs,
+   upload, form-panel, trust-item, modal, hero-card-float, botones
+   de envío). Este bloque la extiende a TODO lo demás que aún no la
+   tenía: el hero completo, las cards dh-glass genéricas, los pasos,
+   stats, tracker, inputs/tab/botón de envío del formulario, el
+   marco de la ventana flotante y los botones circulares del
+   carrusel — para que se vea el mismo panel de vidrio curvo en
+   cada esquina de la página, no solo en algunas piezas.
+═══════════════════════════════════════════════════════════════ */
+.donar-hero,
+.dh-glass,
+.dh-steps-row,
+.dh-stats-grid,
+.dh-tracker-row,
+.dh-form-modal,
+.donar-tab,
+.donar-input,
+.donar-submit-btn,
+.dh-car-btn {
+  background-image: var(--lg-shine) !important;
+  background-blend-mode: overlay;
+}
+
+/* El input de formulario no lleva reflejo (dificulta leer el texto
+   dentro), igual que .modal-input / .sort-select en liquid-glass-mapa.css. */
+.donar-input {
+  background-image: none !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   12. LÍNEA DE LUZ SUPERIOR ("gota de vidrio") EN TODO LO QUE AÚN
+   NO LA TENÍA — mismo ::after que .legend::after / .modal::after /
+   .sidebar::after / .result-item::after en liquid-glass-mapa.css.
+   .dh-choice-card, .dh-card y .dh-cta-banner YA la tienen (bloque 6
+   de este archivo); aquí se completa el resto: hero, cards dh-glass
+   genéricas (steps-row, stats-grid, tracker-row incluidos vía
+   .dh-glass), marco de la ventana flotante, tabs, y botón de envío.
+═══════════════════════════════════════════════════════════════ */
+.donar-hero,
+.dh-glass,
+.dh-form-modal,
+.donar-tabs,
+.donar-submit-btn,
+.donar-modal-close-btn {
+  position: relative;
+}
+.donar-hero::after,
+.dh-glass::after,
+.dh-form-modal::after,
+.donar-tabs::after,
+.donar-submit-btn::before,
+.donar-modal-close-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 8%; right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--lg-highlight, rgba(255,255,255,.22)), transparent);
+  pointer-events: none;
+  z-index: 1;
+}
+/* .donar-submit-btn y .donar-modal-close-btn son píldoras (border-radius
+   999px), no cards rectangulares: la línea se centra en vez de pegarse
+   arriba, imitando el mismo brillo curvo pero ajustado a su forma. */
+.donar-submit-btn::before,
+.donar-modal-close-btn::before {
+  top: 1px;
+  left: 14%;
+  right: 14%;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   13. RESPETAR REDUCED MOTION (sin animación en estos elementos,
+   el reflejo y la línea son estáticos — nada que desactivar aquí,
+   se deja el bloque por consistencia con el resto del archivo)
+═══════════════════════════════════════════════════════════════ */
 
 /* ══════════════════════════════════════════════════════════════
    10. RESPETAR REDUCED MOTION
