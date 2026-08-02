@@ -31,6 +31,146 @@
   transform: translateY(0);
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   VENTANA (MODAL) para #rcMaterialInfo
+   -------------------------------------------------------------
+   #rcMaterialInfo vive ahora dentro de #rcMaterialInfoOverlay,
+   como hijo directo de <body> (fuera de .rc-panel), para que la
+   información se muestre flotando y centrada en pantalla en vez
+   de alargar verticalmente la sección de materiales. Estas reglas
+   SOLO se aplican cuando .rc-minfo está dentro de .rc-minfo-overlay
+   (selector de dos clases, mayor especificidad) — así no afectan a
+   #rcFeaturePanel, que sigue reusando .rc-minfo / .rc-minfo--open
+   como caja acordeón normal dentro del panel del escáner.
+═══════════════════════════════════════════════════════════════ */
+.rc-minfo-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(10, 22, 14, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.26s ease, visibility 0s linear 0.26s;
+}
+
+.rc-minfo-overlay--open {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.26s ease, visibility 0s;
+}
+
+body.rc-modal-open {
+  overflow: hidden;
+}
+
+.rc-minfo-overlay .rc-minfo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(640px, 92vw);
+  max-height: 82vh;
+  margin-top: 0;
+  overflow: hidden;
+  transform: scale(0.94) translateY(10px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.30);
+}
+
+.rc-minfo-overlay--open .rc-minfo {
+  transform: scale(1) translateY(0);
+}
+
+.rc-minfo__scrollbody {
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.rc-minfo-overlay .rc-minfo__inner {
+  padding-top: 46px;
+}
+
+.rc-minfo__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border-muted);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  transition: background 0.2s, color 0.2s, transform 0.2s, border-color 0.2s;
+}
+
+.rc-minfo__close:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  transform: rotate(90deg);
+}
+
+.rc-minfo__nav {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 18px;
+  background: var(--bg-muted);
+  border-top: 1px solid var(--border-muted);
+}
+
+.rc-minfo__navbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border-muted);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, transform 0.2s, border-color 0.2s;
+}
+
+.rc-minfo__navbtn:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.rc-minfo__navbtn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.rc-minfo__navcount {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+@media (max-width: 420px) {
+  .rc-minfo-overlay { padding: 14px; }
+  .rc-minfo__navbtn span { display: none; }
+  .rc-minfo__navbtn { padding: 8px 12px; }
+}
+
 .rc-minfo__inner {
   padding: 20px 22px 22px;
 }
@@ -82,15 +222,16 @@
   background: rgba(217, 138, 31, 0.14);
 }
 
-/* Grid de 3 bloques: Preparación / Dónde llevarlo / Qué obtienes */
+/* Grid de 4 bloques en 2x2: Preparación / Dónde llevarlo /
+   Qué obtienes / Tips extra */
 .rc-minfo__grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 14px;
   margin-top: 16px;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 560px) {
   .rc-minfo__grid { grid-template-columns: 1fr; }
 }
 
@@ -250,44 +391,12 @@
   font-weight: 600;
 }
 
-/* Tips extra dentro del bloque "Cómo prepararlo" */
-.rc-minfo__tipsextra {
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px dashed var(--border-muted);
-  font-size: 0.8rem;
-}
-
-.rc-minfo__tipsextra strong {
-  color: var(--text-heading);
-  font-weight: 600;
-}
-
-.rc-minfo__tipsextra ul {
-  margin: 6px 0 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.rc-minfo__tipsextra li {
-  position: relative;
-  padding-left: 14px;
-  line-height: 1.45;
-  color: var(--text-secondary);
-}
-
-.rc-minfo__tipsextra li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0.55em;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--accent);
+/* Caja "Tips extra": 4to bloque del grid 2x2, mismo lenguaje visual
+   que los otros 3 bloques (.rc-minfo__block), con un acento sutil
+   para diferenciarla como contenido complementario. */
+.rc-minfo__block--tips {
+  background: color-mix(in srgb, var(--accent) 6%, var(--bg-card));
+  border-color: color-mix(in srgb, var(--accent) 22%, var(--border-muted));
 }
 
 /* Dato curioso educativo, cierre antes del footer */
@@ -327,6 +436,10 @@
   }
   .rc-minfo__flash {
     animation: none;
+  }
+  .rc-minfo-overlay,
+  .rc-minfo-overlay .rc-minfo {
+    transition: none;
   }
 }
 

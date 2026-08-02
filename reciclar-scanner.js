@@ -97,8 +97,11 @@
       "frying pan", "wok"
     ],
     papel: [
-      "envelope", "packet", "paper towel", "toilet tissue", "carton",
+      "envelope", "packet", "paper towel", "toilet tissue",
       "menu", "paper bag"
+    ],
+    carton: [
+      "carton", "crate"
     ],
     // OJO: la clase de ImageNet "notebook, notebook computer" es en
     // realidad una laptop, no un cuaderno de papel — por eso NO se
@@ -125,6 +128,9 @@
       "loafer", "sandal", "cowboy boot", "sock", "brassiere", "miniskirt",
       "gown", "cloak", "apron"
     ],
+    cuero: [
+      "purse", "wallet", "backpack", "holster", "saddle", "belt buckle"
+    ],
     muebles: [
       "studio couch", "rocking chair", "folding chair", "wardrobe, closet",
       "file, file cabinet", "desk", "dining table", "four-poster",
@@ -137,7 +143,11 @@
     // Sin cobertura fiable de ImageNet — se dejan vacías a propósito.
     // El usuario siempre puede seleccionarlas manualmente en la lista.
     baterias: [],
-    bombillos: []
+    bombillos: [],
+    tetrapak: [],
+    aceite: [],
+    tela: [],
+    utilesescolares: []
   };
 
   /* ──────────────────────────────────────────────────────────
@@ -160,7 +170,13 @@
     electronicos: { badge: "Requiere punto especial", warn: true, mensaje_escaner: "" },
     celulares: { badge: "Requiere punto especial", warn: true, mensaje_escaner: "" },
     baterias: { badge: "Requiere punto especial", warn: true, mensaje_escaner: "" },
-    bombillos: { badge: "Requiere punto especial", warn: true, mensaje_escaner: "" }
+    bombillos: { badge: "Requiere punto especial", warn: true, mensaje_escaner: "" },
+    carton: { badge: "Reciclable", warn: false, mensaje_escaner: "" },
+    tetrapak: { badge: "Reciclable", warn: false, mensaje_escaner: "" },
+    aceite: { badge: "Requiere punto especial", warn: true, mensaje_escaner: "" },
+    tela: { badge: "Reciclable / Donable", warn: false, mensaje_escaner: "" },
+    cuero: { badge: "Reutilizable", warn: false, mensaje_escaner: "" },
+    utilesescolares: { badge: "Reutilizable", warn: false, mensaje_escaner: "" }
   };
 
   var categoriasCache = null; // se llena con loadCategorias(); null mientras carga o si falló
