@@ -3,189 +3,13 @@
    ===================================================== */
 
 // ── Data ──────────────────────────────────────────────
-let POINTS = [
-
-  {
-    id: 1,
-    name: "Best Metals",
-    type: "reciclaje",
-    address: "David, Chiriquí",
-    distance: 0.5,
-    lat: 8.4331,
-    lng: -82.4308,
-    materials: ["metal", "plasticos"],
-    materialIcons: ["🥫", "🧴"],
-    rating: 4.5,
-    reviewCount: 128,
-    addedAt: "2026-06-20",
-  },
-
-  {
-    id: 2,
-    name: "Reciclaje Joselyne",
-    type: "reciclaje",
-    address: "David, Chiriquí",
-    distance: 1.0,
-    lat: 8.4295,
-    lng: -82.4317,
-    materials: ["plasticos", "papel", "vidrio"],
-    materialIcons: ["🧴", "📄", "🍾"],
-    rating: 4.8,
-    reviewCount: 94,
-    addedAt: "2026-07-05",
-  },
-
-  {
-    id: 3,
-    name: "Recimetal Chiriqui",
-    type: "acopio",
-    address: "David, Chiriquí",
-    distance: 1.5,
-    lat: 8.4279,
-    lng: -82.4330,
-    materials: ["metal", "electronicos"],
-    materialIcons: ["🥫", "💻"],
-    rating: 3.9,
-    reviewCount: 41,
-    addedAt: "2026-05-12",
-  },
-
-  {
-    id: 4,
-    name: "Boquete Recycling",
-    type: "reciclaje",
-    address: "Boquete, Chiriquí",
-    distance: 2.3,
-    lat: 8.7801,
-    lng: -82.4332,
-    materials: ["plasticos", "papel", "vidrio"],
-    materialIcons: ["🧴", "📄", "🍾"],
-    rating: 4.2,
-    reviewCount: 67,
-    addedAt: "2026-06-28",
-  },
-
-  {
-    id: 5,
-    name: "Tierras Altas Recicla",
-    type: "reciclaje",
-    address: "Volcán, Chiriquí",
-    distance: 3.1,
-    lat: 8.7724,
-    lng: -82.6388,
-    materials: ["plasticos", "papel", "metal"],
-    materialIcons: ["🧴", "📄", "🥫"],
-    rating: 4.0,
-    reviewCount: 23,
-    addedAt: "2026-04-30",
-  },
-
-  {
-    id: 6,
-    name: "Recicla Panama",
-    type: "reciclaje",
-    address: "Pacora, Panamá",
-    distance: 4.5,
-    lat: 9.1038,
-    lng: -79.2901,
-    materials: ["electronicos", "plasticos"],
-    materialIcons: ["💻", "🧴"],
-    rating: 3.6,
-    reviewCount: 52,
-    addedAt: "2026-07-08",
-  },
-
-  {
-    id: 7,
-    name: "Grun Panama",
-    type: "reciclaje",
-    address: "Juan Díaz, Panamá",
-    distance: 5.2,
-    lat: 9.0469,
-    lng: -79.4499,
-    materials: ["plasticos", "papel", "vidrio", "metal"],
-    materialIcons: ["🧴", "📄", "🍾", "🥫"],
-    rating: 4.7,
-    reviewCount: 210,
-    addedAt: "2026-03-15",
-  },
-
-  {
-    id: 8,
-    name: "ECOSPOT – LEAFSINC",
-    type: "reciclaje",
-    address: "Multiplaza, Panamá",
-    distance: 5.9,
-    lat: 8.9826,
-    lng: -79.5197,
-    materials: ["plasticos", "papel", "vidrio"],
-    materialIcons: ["🧴", "📄", "🍾"],
-    rating: 4.9,
-    reviewCount: 356,
-    addedAt: "2026-07-10",
-  },
-
-  {
-    id: 9,
-    name: "Cruz Roja Panameña",
-    type: "donacion",
-    address: "Ciudad de Panamá",
-    distance: 6.3,
-    lat: 8.9935,
-    lng: -79.5190,
-    materials: ["ropa"],
-    materialIcons: ["👕"],
-    rating: 4.6,
-    reviewCount: 489,
-    addedAt: "2026-02-01",
-  },
-
-  {
-    id: 10,
-    name: "Casa Esperanza",
-    type: "donacion",
-    address: "Ciudad de Panamá",
-    distance: 6.8,
-    lat: 8.9981,
-    lng: -79.5142,
-    materials: ["ropa", "electronicos"],
-    materialIcons: ["👕", "💻"],
-    rating: 4.3,
-    reviewCount: 87,
-    addedAt: "2026-06-02",
-  },
-
-  {
-    id: 11,
-    name: "Banco De Alimentos Panamá",
-    type: "donacion",
-    address: "Ciudad de Panamá",
-    distance: 7.1,
-    lat: 9.0201,
-    lng: -79.4820,
-    materials: ["organicos"],
-    materialIcons: ["🌿"],
-    rating: 4.4,
-    reviewCount: 156,
-    addedAt: "2026-05-25",
-  },
-
-  {
-    id: 12,
-    name: "Recicladora Panama Oeste",
-    type: "acopio",
-    address: "Burunga, Panamá Oeste",
-    distance: 8.4,
-    lat: 8.9512,
-    lng: -79.6803,
-    materials: ["metal", "plasticos"],
-    materialIcons: ["🥫", "🧴"],
-    rating: 3.8,
-    reviewCount: 19,
-    addedAt: "2026-07-01",
-  }
-
-];
+// Los 12 puntos "oficiales" (recicladoras, acopios y ONGs de
+// donación) ahora viven en map-points-data.js como
+// window.RECO_MAP_POINTS, para poder reutilizarlos también en
+// donar.html (selector de empresa) sin cargar Leaflet. Acá se
+// clona cada objeto para no mutar ese array compartido cuando este
+// archivo le aplique valoraciones, ediciones locales, etc.
+let POINTS = (window.RECO_MAP_POINTS || []).map((p) => Object.assign({}, p));
 
 const FACTS = {
   es: [
@@ -248,18 +72,39 @@ function supabaseHeaders() {
 
 // Trae todos los puntos sugeridos ya guardados en Supabase (visibles
 // para todos los visitantes). Si Supabase no está configurado aún, o
-// falla la red, seguimos solo con POINTS sin romper nada.
+// falla la red, seguimos solo con POINTS sin romper nada — pero ahora
+// SIEMPRE dejamos rastro en consola (antes el catch silenciaba todo
+// error real: CORS, red caída, JSON malformado, etc. — lo que hacía
+// imposible saber por qué la lista aparecía vacía o incompleta).
 async function fetchPublishedSuggestions() {
-  if (!SUPABASE_CONFIGURED) return [];
+  if (!SUPABASE_CONFIGURED) {
+    console.warn("[RECO+] Supabase no configurado: SUPABASE_URL/ANON_KEY faltan o son placeholders.");
+    return [];
+  }
   try {
     const res = await fetch(
       `${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}?select=*&order=created_at.desc`,
       { headers: supabaseHeaders() }
     );
-    if (!res.ok) return [];
+    if (!res.ok) {
+      const errBody = await res.text().catch(() => "");
+      console.error(
+        `[RECO+] Supabase respondió ${res.status} ${res.statusText} al pedir "${SUPABASE_TABLE}":`,
+        errBody
+      );
+      return [];
+    }
     const rows = await res.json();
+    if (!Array.isArray(rows)) {
+      console.error("[RECO+] Supabase devolvió algo inesperado (no es un array):", rows);
+      return [];
+    }
     return rows.map(supabaseRowToPoint);
   } catch (e) {
+    // Errores de RED reales: CORS bloqueado, DNS, sin internet, o la
+    // página abierta con file:// en vez de http://localhost (Live
+    // Server). Antes esto se tragaba en silencio.
+    console.error("[RECO+] fetchPublishedSuggestions() falló (red/CORS/parse):", e);
     return [];
   }
 }
@@ -324,13 +169,24 @@ function parseCoords(latRaw, lngRaw) {
 }
 
 const MATERIAL_ICONS = {
-  plasticos: "🧴",
+  plastico: "🧴",
   papel: "📄",
   vidrio: "🍾",
   metal: "🥫",
   ropa: "👕",
   electronicos: "💻",
-  organicos: "🌿",
+  carton: "📦",
+  libros: "📚",
+  celulares: "📱",
+  muebles: "🪑",
+  juguetes: "🧸",
+  baterias: "🔋",
+  bombillos: "💡",
+  tetrapak: "🧃",
+  aceite: "🍶",
+  tela: "🪡",
+  cuero: "🧥",
+  utilesescolares: "✏️",
 };
 
 // Construye un nuevo punto a partir de los datos del formulario del
@@ -346,7 +202,7 @@ async function submitSuggestion({ name, address, type, materials, comments, lat,
     );
   }
 
-  const finalMaterials = materials.length ? materials : ["organicos"];
+  const finalMaterials = materials.length ? materials : ["plastico"];
 
   const payload = {
     name: name,
@@ -687,6 +543,11 @@ function initMap() {
           direction: "top"
         });
 
+        // Ya tenemos ubicación real: recalcula y repinta distancias
+        // (lista + popups) y el orden "cercanos", que hasta ahora se
+        // quedaban con el 0 km / valor estático del primer render.
+        refreshResults();
+
       },
 
       () => {
@@ -727,7 +588,7 @@ function buildPopup(p) {
       </div>
       <p class="popup-address" style="font-size:.74rem;color:#8aab90;margin:0 0 .4rem">${p.address}</p>
       ${typeof p.rating === "number" ? `<p style="font-size:.76rem;color:#8aab90;margin:0 0 .3rem;display:flex;align-items:center;gap:.3rem"><span style="color:#f0b429;display:inline-flex;align-items:center">${renderStars(p.rating)}</span><span class="popup-rating-value" style="font-weight:600">${p.rating.toFixed(1)} (${p.reviewCount || 0})</span></p>` : ""}
-      <p class="popup-distance" style="font-size:.78rem;font-weight:700;color:#2d8c4e;margin:0">${p.distance} km</p>
+      <p class="popup-distance" style="font-size:.78rem;font-weight:700;color:#2d8c4e;margin:0">${formatDistance(p)}</p>
       <div style="margin-top:.4rem;display:flex;gap:.2rem;flex-wrap:wrap">
         ${p.materialIcons.map((ic) => `<span style="font-size:.9rem">${ic}</span>`).join("")}
       </div>
@@ -777,7 +638,7 @@ function renderResults(points) {
           ${p.materialIcons.map((ic) => `<span class="material-icon">${ic}</span>`).join("")}
         </div>
       </div>
-      <div class="result-distance">${p.distance} km</div>
+      <div class="result-distance">${formatDistance(p)}</div>
     `;
     li.addEventListener("click", () => {
       map.setView([p.lat, p.lng], 16, { animate: true });
@@ -830,11 +691,24 @@ function haversineKm(lat1, lng1, lat2, lng2) {
 
 function pointDistance(p) {
   // Si tenemos ubicación real del usuario, calculamos distancia real;
-  // si no, usamos el campo "distance" fijo que ya trae cada punto.
+  // si no, usamos el campo "distance" fijo que ya trae cada punto (solo
+  // para poder ordenar algo mientras el navegador resuelve el GPS).
   if (userLat != null && userLng != null) {
     return haversineKm(userLat, userLng, p.lat, p.lng);
   }
   return p.distance;
+}
+
+// Da formato a la distancia para MOSTRARLA en la UI (popup y lista de
+// resultados). A diferencia de pointDistance() (que sí puede usar el
+// valor estático como respaldo para poder ordenar), aquí NO inventamos
+// un número si todavía no tenemos la ubicación real del usuario: se
+// muestra un guion en vez del "0 km" que salía siempre antes.
+function formatDistance(p) {
+  if (userLat == null || userLng == null) return "—";
+  const km = haversineKm(userLat, userLng, p.lat, p.lng);
+  if (!Number.isFinite(km)) return "—";
+  return km < 1 ? `${Math.round(km * 1000)} m` : `${km.toFixed(1)} km`;
 }
 
 function sortPoints(points, sortBy) {
@@ -911,7 +785,7 @@ function initSearch() {
         userLat = pos.coords.latitude;
         userLng = pos.coords.longitude;
         map.setView([userLat, userLng], 15, { animate: true });
-        if (activeSort === "cercanos") refreshResults();
+        refreshResults(); // recalcula distancias reales (lista + popups), no solo el orden
       },
       () => alert(typeof t === "function" ? t("mapa.results.locateError") : "No se pudo obtener tu ubicación.")
     );

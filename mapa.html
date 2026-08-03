@@ -281,15 +281,37 @@
       <span class="filter-label" data-i18n="mapa.filter.label">Filtrar por material:</span>
       <div class="filter-chips" id="filterChips">
         <button class="chip active" data-filter="todos" data-i18n="mapa.filter.todos">Todos</button>
-        <button class="chip" data-filter="plasticos" data-i18n="mapa.filter.plasticos">Plásticos</button>
-        <button class="chip" data-filter="papel" data-i18n="mapa.filter.papel">Papel</button>
-        <button class="chip" data-filter="vidrio" data-i18n="mapa.filter.vidrio">Vidrio</button>
-        <button class="chip" data-filter="metal" data-i18n="mapa.filter.metal">Metal</button>
-        <button class="chip" data-filter="ropa" data-i18n="mapa.filter.ropa">Ropa</button>
-        <button class="chip" data-filter="electronicos" data-i18n="mapa.filter.electronicos">Electrónicos</button>
-        <button class="chip" data-filter="organicos" data-i18n="mapa.filter.organicos">Orgánicos</button>
+        <button class="chip" data-filter="plastico" data-i18n="reciclar.mat.plastico">Plástico</button>
+        <button class="chip" data-filter="papel" data-i18n="reciclar.mat.papel">Papel</button>
+        <button class="chip" data-filter="vidrio" data-i18n="reciclar.mat.vidrio">Vidrio</button>
+        <button class="chip" data-filter="metal" data-i18n="reciclar.mat.metal">Metal</button>
+        <button class="chip" data-filter="ropa" data-i18n="reciclar.mat.ropa">Ropa</button>
+        <button class="chip" data-filter="electronicos" data-i18n="reciclar.mat.electronicos">Electrónicos</button>
       </div>
-      <button class="more-filters-btn" data-i18n="mapa.filter.more">&#9776; Más filtros</button>
+      <button class="more-filters-btn" id="moreFiltersBtn" data-i18n="mapa.filter.more">&#9776; Más filtros</button>
+
+      <!-- Dropdown flotante: no ocupa espacio en el layout, se
+           sobrepone encima del contenido. Contiene el resto de las
+           18 categorías reales de la tabla `categorias` en Supabase
+           que no entraron en la fila principal. Activado por
+           mapa-more-filters.js. -->
+      <div class="more-filters-dropdown" id="filterChipsExtra" hidden role="menu" aria-label="Más materiales">
+        <span class="filter-label more-filters-dropdown__label" data-i18n="mapa.filter.label.more">Más materiales:</span>
+        <div class="filter-chips" id="filterChipsExtraList">
+          <button class="chip" data-filter="carton" data-i18n="reciclar.mat.carton">Cartón</button>
+          <button class="chip" data-filter="libros" data-i18n="reciclar.mat.libros">Libros</button>
+          <button class="chip" data-filter="celulares" data-i18n="reciclar.mat.celulares">Celulares</button>
+          <button class="chip" data-filter="muebles" data-i18n="reciclar.mat.muebles">Muebles</button>
+          <button class="chip" data-filter="juguetes" data-i18n="reciclar.mat.juguetes">Juguetes</button>
+          <button class="chip" data-filter="baterias" data-i18n="reciclar.mat.baterias">Baterías</button>
+          <button class="chip" data-filter="bombillos" data-i18n="reciclar.mat.bombillos">Bombillos</button>
+          <button class="chip" data-filter="tetrapak" data-i18n="reciclar.mat.tetrapak">Tetra Pak</button>
+          <button class="chip" data-filter="aceite" data-i18n="reciclar.mat.aceite">Aceite de cocina</button>
+          <button class="chip" data-filter="tela" data-i18n="reciclar.mat.tela">Tela</button>
+          <button class="chip" data-filter="cuero" data-i18n="reciclar.mat.cuero">Cuero</button>
+          <button class="chip" data-filter="utilesescolares" data-i18n="reciclar.mat.utilesescolares">Útiles escolares</button>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -376,13 +398,24 @@
       <div class="modal-materials" id="modalMaterials">
         <span class="filter-label" data-i18n="mapa.modal.materiales">Materiales que acepta:</span>
         <div class="modal-materials__chips">
-          <button type="button" class="chip" data-material="plasticos" data-i18n="mapa.filter.plasticos">Plásticos</button>
-          <button type="button" class="chip" data-material="papel" data-i18n="mapa.filter.papel">Papel</button>
-          <button type="button" class="chip" data-material="vidrio" data-i18n="mapa.filter.vidrio">Vidrio</button>
-          <button type="button" class="chip" data-material="metal" data-i18n="mapa.filter.metal">Metal</button>
-          <button type="button" class="chip" data-material="ropa" data-i18n="mapa.filter.ropa">Ropa</button>
-          <button type="button" class="chip" data-material="electronicos" data-i18n="mapa.filter.electronicos">Electrónicos</button>
-          <button type="button" class="chip" data-material="organicos" data-i18n="mapa.filter.organicos">Orgánicos</button>
+          <button type="button" class="chip" data-material="plastico" data-i18n="reciclar.mat.plastico">Plástico</button>
+          <button type="button" class="chip" data-material="papel" data-i18n="reciclar.mat.papel">Papel</button>
+          <button type="button" class="chip" data-material="vidrio" data-i18n="reciclar.mat.vidrio">Vidrio</button>
+          <button type="button" class="chip" data-material="metal" data-i18n="reciclar.mat.metal">Metal</button>
+          <button type="button" class="chip" data-material="ropa" data-i18n="reciclar.mat.ropa">Ropa</button>
+          <button type="button" class="chip" data-material="electronicos" data-i18n="reciclar.mat.electronicos">Electrónicos</button>
+          <button type="button" class="chip" data-material="carton" data-i18n="reciclar.mat.carton">Cartón</button>
+          <button type="button" class="chip" data-material="libros" data-i18n="reciclar.mat.libros">Libros</button>
+          <button type="button" class="chip" data-material="celulares" data-i18n="reciclar.mat.celulares">Celulares</button>
+          <button type="button" class="chip" data-material="muebles" data-i18n="reciclar.mat.muebles">Muebles</button>
+          <button type="button" class="chip" data-material="juguetes" data-i18n="reciclar.mat.juguetes">Juguetes</button>
+          <button type="button" class="chip" data-material="baterias" data-i18n="reciclar.mat.baterias">Baterías</button>
+          <button type="button" class="chip" data-material="bombillos" data-i18n="reciclar.mat.bombillos">Bombillos</button>
+          <button type="button" class="chip" data-material="tetrapak" data-i18n="reciclar.mat.tetrapak">Tetra Pak</button>
+          <button type="button" class="chip" data-material="aceite" data-i18n="reciclar.mat.aceite">Aceite de cocina</button>
+          <button type="button" class="chip" data-material="tela" data-i18n="reciclar.mat.tela">Tela</button>
+          <button type="button" class="chip" data-material="cuero" data-i18n="reciclar.mat.cuero">Cuero</button>
+          <button type="button" class="chip" data-material="utilesescolares" data-i18n="reciclar.mat.utilesescolares">Útiles escolares</button>
         </div>
       </div>
       <textarea class="modal-input" placeholder="Comentarios adicionales..." rows="3" data-i18n="mapa.modal.ph.comentarios"></textarea>
@@ -445,7 +478,12 @@
   <script src="i18n.js"></script>
   <script src="nav-preview.js"></script>
   <script src="navbar.js"></script>
+  <!-- Fuente única de los puntos oficiales del mapa (recicladoras,
+       acopios, ONGs) — debe cargar ANTES de app.js -->
+  <script src="map-points-data.js"></script>
   <script src="app.js"></script>
+  <!-- Capa aditiva: activa la fila de chips secundaria ("+ Más filtros") -->
+  <script src="mapa-more-filters.js"></script>
   <!-- Capa aditiva: sincroniza el tile del mapa con el toggle de tema en vivo -->
   <script src="mapa-theme-sync.js"></script>
   <script src="mapa-routing.js"></script>

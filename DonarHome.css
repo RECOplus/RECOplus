@@ -63,7 +63,7 @@
   position: relative;
   background-color: var(--bg-card, rgba(255,255,255,0.55));
   background-image:
-    linear-gradient(120deg, var(--lg-shine) 0%, transparent 14%, transparent 86%, var(--lg-shine) 100%),
+    linear-gradient(120deg, var(--lg-shine-color) 0%, transparent 14%, transparent 86%, var(--lg-shine-color) 100%),
     linear-gradient(180deg, var(--lg-tint-strong) 0%, var(--lg-tint) 60%, transparent 100%);
   background-blend-mode: overlay, normal;
   backdrop-filter: blur(var(--lg-blur)) saturate(180%);

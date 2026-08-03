@@ -770,7 +770,11 @@ html.dark .type-tag.acopio   { background: rgba(140, 100, 214, 0.16); color: #c9
   .controls { padding: 0 .8rem 1rem; }
   .main-content { padding: 0 .8rem 1rem; }
   .filter-bar { gap: .35rem; }
-  .more-filters-btn { display: none; }
+  /* El botón "+ Más filtros" ya no se oculta en móvil: es la única
+     forma de llegar a los 12 materiales secundarios (cartón, libros,
+     celulares, muebles, juguetes, baterías, bombillos, etc.) en
+     pantallas pequeñas, donde no hay espacio para mostrarlos todos
+     en la fila principal. */
 }
 
 /* ===========================

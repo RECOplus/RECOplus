@@ -33,6 +33,23 @@
     return window.recoSupabase;
   }
 
+  /* ── Calcula la URL base correcta para redirects (OAuth, reset de
+     contraseña, confirmación de email) ──
+     window.location.origin por sí solo NO alcanza en sitios como
+     GitHub Pages de proyecto (usuario.github.io/repo/), porque origin
+     solo trae protocolo+host, sin la carpeta "/repo/". Si se usa solo
+     origin, el redirect apunta a una URL que no existe en el sitio y
+     Supabase, al no reconocerla como URL permitida, cae de vuelta a la
+     Site URL configurada en el dashboard (que puede ser localhost).
+     Esta función arma la base a partir de la carpeta actual, así que
+     funciona igual en GitHub Pages con subcarpeta, en Vercel (raíz) y
+     en localhost. */
+  function getRedirectBase() {
+    var path = window.location.pathname;
+    var dir = path.substring(0, path.lastIndexOf('/') + 1);
+    return window.location.origin + dir;
+  }
+
   /* ── Decodifica el access_token (JWT) de una sesión y revisa su
      campo "amr" (Authentication Methods Reference). Cuando la sesión
      viene de un link de recuperación, Supabase incluye el método
@@ -123,7 +140,7 @@
       password: password,
       options: {
         data: extraData || {},
-        emailRedirectTo: window.location.origin + '/login.html'
+        emailRedirectTo: getRedirectBase() + 'login.html'
       }
     }).then(function (res) {
       if (res.error) {
@@ -164,7 +181,7 @@
     if (!client) return Promise.resolve({ ok: false, message: 'Servicio no disponible.' });
 
     var forceSelect = opts && opts.switchAccount;
-    var oauthOptions = { redirectTo: window.location.origin + '/index.html' };
+    var oauthOptions = { redirectTo: getRedirectBase() + 'index.html' };
     if (forceSelect) {
       // Fuerza a Google a mostrar el selector de cuentas en vez de
       // reusar automáticamente la sesión de Google ya activa en el
@@ -190,7 +207,7 @@
 
     return client.auth.signInWithOAuth({
       provider: 'apple',
-      options: { redirectTo: window.location.origin + '/index.html' }
+      options: { redirectTo: getRedirectBase() + 'index.html' }
     }).then(function (res) {
       if (res.error) return { ok: false, message: translateAuthError(res.error), error: res.error };
       return { ok: true };
@@ -207,7 +224,7 @@
     if (!client) return Promise.resolve({ ok: false, message: 'Servicio no disponible.' });
 
     return client.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin + '/reset-password.html'
+      redirectTo: getRedirectBase() + 'reset-password.html'
     }).then(function (res) {
       if (res.error) return { ok: false, message: translateAuthError(res.error), error: res.error };
       return { ok: true };

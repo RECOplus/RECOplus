@@ -1,0 +1,301 @@
+/* ═══════════════════════════════════════════════════════════════
+   DONACIONES-LISTADO.CSS — RECO+
+   Capa ADITIVA para donaciones.html ("Ver todas las publicaciones").
+   Reutiliza los mismos tokens que donar.css / DonarHome.css
+   (--accent, --bg-card, --border-muted, --text-heading,
+   --text-secondary, --text-muted, --dn-solicitar, --lg-tint*,
+   --lg-shine-color, --lg-blur, --lg-shadow) para que se vea igual
+   que el resto del sitio. No modifica ningún archivo existente.
+
+   Cargar DESPUÉS de donar.css, liquid-glass-donar(-light-fix).css
+   y DonarHome.css:
+   <link rel="stylesheet" href="donaciones-listado.css" />
+═══════════════════════════════════════════════════════════════ */
+
+/* ──────────────────────────────────────────────────
+   1. HERO SIMPLE
+   ────────────────────────────────────────────────── */
+.dl-hero {
+  max-width: 760px;
+  margin: 112px auto 8px;
+  padding: 0 24px;
+  text-align: center;
+}
+
+.dl-hero__title {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  line-height: 1.15;
+  margin: 0 0 12px;
+  color: var(--text-heading, #16281c);
+}
+
+.dl-hero__subtitle {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: var(--text-secondary, #4b6456);
+  margin: 0;
+}
+
+/* ──────────────────────────────────────────────────
+   2. FILTROS + BUSCADOR
+   ────────────────────────────────────────────────── */
+.dl-filters-section {
+  max-width: 1160px;
+  margin: 32px auto 0;
+  padding: 0 24px;
+}
+
+.dl-filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.dl-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dl-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--border-muted, var(--lg-border));
+  background: var(--bg-card, rgba(255,255,255,0.55));
+  backdrop-filter: blur(var(--lg-blur, 18px)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--lg-blur, 18px)) saturate(180%);
+  color: var(--text-secondary, #4b6456);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.dl-chip:hover {
+  color: var(--text-heading, #16281c);
+  border-color: var(--accent, #2d8c4e);
+  transform: translateY(-1px);
+}
+
+.dl-chip.active {
+  background: var(--accent, #2d8c4e);
+  border-color: var(--accent, #2d8c4e);
+  color: #fff;
+}
+
+.dl-chip[data-filter="solicitar"].active {
+  background: var(--dn-solicitar, #2f6fbf);
+  border-color: var(--dn-solicitar, #2f6fbf);
+}
+
+.dl-search-wrap {
+  flex: 1 1 260px;
+  max-width: 360px;
+}
+
+.dl-search {
+  width: 100%;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  color: var(--text-primary, #16281c);
+  background: var(--bg-muted, rgba(255,255,255,0.75));
+  border: 1px solid var(--border-muted, var(--lg-border));
+  border-radius: 999px;
+  padding: 11px 18px;
+  outline: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  box-sizing: border-box;
+}
+
+.dl-search:focus {
+  border-color: color-mix(in srgb, var(--accent, #2d8c4e) 55%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent, #2d8c4e) 18%, transparent);
+}
+
+.dl-search::placeholder {
+  color: var(--text-muted, #4b6456);
+}
+
+.dl-count {
+  margin: 16px 0 0;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  color: var(--text-muted, #4b6456);
+}
+
+.dl-count #dlCount {
+  font-weight: 700;
+  color: var(--accent, #2d8c4e);
+}
+
+/* ──────────────────────────────────────────────────
+   3. GRID DE RESULTADOS
+   ────────────────────────────────────────────────── */
+.dl-results-section {
+  max-width: 1160px;
+  margin: 0 auto 72px;
+  padding: 24px 24px 0;
+}
+
+.dl-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* Reutiliza el mismo look que .dh-card (donar.html) pero sin depender
+   de esa clase, para que esta página no necesite DonarHome.js. */
+.dl-card {
+  position: relative;
+  border-radius: 20px;
+  padding: 14px;
+  isolation: isolate;
+  background-color: var(--bg-card, rgba(255,255,255,0.55));
+  background-image:
+    linear-gradient(120deg, var(--lg-shine-color, rgba(255,255,255,0.65)) 0%, transparent 14%, transparent 86%, var(--lg-shine-color, rgba(255,255,255,0.65)) 100%),
+    linear-gradient(180deg, var(--lg-tint-strong, rgba(255,255,255,0.22)) 0%, var(--lg-tint, rgba(255,255,255,0.1)) 60%, transparent 100%);
+  background-blend-mode: overlay, normal;
+  backdrop-filter: blur(var(--lg-blur, 18px)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--lg-blur, 18px)) saturate(180%);
+  border: 1px solid var(--border-muted, var(--lg-border));
+  box-shadow: var(--lg-shadow, 0 8px 32px rgba(20,60,35,0.10));
+  transition: box-shadow 0.3s cubic-bezier(.4,0,.2,1), border-color 0.3s ease, transform 0.3s cubic-bezier(.4,0,.2,1);
+}
+
+.dl-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent, #2d8c4e);
+}
+
+.dl-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.dl-card-img {
+  position: relative;
+  height: 140px;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.6rem;
+  background: color-mix(in srgb, var(--accent, #2d8c4e) 10%, transparent);
+  overflow: hidden;
+}
+
+.dl-card--solicitar .dl-card-img {
+  background: color-mix(in srgb, var(--dn-solicitar, #2f6fbf) 10%, transparent);
+}
+
+.dl-card-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  z-index: 1;
+}
+.dl-card-badge--good { background: color-mix(in srgb, var(--accent, #2d8c4e) 85%, black 10%); }
+.dl-card-badge--warn { background: #b8860b; }
+
+.dl-card-type {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  z-index: 1;
+  color: #fff;
+  background: color-mix(in srgb, var(--accent, #2d8c4e) 85%, black 10%);
+}
+.dl-card--solicitar .dl-card-type {
+  background: color-mix(in srgb, var(--dn-solicitar, #2f6fbf) 85%, black 10%);
+}
+
+.dl-card h4 {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--text-heading, #16281c);
+  margin: 0 0 4px;
+}
+
+.dl-card-meta,
+.dl-card-cat {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  color: var(--text-muted, #4b6456);
+  margin: 0 0 2px;
+}
+
+.dl-card-btn {
+  margin-top: 10px;
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 999px;
+  border: none;
+  background: color-mix(in srgb, var(--accent, #2d8c4e) 14%, transparent);
+  color: var(--accent, #2d8c4e);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.dl-card-btn:hover { background: var(--accent, #2d8c4e); color: #fff; }
+
+.dl-card--solicitar .dl-card-btn {
+  background: color-mix(in srgb, var(--dn-solicitar, #2f6fbf) 12%, transparent);
+  color: var(--dn-solicitar, #2f6fbf);
+}
+.dl-card--solicitar .dl-card-btn:hover {
+  background: var(--dn-solicitar, #2f6fbf);
+  color: #fff;
+}
+
+.dl-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 64px 24px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text-muted, #4b6456);
+}
+
+/* ──────────────────────────────────────────────────
+   4. RESPONSIVE
+   ────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .dl-hero { margin-top: 96px; }
+  .dl-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 560px) {
+  .dl-filters { flex-direction: column; align-items: stretch; }
+  .dl-search-wrap { max-width: none; }
+  .dl-grid { grid-template-columns: 1fr; gap: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dl-card { transition: none !important; }
+}

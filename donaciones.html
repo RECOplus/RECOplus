@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <script src="darkmode.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RECO+ | Todas las publicaciones</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="donar.css" />
+  <!-- Mismo "liquid glass" oscuro y misma paleta que donar.html -->
+  <link rel="stylesheet" href="liquid-glass-donar.css" />
+  <link rel="stylesheet" href="reciclar-shimmer.css" />
+  <link rel="stylesheet" href="liquid-glass-donar-light-fix.css" />
+  <link rel="stylesheet" href="donar-mapa-effects.css" />
+  <link rel="stylesheet" href="DonarHome.css" />
+  <!-- Capa aditiva: ventana de detalle de donación/solicitud (botón "Ver donación" / "Ayudar") -->
+  <link rel="stylesheet" href="donar-detail-modal.css" />
+  <!-- Capa aditiva: header, filtros y grid de esta página ("Ver todas") -->
+  <link rel="stylesheet" href="donaciones-listado.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+/* ── BUBBLE NAV — CSS variables for light/dark ── */
+
+/* MODO CLARO */
+:root {
+  --nav-bg:               rgba(242, 250, 244, 0.55);
+  --nav-border:           rgba(168, 218, 181, 0.55);
+  --nav-shadow:           0 8px 32px rgba(30, 80, 40, 0.14), 0 2px 8px rgba(30, 80, 40, 0.08);
+  --nav-link-color:       #2a4a34;
+  --nav-link-hover-bg:    rgba(45, 140, 78, 0.10);
+  --nav-link-hover-color: #1a5c2a;
+  --nav-link-active-bg:   rgba(45, 140, 78, 0.14);
+  --nav-lang-bg:          rgba(45, 140, 78, 0.08);
+  --nav-lang-border:      rgba(45, 140, 78, 0.22);
+  --nav-lang-color:       #2a4a34;
+  --nav-dm-bg:            rgba(45, 140, 78, 0.08);
+  --nav-dm-border:        rgba(45, 140, 78, 0.22);
+  --nav-cta-bg:           #2d8c4e;
+  --nav-cta-color:        #fff;
+  --nav-cta-hover:        #1a5c2a;
+}
+
+/* MODO OSCURO */
+html.dark {
+  --nav-bg:               rgba(12, 22, 14, 0.55);
+  --nav-border:           rgba(61, 170, 96, 0.20);
+  --nav-shadow:           0 8px 32px rgba(0, 0, 0, 0.40), 0 2px 8px rgba(0, 0, 0, 0.28);
+  --nav-link-color:       rgba(212, 234, 216, 0.80);
+  --nav-link-hover-bg:    rgba(255, 255, 255, 0.08);
+  --nav-link-hover-color: #d4ead8;
+  --nav-link-active-bg:   rgba(255, 255, 255, 0.11);
+  --nav-lang-bg:          rgba(255, 255, 255, 0.07);
+  --nav-lang-border:      rgba(255, 255, 255, 0.15);
+  --nav-lang-color:       rgba(212, 234, 216, 0.80);
+  --nav-dm-bg:            rgba(255, 255, 255, 0.07);
+  --nav-dm-border:        rgba(255, 255, 255, 0.15);
+  --nav-cta-bg:           #fff;
+  --nav-cta-color:        #111;
+  --nav-cta-hover:        #e8f5ec;
+}
+
+/* ── WRAPPER ── */
+.bubble-nav-wrapper {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: calc(100% - 48px);
+  max-width: 1160px;
+}
+
+/* ── PILL ── */
+.bubble-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--nav-bg);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid var(--nav-border);
+  border-radius: 999px;
+  padding: 10px 14px 10px 20px;
+  box-shadow: var(--nav-shadow);
+  gap: 16px;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+/* ── LOGO ── */
+.bubble-nav__logo img {
+  height: 34px;
+  width: auto;
+  display: block;
+  flex-shrink: 0;
+  transition: filter 0.3s;
+}
+
+/* ── LINKS ── */
+.bubble-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  justify-content: center;
+}
+
+.bubble-nav__links a {
+  font-family: 'DM Sans', 'Arial', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--nav-link-color);
+  text-decoration: none;
+  padding: 6px 11px;
+  border-radius: 999px;
+  white-space: nowrap;
+  transition: color 0.18s, background 0.18s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.bubble-nav__links a svg {
+  opacity: 0.75;
+  flex-shrink: 0;
+  transition: opacity 0.18s;
+}
+
+.bubble-nav__links a:hover {
+  color: var(--nav-link-hover-color);
+  background: var(--nav-link-hover-bg);
+}
+
+.bubble-nav__links a:hover svg { opacity: 1; }
+
+.bubble-nav__links a.active {
+  color: var(--nav-link-hover-color);
+  background: var(--nav-link-active-bg);
+  font-weight: 600;
+}
+
+.bubble-nav__links a.active svg { opacity: 1; }
+
+/* ── RIGHT ACTIONS ── */
+.bubble-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ── DARK MODE PILL ── */
+.dm-pill {
+  display: inline-flex;
+  align-items: center;
+  background: var(--nav-dm-bg);
+  border: 1px solid var(--nav-dm-border);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s;
+}
+
+.dm-pill__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  transition: background 0.2s, color 0.2s, opacity 0.2s;
+  color: var(--nav-link-color);
+  opacity: 0.45;
+}
+
+html:not(.dark) .dm-pill__sun { opacity: 1; background: rgba(45,140,78,0.15); color: #d4a017; }
+html:not(.dark) .dm-pill__moon { opacity: 0.38; }
+html.dark .dm-pill__moon { opacity: 1; background: rgba(61,170,96,0.18); color: #c8d8ff; }
+html.dark .dm-pill__sun { opacity: 0.38; }
+
+/* ── LANG PILL ── */
+.lang-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--nav-lang-bg);
+  border: 1px solid var(--nav-lang-border);
+  border-radius: 999px;
+  padding: 5px 11px 5px 9px;
+  cursor: pointer;
+  font-family: 'DM Sans', 'Arial', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--nav-lang-color);
+  transition: background 0.18s;
+  letter-spacing: 0.02em;
+}
+
+.lang-pill:hover { background: var(--nav-link-hover-bg); }
+.lang-pill svg { opacity: 0.8; flex-shrink: 0; }
+.lang-pill__chevron { opacity: 0.6; }
+.lang-pill__label { color: var(--nav-lang-color); }
+
+/* ── CTA BUTTON ── */
+.bubble-nav__cta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--nav-cta-bg);
+  color: var(--nav-cta-color);
+  border: none;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-family: 'DM Sans', 'Arial', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s, transform 0.15s;
+}
+
+.bubble-nav__cta:hover {
+  background: var(--nav-cta-hover);
+  transform: translateY(-1px);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 860px) {
+  .bubble-nav-wrapper { width: calc(100% - 24px); top: 10px; }
+  .bubble-nav__links { display: none; }
+  .bubble-nav { padding: 10px 14px; }
+}
+</style>
+<!-- Capa aditiva: el CTA "Únete" ahora es <a>, no <button> -->
+<link rel="stylesheet" href="nav-cta-link-fix.css">
+<script>
+/* ── DM-PILL: manejado por darkmode.js (injectToggleButton conecta el .dm-pill) ── */
+
+/* ── LANG PILL ── */
+(function () {
+  function syncLangPill(lang) {
+    var esLabel = document.querySelector('.lang-pill .lang-label-es');
+    var enLabel = document.querySelector('.lang-pill .lang-label-en');
+    var btn     = document.querySelector('.lang-pill');
+    if (!btn) return;
+    if (lang === 'en') {
+      if (esLabel) esLabel.style.display = 'none';
+      if (enLabel) enLabel.style.display = 'inline';
+      btn.setAttribute('data-current', 'en');
+    } else {
+      if (esLabel) esLabel.style.display = 'inline';
+      if (enLabel) enLabel.style.display = 'none';
+      btn.setAttribute('data-current', 'es');
+    }
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    var saved = localStorage.getItem('reco-lang') || 'es';
+    syncLangPill(saved);
+    var origToggle = window.toggleLang;
+    if (origToggle) {
+      window.toggleLang = function () {
+        origToggle();
+        syncLangPill(localStorage.getItem('reco-lang') || 'es');
+      };
+    }
+  });
+  window.addEventListener('load', function () {
+    var origToggle = window.toggleLang;
+    if (origToggle && !origToggle._patched) {
+      window.toggleLang = function () {
+        origToggle();
+        syncLangPill(localStorage.getItem('reco-lang') || 'es');
+      };
+      window.toggleLang._patched = true;
+    }
+  });
+})();
+</script>
+<!-- Capa aditiva: chip de usuario con foto/avatar + menú cuando hay sesión -->
+<link rel="stylesheet" href="navbar-auth.css">
+</head>
+<body>
+
+  <!-- ── BUBBLE NAVBAR ── -->
+<div class="bubble-nav-wrapper">
+  <header class="bubble-nav">
+    <div class="bubble-nav__logo">
+      <img src="img/logo png nombre.png" alt="RECO+">
+    </div>
+
+        <nav class="bubble-nav__links">
+      <a href="https://recoplus.github.io/rEcOPlus-Final/index.html" data-tooltip="Vuelve a la página principal." data-i18n-tooltip="nav.inicio.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M3 9.5L10 3l7 6.5V17a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M7 18v-6h6v6"/></svg>
+        <span data-i18n="nav.inicio">Inicio</span>
+      </a>
+      <a href="https://r-ec-o-plus-final-git-main-reco8.vercel.app/reciclar.html" data-tooltip="Centros de reciclaje cerca de ti." data-i18n-tooltip="nav.reciclar.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M10 2a6 6 0 016 6c0 4-6 10-6 10S4 12 4 8a6 6 0 016-6z"/><circle cx="10" cy="8" r="2"/></svg>
+        <span data-i18n="nav.reciclar">Reciclar</span>
+      </a>
+      <a href="https://recoplus.github.io/rEcOPlus-Final/donar.html" class="active" data-tooltip="Comparte lo que ya no usas y cambia vidas." data-i18n-tooltip="nav.donar.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M3 11c0-2.5 2-4 4-3l3 1.5 5-1.5c1.2-.2 2.5.6 2.5 2 0 1.2-.8 2-2 2l-3.5.5"/><path d="M3 11l2 5h3l7-4"/></svg>
+        <span data-i18n="nav.donar">Donar</span>
+      </a>
+      <a href="https://recoplus.github.io/rEcOPlus-Final/guia.html" data-tooltip="Aprende paso a paso cómo reciclar y donar." data-i18n-tooltip="nav.guia.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><rect x="4" y="2" width="12" height="16" rx="1.5"/><path d="M4 5h12M7 2v16"/></svg>
+        <span data-i18n="nav.guia">Guía</span>
+      </a>
+      <a href="https://recoplus.github.io/rEcOPlus-Final/contacto.html" data-tooltip="Escríbenos, respondemos en menos de 24h." data-i18n-tooltip="nav.contacto.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><rect x="2" y="5" width="16" height="12" rx="1.5"/><path d="M2 7l8 5 8-5"/></svg>
+        <span data-i18n="nav.contacto">Contacto</span>
+      </a>
+      <a href="https://recoplus.github.io/rEcOPlus-Final/blog.html" data-tooltip="Historias, tips y noticias sobre sostenibilidad." data-i18n-tooltip="nav.blog.desc">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><rect x="3" y="3" width="14" height="14" rx="1.5"/><path d="M6 7h8M6 10h8M6 13h5"/></svg>
+        <span data-i18n="nav.blog">Blog</span>
+      </a>
+    </nav>
+
+    <!-- Right side: dark mode pill + lang pill + CTA -->
+    <!-- navbar__spacer keeps compatibility with darkmode.js auto-injection -->
+    <div class="bubble-nav__actions navbar__spacer">
+
+      <!-- Dark mode pill -->
+      <div class="dm-pill" id="darkModeToggle" role="button" title="Cambiar modo claro/oscuro" aria-label="Toggle dark mode">
+        <span class="dm-pill__btn dm-pill__sun dm-sun" id="dmSunBtn">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" width="16" height="16">
+            <circle cx="10" cy="10" r="3.5"/>
+            <line x1="10" y1="2" x2="10" y2="4.5"/><line x1="10" y1="15.5" x2="10" y2="18"/>
+            <line x1="2" y1="10" x2="4.5" y2="10"/><line x1="15.5" y1="10" x2="18" y2="10"/>
+            <line x1="4.4" y1="4.4" x2="6.2" y2="6.2"/><line x1="13.8" y1="13.8" x2="15.6" y2="15.6"/>
+            <line x1="15.6" y1="4.4" x2="13.8" y2="6.2"/><line x1="6.2" y1="13.8" x2="4.4" y2="15.6"/>
+          </svg>
+        </span>
+        <span class="dm-pill__btn dm-pill__moon dm-moon" id="dmMoonBtn">
+          <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15">
+            <path d="M17.3 13.3A8 8 0 016.7 2.7a7 7 0 100 14.6 7.9 7.9 0 0010.6-4z"/>
+          </svg>
+        </span>
+      </div>
+
+      <!-- Language pill -->
+      <button class="lang-pill" onclick="toggleLang()" aria-label="Cambiar idioma" data-current="es">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15">
+          <circle cx="10" cy="10" r="8"/>
+          <ellipse cx="10" cy="10" rx="3.5" ry="8"/>
+          <line x1="2" y1="10" x2="18" y2="10"/>
+        </svg>
+        <span class="lang-pill__label lang-label-es">ES</span>
+        <span class="lang-pill__label lang-label-en" style="display:none">EN</span>
+        <svg class="lang-pill__chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" width="11" height="11" stroke-linecap="round">
+          <path d="M5 7l5 5 5-5"/>
+        </svg>
+      </button>
+
+      <a href="https://recoplus.github.io/rEcOPlus-Final/login.html" class="bubble-nav__cta" data-i18n="nav.unete">
+        <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z"/></svg>
+        Únete
+      </a>
+
+    </div>
+  </header>
+</div>
+
+  <!-- ========== HERO SIMPLE ========== -->
+  <section class="dl-hero">
+    <h1 class="dl-hero__title" data-i18n="donaciones.hero.title">Todas las publicaciones</h1>
+    <p class="dl-hero__subtitle" data-i18n="donaciones.hero.subtitle">Explora todas las donaciones disponibles y las solicitudes de ayuda activas en la comunidad RECO+, con todos sus detalles.</p>
+  </section>
+
+  <!-- ========== FILTROS ========== -->
+  <section class="dl-filters-section">
+    <div class="dl-filters">
+      <div class="dl-chips" id="dlChips">
+        <button type="button" class="dl-chip active" data-filter="todas" data-i18n="donaciones.filter.todas">Todas</button>
+        <button type="button" class="dl-chip" data-filter="donar" data-i18n="donaciones.filter.donaciones">🌿 Donaciones</button>
+        <button type="button" class="dl-chip" data-filter="solicitar" data-i18n="donaciones.filter.solicitudes">🙋 Solicitudes de ayuda</button>
+      </div>
+      <div class="dl-search-wrap">
+        <input type="text" id="dlSearch" class="dl-search" placeholder="Buscar por categoría, descripción o ubicación..." data-i18n="donaciones.search.placeholder" />
+      </div>
+    </div>
+    <p class="dl-count"><span id="dlCount">0</span> <span data-i18n="donaciones.count.suffix">publicaciones activas</span></p>
+  </section>
+
+  <!-- ========== GRID DE RESULTADOS ========== -->
+  <section class="dl-results-section">
+    <div class="dl-grid" id="dlGrid">
+      <div class="dl-empty" data-i18n="donaciones.cargando">Cargando publicaciones...</div>
+    </div>
+  </section>
+
+  <!-- ========== MODAL DETALLE DE DONACIÓN / SOLICITUD ==========
+       El mismo modal (y la misma lógica de donar-listings.js) que
+       usa donar.html — así "Ver donación"/"Ayudar" se comportan
+       igual en las dos páginas. -->
+  <div class="donar-detail-overlay" id="donarDetailModal">
+    <div class="donar-detail-modal">
+      <button class="donar-detail-close" id="donarDetailClose" aria-label="Cerrar">✕</button>
+      <div class="donar-detail-img" id="donarDetailImg"></div>
+      <div class="donar-detail-body">
+        <span class="donar-detail-kicker" id="donarDetailKicker">Donación</span>
+        <h3 class="donar-detail-title" id="donarDetailTitle"></h3>
+        <div class="donar-detail-meta" id="donarDetailMeta"></div>
+        <p class="donar-detail-desc" id="donarDetailDesc"></p>
+      </div>
+      <div class="donar-detail-footer">
+        <button class="donar-modal-close-btn" id="donarDetailCloseBtn">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="footer-grid">
+        <div class="footer-brand">
+            <div class="footer-logo"><img src="img/hoja.png" alt="hoja"> <strong>RECO+</strong></div>
+            <p data-i18n="footer.tagline">El plus que el planeta necesita.</p>
+            <div class="redes">
+                <a href="#">f</a>
+                <a href="#">in</a>
+                <a href="#">tk</a>
+                <a href="#">▶</a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4 data-i18n="footer.nav">Navegación</h4>
+            <a href="https://recoplus.github.io/rEcOPlus-Final/mapa.html" data-i18n="nav.mapa">Mapa</a>
+            <a href="https://recoplus.github.io/rEcOPlus-Final/guia.html" data-i18n="nav.guia">Guía</a>
+            <a href="https://recoplus.github.io/rEcOPlus-Final/donar.html" data-i18n="nav.donar">Donar / Ayuda</a>
+            <a href="#tienda">Tienda EcoTech</a>
+            <a href="https://recoplus.github.io/rEcOPlus-Final/alianzas.html" data-i18n="nav.alianzas">Alianzas</a>
+            <a href="https://recoplus.github.io/rEcOPlus-Final/blog.html" data-i18n="nav.blog">Blog</a>
+            <a href="https://recoplus.github.io/rEcOPlus-Final/contacto.html" data-i18n="nav.contacto">Contacto</a>
+        </div>
+        <div class="footer-col">
+            <h4 data-i18n="footer.recursos">Recursos</h4>
+            <a href="#" data-i18n="footer.ayuda">Centro de ayuda</a>
+            <a href="#" data-i18n="footer.faq">Preguntas frecuentes</a>
+            <a href="#" data-i18n="footer.terminos">Términos y condiciones</a>
+            <a href="#" data-i18n="footer.privacidad">Política de privacidad</a>
+        </div>
+        <div class="footer-col">
+            <h4 data-i18n="footer.contacto">Contacto</h4>
+            <p>soporte.recoplus@gmail.com</p>
+            <p>+507 6399-1249</p>
+            <p>David, Panama</p>
+        </div>
+        <div class="footer-col">
+            <h4 data-i18n="footer.newsletter">Newsletter</h4>
+            <p data-i18n="footer.nl.desc">Recibe tips, noticias y oportunidades para ayudar.</p>
+            <div class="newsletter-form">
+                <input type="email" placeholder="Tu correo electrónico" data-i18n="footer.nl.ph">
+                <button data-i18n="footer.nl.btn">Suscribirme</button>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p data-i18n="footer.copy">© 2026 RECO+. Todos los derechos reservados.</p>
+    </div>
+</footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="auth.js"></script>
+  <script src="i18n.js"></script>
+  <script src="nav-preview.js"></script>
+  <!-- Reutiliza el modal de detalle y su lógica (abrir/cerrar) tal
+       cual la usa donar.html, sin duplicarla. Los carruseles que
+       este archivo intenta poblar (#dhCarouselDonaciones, etc.) no
+       existen en esta página, así que esa parte simplemente no hace
+       nada — solo se usa por window.dhOpenDetailModal y el cierre
+       del modal. -->
+  <script src="donar-listings.js"></script>
+  <!-- Carga TODAS las publicaciones activas, con filtros y buscador -->
+  <script src="donaciones-listado.js"></script>
+  <script src="navbar-auth.js"></script>
+</body>
+</html>

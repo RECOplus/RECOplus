@@ -64,6 +64,13 @@
     }
     addLights('.donar-hero', 18);
 
+    /* ── Mismas partículas suaves para las secciones nuevas del
+       homepage, que hoy solo tenían los glow-orbs estáticos de
+       donar-liquid-glass-boost.css pero no partículas flotantes. ── */
+    addLights('.dh-choice', 12);
+    addLights('.dh-listings', 12);
+    addLights('.dh-cta-banner', 14);
+
     document.querySelectorAll('.donar-trust-item').forEach(function (item) {
       if (item.querySelector(':scope > .dn-lights')) return;
       var wrap = document.createElement('div');
