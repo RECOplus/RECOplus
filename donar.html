@@ -337,13 +337,13 @@ html.dark .dm-pill__sun { opacity: 0.38; }
 
       <!-- Capa aditiva: mini menú "tus publicaciones activas" (SOLO esta página) -->
       <div class="mis-pubs-wrap" id="misPubsWrap">
-        <button class="mis-pubs-btn" id="misPubsBtn" type="button" aria-haspopup="true" aria-expanded="false" title="Tus publicaciones activas">
+        <button class="mis-pubs-btn" id="misPubsBtn" type="button" aria-haspopup="true" aria-expanded="false" title="Tus publicaciones activas" data-i18n-title="donar.mispubs.title">
           ♻️
         </button>
         <div class="mis-pubs-dropdown" id="misPubsDropdown">
-          <div class="mis-pubs-dropdown-header">Tus publicaciones activas</div>
+          <div class="mis-pubs-dropdown-header" data-i18n="donar.mispubs.header">Tus publicaciones activas</div>
           <div class="mis-pubs-dropdown-body" id="misPubsBody">
-            <div class="mis-pubs-empty">Cargando...</div>
+            <div class="mis-pubs-empty" data-i18n="donar.mispubs.cargando">Cargando...</div>
           </div>
         </div>
       </div>
@@ -429,21 +429,21 @@ html.dark .dm-pill__sun { opacity: 0.38; }
   <!-- ========== ¿QUÉ QUIERES HACER HOY? ========== -->
   <section class="dh-section dh-choice">
     <div class="dh-section-heading">
-      <h2 class="dh-kicker">🌿 ¿Qué quieres hacer hoy? 🌿</h2>
-      <p>Elige cómo quieres ayudar o recibir ayuda.</p>
+      <h2 class="dh-kicker" data-i18n="donar.choice.title">🌿 ¿Qué quieres hacer hoy? 🌿</h2>
+      <p data-i18n="donar.choice.subtitle">Elige cómo quieres ayudar o recibir ayuda.</p>
     </div>
     <div class="dh-choice-grid">
       <div class="dh-choice-card dh-glass dn-reveal">
         <span class="dh-choice-icon"><img src="img/caja.png" alt="caja"></span>
-        <h3>Tengo algo para donar</h3>
-        <p>Publica objetos, ropa, libros, electrónicos o lo que ya no usas y conéctate con alguien que lo necesita.</p>
-        <button class="dh-choice-btn" onclick="dhGoToTab('donar')">Publicar donación →</button>
+        <h3 data-i18n="donar.choice.card1.title">Tengo algo para donar</h3>
+        <p data-i18n="donar.choice.card1.desc">Publica objetos, ropa, libros, electrónicos o lo que ya no usas y conéctate con alguien que lo necesita.</p>
+        <button class="dh-choice-btn" onclick="dhGoToTab('donar')" data-i18n="donar.choice.card1.btn">Publicar donación →</button>
       </div>
       <div class="dh-choice-card dh-glass dn-reveal">
         <span class="dh-choice-icon dh-choice-icon--blue"><img src="img/personas.png" alt="personas"></span>
-        <h3>Necesito algo</h3>
-        <p>Solicita los objetos que necesitas para ti o para tu comunidad. Alguien puede tener justo lo que buscas.</p>
-        <button class="dh-choice-btn dh-choice-btn--blue" onclick="dhGoToTab('solicitar')">Publicar solicitud →</button>
+        <h3 data-i18n="donar.choice.card2.title">Necesito algo</h3>
+        <p data-i18n="donar.choice.card2.desc">Solicita los objetos que necesitas para ti o para tu comunidad. Alguien puede tener justo lo que buscas.</p>
+        <button class="dh-choice-btn dh-choice-btn--blue" onclick="dhGoToTab('solicitar')" data-i18n="donar.choice.card2.btn">Publicar solicitud →</button>
       </div>
     </div>
   </section>
@@ -451,32 +451,32 @@ html.dark .dm-pill__sun { opacity: 0.38; }
   <!-- ========== CONECTA UNA NECESIDAD ========== -->
   <section class="dh-section dh-steps">
     <div class="dh-section-heading">
-      <h2 class="dh-kicker">🌿 Conecta una necesidad 🌿</h2>
-      <p>En RECO+ conectamos lo que ya no usas con quien más lo necesita.</p>
+      <h2 class="dh-kicker" data-i18n="donar.steps.title">🌿 Conecta una necesidad 🌿</h2>
+      <p data-i18n="donar.steps.subtitle">En RECO+ conectamos lo que ya no usas con quien más lo necesita.</p>
     </div>
     <div class="dh-steps-row dh-glass">
       <div class="dh-step dn-reveal">
         <span class="dh-step-icon">📦</span>
-        <strong>1. Publicas</strong>
-        <p>Publicas lo que quieres donar.</p>
+        <strong data-i18n="donar.steps.s1.title">1. Publicas</strong>
+        <p data-i18n="donar.steps.s1.desc">Publicas lo que quieres donar.</p>
       </div>
       <span class="dh-step-arrow">→</span>
       <div class="dh-step dn-reveal">
         <span class="dh-step-icon">🔍</span>
-        <strong>2. Conectamos</strong>
-        <p>Buscamos a la persona que puede necesitarlo.</p>
+        <strong data-i18n="donar.steps.s2.title">2. Conectamos</strong>
+        <p data-i18n="donar.steps.s2.desc">Buscamos a la persona que puede necesitarlo.</p>
       </div>
       <span class="dh-step-arrow">→</span>
       <div class="dh-step dn-reveal">
         <span class="dh-step-icon">🤝</span>
-        <strong>3. Entregas</strong>
-        <p>Coordinan la entrega de forma segura.</p>
+        <strong data-i18n="donar.steps.s3.title">3. Entregas</strong>
+        <p data-i18n="donar.steps.s3.desc">Coordinan la entrega de forma segura.</p>
       </div>
       <span class="dh-step-arrow">→</span>
       <div class="dh-step dn-reveal">
         <span class="dh-step-icon">💚</span>
-        <strong>4. Impacto</strong>
-        <p>Tu donación genera un cambio real.</p>
+        <strong data-i18n="donar.steps.s4.title">4. Impacto</strong>
+        <p data-i18n="donar.steps.s4.desc">Tu donación genera un cambio real.</p>
       </div>
     </div>
   </section>
@@ -484,25 +484,25 @@ html.dark .dm-pill__sun { opacity: 0.38; }
   <!-- ========== ESTADÍSTICAS ========== -->
   <section class="dh-section dh-stats">
     <div class="dh-section-heading">
-      <h2 class="dh-kicker">Juntos estamos generando un impacto real</h2>
+      <h2 class="dh-kicker" data-i18n="donar.stats.title">Juntos estamos generando un impacto real</h2>
     </div>
     <div class="dh-stats-grid dh-glass">
       <span class="dh-stats-leaf">🌿</span>
       <div class="dh-stat dn-reveal">
         <span class="dh-stat-num" data-count="600">+0</span>
-        <p>Objetos donados</p>
+        <p data-i18n="donar.stats.objetos">Objetos donados</p>
       </div>
       <div class="dh-stat dn-reveal">
         <span class="dh-stat-num" data-count="250">+0</span>
-        <p>Personas ayudadas</p>
+        <p data-i18n="donar.stats.personas">Personas ayudadas</p>
       </div>
       <div class="dh-stat dn-reveal">
         <span class="dh-stat-num" data-count="80">+0</span>
-        <p>Comunidades conectadas</p>
+        <p data-i18n="donar.stats.comunidades">Comunidades conectadas</p>
       </div>
       <div class="dh-stat dn-reveal">
         <span class="dh-stat-num" data-count="1200">+0</span>
-        <p>Objetos reutilizados</p>
+        <p data-i18n="donar.stats.reutilizados">Objetos reutilizados</p>
       </div>
       <span class="dh-stats-leaf">🌿</span>
     </div>
@@ -513,32 +513,32 @@ html.dark .dm-pill__sun { opacity: 0.38; }
     <div class="dh-listings-grid">
       <div class="dh-listing-col dh-listing-col--donaciones">
         <div class="dh-listing-head">
-          <h3>🌿 Donaciones disponibles</h3>
-          <a href="#" class="dh-see-all">Ver todas →</a>
+          <h3 data-i18n="donar.listings.donaciones.title">🌿 Donaciones disponibles</h3>
+          <a href="https://recoplus.github.io/rEcOPlus-Final/donaciones.html" class="dh-see-all" data-i18n="donar.listings.verTodas">Ver todas →</a>
         </div>
         <div class="dh-carousel-wrap">
           <button class="dh-car-btn dh-car-prev" aria-label="Anterior">‹</button>
           <div class="dh-carousel" id="dhCarouselDonaciones">
             <div class="dh-card dh-glass dn-reveal">
-              <div class="dh-card-img"><span class="dh-card-badge dh-card-badge--good">Buen estado</span>🎒</div>
-              <h4>Mochila escolar</h4>
+              <div class="dh-card-img"><span class="dh-card-badge dh-card-badge--good" data-i18n="donar.sample.buenEstado">Buen estado</span>🎒</div>
+              <h4 data-i18n="donar.sample.mochila">Mochila escolar</h4>
               <p class="dh-card-meta">📍 David, Chiriquí</p>
-              <p class="dh-card-cat">Útiles escolares</p>
-              <button class="dh-card-btn">Ver donación →</button>
+              <p class="dh-card-cat" data-i18n="donar.sample.utilesEscolares">Útiles escolares</p>
+              <button class="dh-card-btn" data-i18n="donar.card.verDonacion">Ver donación →</button>
             </div>
             <div class="dh-card dh-glass dn-reveal">
-              <div class="dh-card-img"><span class="dh-card-badge dh-card-badge--warn">Necesita reparación</span>💻</div>
-              <h4>Computadora portátil</h4>
+              <div class="dh-card-img"><span class="dh-card-badge dh-card-badge--warn" data-i18n="donar.sample.necesitaReparacion">Necesita reparación</span>💻</div>
+              <h4 data-i18n="donar.sample.laptop">Computadora portátil</h4>
               <p class="dh-card-meta">📍 David, Chiriquí</p>
-              <p class="dh-card-cat">Electrónicos</p>
-              <button class="dh-card-btn">Ver donación →</button>
+              <p class="dh-card-cat" data-i18n="donar.form.opt.electronicos">Electrónicos</p>
+              <button class="dh-card-btn" data-i18n="donar.card.verDonacion">Ver donación →</button>
             </div>
             <div class="dh-card dh-glass dn-reveal">
-              <div class="dh-card-img"><span class="dh-card-badge dh-card-badge--good">Buen estado</span>👕</div>
-              <h4>Ropa variada</h4>
+              <div class="dh-card-img"><span class="dh-card-badge dh-card-badge--good" data-i18n="donar.sample.buenEstado">Buen estado</span>👕</div>
+              <h4 data-i18n="donar.sample.ropaVariada">Ropa variada</h4>
               <p class="dh-card-meta">📍 Boquete, Chiriquí</p>
-              <p class="dh-card-cat">Ropa</p>
-              <button class="dh-card-btn">Ver donación →</button>
+              <p class="dh-card-cat" data-i18n="donar.form.opt.ropa">Ropa</p>
+              <button class="dh-card-btn" data-i18n="donar.card.verDonacion">Ver donación →</button>
             </div>
           </div>
           <button class="dh-car-btn dh-car-next" aria-label="Siguiente">›</button>
@@ -547,32 +547,32 @@ html.dark .dm-pill__sun { opacity: 0.38; }
 
       <div class="dh-listing-col dh-listing-col--solicitudes">
         <div class="dh-listing-head">
-          <h3>🌿 Solicitudes de donación</h3>
-          <a href="#" class="dh-see-all">Ver todas →</a>
+          <h3 data-i18n="donar.listings.solicitudes.title">🌿 Solicitudes de donación</h3>
+          <a href="https://recoplus.github.io/rEcOPlus-Final/donaciones.html" class="dh-see-all" data-i18n="donar.listings.verTodas">Ver todas →</a>
         </div>
         <div class="dh-carousel-wrap">
           <button class="dh-car-btn dh-car-prev" aria-label="Anterior">‹</button>
           <div class="dh-carousel" id="dhCarouselSolicitudes">
             <div class="dh-card dh-glass dn-reveal">
               <div class="dh-card-img">👦</div>
-              <h4>Se necesita computadora</h4>
+              <h4 data-i18n="donar.sample.seNecesitaComputadora">Se necesita computadora</h4>
               <p class="dh-card-meta">📍 David, Chiriquí</p>
-              <p class="dh-card-cat">Educación</p>
-              <button class="dh-card-btn">Ayudar →</button>
+              <p class="dh-card-cat" data-i18n="donar.sample.educacion">Educación</p>
+              <button class="dh-card-btn" data-i18n="donar.card.ayudar">Ayudar →</button>
             </div>
             <div class="dh-card dh-glass dn-reveal">
               <div class="dh-card-img">🧥</div>
-              <h4>Ropa para niños</h4>
+              <h4 data-i18n="donar.sample.ropaNinos">Ropa para niños</h4>
               <p class="dh-card-meta">📍 Bugaba, Chiriquí</p>
-              <p class="dh-card-cat">Ropa</p>
-              <button class="dh-card-btn">Ayudar →</button>
+              <p class="dh-card-cat" data-i18n="donar.form.opt.ropa">Ropa</p>
+              <button class="dh-card-btn" data-i18n="donar.card.ayudar">Ayudar →</button>
             </div>
             <div class="dh-card dh-glass dn-reveal">
               <div class="dh-card-img">📚</div>
-              <h4>Libros escolares</h4>
+              <h4 data-i18n="donar.sample.librosEscolares">Libros escolares</h4>
               <p class="dh-card-meta">📍 Alanje, Chiriquí</p>
-              <p class="dh-card-cat">Educación</p>
-              <button class="dh-card-btn">Ayudar →</button>
+              <p class="dh-card-cat" data-i18n="donar.sample.educacion">Educación</p>
+              <button class="dh-card-btn" data-i18n="donar.card.ayudar">Ayudar →</button>
             </div>
           </div>
           <button class="dh-car-btn dh-car-next" aria-label="Siguiente">›</button>
@@ -584,38 +584,38 @@ html.dark .dm-pill__sun { opacity: 0.38; }
   <!-- ========== SIGUE EL CAMINO DE TU DONACIÓN ========== -->
   <section class="dh-section dh-tracker">
     <div class="dh-section-heading">
-      <h2 class="dh-kicker">Sigue el camino de tu donación</h2>
-      <p>Así puedes ver el impacto de tu ayuda.</p>
+      <h2 class="dh-kicker" data-i18n="donar.tracker.title">Sigue el camino de tu donación</h2>
+      <p data-i18n="donar.tracker.subtitle">Así puedes ver el impacto de tu ayuda.</p>
     </div>
     <div class="dh-tracker-row dh-glass">
       <div class="dh-tracker-step dn-reveal">
         <span class="dh-tracker-icon">📋</span>
-        <strong>Publicada</strong>
-        <p>Tu donación fue publicada con éxito.</p>
+        <strong data-i18n="donar.tracker.s1.title">Publicada</strong>
+        <p data-i18n="donar.tracker.s1.desc">Tu donación fue publicada con éxito.</p>
       </div>
       <span class="dh-tracker-line">→</span>
       <div class="dh-tracker-step dn-reveal">
         <span class="dh-tracker-icon">🔍</span>
-        <strong>En búsqueda</strong>
-        <p>Buscamos a la persona que puede necesitarlo.</p>
+        <strong data-i18n="donar.tracker.s2.title">En búsqueda</strong>
+        <p data-i18n="donar.tracker.s2.desc">Buscamos a la persona que puede necesitarlo.</p>
       </div>
       <span class="dh-tracker-line">→</span>
       <div class="dh-tracker-step dn-reveal">
         <span class="dh-tracker-icon">🙌</span>
-        <strong>Encontró receptor</strong>
-        <p>Alguien aceptó tu donación.</p>
+        <strong data-i18n="donar.tracker.s3.title">Encontró receptor</strong>
+        <p data-i18n="donar.tracker.s3.desc">Alguien aceptó tu donación.</p>
       </div>
       <span class="dh-tracker-line">→</span>
       <div class="dh-tracker-step dn-reveal">
         <span class="dh-tracker-icon">🚚</span>
-        <strong>Entregada</strong>
-        <p>La donación fue entregada.</p>
+        <strong data-i18n="donar.tracker.s4.title">Entregada</strong>
+        <p data-i18n="donar.tracker.s4.desc">La donación fue entregada.</p>
       </div>
       <span class="dh-tracker-line">→</span>
       <div class="dh-tracker-step dn-reveal">
         <span class="dh-tracker-icon">💚</span>
-        <strong>Impacto generado</strong>
-        <p>Tu ayuda ya está haciendo la diferencia.</p>
+        <strong data-i18n="donar.tracker.s5.title">Impacto generado</strong>
+        <p data-i18n="donar.tracker.s5.desc">Tu ayuda ya está haciendo la diferencia.</p>
       </div>
     </div>
   </section>
@@ -625,10 +625,10 @@ html.dark .dm-pill__sun { opacity: 0.38; }
     <div class="dh-cta-banner dh-glass dn-reveal">
       <span class="dh-cta-banner__icon">🌍</span>
       <div class="dh-cta-banner__text">
-        <h3>¿Tienes dudas o quieres ayudar de otra forma?</h3>
-        <p>Hablemos y juntos encontramos la mejor manera de colaborar.</p>
+        <h3 data-i18n="donar.ctaBanner.title">¿Tienes dudas o quieres ayudar de otra forma?</h3>
+        <p data-i18n="donar.ctaBanner.desc">Hablemos y juntos encontramos la mejor manera de colaborar.</p>
       </div>
-      <a href="https://recoplus.github.io/rEcOPlus-Final/contacto.html" class="dh-btn dh-btn--primary">Contáctanos →</a>
+      <a href="https://recoplus.github.io/rEcOPlus-Final/contacto.html" class="dh-btn dh-btn--primary" data-i18n="donar.ctaBanner.btn">Contáctanos →</a>
     </div>
   </section>
 
@@ -671,8 +671,8 @@ html.dark .dm-pill__sun { opacity: 0.38; }
       <div class="donar-form-grid">
         <!-- Col izquierda -->
         <div class="donar-form-col">
-          <label class="donar-label" data-i18n="donar.form.label.categoria1">¿Qué vas a donar?</label>
-          <select class="donar-input" id="donacion-categoria">
+          <label class="donar-label" data-i18n="donar.form.label.categoria1">¿Qué vas a donar? <span class="donar-required">*</span></label>
+          <select class="donar-input" id="donacion-categoria" required>
             <option value="" data-i18n="donar.form.opt.categoria">Selecciona una categoría</option>
             <option data-i18n="donar.form.opt.ropa">Ropa y calzado</option>
             <option data-i18n="donar.form.opt.electronicos">Electrónicos</option>
@@ -686,38 +686,38 @@ html.dark .dm-pill__sun { opacity: 0.38; }
             <option data-i18n="donar.form.opt.otro">Otro</option>
           </select>
 
-          <label class="donar-label" data-i18n="donar.form.label.disponibilidad">¿Disponibilidad?</label>
-          <select class="donar-input" id="donacion-disponibilidad">
+          <label class="donar-label" data-i18n="donar.form.label.disponibilidad">¿Disponibilidad? <span class="donar-required">*</span></label>
+          <select class="donar-input" id="donacion-disponibilidad" required>
             <option value="" data-i18n="donar.form.opt.disponibilidad">Selecciona disponibilidad</option>
             <option data-i18n="donar.form.opt.inmediata">Inmediata</option>
             <option data-i18n="donar.form.opt.semana">Esta semana</option>
             <option data-i18n="donar.form.opt.mes">Este mes</option>
           </select>
 
-          <label class="donar-label" data-i18n="donar.form.label.descripcion">Descripción</label>
-          <textarea class="donar-input donar-textarea" id="donacion-descripcion" placeholder="Describe el artículo: estado, cantidad, detalles importantes..." data-i18n="donar.form1.ph.desc"></textarea>
+          <label class="donar-label" data-i18n="donar.form.label.descripcion">Descripción <span class="donar-required">*</span></label>
+          <textarea class="donar-input donar-textarea" id="donacion-descripcion" placeholder="Describe el artículo: estado, cantidad, detalles importantes..." data-i18n="donar.form1.ph.desc" required></textarea>
         </div>
 
         <!-- Col derecha -->
         <div class="donar-form-col">
-          <label class="donar-label" data-i18n="donar.form.label.ubicacion">Ubicación</label>
-          <input type="text" class="donar-input" id="donacion-ubicacion" placeholder="Tu ciudad o barrio" data-i18n="donar.form.ph.ubicacion" />
+          <label class="donar-label" data-i18n="donar.form.label.ubicacion">Ubicación <span class="donar-required">*</span></label>
+          <input type="text" class="donar-input" id="donacion-ubicacion" placeholder="Tu ciudad o barrio" data-i18n="donar.form.ph.ubicacion" required />
 
-          <label class="donar-label" data-i18n="donar.form.label.punto">Punto funcional</label>
-          <select class="donar-input" id="donacion-punto">
+          <label class="donar-label" data-i18n="donar.form.label.punto">Punto funcional <span class="donar-required">*</span></label>
+          <select class="donar-input" id="donacion-punto" required>
             <option value="" data-i18n="donar.form.opt.punto1">Selecciona punto</option>
             <option data-i18n="donar.form.opt.domicilio">Entrega en mi domicilio</option>
             <option data-i18n="donar.form.opt.acopio">Punto de acopio cercano</option>
             <option data-i18n="donar.form.opt.centro">Centro comunitario</option>
           </select>
 
-          <label class="donar-label">Empresa a la que se enviará <span class="donar-optional">(opcional)</span></label>
+          <label class="donar-label" data-i18n="donar.form.label.empresa">Empresa a la que se enviará <span class="donar-optional" data-i18n="donar.form.opcional">(opcional)</span></label>
           <select class="donar-input" id="donacion-empresa">
-            <option value="">Selecciona una empresa (opcional)</option>
+            <option value="" data-i18n="donar.form.opt.empresa">Selecciona una empresa (opcional)</option>
           </select>
 
           <!-- Zona de imagen -->
-          <label class="donar-label" data-i18n="donar.form1.label.foto">Foto del artículo</label>
+          <label class="donar-label" data-i18n="donar.form1.label.foto">Foto del artículo <span class="donar-required">*</span></label>
           <div class="donar-upload" id="dropzone">
             <span class="donar-upload-icon">📷</span>
             <p data-i18n="donar.form.upload.text">Arrastra una imagen aquí<br>o <strong>haz clic para subir</strong></p>
@@ -749,8 +749,8 @@ html.dark .dm-pill__sun { opacity: 0.38; }
 
       <div class="donar-form-grid">
         <div class="donar-form-col">
-          <label class="donar-label" data-i18n="donar.form.label.categoria2">¿Qué necesitas?</label>
-          <select class="donar-input" id="solicitud-categoria">
+          <label class="donar-label" data-i18n="donar.form.label.categoria2">¿Qué necesitas? <span class="donar-required">*</span></label>
+          <select class="donar-input" id="solicitud-categoria" required>
             <option value="" data-i18n="donar.form.opt.categoria">Selecciona una categoría</option>
             <option data-i18n="donar.form.opt.ropa">Ropa y calzado</option>
             <option data-i18n="donar.form.opt.electronicos">Electrónicos</option>
@@ -763,36 +763,36 @@ html.dark .dm-pill__sun { opacity: 0.38; }
             <option data-i18n="donar.form.opt.otro">Otro</option>
           </select>
 
-          <label class="donar-label" data-i18n="donar.form.label.disponibilidad">¿Disponibilidad?</label>
-          <select class="donar-input" id="solicitud-disponibilidad">
+          <label class="donar-label" data-i18n="donar.form.label.disponibilidad">¿Disponibilidad? <span class="donar-required">*</span></label>
+          <select class="donar-input" id="solicitud-disponibilidad" required>
             <option value="" data-i18n="donar.form.opt.disponibilidad">Selecciona disponibilidad</option>
             <option data-i18n="donar.form.opt.cuanto-antes">Lo antes posible</option>
             <option data-i18n="donar.form.opt.semana">Esta semana</option>
             <option data-i18n="donar.form.opt.mes">Este mes</option>
           </select>
 
-          <label class="donar-label" data-i18n="donar.form.label.descripcion">Descripción</label>
-          <textarea class="donar-input donar-textarea" id="solicitud-descripcion" placeholder="Describe qué necesitas, para qué y cualquier detalle relevante..." data-i18n="donar.form2.ph.desc"></textarea>
+          <label class="donar-label" data-i18n="donar.form.label.descripcion">Descripción <span class="donar-required">*</span></label>
+          <textarea class="donar-input donar-textarea" id="solicitud-descripcion" placeholder="Describe qué necesitas, para qué y cualquier detalle relevante..." data-i18n="donar.form2.ph.desc" required></textarea>
         </div>
 
         <div class="donar-form-col">
-          <label class="donar-label" data-i18n="donar.form.label.ubicacion">Ubicación</label>
-          <input type="text" class="donar-input" id="solicitud-ubicacion" placeholder="Tu ciudad o barrio" data-i18n="donar.form.ph.ubicacion" />
+          <label class="donar-label" data-i18n="donar.form.label.ubicacion">Ubicación <span class="donar-required">*</span></label>
+          <input type="text" class="donar-input" id="solicitud-ubicacion" placeholder="Tu ciudad o barrio" data-i18n="donar.form.ph.ubicacion" required />
 
-          <label class="donar-label" data-i18n="donar.form.label.punto">Punto funcional</label>
-          <select class="donar-input" id="solicitud-punto">
+          <label class="donar-label" data-i18n="donar.form.label.punto">Punto funcional <span class="donar-required">*</span></label>
+          <select class="donar-input" id="solicitud-punto" required>
             <option value="" data-i18n="donar.form.opt.punto2">Selecciona punto de recepción</option>
             <option data-i18n="donar.form.opt.visita">Me pueden visitar</option>
             <option data-i18n="donar.form.opt.recojo">Recojo en punto de acopio</option>
             <option data-i18n="donar.form.opt.acuerdo">Acuerdo con donante</option>
           </select>
 
-          <label class="donar-label">Empresa a la que se enviará <span class="donar-optional">(opcional)</span></label>
+          <label class="donar-label" data-i18n="donar.form.label.empresa">Empresa a la que se enviará <span class="donar-optional" data-i18n="donar.form.opcional">(opcional)</span></label>
           <select class="donar-input" id="solicitud-empresa">
-            <option value="">Selecciona una empresa (opcional)</option>
+            <option value="" data-i18n="donar.form.opt.empresa">Selecciona una empresa (opcional)</option>
           </select>
 
-          <label class="donar-label" data-i18n="donar.form2.label.foto">Foto de referencia <span class="donar-optional" data-i18n="donar.form.opcional">(opcional)</span></label>
+          <label class="donar-label" data-i18n="donar.form2.label.foto">Foto de referencia <span class="donar-required">*</span></label>
           <div class="donar-upload" id="dropzone2">
             <span class="donar-upload-icon">📷</span>
             <p data-i18n="donar.form.upload.text">Arrastra una imagen aquí<br>o <strong>haz clic para subir</strong></p>
@@ -851,9 +851,9 @@ html.dark .dm-pill__sun { opacity: 0.38; }
   <div class="donar-modal-overlay" id="donarModal">
     <div class="donar-modal">
       <span class="donar-modal-check">✅</span>
-      <h3 id="modalTitle">¡Publicación enviada!</h3>
-      <p id="modalMsg">Tu donación ha sido publicada exitosamente. La comunidad RECO+ ya puede verla.</p>
-      <button class="donar-modal-close-btn" id="closeModal">Cerrar</button>
+      <h3 id="modalTitle" data-i18n="donar.modalExito.title">¡Publicación enviada!</h3>
+      <p id="modalMsg" data-i18n="donar.modalExito.desc">Tu donación ha sido publicada exitosamente. La comunidad RECO+ ya puede verla.</p>
+      <button class="donar-modal-close-btn" id="closeModal" data-i18n="donar.modal.cerrar">Cerrar</button>
     </div>
   </div>
 
@@ -873,7 +873,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
         <p class="donar-detail-desc" id="donarDetailDesc"></p>
       </div>
       <div class="donar-detail-footer">
-        <button class="donar-modal-close-btn" id="donarDetailCloseBtn">Cerrar</button>
+        <button class="donar-modal-close-btn" id="donarDetailCloseBtn" data-i18n="donar.modal.cerrar">Cerrar</button>
       </div>
     </div>
   </div>

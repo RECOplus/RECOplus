@@ -362,29 +362,29 @@ html.dark .dm-pill__sun { opacity: 0.38; }
 
   <!-- ========== HERO SIMPLE ========== -->
   <section class="dl-hero">
-    <h1 class="dl-hero__title">Todas las publicaciones</h1>
-    <p class="dl-hero__subtitle">Explora todas las donaciones disponibles y las solicitudes de ayuda activas en la comunidad RECO+, con todos sus detalles.</p>
+    <h1 class="dl-hero__title" data-i18n="donaciones.hero.title">Todas las publicaciones</h1>
+    <p class="dl-hero__subtitle" data-i18n="donaciones.hero.subtitle">Explora todas las donaciones disponibles y las solicitudes de ayuda activas en la comunidad RECO+, con todos sus detalles.</p>
   </section>
 
   <!-- ========== FILTROS ========== -->
   <section class="dl-filters-section">
     <div class="dl-filters">
       <div class="dl-chips" id="dlChips">
-        <button type="button" class="dl-chip active" data-filter="todas">Todas</button>
-        <button type="button" class="dl-chip" data-filter="donar">🌿 Donaciones</button>
-        <button type="button" class="dl-chip" data-filter="solicitar">🙋 Solicitudes de ayuda</button>
+        <button type="button" class="dl-chip active" data-filter="todas" data-i18n="donaciones.filter.todas">Todas</button>
+        <button type="button" class="dl-chip" data-filter="donar" data-i18n="donaciones.filter.donaciones">🌿 Donaciones</button>
+        <button type="button" class="dl-chip" data-filter="solicitar" data-i18n="donaciones.filter.solicitudes">🙋 Solicitudes de ayuda</button>
       </div>
       <div class="dl-search-wrap">
-        <input type="text" id="dlSearch" class="dl-search" placeholder="Buscar por categoría, descripción o ubicación..." />
+        <input type="text" id="dlSearch" class="dl-search" placeholder="Buscar por categoría, descripción o ubicación..." data-i18n="donaciones.search.placeholder" />
       </div>
     </div>
-    <p class="dl-count"><span id="dlCount">0</span> publicaciones activas</p>
+    <p class="dl-count"><span id="dlCount">0</span> <span data-i18n="donaciones.count.suffix">publicaciones activas</span></p>
   </section>
 
   <!-- ========== GRID DE RESULTADOS ========== -->
   <section class="dl-results-section">
     <div class="dl-grid" id="dlGrid">
-      <div class="dl-empty">Cargando publicaciones...</div>
+      <div class="dl-empty" data-i18n="donaciones.cargando">Cargando publicaciones...</div>
     </div>
   </section>
 

@@ -95,11 +95,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function openModal(isDonar) {
     if (isDonar) {
-      modalTitle.textContent = '¡Donación publicada!';
-      modalMsg.textContent = 'Tu donación ha sido publicada exitosamente. La comunidad RECO+ ya puede verla y contactarte.';
+      modalTitle.textContent = t('donar.modalExito.donar.title');
+      modalMsg.textContent = t('donar.modalExito.donar.desc');
     } else {
-      modalTitle.textContent = '¡Solicitud publicada!';
-      modalMsg.textContent = 'Tu solicitud ha sido enviada. Pronto alguien de la comunidad RECO+ podrá ayudarte.';
+      modalTitle.textContent = t('donar.modalExito.solicitar.title');
+      modalMsg.textContent = t('donar.modalExito.solicitar.desc');
     }
     modal.classList.add('open');
   }
@@ -107,8 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
   /* Modal reutilizado para avisar que hace falta iniciar sesión antes
      de publicar (mismo overlay/estructura visual que el de éxito). */
   function openLoginRequiredModal() {
-    modalTitle.textContent = 'Inicia sesión para continuar';
-    modalMsg.textContent = 'Necesitas tener una cuenta para publicar una donación o solicitud en RECO+.';
+    modalTitle.textContent = t('donar.modalLogin.title');
+    modalMsg.textContent = t('donar.modalLogin.desc');
     modal.classList.add('open');
   }
 
@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!btn) return null;
     const originalText = btn.textContent;
     btn.disabled = true;
-    btn.textContent = loadingText;
+    btn.textContent = loadingText || t('donar.btn.publicando');
     return function restore() {
       btn.disabled = false;
       btn.textContent = originalText;
@@ -154,16 +154,76 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /* ---- VALIDACIÓN DE CAMPOS OBLIGATORIOS ----
+     Todos los campos de ambos formularios son requeridos (incluida
+     la foto). Recorre una lista de ids, marca con .donar-input--error
+     los que estén vacíos y hace focus en el primero. Devuelve true
+     si todo está completo. */
+  function validateRequiredFields(fieldIds, fileInputId) {
+    let firstInvalid = null;
+    let allValid = true;
+
+    fieldIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const value = (el.value || '').trim();
+      if (!value) {
+        allValid = false;
+        el.classList.add('donar-input--error');
+        if (!firstInvalid) firstInvalid = el;
+      } else {
+        el.classList.remove('donar-input--error');
+      }
+    });
+
+    // Foto: también obligatoria, se valida contra el <input type="file">
+    if (fileInputId) {
+      const fileInput = document.getElementById(fileInputId);
+      const dropzoneId = fileInput ? fileInput.id === 'fileInput' ? 'dropzone' : 'dropzone2' : null;
+      const dropzone = dropzoneId ? document.getElementById(dropzoneId) : null;
+      const hasFile = fileInput && fileInput.files && fileInput.files.length > 0;
+      if (!hasFile) {
+        allValid = false;
+        if (dropzone) dropzone.classList.add('donar-input--error');
+        if (!firstInvalid && dropzone) firstInvalid = dropzone;
+      } else if (dropzone) {
+        dropzone.classList.remove('donar-input--error');
+      }
+    }
+
+    if (firstInvalid) {
+      firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (typeof firstInvalid.focus === 'function') firstInvalid.focus();
+    }
+
+    return allValid;
+  }
+
+  // Quita el resaltado de error apenas el usuario corrige el campo
+  document.querySelectorAll('.donar-input').forEach((el) => {
+    const clear = () => el.classList.remove('donar-input--error');
+    el.addEventListener('input', clear);
+    el.addEventListener('change', clear);
+  });
+
   /* ---- SUBMIT DONAR ---- */
   const btnDonar = document.getElementById('btnDonar');
   if (btnDonar) {
     btnDonar.addEventListener('click', async () => {
-      const categoriaEl = document.getElementById('donacion-categoria');
-      const categoria = categoriaEl ? categoriaEl.value : '';
-      if (!categoria) {
+      const camposDonar = [
+        'donacion-categoria',
+        'donacion-disponibilidad',
+        'donacion-descripcion',
+        'donacion-ubicacion',
+        'donacion-punto'
+      ];
+      if (!validateRequiredFields(camposDonar, 'fileInput')) {
         shakeBtn(btnDonar);
         return;
       }
+
+      const categoriaEl = document.getElementById('donacion-categoria');
+      const categoria = categoriaEl ? categoriaEl.value : '';
 
       const client = getSupabaseClient();
       if (!client || !window.recoAuth) {
@@ -208,8 +268,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (error) {
         console.error('[RECO+] Error al publicar donación:', error);
-        modalTitle.textContent = 'No se pudo publicar';
-        modalMsg.textContent = 'Ocurrió un error al guardar tu donación. Intenta de nuevo en unos segundos.';
+        modalTitle.textContent = t('donar.modalError.title');
+        modalMsg.textContent = t('donar.modalError.desc.donar');
         modal.classList.add('open');
         return;
       }
@@ -223,12 +283,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnSolicitar = document.getElementById('btnSolicitar');
   if (btnSolicitar) {
     btnSolicitar.addEventListener('click', async () => {
-      const categoriaEl = document.getElementById('solicitud-categoria');
-      const categoria = categoriaEl ? categoriaEl.value : '';
-      if (!categoria) {
+      const camposSolicitar = [
+        'solicitud-categoria',
+        'solicitud-disponibilidad',
+        'solicitud-descripcion',
+        'solicitud-ubicacion',
+        'solicitud-punto'
+      ];
+      if (!validateRequiredFields(camposSolicitar, 'fileInput2')) {
         shakeBtn(btnSolicitar);
         return;
       }
+
+      const categoriaEl = document.getElementById('solicitud-categoria');
+      const categoria = categoriaEl ? categoriaEl.value : '';
 
       const client = getSupabaseClient();
       if (!client || !window.recoAuth) {
@@ -273,8 +341,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (error) {
         console.error('[RECO+] Error al publicar solicitud:', error);
-        modalTitle.textContent = 'No se pudo publicar';
-        modalMsg.textContent = 'Ocurrió un error al guardar tu solicitud. Intenta de nuevo en unos segundos.';
+        modalTitle.textContent = t('donar.modalError.title');
+        modalMsg.textContent = t('donar.modalError.desc.solicitar');
         modal.classList.add('open');
         return;
       }

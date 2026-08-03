@@ -51,13 +51,13 @@
   function timeAgo(dateStr) {
     var diffMs = Date.now() - new Date(dateStr).getTime();
     var mins = Math.floor(diffMs / 60000);
-    if (mins < 1) return 'justo ahora';
-    if (mins < 60) return 'hace ' + mins + ' min';
+    if (mins < 1) return t('donar.time.justoAhora');
+    if (mins < 60) return t('donar.time.haceMin', { n: mins });
     var hours = Math.floor(mins / 60);
-    if (hours < 24) return 'hace ' + hours + 'h';
+    if (hours < 24) return t('donar.time.haceHoras', { n: hours });
     var days = Math.floor(hours / 24);
-    if (days < 30) return 'hace ' + days + 'd';
-    return new Date(dateStr).toLocaleDateString('es-PA');
+    if (days < 30) return t('donar.time.haceDias', { n: days });
+    return new Date(dateStr).toLocaleDateString(currentLang() === 'en' ? 'en-US' : 'es-PA');
   }
 
   function disponibilidadBadge(disponibilidad) {
@@ -94,14 +94,14 @@
       ? '<span class="dl-card-badge ' + badge.cls + '">' + escapeHtml(badge.text) + '</span>'
       : '';
 
-    var typeHTML = '<span class="dl-card-type">' + (isDonar ? '🌿 Donación' : '🙋 Solicitud') + '</span>';
+    var typeHTML = '<span class="dl-card-type">' + (isDonar ? t('donaciones.tipo.donacion') : t('donaciones.tipo.solicitud')) + '</span>';
 
     var titulo = row.descripcion
       ? (row.descripcion.length > 46 ? row.descripcion.slice(0, 46) + '…' : row.descripcion)
       : row.categoria;
 
-    var ubicacion = row.ubicacion ? '📍 ' + escapeHtml(row.ubicacion) : '📍 Ubicación no especificada';
-    var actionLabel = isDonar ? 'Ver donación' : 'Ayudar';
+    var ubicacion = row.ubicacion ? '📍 ' + escapeHtml(row.ubicacion) : '📍 ' + t('donar.listings.ubicacionSinEspecificar');
+    var actionLabel = isDonar ? t('donar.card.verDonacion') : t('donar.card.ayudar');
 
     return (
       '<div class="dl-card ' + (isDonar ? 'dl-card--donar' : 'dl-card--solicitar') + '" data-donacion-id="' + row.id + '">' +
@@ -109,7 +109,7 @@
         '<h4>' + escapeHtml(titulo) + '</h4>' +
         '<p class="dl-card-meta">' + ubicacion + '</p>' +
         '<p class="dl-card-cat">' + escapeHtml(row.categoria) + ' · ' + timeAgo(row.created_at) + '</p>' +
-        '<button class="dl-card-btn">' + actionLabel + ' →</button>' +
+        '<button class="dl-card-btn">' + actionLabel + '</button>' +
       '</div>'
     );
   }
@@ -136,7 +136,7 @@
     if (countEl) countEl.textContent = String(filtered.length);
 
     if (filtered.length === 0) {
-      grid.innerHTML = '<div class="dl-empty">No se encontraron publicaciones con esos filtros.</div>';
+      grid.innerHTML = '<div class="dl-empty">' + escapeHtml(t('donaciones.sinResultados')) + '</div>';
       return;
     }
 
@@ -149,7 +149,7 @@
     var client = getClient();
     var grid = document.getElementById('dlGrid');
     if (!client) {
-      if (grid) grid.innerHTML = '<div class="dl-empty">No se pudo conectar con la base de datos. Intenta recargar la página.</div>';
+      if (grid) grid.innerHTML = '<div class="dl-empty">' + escapeHtml(t('donaciones.error.conexion')) + '</div>';
       return;
     }
 
@@ -161,7 +161,7 @@
       .then(function (res) {
         if (res.error) {
           console.error('[RECO+] Error cargando publicaciones:', res.error);
-          if (grid) grid.innerHTML = '<div class="dl-empty">Ocurrió un error al cargar las publicaciones. Intenta de nuevo más tarde.</div>';
+          if (grid) grid.innerHTML = '<div class="dl-empty">' + escapeHtml(t('donaciones.error.carga')) + '</div>';
           return;
         }
         allRows = res.data || [];

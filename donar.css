@@ -370,6 +370,27 @@ html.dark .donar-hero::after {
   font-size: 0.78rem;
 }
 
+/* Asterisco de campo obligatorio, junto a .donar-label */
+.donar-required {
+  color: #e0555a;
+  font-weight: 700;
+}
+html.dark .donar-required {
+  color: #ff8a8f;
+}
+
+/* Estado inválido nativo (:invalid tras intento de submit) — solo
+   resalta cuando el navegador ya marcó el campo como "touched"
+   mediante la clase .donar-input--error que añade donar.js */
+.donar-input--error {
+  border-color: #e0555a !important;
+  box-shadow: 0 0 0 3px rgba(224, 85, 90, 0.18) !important;
+}
+html.dark .donar-input--error {
+  border-color: #ff8a8f !important;
+  box-shadow: 0 0 0 3px rgba(255, 138, 143, 0.18) !important;
+}
+
 .donar-input {
   width: 100%;
   font-family: 'DM Sans', sans-serif;

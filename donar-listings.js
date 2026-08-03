@@ -72,13 +72,13 @@
   function timeAgo(dateStr) {
     var diffMs = Date.now() - new Date(dateStr).getTime();
     var mins = Math.floor(diffMs / 60000);
-    if (mins < 1) return 'justo ahora';
-    if (mins < 60) return 'hace ' + mins + ' min';
+    if (mins < 1) return t('donar.time.justoAhora');
+    if (mins < 60) return t('donar.time.haceMin', { n: mins });
     var hours = Math.floor(mins / 60);
-    if (hours < 24) return 'hace ' + hours + 'h';
+    if (hours < 24) return t('donar.time.haceHoras', { n: hours });
     var days = Math.floor(hours / 24);
-    if (days < 30) return 'hace ' + days + 'd';
-    return new Date(dateStr).toLocaleDateString('es-PA');
+    if (days < 30) return t('donar.time.haceDias', { n: days });
+    return new Date(dateStr).toLocaleDateString(currentLang() === 'en' ? 'en-US' : 'es-PA');
   }
 
   /* ── Construye el HTML de una tarjeta a partir de una fila de la
@@ -98,7 +98,7 @@
       ? (row.descripcion.length > 42 ? row.descripcion.slice(0, 42) + '…' : row.descripcion)
       : row.categoria;
 
-    var ubicacion = row.ubicacion ? '📍 ' + escapeHtml(row.ubicacion) : '📍 Ubicación no especificada';
+    var ubicacion = row.ubicacion ? '📍 ' + escapeHtml(row.ubicacion) : '📍 ' + t('donar.listings.ubicacionSinEspecificar');
 
     return (
       '<div class="dh-card dh-glass dn-reveal is-visible" data-donacion-id="' + row.id + '">' +
@@ -139,7 +139,7 @@
      que se usa en la tarjeta chica) ── */
   function formatFechaLarga(dateStr) {
     try {
-      return new Date(dateStr).toLocaleDateString('es-PA', { day: 'numeric', month: 'long', year: 'numeric' });
+      return new Date(dateStr).toLocaleDateString(currentLang() === 'en' ? 'en-US' : 'es-PA', { day: 'numeric', month: 'long', year: 'numeric' });
     } catch (e) {
       return '';
     }
@@ -163,7 +163,7 @@
     var isDonar = row.tipo === 'donar';
 
     var kicker = document.getElementById('donarDetailKicker');
-    if (kicker) kicker.textContent = isDonar ? '🌿 Donación disponible' : '🙋 Solicitud de ayuda';
+    if (kicker) kicker.textContent = isDonar ? t('donar.listings.kicker.donacion') : t('donar.listings.kicker.solicitud');
 
     var imgWrap = document.getElementById('donarDetailImg');
     if (imgWrap) {
@@ -178,14 +178,14 @@
     var metaEl = document.getElementById('donarDetailMeta');
     if (metaEl) {
       var metaRows = [];
-      metaRows.push('<div><span class="donar-detail-meta-ic">📍</span>' + escapeHtml(row.ubicacion || 'Ubicación no especificada') + '</div>');
+      metaRows.push('<div><span class="donar-detail-meta-ic">📍</span>' + escapeHtml(row.ubicacion || t('donar.listings.ubicacionSinEspecificar')) + '</div>');
       if (row.punto_funcional) {
-        var puntoLabel = isDonar ? 'Punto de entrega' : 'Punto de recepción';
+        var puntoLabel = isDonar ? t('donar.listings.puntoEntrega') : t('donar.listings.puntoRecepcion');
         metaRows.push('<div><span class="donar-detail-meta-ic">📌</span>' + puntoLabel + ': ' + escapeHtml(row.punto_funcional) + '</div>');
       }
-      metaRows.push('<div><span class="donar-detail-meta-ic">🙋</span>Publicado por ' + escapeHtml(row.autor_nombre || 'Usuario RECO+') + '</div>');
+      metaRows.push('<div><span class="donar-detail-meta-ic">🙋</span>' + t('donar.listings.publicadoPor') + ' ' + escapeHtml(row.autor_nombre || t('donar.listings.usuarioGenerico')) + '</div>');
       if (row.empresa_destino) {
-        metaRows.push('<div><span class="donar-detail-meta-ic">🏢</span>Empresa: ' + escapeHtml(row.empresa_destino) + '</div>');
+        metaRows.push('<div><span class="donar-detail-meta-ic">🏢</span>' + t('donar.listings.empresa') + ': ' + escapeHtml(row.empresa_destino) + '</div>');
       }
       if (row.created_at) {
         metaRows.push('<div><span class="donar-detail-meta-ic">📅</span>' + formatFechaLarga(row.created_at) + '</div>');
@@ -194,7 +194,7 @@
     }
 
     var descEl = document.getElementById('donarDetailDesc');
-    if (descEl) descEl.textContent = row.descripcion || 'Sin descripción adicional.';
+    if (descEl) descEl.textContent = row.descripcion || t('donar.listings.sinDescripcion');
 
     overlay.classList.add('open');
     document.body.classList.add('dh-modal-lock');
@@ -266,13 +266,13 @@
       .eq('tipo', 'donar')
       .eq('estado', 'activa')
       .order('created_at', { ascending: false })
-      .limit(12)
+      .limit(2)
       .then(function (res) {
         if (res.error) {
           console.error('[RECO+] Error cargando donaciones:', res.error);
           return;
         }
-        renderList('dhCarouselDonaciones', res.data, 'Ver donación', 'Aún no hay donaciones publicadas. ¡Sé el primero!');
+        renderList('dhCarouselDonaciones', res.data, t('donar.card.verDonacion').replace(' →', ''), t('donar.listings.empty.donaciones'));
       });
 
     client
@@ -281,13 +281,13 @@
       .eq('tipo', 'solicitar')
       .eq('estado', 'activa')
       .order('created_at', { ascending: false })
-      .limit(12)
+      .limit(2)
       .then(function (res) {
         if (res.error) {
           console.error('[RECO+] Error cargando solicitudes:', res.error);
           return;
         }
-        renderList('dhCarouselSolicitudes', res.data, 'Ayudar', 'Aún no hay solicitudes publicadas.');
+        renderList('dhCarouselSolicitudes', res.data, t('donar.card.ayudar').replace(' →', ''), t('donar.listings.empty.solicitudes'));
       });
   }
 

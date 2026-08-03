@@ -149,7 +149,7 @@
 
 .dl-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
 
@@ -287,12 +287,13 @@
    ────────────────────────────────────────────────── */
 @media (max-width: 900px) {
   .dl-hero { margin-top: 96px; }
+  .dl-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 560px) {
   .dl-filters { flex-direction: column; align-items: stretch; }
   .dl-search-wrap { max-width: none; }
-  .dl-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+  .dl-grid { grid-template-columns: 1fr; gap: 14px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
