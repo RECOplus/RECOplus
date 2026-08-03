@@ -49,10 +49,12 @@
      empresas en vez de arriesgarse a dejar el selector vacío. ── */
   var CATEGORIA_A_MATERIAL = {
     'Ropa y calzado': ['ropa'],
-    'Electrónicos': ['electronicos'],
-    'Libros y útiles': ['papel'],
-    'Alimentos no perecederos': ['organicos'],
-    'Alimentos': ['organicos']
+    'Electrónicos': ['electronicos', 'celulares'],
+    'Muebles': ['muebles'],
+    'Libros y útiles': ['libros', 'utilesescolares', 'papel'],
+    'Juguetes': ['juguetes'],
+    'Alimentos no perecederos': ['aceite'],
+    'Alimentos': ['aceite']
   };
 
   var empresasPromise = null;

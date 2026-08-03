@@ -169,13 +169,24 @@ function parseCoords(latRaw, lngRaw) {
 }
 
 const MATERIAL_ICONS = {
-  plasticos: "🧴",
+  plastico: "🧴",
   papel: "📄",
   vidrio: "🍾",
   metal: "🥫",
   ropa: "👕",
   electronicos: "💻",
-  organicos: "🌿",
+  carton: "📦",
+  libros: "📚",
+  celulares: "📱",
+  muebles: "🪑",
+  juguetes: "🧸",
+  baterias: "🔋",
+  bombillos: "💡",
+  tetrapak: "🧃",
+  aceite: "🍶",
+  tela: "🪡",
+  cuero: "🧥",
+  utilesescolares: "✏️",
 };
 
 // Construye un nuevo punto a partir de los datos del formulario del
@@ -191,7 +202,7 @@ async function submitSuggestion({ name, address, type, materials, comments, lat,
     );
   }
 
-  const finalMaterials = materials.length ? materials : ["organicos"];
+  const finalMaterials = materials.length ? materials : ["plastico"];
 
   const payload = {
     name: name,

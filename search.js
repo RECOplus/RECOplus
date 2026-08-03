@@ -36,10 +36,10 @@
     {
       keywords_es: ["plastico","plasticos","botella","botellas","pet","envase"],
       keywords_en: ["plastic","plastics","bottle","bottles","pet","container"],
-      label_es: "Puntos de reciclaje — Plásticos",
-      label_en: "Recycling points — Plastics",
+      label_es: "Puntos de reciclaje — Plástico",
+      label_en: "Recycling points — Plastic",
       icon: "♻️",
-      action: { type: "map", payload: "plasticos" }
+      action: { type: "map", payload: "plastico" }
     },
     {
       keywords_es: ["papel","carton","cartón","periodico","periódico","libro","libros","revista"],
@@ -82,12 +82,68 @@
       action: { type: "map", payload: "ropa" }
     },
     {
-      keywords_es: ["organico","organicos","compost","comida","residuos organicos","basura organica"],
-      keywords_en: ["organic","compost","food","organic waste","organic trash"],
-      label_es: "Puntos de reciclaje — Orgánicos",
-      label_en: "Recycling points — Organic",
-      icon: "🌱",
-      action: { type: "map", payload: "organicos" }
+      keywords_es: ["aceite","aceite de cocina","aceite usado","grasa"],
+      keywords_en: ["oil","cooking oil","used oil","grease"],
+      label_es: "Puntos de reciclaje — Aceite de cocina",
+      label_en: "Recycling points — Cooking oil",
+      icon: "🍶",
+      action: { type: "map", payload: "aceite" }
+    },
+    {
+      keywords_es: ["carton","cartón","caja","cajas"],
+      keywords_en: ["cardboard","box","boxes"],
+      label_es: "Puntos de reciclaje — Cartón",
+      label_en: "Recycling points — Cardboard",
+      icon: "📦",
+      action: { type: "map", payload: "carton" }
+    },
+    {
+      keywords_es: ["bateria","baterias","pila","pilas"],
+      keywords_en: ["battery","batteries"],
+      label_es: "Puntos de reciclaje — Baterías",
+      label_en: "Recycling points — Batteries",
+      icon: "🔋",
+      action: { type: "map", payload: "baterias" }
+    },
+    {
+      keywords_es: ["bombillo","bombillos","foco","focos","lampara"],
+      keywords_en: ["light bulb","bulb","lamp"],
+      label_es: "Puntos de reciclaje — Bombillos",
+      label_en: "Recycling points — Light bulbs",
+      icon: "💡",
+      action: { type: "map", payload: "bombillos" }
+    },
+    {
+      keywords_es: ["celular","celulares","telefono","movil"],
+      keywords_en: ["cellphone","phone","mobile"],
+      label_es: "Puntos de reciclaje — Celulares",
+      label_en: "Recycling points — Cellphones",
+      icon: "📱",
+      action: { type: "map", payload: "celulares" }
+    },
+    {
+      keywords_es: ["mueble","muebles","silla","mesa","sofa"],
+      keywords_en: ["furniture","chair","table","sofa"],
+      label_es: "Puntos de reciclaje — Muebles",
+      label_en: "Recycling points — Furniture",
+      icon: "🪑",
+      action: { type: "map", payload: "muebles" }
+    },
+    {
+      keywords_es: ["juguete","juguetes"],
+      keywords_en: ["toy","toys"],
+      label_es: "Puntos de reciclaje — Juguetes",
+      label_en: "Recycling points — Toys",
+      icon: "🧸",
+      action: { type: "map", payload: "juguetes" }
+    },
+    {
+      keywords_es: ["libro","libros"],
+      keywords_en: ["book","books"],
+      label_es: "Puntos de reciclaje — Libros",
+      label_en: "Recycling points — Books",
+      icon: "📚",
+      action: { type: "map", payload: "libros" }
     },
     {
       keywords_es: ["donacion","donacion mapa","punto de donacion","puntos de donacion"],
@@ -300,21 +356,31 @@
      APLICAR FILTRO EN MAPA (cuando ya estamos en mapa.html)
   ─────────────────────────────────────────────── */
   function applyMapFilter(filterValue) {
-    // Activar el chip correspondiente
-    const chips = document.querySelectorAll(".chip");
-    chips.forEach(chip => {
-      chip.classList.remove("active");
-      if (chip.dataset.filter === filterValue || 
-          (filterValue === "donacion" && chip.dataset.filter === "todos")) {
-        chip.classList.add("active");
-        chip.click(); // disparar el evento de filtrado existente en app.js
-      }
-    });
-    // Si es "todos" o no hay chip match, resetear
-    if (!document.querySelector(`.chip[data-filter="${filterValue}"]`)) {
-      const todosChip = document.querySelector('.chip[data-filter="todos"]');
+    // Si el material vive en la fila principal (#filterChips), un
+    // simple click alcanza: app.js ya escucha ahí directamente.
+    // Si vive en la fila secundaria (#filterChipsExtra, detrás de
+    // "+ Más filtros"), primero hay que abrir ese panel — mapa-more-
+    // filters.js expone moreFiltersBtn para eso — y clicar el chip
+    // ahí, que a su vez delega en app.js vía un proxy oculto.
+    const mainChip = document.querySelector(`#filterChips .chip[data-filter="${filterValue}"]`);
+    const extraChip = document.querySelector(`#filterChipsExtraList .chip[data-filter="${filterValue}"]`);
+
+    if (filterValue === "donacion") {
+      const todosChip = document.querySelector('#filterChips .chip[data-filter="todos"]');
+      if (todosChip) todosChip.click();
+    } else if (mainChip) {
+      mainChip.click();
+    } else if (extraChip) {
+      const moreBtn = document.getElementById("moreFiltersBtn");
+      const extraPanel = document.getElementById("filterChipsExtra");
+      if (moreBtn && extraPanel && extraPanel.hidden) moreBtn.click();
+      extraChip.click();
+    } else {
+      // Sin match: resetear a "todos"
+      const todosChip = document.querySelector('#filterChips .chip[data-filter="todos"]');
       if (todosChip) todosChip.click();
     }
+
     // Scroll al mapa
     const mapEl = document.getElementById("map");
     if (mapEl) mapEl.scrollIntoView({ behavior: "smooth" });

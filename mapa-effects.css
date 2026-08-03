@@ -335,6 +335,74 @@ html.dark .leaflet-marker-icon:hover {
   pointer-events: none;
 }
 
+/* ── 14. SWAP "+ Más filtros" (antes: dropdown flotante) ──
+   Activado por mapa-more-filters.js. #filterChipsExtra YA NO es un
+   dropdown flotante (position:absolute) que se sobrepone encima del
+   contenido: ahora vive en el mismo lugar de la fila que #filterChips
+   y ambos se turnan con [hidden] — al pulsar "+ Más filtros" se oculta
+   #filterChips y aparece #filterChipsExtra (mismo look, misma fila,
+   sin empujar nada); al pulsar de nuevo (o elegir un chip, o click
+   fuera) vuelve a mostrarse #filterChips. Ver mapa-more-filters.js. ── */
+.more-filters-dropdown {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .35rem;
+  flex: 1;
+  min-width: 0;
+  animation: mapaDropdownIn .22s cubic-bezier(.4,0,.2,1);
+}
+
+/* La etiqueta "Más materiales:" ya no se muestra: al ser un
+   reemplazo (no un menú aparte), la fila ya lleva el label
+   "Filtrar por material:" de siempre — no hace falta un segundo. */
+.more-filters-dropdown__label {
+  display: none;
+}
+
+@keyframes mapaDropdownIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.more-filters-btn--open {
+  border-color: var(--accent, #2d8c4e);
+  color: var(--accent, #2d8c4e);
+}
+
+/* FIX: .filter-chips y .more-filters-dropdown fijan su propio
+   "display: flex", y eso le gana en cascada al "display: none" que
+   el navegador aplica por defecto al atributo [hidden] (las reglas
+   de autor siempre le ganan a la hoja de estilos por defecto del
+   navegador). Sin esto, mainChips.hidden / dropdown.hidden del JS no
+   ocultaban nada y las dos filas quedaban visibles a la vez. Un
+   selector con ID gana en especificidad a la clase, así que sí manda. */
+#filterChips[hidden],
+#filterChipsExtra[hidden] {
+  display: none;
+}
+
+/* El botón siempre en el mismo lugar (lado derecho): al ocultarse
+   #filterChips (o #filterChipsExtra), el navegador recalcula el
+   flujo del flex y el botón "salta" a ocupar el hueco de lo que
+   desapareció. Con "order" fijamos su posición visual sin depender
+   de dónde vive en el HTML ni de qué fila esté visible: la etiqueta
+   va primero (order automático 0), la fila de chips que corresponda
+   (cualquiera de las dos) siempre segunda, y el botón siempre al
+   final — pegado al borde derecho gracias a "flex: 1" de la fila
+   de chips, que empuja todo lo demás. */
+.filter-bar #filterChips,
+.filter-bar #filterChipsExtra {
+  order: 1;
+}
+.filter-bar #moreFiltersBtn {
+  order: 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .more-filters-dropdown { animation: none; }
+}
+
 /* ── 13. RESPETAR REDUCED MOTION ── */
 @media (prefers-reduced-motion: reduce) {
   .controls::before, .controls::after,

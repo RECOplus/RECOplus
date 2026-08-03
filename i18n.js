@@ -201,14 +201,8 @@ const translations = {
     "mapa.search.locate.title":  "Usar mi ubicación",
 
     "mapa.filter.label":        "Filtrar por material:",
+    "mapa.filter.label.more":   "Más materiales:",
     "mapa.filter.todos":        "Todos",
-    "mapa.filter.plasticos":    "Plásticos",
-    "mapa.filter.papel":        "Papel",
-    "mapa.filter.vidrio":       "Vidrio",
-    "mapa.filter.metal":        "Metal",
-    "mapa.filter.ropa":         "Ropa",
-    "mapa.filter.electronicos": "Electrónicos",
-    "mapa.filter.organicos":    "Orgánicos",
     "mapa.filter.more":         "☰ Más filtros",
 
     "mapa.legend.recycle":   "Puntos de reciclaje",
@@ -803,14 +797,8 @@ const translations = {
     "mapa.search.locate.title":  "Use my location",
 
     "mapa.filter.label":        "Filter by material:",
+    "mapa.filter.label.more":   "More materials:",
     "mapa.filter.todos":        "All",
-    "mapa.filter.plasticos":    "Plastics",
-    "mapa.filter.papel":        "Paper",
-    "mapa.filter.vidrio":       "Glass",
-    "mapa.filter.metal":        "Metal",
-    "mapa.filter.ropa":         "Clothes",
-    "mapa.filter.electronicos": "Electronics",
-    "mapa.filter.organicos":    "Organic",
     "mapa.filter.more":         "☰ More filters",
 
     "mapa.legend.recycle":   "Recycling points",
