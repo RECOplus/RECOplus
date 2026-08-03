@@ -543,6 +543,11 @@ function initMap() {
           direction: "top"
         });
 
+        // Ya tenemos ubicación real: recalcula y repinta distancias
+        // (lista + popups) y el orden "cercanos", que hasta ahora se
+        // quedaban con el 0 km / valor estático del primer render.
+        refreshResults();
+
       },
 
       () => {
@@ -583,7 +588,7 @@ function buildPopup(p) {
       </div>
       <p class="popup-address" style="font-size:.74rem;color:#8aab90;margin:0 0 .4rem">${p.address}</p>
       ${typeof p.rating === "number" ? `<p style="font-size:.76rem;color:#8aab90;margin:0 0 .3rem;display:flex;align-items:center;gap:.3rem"><span style="color:#f0b429;display:inline-flex;align-items:center">${renderStars(p.rating)}</span><span class="popup-rating-value" style="font-weight:600">${p.rating.toFixed(1)} (${p.reviewCount || 0})</span></p>` : ""}
-      <p class="popup-distance" style="font-size:.78rem;font-weight:700;color:#2d8c4e;margin:0">${p.distance} km</p>
+      <p class="popup-distance" style="font-size:.78rem;font-weight:700;color:#2d8c4e;margin:0">${formatDistance(p)}</p>
       <div style="margin-top:.4rem;display:flex;gap:.2rem;flex-wrap:wrap">
         ${p.materialIcons.map((ic) => `<span style="font-size:.9rem">${ic}</span>`).join("")}
       </div>
@@ -633,7 +638,7 @@ function renderResults(points) {
           ${p.materialIcons.map((ic) => `<span class="material-icon">${ic}</span>`).join("")}
         </div>
       </div>
-      <div class="result-distance">${p.distance} km</div>
+      <div class="result-distance">${formatDistance(p)}</div>
     `;
     li.addEventListener("click", () => {
       map.setView([p.lat, p.lng], 16, { animate: true });
@@ -686,11 +691,24 @@ function haversineKm(lat1, lng1, lat2, lng2) {
 
 function pointDistance(p) {
   // Si tenemos ubicación real del usuario, calculamos distancia real;
-  // si no, usamos el campo "distance" fijo que ya trae cada punto.
+  // si no, usamos el campo "distance" fijo que ya trae cada punto (solo
+  // para poder ordenar algo mientras el navegador resuelve el GPS).
   if (userLat != null && userLng != null) {
     return haversineKm(userLat, userLng, p.lat, p.lng);
   }
   return p.distance;
+}
+
+// Da formato a la distancia para MOSTRARLA en la UI (popup y lista de
+// resultados). A diferencia de pointDistance() (que sí puede usar el
+// valor estático como respaldo para poder ordenar), aquí NO inventamos
+// un número si todavía no tenemos la ubicación real del usuario: se
+// muestra un guion en vez del "0 km" que salía siempre antes.
+function formatDistance(p) {
+  if (userLat == null || userLng == null) return "—";
+  const km = haversineKm(userLat, userLng, p.lat, p.lng);
+  if (!Number.isFinite(km)) return "—";
+  return km < 1 ? `${Math.round(km * 1000)} m` : `${km.toFixed(1)} km`;
 }
 
 function sortPoints(points, sortBy) {
@@ -767,7 +785,7 @@ function initSearch() {
         userLat = pos.coords.latitude;
         userLng = pos.coords.longitude;
         map.setView([userLat, userLng], 15, { animate: true });
-        if (activeSort === "cercanos") refreshResults();
+        refreshResults(); // recalcula distancias reales (lista + popups), no solo el orden
       },
       () => alert(typeof t === "function" ? t("mapa.results.locateError") : "No se pudo obtener tu ubicación.")
     );
