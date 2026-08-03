@@ -13,8 +13,23 @@
 
   /* ══════════════════════════════════════════════
      1. APLICAR TEMA INMEDIATAMENTE (evita flash)
+     ─────────────────────────────────────────────
+     Prioridad: ?theme= en la URL  >  localStorage
+     (el parámetro de URL permite que el tema viaje
+     entre orígenes distintos, ej. GitHub Pages ↔ Vercel,
+     donde localStorage no se comparte entre dominios)
      ══════════════════════════════════════════════ */
-  var saved = localStorage.getItem("reco-theme") || "dark";
+  var urlParams = new URLSearchParams(window.location.search);
+  var urlTheme = urlParams.get("theme");
+
+  var saved;
+  if (urlTheme === "dark" || urlTheme === "light") {
+    saved = urlTheme;
+    localStorage.setItem("reco-theme", saved); // sincroniza para este origen
+  } else {
+    saved = localStorage.getItem("reco-theme") || "dark";
+  }
+
   if (saved === "dark") {
     document.documentElement.classList.add("dark");
   }
@@ -1073,9 +1088,57 @@
   }
 
   /* ══════════════════════════════════════════════
-     5. INIT
+     5. PROPAGAR TEMA A ENLACES ENTRE ORÍGENES
+     ─────────────────────────────────────────────
+     Cuando un <a> apunta a otro origen (ej. de un
+     dominio de GitHub Pages a uno de Vercel, o vice-
+     versa), le agregamos ?theme=dark/light antes de
+     navegar, para que el tema viaje aunque localStorage
+     no se comparta entre esos dominios.
+     ══════════════════════════════════════════════ */
+  function appendThemeToUrl(href, theme) {
+    try {
+      var url = new URL(href, window.location.href);
+      url.searchParams.set("theme", theme);
+      return url.href;
+    } catch (e) {
+      return href; // href inválido o especial (mailto:, tel:, etc.) — no tocar
+    }
+  }
+
+  function isExternalOrigin(href) {
+    try {
+      var url = new URL(href, window.location.href);
+      return url.origin !== window.location.origin;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function initCrossOriginThemeLinks() {
+    document.addEventListener("click", function (e) {
+      var link = e.target.closest("a[href]");
+      if (!link) return;
+
+      var href = link.getAttribute("href");
+      if (!href || href.charAt(0) === "#") return;
+      if (link.target === "_blank") {
+        // igual reescribimos el href para que la pestaña nueva abra con el tema correcto
+      }
+      if (/^(mailto:|tel:|javascript:)/i.test(href)) return;
+      if (!isExternalOrigin(href)) return; // mismo origen: localStorage ya alcanza
+
+      var isDark = document.documentElement.classList.contains("dark");
+      var newHref = appendThemeToUrl(href, isDark ? "dark" : "light");
+      link.setAttribute("href", newHref);
+    }, true); // captura, para llegar antes que otros handlers de navegación
+  }
+
+  /* ══════════════════════════════════════════════
+     6. INIT
      ══════════════════════════════════════════════ */
   injectStyles();
+  initCrossOriginThemeLinks();
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function () {
