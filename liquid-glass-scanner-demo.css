@@ -15,6 +15,32 @@
 ═══════════════════════════════════════════════════════════════ */
 
 :root {
+  /* Modo claro (base) */
+  --lg-bg:            rgba(255, 255, 255, 0.55);
+  --lg-border:        rgba(45, 140, 78, 0.18);
+  --lg-border-strong: rgba(45, 140, 78, 0.32);
+  --lg-highlight:     rgba(255, 255, 255, 0.65);
+  --lg-shadow:        0 14px 34px rgba(26, 92, 42, 0.12), 0 4px 10px rgba(26, 92, 42, 0.08);
+  --lg-shadow-hover:  0 18px 44px rgba(26, 92, 42, 0.16), 0 6px 16px rgba(26, 92, 42, 0.10);
+  --lg-shadow-sm:     0 6px 16px rgba(26, 92, 42, 0.10), 0 2px 6px rgba(26, 92, 42, 0.06);
+  --lg-blur: 22px;
+  --lg-shine: linear-gradient(
+    115deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.30) 45%,
+    rgba(255, 255, 255, 0.45) 50%,
+    rgba(255, 255, 255, 0.18) 56%,
+    transparent 68%
+  );
+  --lg-ia-glow:      rgba(139, 105, 233, 0.45);
+  --lg-ia-glow-soft: rgba(139, 105, 233, 0.22);
+
+  --rs-lg-texto:        #1a2e1e;
+  --rs-lg-texto-suave:  rgba(26, 46, 30, 0.68);
+}
+
+html.dark {
+  /* Modo oscuro (override) — valores originales del diseño liquid glass */
   --lg-bg:            rgba(18, 26, 20, 0.55);
   --lg-border:        rgba(255, 255, 255, 0.14);
   --lg-border-strong: rgba(255, 255, 255, 0.20);
@@ -33,18 +59,21 @@
   );
   --lg-ia-glow:      rgba(139, 105, 233, 0.55);
   --lg-ia-glow-soft: rgba(139, 105, 233, 0.28);
+
+  --rs-lg-texto:        #eaf3ec;
+  --rs-lg-texto-suave:  rgba(234, 243, 236, 0.68);
 }
 
-/* ── VARIABLES BASE DEL WIDGET → vidrio oscuro + texto claro legible ──
+/* ── VARIABLES BASE DEL WIDGET → vidrio + texto legible, adaptados a claro/oscuro ──
    scanner-widget.css ya construye botones y tarjeta de resultado sobre
    estas custom properties; con solo redefinirlas aquí, todo hereda el
-   mismo vidrio profundo y contraste que mapa.html. */
+   mismo vidrio y contraste correcto según el tema activo. */
 .reco-scanner {
   --rs-glass-bg: var(--lg-bg);
   --rs-glass-border: var(--lg-border);
   --rs-glass-blur: var(--lg-blur);
-  --rs-texto: #eaf3ec;
-  --rs-texto-suave: rgba(234, 243, 236, 0.68);
+  --rs-texto: var(--rs-lg-texto);
+  --rs-texto-suave: var(--rs-lg-texto-suave);
 }
 
 /* ── ENCABEZADO: entrada suave + eyebrow con glow ── */
@@ -149,9 +178,9 @@
 }
 
 .reco-scanner__resultado-confianza {
-  background: rgba(255, 255, 255, 0.10);
+  background: var(--lg-bg);
   border: 1px solid var(--lg-border);
-  color: #eaf3ec;
+  color: var(--rs-lg-texto);
 }
 
 /* ── CONTROLES: glow al pasar el mouse + shimmer en los CTA ── */

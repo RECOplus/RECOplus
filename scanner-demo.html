@@ -26,13 +26,61 @@
 
 <style>
   * { box-sizing: border-box; }
+
+  /* ────────────────────────────────────────────
+     Variables locales del scanner — modo claro
+     por defecto, sobreescritas en html.dark
+     (mismo patrón que darkmode.js usa en el resto
+     del sitio: variables CSS + html.dark override)
+     ────────────────────────────────────────────── */
+  :root {
+    --scanner-bg-grad-start: #eaf6ee;
+    --scanner-bg-grad-end:   #f7fbf8;
+    --scanner-text:          #1a2e1e;
+    --scanner-text-soft:     rgba(26, 46, 30, 0.65);
+    --scanner-eyebrow:       #2d8c4e;
+
+    --color-primario:        #2d8c4e;
+    --color-primario-oscuro: #1a5c2a;
+    --glass-bg:              rgba(255, 255, 255, 0.55);
+    --glass-border:          rgba(45, 140, 78, 0.18);
+    --glass-blur:            18px;
+    --color-texto:           #1a2e1e;
+    --color-texto-suave:     rgba(26, 46, 30, 0.62);
+
+    --scanner-hist-item-bg:     rgba(45, 140, 78, 0.06);
+    --scanner-hist-item-border: rgba(45, 140, 78, 0.16);
+    --scanner-hist-heading:     rgba(26, 46, 30, 0.55);
+  }
+
+  html.dark {
+    --scanner-bg-grad-start: #234c30;
+    --scanner-bg-grad-end:   #0d1810;
+    --scanner-text:          #f2f5f2;
+    --scanner-text-soft:     rgba(242, 245, 242, 0.7);
+    --scanner-eyebrow:       #6cbf3f;
+
+    --color-primario:        #2d8c4e;
+    --color-primario-oscuro: #1a5c2a;
+    --glass-bg:              rgba(255, 255, 255, 0.08);
+    --glass-border:          rgba(255, 255, 255, 0.18);
+    --glass-blur:            18px;
+    --color-texto:           #f2f5f2;
+    --color-texto-suave:     rgba(242, 245, 242, 0.65);
+
+    --scanner-hist-item-bg:     rgba(255, 255, 255, 0.05);
+    --scanner-hist-item-border: rgba(255, 255, 255, 0.08);
+    --scanner-hist-heading:     rgba(242, 245, 242, 0.55);
+  }
+
   body {
     margin: 0;
     min-height: 100vh;
-    background: radial-gradient(circle at 20% -10%, #234c30, #0d1810 60%);
+    background: radial-gradient(circle at 20% -10%, var(--scanner-bg-grad-start), var(--scanner-bg-grad-end) 60%);
     font-family: 'DM Sans', system-ui, sans-serif;
-    color: #f2f5f2;
+    color: var(--scanner-text);
     padding: 110px 16px 60px;
+    transition: background 0.28s cubic-bezier(.4,0,.2,1), color 0.28s cubic-bezier(.4,0,.2,1);
   }
   .contenedor { max-width: 520px; margin: 0 auto; }
   .encabezado { text-align: center; margin-bottom: 24px; }
@@ -40,9 +88,10 @@
     font-family: 'Fraunces', serif;
     font-size: 1.8rem;
     margin: 0 0 6px;
+    color: var(--scanner-text);
   }
   .encabezado p {
-    color: rgba(242, 245, 242, 0.7);
+    color: var(--scanner-text-soft);
     font-size: 0.95rem;
     margin: 0;
   }
@@ -50,7 +99,7 @@
     text-transform: uppercase;
     letter-spacing: 0.12em;
     font-size: 0.72rem;
-    color: #6cbf3f;
+    color: var(--scanner-eyebrow);
     font-weight: 700;
     margin-bottom: 8px;
     display: block;
@@ -62,7 +111,7 @@
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: rgba(242,245,242,0.55);
+    color: var(--scanner-hist-heading);
     margin: 0 0 10px;
   }
   .historial ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
@@ -71,10 +120,11 @@
     align-items: center;
     gap: 10px;
     font-size: 0.85rem;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.08);
+    background: var(--scanner-hist-item-bg);
+    border: 1px solid var(--scanner-hist-item-border);
     border-radius: 10px;
     padding: 8px 12px;
+    color: var(--scanner-text);
   }
   .historial li span.punto {
     width: 8px; height: 8px; border-radius: 50%;
