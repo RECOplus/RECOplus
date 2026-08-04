@@ -140,7 +140,13 @@
 
     settingsBtn.addEventListener('click', function (e) {
       e.stopPropagation();
-      window.location.href = 'ajustes.html';
+      wrap.setAttribute('data-open', 'false');
+      btn.setAttribute('aria-expanded', 'false');
+      if (window.recoAjustes && typeof window.recoAjustes.open === 'function') {
+        window.recoAjustes.open();
+      } else {
+        window.location.href = 'ajustes.html';
+      }
     });
 
     switchBtn.addEventListener('click', function (e) {

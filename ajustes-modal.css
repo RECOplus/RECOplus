@@ -1,0 +1,364 @@
+/* ══════════════════════════════════════════════════════════════
+   AJUSTES-MODAL.CSS
+   Capa ADITIVA — modal de ajustes de cuenta, accesible desde el
+   chip de usuario (botón "Ajustes") en cualquier página del sitio.
+   Usa las variables CSS globales que ya inyecta darkmode.js
+   (--bg-card, --text-primary, --border-light, --accent, etc.),
+   así que hereda modo claro/oscuro automáticamente sin duplicar
+   lógica de tema aquí.
+
+   Requiere, en cualquier página con navbar-auth.js:
+     <link rel="stylesheet" href="ajustes-modal.css">
+     <script src="ajustes-modal.js"></script>
+═══════════════════════════════════════════════════════════════ */
+
+.ajustes-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99998;
+  background: rgba(10, 20, 12, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s cubic-bezier(.4,0,.2,1);
+}
+html.dark .ajustes-overlay {
+  background: rgba(0, 0, 0, 0.62);
+}
+.ajustes-overlay[data-open="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.ajustes-modal {
+  width: 100%;
+  max-width: 560px;
+  max-height: min(84vh, 720px);
+  background: var(--bg-card, #fff);
+  color: var(--text-primary, #1a2e1e);
+  border-radius: 20px;
+  border: 1px solid var(--border-card, #d4eeda);
+  box-shadow: 0 24px 70px rgba(0,0,0,0.28), 0 6px 20px rgba(0,0,0,0.14);
+  display: flex;
+  flex-direction: column;
+  transform: translateY(14px) scale(0.97);
+  transition: transform 0.24s cubic-bezier(.2,.8,.3,1.05);
+  overflow: hidden;
+}
+.ajustes-overlay[data-open="true"] .ajustes-modal {
+  transform: translateY(0) scale(1);
+}
+
+/* ── Header ── */
+.ajustes-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border-muted, #c8e6c9);
+  flex-shrink: 0;
+}
+.ajustes-modal__title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: var(--text-heading, #1a5c2a);
+  margin: 0;
+}
+.ajustes-modal__close {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: none;
+  background: var(--bg-muted, #e8f5ec);
+  color: var(--text-secondary, #4a6b52);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.18s, color 0.18s;
+}
+.ajustes-modal__close:hover {
+  background: var(--accent, #2d8c4e);
+  color: #fff;
+}
+
+/* ── Body: tabs + panel ── */
+.ajustes-modal__body {
+  display: flex;
+  min-height: 0;
+  flex: 1;
+}
+
+.ajustes-modal__tabs {
+  width: 168px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border-muted, #c8e6c9);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+}
+.ajustes-tab {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 11px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary, #4a6b52);
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.ajustes-tab svg { flex-shrink: 0; opacity: 0.8; }
+.ajustes-tab:hover {
+  background: var(--bg-muted, #e8f5ec);
+  color: var(--text-primary, #1a2e1e);
+}
+.ajustes-tab[data-active="true"] {
+  background: var(--accent, #2d8c4e);
+  color: #fff;
+}
+.ajustes-tab[data-active="true"] svg { opacity: 1; }
+
+.ajustes-modal__panel {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: 20px 22px 24px;
+}
+
+.ajustes-section {
+  display: none;
+  flex-direction: column;
+  gap: 18px;
+  animation: ajustesFadeIn 0.18s ease both;
+}
+.ajustes-section[data-active="true"] { display: flex; }
+@keyframes ajustesFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ajustes-section__title {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted, #8aab90);
+  font-weight: 700;
+  margin: 0;
+}
+
+/* ── Filas de ajuste (label + control) ── */
+.ajustes-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.ajustes-row__text { min-width: 0; }
+.ajustes-row__label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary, #1a2e1e);
+  margin: 0 0 2px;
+}
+.ajustes-row__desc {
+  font-size: 0.78rem;
+  color: var(--text-muted, #8aab90);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ── Inputs de texto ── */
+.ajustes-input {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border-light, #a8dab5);
+  background: var(--input-bg, #f2faf4);
+  color: var(--text-primary, #1a2e1e);
+  font-family: inherit;
+  font-size: 0.87rem;
+  transition: border-color 0.18s, background 0.18s;
+}
+.ajustes-input:focus {
+  outline: none;
+  border-color: var(--accent, #2d8c4e);
+  background: var(--bg-secondary, #fff);
+}
+.ajustes-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.ajustes-field { display: flex; flex-direction: column; gap: 5px; }
+.ajustes-field label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary, #4a6b52);
+}
+
+/* ── Switch (toggle on/off) ── */
+.ajustes-switch {
+  position: relative;
+  width: 42px;
+  height: 24px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  border: none;
+  background: var(--border-light, #a8dab5);
+  cursor: pointer;
+  transition: background 0.22s cubic-bezier(.4,0,.2,1);
+}
+.ajustes-switch[data-on="true"] {
+  background: var(--accent, #2d8c4e);
+}
+.ajustes-switch__knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  transition: transform 0.24s cubic-bezier(.4,0,.2,1);
+}
+.ajustes-switch[data-on="true"] .ajustes-switch__knob {
+  transform: translateX(18px);
+}
+
+/* ── Segmented control (2-3 opciones, ej. claro/oscuro, tamaño fuente) ── */
+.ajustes-segmented {
+  display: inline-flex;
+  background: var(--bg-muted, #e8f5ec);
+  border-radius: 10px;
+  padding: 3px;
+  gap: 2px;
+}
+.ajustes-segmented__opt {
+  padding: 6px 13px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary, #4a6b52);
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.16s, color 0.16s;
+  white-space: nowrap;
+}
+.ajustes-segmented__opt[data-active="true"] {
+  background: var(--bg-card, #fff);
+  color: var(--accent, #2d8c4e);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+}
+
+/* ── Botones de acción ── */
+.ajustes-btn {
+  padding: 9px 16px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border-light, #a8dab5);
+  background: var(--bg-card, #fff);
+  color: var(--text-primary, #1a2e1e);
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s;
+  white-space: nowrap;
+}
+.ajustes-btn:hover {
+  border-color: var(--accent, #2d8c4e);
+  color: var(--accent, #2d8c4e);
+}
+.ajustes-btn--primario {
+  background: var(--accent, #2d8c4e);
+  border-color: var(--accent, #2d8c4e);
+  color: #fff;
+}
+.ajustes-btn--primario:hover {
+  background: var(--accent-dark, #1a5c2a);
+  color: #fff;
+}
+.ajustes-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ── Zona de peligro ── */
+.ajustes-danger-zone {
+  border: 1.5px solid rgba(224, 72, 58, 0.35);
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: rgba(224, 72, 58, 0.05);
+}
+html.dark .ajustes-danger-zone {
+  background: rgba(224, 72, 58, 0.08);
+}
+.ajustes-btn--peligro {
+  background: transparent;
+  border-color: rgba(224, 72, 58, 0.5);
+  color: #c23a2a;
+}
+.ajustes-btn--peligro:hover {
+  background: #c23a2a;
+  border-color: #c23a2a;
+  color: #fff;
+}
+
+/* ── Mensaje de estado (guardado / error) ── */
+.ajustes-status {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 8px;
+  display: none;
+}
+.ajustes-status[data-visible="true"] { display: block; }
+.ajustes-status[data-tipo="ok"] {
+  background: rgba(45, 140, 78, 0.12);
+  color: var(--accent-dark, #1a5c2a);
+}
+.ajustes-status[data-tipo="error"] {
+  background: rgba(224, 72, 58, 0.12);
+  color: #c23a2a;
+}
+
+hr.ajustes-divider {
+  border: none;
+  border-top: 1px solid var(--border-muted, #c8e6c9);
+  margin: 2px 0;
+}
+
+/* ── Responsive: móvil ── */
+@media (max-width: 640px) {
+  .ajustes-modal { max-height: 92vh; }
+  .ajustes-modal__body { flex-direction: column; }
+  .ajustes-modal__tabs {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border-muted, #c8e6c9);
+  }
+  .ajustes-tab { flex-shrink: 0; }
+  .ajustes-row { flex-wrap: wrap; }
+}
