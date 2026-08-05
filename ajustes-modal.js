@@ -237,7 +237,11 @@
 
   function refrescarSeccionCuenta() {
     if (!overlayEl || !window.recoAuth) return;
-    window.recoAuth.getSession().then(function (session) {
+    // Igual que en navbar-auth.js: se usa la sesión verificada contra
+    // el servidor para no mostrar datos de una cuenta vieja si el
+    // usuario cambió de cuenta de Google recientemente en otra pestaña.
+    var getSesion = window.recoAuth.getVerifiedSession || window.recoAuth.getSession;
+    getSesion().then(function (session) {
       if (!session || !session.user) return;
       var user = session.user;
       var meta = user.user_metadata || {};

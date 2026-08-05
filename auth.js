@@ -282,6 +282,37 @@
     });
   }
 
+  /* ── Sesión verificada contra el servidor (no el caché local) ──
+     client.auth.getSession() lee directo de localStorage y puede
+     devolver un token "viejo" si, por ejemplo, hay varias pestañas
+     abiertas y una de ellas todavía no se enteró de un cambio de
+     cuenta (logout + login con otra cuenta de Google) hecho en otra
+     pestaña. client.auth.getUser() sí hace una llamada real a
+     Supabase para validar el token y devuelve el usuario actual de
+     verdad, así que es lo correcto para pintar el chip de la navbar
+     (donde mostrar la cuenta equivocada, aunque sea un instante, es
+     confuso). Es un poco más lento que getSession() porque implica
+     red, por eso getSession() se deja como estaba para otros usos. */
+  function getVerifiedSession() {
+    var client = getClient();
+    if (!client) return Promise.resolve(null);
+
+    return client.auth.getUser().then(function (res) {
+      if (res.error || !res.data || !res.data.user) return null;
+      // Combina el usuario verificado con la sesión local (para
+      // tener access_token disponible si algo más lo necesita), pero
+      // el objeto "user" que importa para pintar la UI es el fresco.
+      return client.auth.getSession().then(function (sesRes) {
+        var session = sesRes.data ? sesRes.data.session : null;
+        if (!session) return { user: res.data.user };
+        session.user = res.data.user;
+        return session;
+      });
+    }).catch(function () {
+      return null;
+    });
+  }
+
   /* ── Suscribirse a cambios de sesión (login/logout en cualquier
      pestaña, expiración de token, etc.) ──
      callback(session) recibe null si no hay sesión. */
@@ -322,6 +353,7 @@
     signOut: signOut,
     switchAccount: switchAccount,
     getSession: getSession,
+    getVerifiedSession: getVerifiedSession,
     onAuthChange: onAuthChange,
     isPasswordRecovery: isPasswordRecovery
   };

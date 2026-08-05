@@ -200,7 +200,15 @@
       return;
     }
 
-    window.recoAuth.getSession().then(function (session) {
+    // Al cargar la página se usa la sesión VERIFICADA contra el
+    // servidor (getVerifiedSession), no la cacheada en localStorage
+    // (getSession). Esto evita pintar por un instante la cuenta
+    // "vieja" al navegar entre páginas justo después de cambiar de
+    // cuenta de Google (ej. con varias pestañas abiertas). Si por
+    // alguna razón getVerifiedSession fallara (offline, etc.), cae a
+    // getSession como respaldo para no dejar la navbar sin chip.
+    var getInicial = window.recoAuth.getVerifiedSession || window.recoAuth.getSession;
+    getInicial().then(function (session) {
       applySession(session);
     });
 
