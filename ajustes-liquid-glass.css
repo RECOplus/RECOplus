@@ -1,0 +1,254 @@
+/* ══════════════════════════════════════════════════════════════
+   AJUSTES-LIQUID-GLASS.CSS
+   Capa ADITIVA sobre ajustes-modal.css. No lo modifica: solo añade
+   el mismo lenguaje visual "liquid glass" que ya tiene el resto del
+   sitio (navbar-auth.css → .nav-user__menu, login.css/login-glass-fx.css,
+   liquid-glass.css) al panel del modal de Ajustes:
+
+     - Fondo con blend de shine + tint (igual mixin que .nav-user__menu)
+     - backdrop-filter blur + saturate (vidrio real, no solo overlay)
+     - Borde animado tipo "conic flow" (mask-composite: exclude,
+       mismo truco que .nav-user__menu::before / .bubble-nav::before)
+     - Línea de brillo especular arriba (.nav-user__menu::after)
+     - Glow ambiental "respirando" alrededor del modal
+     - Mismo sheen-sweep en el botón primario y en las tabs activas
+
+   Usa las variables --lg-* globales de liquid-glass.css (ya cargado
+   en todas las páginas) y --fx-glow-green-soft de liquid-glass-fx.css
+   si está presente; si no, cae a valores fijos equivalentes para no
+   depender de que esa hoja en particular esté cargada.
+
+   Cárgalo DESPUÉS de ajustes-modal.css en cualquier página:
+     <link rel="stylesheet" href="ajustes-modal.css">
+     <link rel="stylesheet" href="ajustes-liquid-glass.css">
+═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Fallbacks propios por si liquid-glass-fx.css no está cargado en
+     alguna página (el modal debe verse bien de todas formas). Si
+     --fx-glow-green-soft ya existe (viene de liquid-glass-fx.css),
+     estos --ajg-* la reutilizan en vez de duplicar el valor. */
+  --ajg-glow: var(--fx-glow-green-soft, rgba(94, 207, 130, 0.28));
+  --ajg-glow-strong: var(--fx-glow-green, rgba(94, 207, 130, 0.55));
+}
+
+/* ══════════════════════════════════════════════════════════════
+   OVERLAY DE FONDO — un poco de vidrio también detrás, para que el
+   modal no quede "flotando" sobre un scrim plano sin relación con
+   el resto del sitio.
+═══════════════════════════════════════════════════════════════ */
+.ajustes-overlay {
+  backdrop-filter: blur(6px) saturate(120%);
+  -webkit-backdrop-filter: blur(6px) saturate(120%);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MODAL — vidrio real: blend de shine+tint, blur, borde animado,
+   línea especular arriba y glow ambiental respirando. Mismo mixin
+   que .nav-user__menu en navbar-auth.css.
+═══════════════════════════════════════════════════════════════ */
+.ajustes-modal {
+  position: relative;
+  background-color: color-mix(in srgb, var(--bg-card, #fff) 55%, transparent);
+  background-image:
+    linear-gradient(120deg, var(--lg-shine, rgba(255,255,255,0.35)) 0%, transparent 16%, transparent 84%, var(--lg-shine, rgba(255,255,255,0.35)) 100%),
+    linear-gradient(180deg, var(--lg-tint-strong, rgba(255,255,255,0.12)) 0%, var(--lg-tint, rgba(255,255,255,0.05)) 55%, transparent 100%);
+  background-blend-mode: overlay, normal;
+  backdrop-filter: blur(var(--lg-blur, 18px)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--lg-blur, 18px)) saturate(180%);
+  border-color: var(--lg-border, var(--border-card, #d4eeda));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.16),
+    inset 0 -1px 0 rgba(0,0,0,0.14),
+    0 24px 70px rgba(0,0,0,0.28),
+    0 6px 20px rgba(0,0,0,0.14),
+    0 0 0 0 var(--ajg-glow);
+  animation: ajgModalGlow 5s ease-in-out 0.5s infinite;
+}
+html.dark .ajustes-modal {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    inset 0 -1px 0 rgba(0,0,0,0.30),
+    0 24px 70px rgba(0,0,0,0.5),
+    0 6px 20px rgba(0,0,0,0.3),
+    0 0 0 0 var(--ajg-glow);
+}
+@keyframes ajgModalGlow {
+  0%, 100% {
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.16),
+      inset 0 -1px 0 rgba(0,0,0,0.14),
+      0 24px 70px rgba(0,0,0,0.28),
+      0 6px 20px rgba(0,0,0,0.14),
+      0 0 0 0 var(--ajg-glow);
+  }
+  50% {
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.16),
+      inset 0 -1px 0 rgba(0,0,0,0.14),
+      0 24px 70px rgba(0,0,0,0.28),
+      0 6px 20px rgba(0,0,0,0.14),
+      0 0 28px 5px var(--ajg-glow);
+  }
+}
+
+/* Línea de brillo especular arriba (igual que .nav-user__menu::after
+   y .login-card::after) */
+.ajustes-modal::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 8%; right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Borde animado tipo "conic flow": un anillo de 1px que recorre el
+   perímetro del modal con un gradiente en movimiento. Misma técnica
+   que .nav-user__menu::before / .bubble-nav::before (mask-composite
+   deja visible solo el anillo, no el relleno). */
+.ajustes-modal::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(120deg,
+    transparent 15%,
+    var(--ajg-glow-strong) 50%,
+    transparent 85%);
+  background-size: 250% 250%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: ajgBorderFlow 6s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+@keyframes ajgBorderFlow {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* El header, los tabs y el panel quedan por encima del borde/shine
+   (que viven en ::before/::after del propio .ajustes-modal). */
+.ajustes-modal__header,
+.ajustes-modal__body {
+  position: relative;
+  z-index: 2;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TABS — la tab activa recibe un glow suave, igual criterio que
+   .filter-chips .chip.active en liquid-glass-fx.css
+═══════════════════════════════════════════════════════════════ */
+.ajustes-tab[data-active="true"] {
+  box-shadow: 0 0 0 0 var(--ajg-glow);
+  animation: ajgTabGlow 2.8s ease-in-out infinite;
+}
+@keyframes ajgTabGlow {
+  0%, 100% { box-shadow: 0 0 0 0 var(--ajg-glow); }
+  50%      { box-shadow: 0 0 14px 2px var(--ajg-glow); }
+}
+.ajustes-tab:hover {
+  box-shadow: 0 0 0 2px var(--ajg-glow);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BOTÓN DE CERRAR — mismo giro + glow que .modal-close en
+   liquid-glass-fx.css
+═══════════════════════════════════════════════════════════════ */
+.ajustes-modal__close {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.18s, color 0.18s;
+}
+.ajustes-modal__close:hover {
+  transform: rotate(90deg) scale(1.1);
+  box-shadow: 0 0 0 3px var(--ajg-glow);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   INPUTS — glow al enfocar, mismo patrón que .modal-input /
+   .login-field__input
+═══════════════════════════════════════════════════════════════ */
+.ajustes-input {
+  background-color: color-mix(in srgb, var(--input-bg, #f2faf4) 45%, transparent);
+  transition: border-color 0.18s, background 0.18s, box-shadow 0.28s ease, transform 0.15s ease;
+}
+.ajustes-input:focus {
+  background-color: color-mix(in srgb, var(--bg-secondary, #fff) 55%, transparent);
+  box-shadow: 0 0 0 3px var(--ajg-glow);
+  transform: translateY(-1px);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BOTÓN PRIMARIO — sheen-sweep en movimiento, igual técnica que
+   .bubble-nav__cta::before / .suggest-btn::before
+═══════════════════════════════════════════════════════════════ */
+.ajustes-btn {
+  background-color: color-mix(in srgb, var(--bg-card, #fff) 50%, transparent);
+  backdrop-filter: blur(calc(var(--lg-blur, 18px) / 2)) saturate(160%);
+  -webkit-backdrop-filter: blur(calc(var(--lg-blur, 18px) / 2)) saturate(160%);
+  transition: background 0.18s, border-color 0.18s, color 0.18s, box-shadow 0.3s ease, transform 0.2s ease;
+}
+.ajustes-btn--primario {
+  background-color: color-mix(in srgb, var(--accent, #2d8c4e) 65%, transparent);
+  position: relative;
+  overflow: hidden;
+}
+.ajustes-btn--primario::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 20%, rgba(255,255,255,0.5) 45%, transparent 60%);
+  background-size: 250% 100%;
+  animation: ajgSheenSweep 3.2s ease-in-out infinite;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+@keyframes ajgSheenSweep {
+  0%   { background-position: -140% 0; }
+  100% { background-position: 240% 0; }
+}
+.ajustes-btn--primario > * {
+  position: relative;
+  z-index: 1;
+}
+.ajustes-btn:hover {
+  box-shadow: 0 0 0 3px var(--ajg-glow);
+  transform: translateY(-1px);
+}
+.ajustes-btn--peligro:hover {
+  box-shadow: 0 0 0 3px rgba(224, 72, 58, 0.28);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SWITCHES — pequeño glow cuando están activados
+═══════════════════════════════════════════════════════════════ */
+.ajustes-switch[data-on="true"] {
+  background-color: color-mix(in srgb, var(--accent, #2d8c4e) 55%, transparent);
+  box-shadow: 0 0 10px 1px var(--ajg-glow);
+}
+
+.ajustes-segmented {
+  background-color: color-mix(in srgb, var(--bg-muted, #e8f5ec) 45%, transparent);
+  backdrop-filter: blur(calc(var(--lg-blur, 18px) / 2));
+  -webkit-backdrop-filter: blur(calc(var(--lg-blur, 18px) / 2));
+}
+.ajustes-segmented__opt[data-active="true"] {
+  background-color: color-mix(in srgb, var(--bg-card, #fff) 60%, transparent);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Accesibilidad: respeta prefers-reduced-motion, igual que el
+   resto de capas liquid-glass del sitio.
+═══════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .ajustes-modal,
+  .ajustes-modal::before,
+  .ajustes-tab[data-active="true"],
+  .ajustes-btn--primario::before {
+    animation: none !important;
+  }
+}
