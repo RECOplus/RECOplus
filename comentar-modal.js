@@ -52,31 +52,43 @@
 
   /* ══════════════════════════════════════════════
      INYECTAR BOTÓN EN EL FOOTER
+     Se agrega como un link más dentro de la columna
+     "Recursos" (.footer-col cuyo <h4> es footer.recursos),
+     con el mismo estilo que los demás enlaces de esa
+     columna. Si por algún motivo esa columna no existe en
+     alguna página, cae a la última .footer-col disponible.
      ══════════════════════════════════════════════ */
+  function findRecursosCol(footer) {
+    var cols = footer.querySelectorAll('.footer-col');
+    for (var i = 0; i < cols.length; i++) {
+      var h4 = cols[i].querySelector('h4');
+      if (!h4) continue;
+      if (h4.getAttribute('data-i18n') === 'footer.recursos') return cols[i];
+      if (h4.textContent && h4.textContent.trim().toLowerCase() === 'recursos') return cols[i];
+    }
+    return cols.length ? cols[cols.length - 1] : null;
+  }
+
   function injectFooterButton() {
     var footer = document.querySelector('footer');
     if (!footer) return;
     if (footer.querySelector('.comentar-footer-btn')) return; // ya inyectado
 
-    var wrap = document.createElement('div');
-    wrap.className = 'comentar-footer-btn-wrap';
-    wrap.innerHTML =
-      '<button type="button" class="comentar-footer-btn" id="comentarFooterBtn">' +
-        ICON_CHAT +
-        '<span data-i18n="comentar.boton">Dejar un comentario</span>' +
-      '</button>';
+    var col = findRecursosCol(footer);
+    if (!col) return;
 
-    // Se coloca al final del footer (después de footer-bottom si
-    // existe, o al final del footer si no), para que quede visible
-    // como cierre de página en cualquier variante de footer del sitio.
-    var bottom = footer.querySelector('.footer-bottom');
-    if (bottom) {
-      bottom.insertAdjacentElement('afterend', wrap);
-    } else {
-      footer.appendChild(wrap);
-    }
+    var link = document.createElement('a');
+    link.href = '#';
+    link.className = 'comentar-footer-btn';
+    link.id = 'comentarFooterBtn';
+    link.innerHTML = ICON_CHAT + '<span data-i18n="comentar.boton">Dejar un comentario</span>';
 
-    wrap.querySelector('#comentarFooterBtn').addEventListener('click', openModal);
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      openModal();
+    });
+
+    col.appendChild(link);
 
     if (typeof window.applyLang === 'function' && typeof window.currentLang === 'function') {
       window.applyLang(window.currentLang());

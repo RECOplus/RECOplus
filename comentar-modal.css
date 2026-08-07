@@ -15,24 +15,23 @@
      <script src="comentar-modal.js"></script>
 ═══════════════════════════════════════════════════════════════ */
 
-/* ── Botón inyectado en el footer ── */
-.comentar-footer-btn-wrap {
-  display: flex;
-  justify-content: center;
-  margin-top: 16px;
-}
-
+/* ── Botón "Dejar un comentario" dentro de la columna Recursos ──
+   Vive como un ítem más de .footer-col (misma columna que Centro
+   de ayuda / FAQ / Términos / Privacidad), pero conserva su propio
+   diseño tipo "pill" con ícono en vez de ser un link de texto plano,
+   para que siga destacándose como llamada a la acción. */
 .comentar-footer-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 20px;
+  margin-top: 10px;
+  padding: 9px 18px;
   border-radius: 999px;
   border: 1.5px solid rgba(126,232,154,0.30);
   background: rgba(45,140,78,0.16);
-  color: #eafff1;
+  color: #eafff1 !important;
   font-family: 'DM Sans', Arial, sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
@@ -51,11 +50,6 @@
   transform: translateY(0) scale(0.98);
 }
 .comentar-footer-btn svg { flex-shrink: 0; }
-
-/* Variante clara, para el footer de contacto.html que tiene fondo
-   distinto (--verde-900) — la misma clase funciona en ambos porque
-   usa colores propios en vez de heredar; se deja tal cual, luce
-   bien sobre fondos oscuros/verdes que ya usan todos los footers. */
 
 /* ── Overlay + modal (mismo patrón que ajustes-overlay/ajustes-modal) ── */
 .comentar-overlay {
