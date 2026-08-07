@@ -38,9 +38,19 @@
     return '★★★★★'.slice(0, r) + '☆☆☆☆☆'.slice(0, 5 - r);
   }
 
+  function normalizarParaHandle(str) {
+    return String(str || '')
+      .trim()
+      .toLowerCase()
+      .replace(/ñ/g, 'n')
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // quita tildes/diacríticos (á->a, é->e, etc.)
+      .replace(/\s+/g, '_')
+      .replace(/[^a-z0-9_]/g, '');
+  }
+
   function buildCard(row) {
     var nombre = row.autor_nombre || 'Usuario RECO+';
-    var handle = '@' + nombre.trim().toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '').slice(0, 18);
+    var handle = '@' + normalizarParaHandle(nombre);
 
     return (
       '<div class="test-card">' +
