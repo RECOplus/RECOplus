@@ -209,6 +209,7 @@ html.dark .comentar-overlay {
   padding: 8px 10px;
   border-radius: 12px;
   background: var(--bg-muted, #e8f5ec);
+  min-width: 0;
 }
 .comentar-autor__avatar {
   width: 34px;
@@ -225,9 +226,14 @@ html.dark .comentar-overlay {
   font-size: 0.82rem;
 }
 .comentar-autor__name {
+  flex: 1;
+  min-width: 0;
   font-size: 0.86rem;
   font-weight: 700;
   color: var(--text-primary, #1a2e1e);
+  line-height: 1.35;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 /* Estrellas interactivas */
