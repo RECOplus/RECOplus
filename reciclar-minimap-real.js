@@ -60,6 +60,12 @@
   var rcRoutingControl = null;
   var rcRouteEndMarker = null;
   var rcPanelEl = null;
+  // Combinado de puntos oficiales + comunidad, la MISMA lista que se
+  // pintó en el mini-mapa (se llena en populateMiniMap). Se expone
+  // en la API pública para que otros scripts (ej. la ruta automática
+  // por material) puedan elegir el punto más cercano sin volver a
+  // pedirle los datos a Supabase.
+  var rcAllPoints = [];
 
   function ready(fn) {
     if (document.readyState === "loading") {
@@ -399,6 +405,7 @@
 
     fetchCommunityPoints().then(function (communityPoints) {
       var allPoints = officialPoints.concat(communityPoints);
+      rcAllPoints = allPoints; // disponible para recoMiniMapRoute.findNearestForMaterial
 
       var group = L.featureGroup();
       allPoints.forEach(function (p) {
@@ -422,6 +429,42 @@
       detectUserLocation(map, group);
     });
   }
+
+  /* ══════════════════════════════════════════════
+     API PÚBLICA (capa aditiva)
+     -------------------------------------------------------------
+     Permite que otros scripts (ej. reciclar-auto-route.js) tracen
+     una ruta en el mini-mapa o la limpien, y consulten/reaccionen a
+     la ubicación del usuario, sin duplicar la lógica de geolocalización
+     ni de Leaflet Routing Machine que ya vive en este archivo.
+     ══════════════════════════════════════════════ */
+  window.recoMiniMapRoute = {
+    // Traza la ruta real hacia (lat, lng). Si aún no hay ubicación
+    // del usuario, la pide primero (mismo comportamiento que el
+    // botón "Cómo llegar" de los popups).
+    to: function (lat, lng, name) {
+      drawRouteTo(lat, lng, name);
+    },
+    // Quita la ruta trazada actualmente, si existe.
+    clear: function () {
+      clearRoute();
+    },
+    // true si ya se conoce la ubicación del usuario (geolocalización
+    // concedida y resuelta al menos una vez).
+    hasUserLocation: function () {
+      return typeof rcUserLat === "number" && typeof rcUserLng === "number";
+    },
+    // Coordenadas del usuario, o null si aún no se detectaron.
+    getUserLocation: function () {
+      if (typeof rcUserLat !== "number" || typeof rcUserLng !== "number") return null;
+      return { lat: rcUserLat, lng: rcUserLng };
+    },
+    // Lista combinada de puntos oficiales + comunidad, tal como se
+    // pintaron en el mini-mapa (vacía hasta que termine de cargar).
+    getPoints: function () {
+      return rcAllPoints.slice();
+    }
+  };
 
   ready(function () {
     var mapEl = document.getElementById("rcMiniMap");

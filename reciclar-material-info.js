@@ -699,6 +699,13 @@
       body.scrollTop = 0;
       updateNavCount();
       openOverlay(opts);
+
+      // Avisa a otros scripts (ej. reciclar-auto-route.js) que se
+      // mostró un material, sin acoplarlos a este archivo ni al DOM
+      // interno de la ventana.
+      document.dispatchEvent(new CustomEvent("reco:material-shown", {
+        detail: { key: key, silent: !!(opts && opts.silent) }
+      }));
     }
 
     // Avanza/retrocede al material anterior o siguiente según el
