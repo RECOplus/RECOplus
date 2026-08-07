@@ -59,6 +59,7 @@
      alguna página, cae a la última .footer-col disponible.
      ══════════════════════════════════════════════ */
   function findRecursosCol(footer) {
+    // Patrón 1: la mayoría de páginas usa .footer-col con <h4>.
     var cols = footer.querySelectorAll('.footer-col');
     for (var i = 0; i < cols.length; i++) {
       var h4 = cols[i].querySelector('h4');
@@ -66,7 +67,18 @@
       if (h4.getAttribute('data-i18n') === 'footer.recursos') return cols[i];
       if (h4.textContent && h4.textContent.trim().toLowerCase() === 'recursos') return cols[i];
     }
-    return cols.length ? cols[cols.length - 1] : null;
+    if (cols.length) return cols[cols.length - 1];
+
+    // Patrón 2 (p. ej. contacto.html): columnas son <div> genéricos
+    // dentro de .footer-grid, encabezados con <h5> en vez de <h4>.
+    var headings = footer.querySelectorAll('.footer-grid > div > h5, .footer-grid > div > h4');
+    for (var j = 0; j < headings.length; j++) {
+      var h = headings[j];
+      if (h.getAttribute('data-i18n') === 'footer.recursos') return h.parentElement;
+      if (h.textContent && h.textContent.trim().toLowerCase() === 'recursos') return h.parentElement;
+    }
+
+    return null;
   }
 
   function injectFooterButton() {
