@@ -1,0 +1,417 @@
+/* ══════════════════════════════════════════════════════════════
+   ALIANZAS-REGISTRO-MODAL.CSS
+   Capa ADITIVA — ventana modal de registro de empresa/aliado,
+   abierta desde el botón "Registrarse →" de la tarjeta "Registra
+   tu empresa o fundación" en alianzas.html.
+
+   Formulario en varios PASOS (ventanas independientes dentro del
+   mismo modal): cada paso se valida antes de poder avanzar al
+   siguiente. Usa las variables CSS globales que inyecta
+   darkmode.js (--bg-card, --text-primary, --border-light, etc.),
+   así que hereda modo claro/oscuro automáticamente.
+
+   Requiere en alianzas.html:
+     <link rel="stylesheet" href="alianzas-registro-modal.css">
+     <script src="alianzas-registro-modal.js"></script>
+═══════════════════════════════════════════════════════════════ */
+
+.rae-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(10, 20, 12, 0.48);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s cubic-bezier(.4,0,.2,1);
+}
+html.dark .rae-overlay {
+  background: rgba(0, 0, 0, 0.66);
+}
+.rae-overlay[data-open="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.rae-modal {
+  width: 100%;
+  max-width: 620px;
+  max-height: min(88vh, 760px);
+  background: var(--bg-card, #fff);
+  color: var(--text-primary, #1a2e1e);
+  border-radius: 22px;
+  border: 1px solid var(--border-card, #d4eeda);
+  box-shadow: 0 24px 70px rgba(0,0,0,0.30), 0 6px 20px rgba(0,0,0,0.16);
+  display: flex;
+  flex-direction: column;
+  transform: translateY(14px) scale(0.97);
+  transition: transform 0.24s cubic-bezier(.2,.8,.3,1.05);
+  overflow: hidden;
+}
+.rae-overlay[data-open="true"] .rae-modal {
+  transform: translateY(0) scale(1);
+}
+
+/* ── Header ── */
+.rae-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 22px 24px 16px;
+  flex-shrink: 0;
+}
+.rae-modal__kicker {
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  color: var(--accent, #2d8c4e);
+  margin: 0 0 5px;
+}
+.rae-modal__title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: var(--text-heading, #1a5c2a);
+  margin: 0;
+  line-height: 1.2;
+}
+.rae-modal__close {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: none;
+  background: var(--bg-muted, #e8f5ec);
+  color: var(--text-secondary, #4a6b52);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.18s, color 0.18s;
+}
+.rae-modal__close:hover {
+  background: #c23a2a;
+  color: #fff;
+}
+
+/* ── Barra de progreso (pasos) ── */
+.rae-modal__progress-track {
+  height: 5px;
+  background: var(--bg-muted, #e8f5ec);
+  margin: 0 24px;
+  border-radius: 999px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.rae-modal__progress-bar {
+  height: 100%;
+  background: var(--accent, #2d8c4e);
+  border-radius: 999px;
+  transition: width 0.32s cubic-bezier(.4,0,.2,1);
+}
+
+/* ── Body ── */
+.rae-modal__body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 20px 24px 8px;
+}
+
+.rae-step__desc {
+  font-size: 0.86rem;
+  color: var(--text-secondary, #4a6b52);
+  line-height: 1.55;
+  margin: 0 0 18px;
+}
+
+/* ── Campos ── */
+.rae-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.rae-field label {
+  font-size: 0.83rem;
+  font-weight: 700;
+  color: var(--text-primary, #1a2e1e);
+}
+.rae-required { color: #c23a2a; font-weight: 700; }
+.rae-optional { color: var(--text-muted, #8aab90); font-weight: 500; font-size: 0.78rem; }
+
+.rae-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+@media (max-width: 520px) {
+  .rae-row { grid-template-columns: 1fr; }
+}
+
+.rae-input {
+  width: 100%;
+  padding: 10px 13px;
+  border-radius: 11px;
+  border: 1.5px solid var(--border-light, #a8dab5);
+  background: var(--input-bg, #f2faf4);
+  color: var(--text-primary, #1a2e1e);
+  font-family: inherit;
+  font-size: 0.9rem;
+  transition: border-color 0.18s, background 0.18s, box-shadow 0.18s;
+}
+.rae-input::placeholder { color: var(--text-muted, #8aab90); }
+.rae-input:focus {
+  outline: none;
+  border-color: var(--accent, #2d8c4e);
+  background: var(--bg-secondary, #fff);
+  box-shadow: 0 0 0 3px rgba(45,140,78,0.15);
+}
+.rae-input--invalid {
+  border-color: #c23a2a !important;
+  background: rgba(224, 72, 58, 0.05) !important;
+}
+.rae-input--invalid:focus {
+  box-shadow: 0 0 0 3px rgba(194,58,42,0.15) !important;
+}
+
+select.rae-input {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%234a6b52' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M5 7l5 5 5-5'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 34px;
+}
+
+.rae-textarea {
+  resize: vertical;
+  min-height: 96px;
+  line-height: 1.5;
+}
+
+.rae-hint {
+  font-size: 0.74rem;
+  color: var(--text-muted, #8aab90);
+}
+.rae-hint--limit {
+  color: #c23a2a;
+}
+
+.rae-error {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #c23a2a;
+  display: none;
+  min-height: 0;
+}
+.rae-error[data-visible="true"] { display: block; }
+
+/* ── Logo uploader ── */
+.rae-logo-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.rae-logo-preview {
+  width: 68px;
+  height: 68px;
+  border-radius: 16px;
+  background: var(--bg-muted, #e8f5ec);
+  border: 1.5px dashed var(--border-light, #a8dab5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  color: var(--text-muted, #8aab90);
+}
+.rae-logo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.rae-logo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+}
+.rae-logo-actions .rae-hint {
+  width: 100%;
+  margin-top: 2px;
+}
+
+/* ── Botones ── */
+.rae-btn {
+  padding: 10px 18px;
+  border-radius: 11px;
+  border: 1.5px solid var(--border-light, #a8dab5);
+  background: var(--bg-card, #fff);
+  color: var(--text-primary, #1a2e1e);
+  font-family: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s, color 0.18s, transform 0.15s;
+  white-space: nowrap;
+}
+.rae-btn:hover {
+  border-color: var(--accent, #2d8c4e);
+  color: var(--accent, #2d8c4e);
+}
+.rae-btn--sm {
+  padding: 7px 13px;
+  font-size: 0.78rem;
+  border-radius: 9px;
+}
+.rae-btn--ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--text-secondary, #4a6b52);
+}
+.rae-btn--ghost:hover {
+  background: var(--bg-muted, #e8f5ec);
+  color: #c23a2a;
+  border-color: transparent;
+}
+.rae-btn--primario {
+  background: var(--accent, #2d8c4e);
+  border-color: var(--accent, #2d8c4e);
+  color: #fff;
+}
+.rae-btn--primario:hover {
+  background: var(--accent-dark, #1a5c2a);
+  border-color: var(--accent-dark, #1a5c2a);
+  color: #fff;
+  transform: translateY(-1px);
+}
+.rae-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* ── Footer ── */
+.rae-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 24px 22px;
+  flex-shrink: 0;
+}
+
+.rae-modal__status {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 9px 13px;
+  border-radius: 10px;
+  margin: 0 24px 14px;
+  display: none;
+}
+.rae-modal__status[data-visible="true"] { display: block; }
+.rae-modal__status[data-tipo="ok"] {
+  background: rgba(45, 140, 78, 0.12);
+  color: var(--accent-dark, #1a5c2a);
+}
+.rae-modal__status[data-tipo="error"] {
+  background: rgba(224, 72, 58, 0.12);
+  color: #c23a2a;
+}
+
+/* ── Chips de selección múltiple (paso "Materiales que reciben") ── */
+.rae-chip-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.rae-chip-count {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-secondary, #4a6b52);
+}
+.rae-chip-actions {
+  display: flex;
+  gap: 6px;
+}
+.rae-chip-actions button {
+  border: none;
+  background: none;
+  color: var(--accent, #2d8c4e);
+  font-family: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+.rae-chip-actions button:hover { text-decoration: underline; }
+.rae-chip-actions span { color: var(--border-light, #a8dab5); }
+
+.rae-chip-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+  padding: 3px;
+  border-radius: 12px;
+  transition: box-shadow 0.18s;
+}
+.rae-chip-grid--invalid {
+  box-shadow: 0 0 0 2px rgba(194,58,42,0.4);
+}
+@media (max-width: 560px) {
+  .rae-chip-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.rae-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 6px 10px;
+  border-radius: 13px;
+  border: 1.5px solid var(--border-light, #a8dab5);
+  background: var(--input-bg, #f2faf4);
+  color: var(--text-secondary, #4a6b52);
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.16s, border-color 0.16s, color 0.16s, transform 0.12s;
+}
+.rae-chip:hover {
+  border-color: var(--accent, #2d8c4e);
+  transform: translateY(-1px);
+}
+.rae-chip svg { flex-shrink: 0; opacity: 0.85; }
+.rae-chip span {
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.rae-chip--active {
+  background: var(--accent, #2d8c4e);
+  border-color: var(--accent, #2d8c4e);
+  color: #fff;
+}
+.rae-chip--active svg { opacity: 1; }
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .rae-modal { max-height: 94vh; border-radius: 18px; }
+  .rae-modal__header { padding: 18px 18px 14px; }
+  .rae-modal__progress-track { margin: 0 18px; }
+  .rae-modal__body { padding: 16px 18px 6px; }
+  .rae-modal__footer { padding: 14px 18px 18px; }
+  .rae-modal__status { margin: 0 18px 12px; }
+}
