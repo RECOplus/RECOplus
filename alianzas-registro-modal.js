@@ -42,6 +42,7 @@
   var currentStepIndex = 0;
   var RAE_STATE = {}; // { empresa: {...}, contacto: {...}, ... } — un objeto por paso
   var registroCompletado = false; // true tras un envío final exitoso a Supabase
+  var RAE_SESION_ACTUAL = null; // sesión de Supabase Auth vigente al abrir el modal (ver requireSesionYAbrir)
 
   function ready(fn) {
     if (document.readyState === 'loading') {
@@ -1237,9 +1238,16 @@
 
   function renderPasoCuenta(data) {
     data = data || {};
+    // El correo YA no se pide: viene fijo de la sesión activa (ver
+    // RAE_SESION_ACTUAL más abajo) porque el registro de aliado
+    // ahora exige haber iniciado sesión antes de abrir este modal.
+    // Por la misma razón no se crea una cuenta nueva aquí, así que
+    // tampoco se piden contraseña/confirmar contraseña: la cuenta ya
+    // existe y ya tiene su propia contraseña de siempre.
+    var correoSesion = (RAE_SESION_ACTUAL && RAE_SESION_ACTUAL.user && RAE_SESION_ACTUAL.user.email) || '';
     return (
       '<div class="rae-step" data-step="cuenta">' +
-        '<p class="rae-step__desc">Crea la cuenta con la que tu empresa administrará su perfil de aliado en RECO+.</p>' +
+        '<p class="rae-step__desc">Tu empresa quedará registrada con la cuenta de RECO+ que ya tienes iniciada.</p>' +
 
         '<div class="rae-field">' +
           '<label for="raeUsuario">Nombre de usuario <span class="rae-required">*</span></label>' +
@@ -1249,31 +1257,9 @@
         '</div>' +
 
         '<div class="rae-field">' +
-          '<label for="raeCuentaEmail">Correo electrónico <span class="rae-required">*</span></label>' +
-          '<input type="email" id="raeCuentaEmail" class="rae-input" placeholder="cuenta@tuempresa.com" maxlength="140" autocomplete="email" value="' + esc(data.email) + '">' +
-          '<span class="rae-error" id="raeCuentaEmailError">Ingresa un correo electrónico válido.</span>' +
-        '</div>' +
-
-        '<div class="rae-field">' +
-          '<label for="raePassword">Contraseña <span class="rae-required">*</span></label>' +
-          '<div class="rae-pass-wrap">' +
-            '<input type="password" id="raePassword" class="rae-input" placeholder="Mínimo 6 caracteres" autocomplete="new-password" value="' + esc(data.password) + '">' +
-            '<button type="button" class="rae-pass-toggle" id="raePasswordToggle" aria-label="Mostrar contraseña">' + RAE_EYE_SVG + '</button>' +
-          '</div>' +
-          '<div class="rae-pass-strength" id="raePasswordStrength" data-nivel="0">' +
-            '<span class="rae-pass-strength__bar"></span><span class="rae-pass-strength__bar"></span><span class="rae-pass-strength__bar"></span><span class="rae-pass-strength__bar"></span>' +
-          '</div>' +
-          '<span class="rae-hint" id="raePasswordHint">Mínimo 6 caracteres.</span>' +
-          '<span class="rae-error" id="raePasswordError">La contraseña debe tener al menos 6 caracteres.</span>' +
-        '</div>' +
-
-        '<div class="rae-field">' +
-          '<label for="raePasswordConfirm">Confirmar contraseña <span class="rae-required">*</span></label>' +
-          '<div class="rae-pass-wrap">' +
-            '<input type="password" id="raePasswordConfirm" class="rae-input" placeholder="Repite la contraseña" autocomplete="new-password" value="' + esc(data.passwordConfirm) + '">' +
-            '<button type="button" class="rae-pass-toggle" id="raePasswordConfirmToggle" aria-label="Mostrar contraseña">' + RAE_EYE_SVG + '</button>' +
-          '</div>' +
-          '<span class="rae-error" id="raePasswordConfirmError">Las contraseñas no coinciden.</span>' +
+          '<label for="raeCuentaEmail">Correo de tu cuenta RECO+</label>' +
+          '<input type="email" id="raeCuentaEmail" class="rae-input" value="' + esc(correoSesion) + '" disabled>' +
+          '<span class="rae-hint">Este es el correo de la cuenta con la que iniciaste sesión. Tu empresa quedará ligada a esta cuenta.</span>' +
         '</div>' +
 
         '<div style="margin-top:6px">' +
@@ -1289,45 +1275,10 @@
 
   function wirePasoCuenta(container, stateSlice) {
     var usuarioInput = container.querySelector('#raeUsuario');
-    var emailInput = container.querySelector('#raeCuentaEmail');
-    var passInput = container.querySelector('#raePassword');
-    var passConfirmInput = container.querySelector('#raePasswordConfirm');
-    var passToggle = container.querySelector('#raePasswordToggle');
-    var passConfirmToggle = container.querySelector('#raePasswordConfirmToggle');
-    var strengthEl = container.querySelector('#raePasswordStrength');
-    var passHint = container.querySelector('#raePasswordHint');
 
-    [usuarioInput, emailInput].forEach(function (el) {
-      el.addEventListener('input', function () { limpiarError(container, el.id); });
-    });
-
-    function actualizarFortaleza() {
-      var nivel = calcularFortalezaPassword(passInput.value);
-      strengthEl.setAttribute('data-nivel', String(nivel));
-      passHint.textContent = passInput.value
-        ? 'Fortaleza: ' + RAE_FORTALEZA_LABEL[nivel] + ' (mínimo 6 caracteres)'
-        : 'Mínimo 6 caracteres.';
-    }
-
-    passInput.addEventListener('input', function () {
-      limpiarError(container, 'raePassword');
-      actualizarFortaleza();
-      if (passConfirmInput.value) limpiarError(container, 'raePasswordConfirm');
-    });
-    actualizarFortaleza();
-
-    passConfirmInput.addEventListener('input', function () {
-      limpiarError(container, 'raePasswordConfirm');
-    });
-
-    function alternarVisibilidad(input, btn) {
-      var oculto = input.type === 'password';
-      input.type = oculto ? 'text' : 'password';
-      btn.innerHTML = oculto ? RAE_EYE_OFF_SVG : RAE_EYE_SVG;
-      btn.setAttribute('aria-label', oculto ? 'Ocultar contraseña' : 'Mostrar contraseña');
-    }
-    passToggle.addEventListener('click', function () { alternarVisibilidad(passInput, passToggle); });
-    passConfirmToggle.addEventListener('click', function () { alternarVisibilidad(passConfirmInput, passConfirmToggle); });
+    usuarioInput.addEventListener('input', function () { limpiarError(container, 'raeUsuario'); });
+    // El campo de correo va "disabled" (viene fijo de la sesión
+    // activa), así que no necesita listener de error ni de input.
 
     wireCheckboxLinea(container, 'raeAceptaTerminos');
     wireCheckboxLinea(container, 'raeAceptaPrivacidad');
@@ -1340,17 +1291,8 @@
     if (!/^[A-Za-z0-9_-]{3,}$/.test(usuario)) { marcarError(container, 'raeUsuario'); valido = false; }
     else { limpiarError(container, 'raeUsuario'); }
 
-    var email = container.querySelector('#raeCuentaEmail').value.trim();
-    if (!email || !esEmailValido(email)) { marcarError(container, 'raeCuentaEmail'); valido = false; }
-    else { limpiarError(container, 'raeCuentaEmail'); }
-
-    var password = container.querySelector('#raePassword').value;
-    if (!password || password.length < 6) { marcarError(container, 'raePassword'); valido = false; }
-    else { limpiarError(container, 'raePassword'); }
-
-    var passwordConfirm = container.querySelector('#raePasswordConfirm').value;
-    if (!passwordConfirm || passwordConfirm !== password) { marcarError(container, 'raePasswordConfirm'); valido = false; }
-    else { limpiarError(container, 'raePasswordConfirm'); }
+    // El correo ya no se valida aquí: viene fijo (disabled) de la
+    // sesión activa, garantizada por el guard que abre este modal.
 
     var terminosEl = container.querySelector('#raeAceptaTerminos');
     var terminosError = container.querySelector('#raeAceptaTerminosError');
@@ -1379,9 +1321,9 @@
 
   function recolectarPasoCuenta(container, stateSlice) {
     stateSlice.usuario = container.querySelector('#raeUsuario').value.trim();
-    stateSlice.email = container.querySelector('#raeCuentaEmail').value.trim();
-    stateSlice.password = container.querySelector('#raePassword').value;
-    stateSlice.passwordConfirm = container.querySelector('#raePasswordConfirm').value;
+    // El correo no se lee del input (está disabled): se toma directo
+    // de la sesión activa, que es la fuente de verdad.
+    stateSlice.email = (RAE_SESION_ACTUAL && RAE_SESION_ACTUAL.user && RAE_SESION_ACTUAL.user.email) || '';
     stateSlice.aceptaTerminos = container.querySelector('#raeAceptaTerminos').classList.contains('rae-checkbox-line--active');
     stateSlice.aceptaPrivacidad = container.querySelector('#raeAceptaPrivacidad').classList.contains('rae-checkbox-line--active');
     return stateSlice;
@@ -1902,38 +1844,21 @@
     var cuenta = RAE_STATE.cuenta || {};
     var opcional = RAE_STATE.opcional || {};
 
+    // El registro de aliado ya no crea una cuenta nueva: exige sesión
+    // iniciada de antemano (ver requireSesionYAbrir), así que el
+    // user_id sale directo de esa sesión vigente. Si por alguna razon
+    // se perdió la sesión entre que se abrió el modal y este envío
+    // final (ej. expiró el token, o se cerró sesión en otra pestaña),
+    // se revisa de nuevo aquí para no insertar con un user_id viejo.
     deshabilitarNavegacion(true);
-    mostrarStatus('ok', 'Creando tu cuenta...');
+    mostrarStatus('ok', 'Verificando tu sesión...');
 
-    window.recoAuth.signUp(cuenta.email, cuenta.password, {
-      tipo: 'aliado',
-      nombre_usuario: cuenta.usuario,
-      nombre_empresa: empresa.nombreEmpresa
-    }).then(function (resCuenta) {
-      if (!resCuenta.ok) {
-        throw { mensaje: resCuenta.message };
-      }
-      var userId = resCuenta.user && resCuenta.user.id;
+    window.recoAuth.getVerifiedSession().then(function (sesionVigente) {
+      var userId = sesionVigente && sesionVigente.user && sesionVigente.user.id;
       if (!userId) {
-        throw { mensaje: 'No se pudo crear la cuenta. Intenta de nuevo.' };
+        throw { mensaje: 'Tu sesión expiró. Vuelve a iniciar sesión e intenta el registro de nuevo.' };
       }
-
-      // El signUp puede devolver { session: null } si el proyecto
-      // tiene activada la confirmación de correo (Supabase nunca
-      // entrega sesión en ese caso, sin importar qué tan rápido se
-      // confirme el email después). Sin sesión activa en el cliente,
-      // el INSERT de más abajo corre como rol "anon" y la política de
-      // RLS (auth.uid() = user_id) lo rechaza — ese es el "problema de
-      // permisos" que se ve en pantalla. Forzamos un signIn explícito
-      // con las mismas credenciales para garantizar que el cliente
-      // quede autenticado antes de insertar. Si el signUp ya dejó
-      // sesión, este signIn es redundante pero inofensivo.
-      return window.recoAuth.signIn(cuenta.email, cuenta.password).then(function (resSesion) {
-        if (!resSesion.ok || !resSesion.session) {
-          throw { mensaje: 'Tu cuenta se creó, pero debes confirmar tu correo antes de continuar. Revisa tu bandeja de entrada y vuelve a intentar el registro después de confirmar.' };
-        }
-        return userId;
-      });
+      return userId;
     }).then(function (userId) {
       mostrarStatus('ok', 'Subiendo logo y fotos...');
 
@@ -2043,6 +1968,90 @@
 
   window.recoRegistroAliado = { open: openModal, close: closeModal };
 
+  // ── AVISO "debes iniciar sesión" ──
+  // Se muestra en vez del modal de registro cuando alguien hace clic
+  // en "Registrarse →" sin tener sesión activa. Es un overlay aparte
+  // y más simple que el modal de pasos (no usa RAE_STATE ni el resto
+  // de la maquinaria de pasos).
+  var avisoSesionEl = null;
+
+  function buildAvisoSesion() {
+    var overlay = document.createElement('div');
+    overlay.className = 'rae-overlay';
+    overlay.setAttribute('data-open', 'false');
+
+    overlay.innerHTML =
+      '<div class="rae-modal" role="dialog" aria-modal="true" aria-labelledby="raeAvisoTitulo" style="max-width:420px">' +
+        '<div class="rae-modal__header">' +
+          '<div>' +
+            '<p class="rae-modal__kicker">Registro de aliado</p>' +
+            '<h2 class="rae-modal__title" id="raeAvisoTitulo">Inicia sesión primero</h2>' +
+          '</div>' +
+          '<button type="button" class="rae-modal__close" id="raeAvisoClose" aria-label="Cerrar">' +
+            '<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l10 10M15 5L5 15"/></svg>' +
+          '</button>' +
+        '</div>' +
+        '<div class="rae-modal__body">' +
+          '<p class="rae-step__desc">Para registrar tu empresa como aliado, primero necesitas iniciar sesión (o crear una cuenta) en RECO+. Tu empresa quedará ligada a esa cuenta.</p>' +
+        '</div>' +
+        '<div class="rae-modal__footer">' +
+          '<button type="button" class="rae-btn" id="raeAvisoCancelar">Cancelar</button>' +
+          '<button type="button" class="rae-btn rae-btn--primario" id="raeAvisoIrLogin">Iniciar sesión →</button>' +
+        '</div>' +
+      '</div>';
+
+    document.body.appendChild(overlay);
+    avisoSesionEl = overlay;
+
+    function cerrarAviso() {
+      overlay.setAttribute('data-open', 'false');
+      document.body.style.overflow = '';
+    }
+
+    overlay.querySelector('#raeAvisoClose').addEventListener('click', cerrarAviso);
+    overlay.querySelector('#raeAvisoCancelar').addEventListener('click', cerrarAviso);
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) cerrarAviso();
+    });
+    overlay.querySelector('#raeAvisoIrLogin').addEventListener('click', function () {
+      window.location.href = 'login.html';
+    });
+  }
+
+  function abrirAvisoSesion() {
+    if (!avisoSesionEl) buildAvisoSesion();
+    avisoSesionEl.setAttribute('data-open', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+
+  // ── Verifica sesión antes de abrir el modal de registro ──
+  // El registro de aliado exige sesión activa (el correo de la
+  // empresa es el mismo de la cuenta con la que se inició sesión).
+  // Por eso, antes de abrir el modal de pasos, se verifica la sesión
+  // contra el servidor (getVerifiedSession, no la copia cacheada en
+  // localStorage) y solo entonces se abre uno u otro overlay.
+  function requireSesionYAbrir(trigger) {
+    if (!window.recoAuth) {
+      console.error('[RECO+] recoAuth no está disponible. Revisa que auth.js se cargó antes que alianzas-registro-modal.js.');
+      return;
+    }
+
+    trigger.style.pointerEvents = 'none';
+
+    window.recoAuth.getVerifiedSession().then(function (sesion) {
+      trigger.style.pointerEvents = '';
+      if (sesion && sesion.user) {
+        RAE_SESION_ACTUAL = sesion;
+        openModal();
+      } else {
+        abrirAvisoSesion();
+      }
+    }).catch(function () {
+      trigger.style.pointerEvents = '';
+      abrirAvisoSesion();
+    });
+  }
+
   /* ══════════════════════════════════════════════
      ENGANCHE: botón "Registrarse →" de la tarjeta
      "Registra tu empresa o fundación"
@@ -2052,7 +2061,7 @@
       var trigger = e.target.closest('#btnRegistrarEmpresaAliado');
       if (trigger) {
         e.preventDefault();
-        openModal();
+        requireSesionYAbrir(trigger);
       }
     });
   });
