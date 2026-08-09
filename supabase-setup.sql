@@ -99,3 +99,144 @@ create or replace view escaneos_stats as
   from escaneos;
 
 grant select on escaneos_stats to anon, authenticated;
+
+
+-- ══════════════════════════════════════════════════════════════
+-- RECO+ — Alianzas: registro de empresas/centros aliados
+-- ═══════════════════════════════════════════════════════════
+-- Usada por el formulario de 9 pasos de alianzas.html
+-- (alianzas-registro-modal.js). Cada fila representa una empresa,
+-- centro de reciclaje o punto de acopio registrado como aliado,
+-- vinculada 1 a 1 con su cuenta de auth.users (creada con
+-- window.recoAuth.signUp en el último paso del formulario).
+
+create table if not exists aliados (
+  id bigint generated always as identity primary key,
+  user_id uuid not null unique references auth.users (id) on delete cascade,
+
+  -- Paso 1 — Información de la empresa
+  nombre_empresa text not null,
+  nombre_comercial text,
+  ruc text not null,
+  tipo_empresa text not null,
+  anio_fundacion integer,
+  descripcion text not null,
+  logo_url text,
+
+  -- Paso 2 — Contacto
+  email text not null,
+  telefono text not null,
+  whatsapp text,
+  sitio_web text,
+
+  -- Paso 3 — Ubicación
+  provincia text not null,
+  distrito text not null,
+  direccion text not null,
+  lat double precision not null,
+  lng double precision not null,
+
+  -- Paso 4/5 — Materiales y servicios (mismos ids que `categorias`
+  -- y los filtros del mapa — ver material-map.js)
+  materiales text[] not null default '{}',
+  servicios text[] not null default '{}',
+
+  -- Paso 6 — Horarios
+  dias_atencion text[] not null default '{}',
+  hora_apertura time not null,
+  hora_cierre time not null,
+
+  -- Paso 7 — Información operativa
+  acepta_particulares boolean not null default true,
+  acepta_empresas boolean not null default true,
+  cantidad_minima numeric not null default 0,
+  cantidad_maxima numeric,
+  paga_materiales boolean not null default false,
+  metodos_pago text[] not null default '{}',
+
+  -- Paso 9 — Información opcional
+  redes_sociales jsonb not null default '{}',
+  fotos_urls text[] not null default '{}',
+  video_presentacion text,
+  areas_cobertura text[] not null default '{}',
+  residuos_mensuales_kg numeric,
+  mision text,
+  vision text,
+
+  -- Moderación: un aliado nuevo entra como "pendiente" y no aparece
+  -- públicamente hasta que alguien lo revise y lo pase a 'aprobado'
+  -- (a mano desde el Table Editor de Supabase, por ahora — no hay
+  -- panel de admin en el sitio todavía).
+  estado text not null default 'pendiente' check (estado in ('pendiente', 'aprobado', 'rechazado')),
+
+  created_at timestamptz not null default now()
+);
+
+alter table aliados enable row level security;
+
+-- Cualquiera puede leer los aliados YA APROBADOS (para mostrarlos en
+-- "Aliados destacados" y futuros listados públicos).
+create policy "Cualquiera puede leer aliados aprobados"
+  on aliados for select
+  to anon, authenticated
+  using (estado = 'aprobado');
+
+-- Un aliado autenticado también puede leer SU PROPIA fila aunque
+-- todavía esté pendiente de aprobación (para que pueda ver su
+-- propio perfil después de registrarse).
+create policy "Un aliado puede leer su propia fila"
+  on aliados for select
+  to authenticated
+  using (auth.uid() = user_id);
+
+-- Solo se puede insertar la fila que corresponde al propio usuario
+-- recién autenticado (justo después del signUp en el paso final del
+-- formulario).
+create policy "Un usuario autenticado puede registrar su propio aliado"
+  on aliados for insert
+  to authenticated
+  with check (auth.uid() = user_id);
+
+-- Un aliado puede editar su propio perfil más adelante (para cuando
+-- se agregue una pantalla de "editar mi perfil de aliado").
+create policy "Un aliado puede actualizar su propia fila"
+  on aliados for update
+  to authenticated
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+create index if not exists idx_aliados_estado on aliados (estado);
+create index if not exists idx_aliados_provincia on aliados (provincia);
+
+
+-- ═══════════════════════════════════════════════════════════
+-- RECO+ — Alianzas: Storage para logo y fotos de aliados
+-- ════════════════════════════════════════════════════════
+-- Bucket PÚBLICO (para poder mostrar el logo/fotos en el sitio sin
+-- login). Cada archivo se guarda bajo una carpeta con el id del
+-- usuario dueño (ej. "3fa8.../logo-171234.jpg"), y las policies de
+-- abajo solo dejan subir/editar/borrar dentro de la PROPIA carpeta.
+
+insert into storage.buckets (id, name, public)
+  values ('aliados', 'aliados', true)
+  on conflict (id) do nothing;
+
+create policy "Cualquiera puede ver logos y fotos de aliados"
+  on storage.objects for select
+  to public
+  using (bucket_id = 'aliados');
+
+create policy "Un aliado puede subir archivos en su propia carpeta"
+  on storage.objects for insert
+  to authenticated
+  with check (bucket_id = 'aliados' and (storage.foldername(name))[1] = auth.uid()::text);
+
+create policy "Un aliado puede actualizar archivos en su propia carpeta"
+  on storage.objects for update
+  to authenticated
+  using (bucket_id = 'aliados' and (storage.foldername(name))[1] = auth.uid()::text);
+
+create policy "Un aliado puede borrar archivos en su propia carpeta"
+  on storage.objects for delete
+  to authenticated
+  using (bucket_id = 'aliados' and (storage.foldername(name))[1] = auth.uid()::text);

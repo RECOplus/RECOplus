@@ -10,11 +10,16 @@
  * en memoria (RAE_STATE) mientras el modal sigue abierto, así que
  * si el usuario retrocede no pierde lo ya escrito.
  *
- * ESTADO ACTUAL: Paso 1 de 9 implementado ("Información de la
- * empresa"). Los pasos restantes se agregan de forma incremental
- * añadiendo nuevas entradas al array RAE_STEPS — el motor de
- * navegación (barra de progreso, Atrás/Siguiente, validación) ya
- * está listo para soportarlos sin cambios adicionales.
+ * ESTADO ACTUAL: Pasos 1–9 de 9 implementados — formulario COMPLETO
+ * (información de la empresa, contacto, ubicación, materiales que
+ * reciben, servicios que ofrecen, horarios, información operativa,
+ * cuenta de acceso e información opcional). Los ids de materiales
+ * son EXACTAMENTE los de la tabla `categorias` en Supabase (los
+ * mismos 18 que usan el escáner y los filtros del mapa — ver
+ * material-map.js y mapa-more-filters.js), así que un aliado
+ * registrado aquí queda compatible automáticamente con esos
+ * filtros. Falta conectar el envío final a Supabase (crear la fila
+ * del aliado, subir logo/fotos y dar de alta la cuenta con auth.js).
  *
  * Capa 100% aditiva: no modifica alianzas.html más allá del id ya
  * agregado al botón, ni ningún otro script del sitio.
@@ -36,6 +41,7 @@
   var modalBuilt = false;
   var currentStepIndex = 0;
   var RAE_STATE = {}; // { empresa: {...}, contacto: {...}, ... } — un objeto por paso
+  var registroCompletado = false; // true tras un envío final exitoso a Supabase
 
   function ready(fn) {
     if (document.readyState === 'loading') {
@@ -520,10 +526,1120 @@
   }
 
   /* ══════════════════════════════════════════════
+     PASO 4 — MATERIALES QUE RECIBEN
+     ─────────────────────────────────────────────
+     Los ids/nombres son EXACTAMENTE los 18 de la tabla `categorias`
+     en Supabase (mismos que usan el escáner de IA y los filtros del
+     mapa — ver material-map.js y el dropdown "+ Más filtros" en
+     mapa-more-filters.js/mapa.html). Los íconos son emoji porque no
+     dependen de ningún sprite/SVG externo y ya son el mismo criterio
+     visual usado en material-map.js y en los puntos reales insertados
+     en puntos_sugeridos (material_icons).
+     ══════════════════════════════════════════════ */
+  var MATERIALES_DISPONIBLES = [
+    { id: 'plastico', nombre: 'Plástico', icono: '🧴' },
+    { id: 'vidrio', nombre: 'Vidrio', icono: '🍾' },
+    { id: 'metal', nombre: 'Metal', icono: '🥫' },
+    { id: 'papel', nombre: 'Papel', icono: '📄' },
+    { id: 'carton', nombre: 'Cartón', icono: '📦' },
+    { id: 'libros', nombre: 'Libros', icono: '📚' },
+    { id: 'electronicos', nombre: 'Electrónicos', icono: '💻' },
+    { id: 'celulares', nombre: 'Celulares', icono: '📱' },
+    { id: 'baterias', nombre: 'Baterías', icono: '🔋' },
+    { id: 'bombillos', nombre: 'Bombillos', icono: '💡' },
+    { id: 'ropa', nombre: 'Ropa', icono: '👕' },
+    { id: 'tela', nombre: 'Tela', icono: '🧵' },
+    { id: 'cuero', nombre: 'Cuero', icono: '🥾' },
+    { id: 'muebles', nombre: 'Muebles', icono: '🪑' },
+    { id: 'juguetes', nombre: 'Juguetes', icono: '🧸' },
+    { id: 'utilesescolares', nombre: 'Útiles escolares', icono: '✏️' },
+    { id: 'tetrapak', nombre: 'Tetra Pak', icono: '🧃' },
+    { id: 'aceite', nombre: 'Aceite de cocina', icono: '🛢️' }
+  ];
+
+  function renderPasoMateriales(data) {
+    data = data || {};
+    var seleccionados = data.materiales || [];
+    var chips = MATERIALES_DISPONIBLES.map(function (m) {
+      var activo = seleccionados.indexOf(m.id) !== -1;
+      return (
+        '<button type="button" class="rae-chip' + (activo ? ' rae-chip--active' : '') + '" data-material-id="' + m.id + '" aria-pressed="' + (activo ? 'true' : 'false') + '">' +
+          '<span class="rae-chip__icon">' + m.icono + '</span>' +
+          '<span>' + m.nombre + '</span>' +
+        '</button>'
+      );
+    }).join('');
+
+    return (
+      '<div class="rae-step" data-step="materiales">' +
+        '<p class="rae-step__desc">Selecciona todos los materiales que tu empresa o centro recibe. Puedes elegir varios — esto es lo que verán los usuarios al filtrar el mapa.</p>' +
+        '<div class="rae-chip-head">' +
+          '<span class="rae-chip-count" id="raeMaterialesCount">' + seleccionados.length + (seleccionados.length === 1 ? ' seleccionado' : ' seleccionados') + '</span>' +
+          '<div class="rae-chip-actions">' +
+            '<button type="button" id="raeMaterialesTodos">Seleccionar todos</button>' +
+            '<span>·</span>' +
+            '<button type="button" id="raeMaterialesNinguno">Ninguno</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="rae-chip-grid" id="raeMaterialesGrid">' + chips + '</div>' +
+        '<span class="rae-error" id="raeMaterialesError" style="margin-top:10px">Selecciona al menos un material.</span>' +
+      '</div>'
+    );
+  }
+
+  function wirePasoMateriales(container, stateSlice) {
+    var grid = container.querySelector('#raeMaterialesGrid');
+    var countEl = container.querySelector('#raeMaterialesCount');
+    var todosBtn = container.querySelector('#raeMaterialesTodos');
+    var ningunoBtn = container.querySelector('#raeMaterialesNinguno');
+
+    if (!stateSlice.materiales) stateSlice.materiales = [];
+
+    function actualizarContador() {
+      var n = grid.querySelectorAll('.rae-chip--active').length;
+      countEl.textContent = n + (n === 1 ? ' seleccionado' : ' seleccionados');
+    }
+
+    function limpiarErrorGrid() {
+      grid.classList.remove('rae-chip-grid--invalid');
+      var err = container.querySelector('#raeMaterialesError');
+      if (err) err.setAttribute('data-visible', 'false');
+    }
+
+    grid.addEventListener('click', function (e) {
+      var chip = e.target.closest('.rae-chip');
+      if (!chip) return;
+      var activo = chip.classList.toggle('rae-chip--active');
+      chip.setAttribute('aria-pressed', activo ? 'true' : 'false');
+      actualizarContador();
+      limpiarErrorGrid();
+    });
+
+    todosBtn.addEventListener('click', function () {
+      grid.querySelectorAll('.rae-chip').forEach(function (chip) {
+        chip.classList.add('rae-chip--active');
+        chip.setAttribute('aria-pressed', 'true');
+      });
+      actualizarContador();
+      limpiarErrorGrid();
+    });
+
+    ningunoBtn.addEventListener('click', function () {
+      grid.querySelectorAll('.rae-chip').forEach(function (chip) {
+        chip.classList.remove('rae-chip--active');
+        chip.setAttribute('aria-pressed', 'false');
+      });
+      actualizarContador();
+    });
+  }
+
+  function validarPasoMateriales(container) {
+    var grid = container.querySelector('#raeMaterialesGrid');
+    var error = container.querySelector('#raeMaterialesError');
+    var activos = grid.querySelectorAll('.rae-chip--active').length;
+
+    if (activos === 0) {
+      grid.classList.add('rae-chip-grid--invalid');
+      if (error) error.setAttribute('data-visible', 'true');
+      return false;
+    }
+    grid.classList.remove('rae-chip-grid--invalid');
+    if (error) error.setAttribute('data-visible', 'false');
+    return true;
+  }
+
+  function recolectarPasoMateriales(container, stateSlice) {
+    var grid = container.querySelector('#raeMaterialesGrid');
+    var seleccionados = [];
+    grid.querySelectorAll('.rae-chip--active').forEach(function (chip) {
+      seleccionados.push(chip.getAttribute('data-material-id'));
+    });
+    stateSlice.materiales = seleccionados;
+    return stateSlice;
+  }
+
+  /* ══════════════════════════════════════════════
+     PASO 5 — SERVICIOS QUE OFRECEN
+     ─────────────────────────────────────────────
+     Misma mecánica de selección múltiple que el Paso 4, pero en
+     formato lista (checkbox + texto) en vez de grid de chips: las
+     etiquetas de servicio son más largas ("Recolección a domicilio",
+     "Destrucción certificada"...) y se leen mejor en una fila que
+     apretadas en un cuadro de 3 columnas.
+     ══════════════════════════════════════════════ */
+  var SERVICIOS_DISPONIBLES = [
+    { id: 'compra_materiales', nombre: 'Compra de materiales reciclables', icono: '💰' },
+    { id: 'recoleccion_domicilio', nombre: 'Recolección a domicilio', icono: '🚚' },
+    { id: 'recoleccion_empresarial', nombre: 'Recolección empresarial', icono: '🏢' },
+    { id: 'transporte_residuos', nombre: 'Transporte de residuos', icono: '🚛' },
+    { id: 'destruccion_certificada', nombre: 'Destrucción certificada', icono: '🛡️' },
+    { id: 'gestion_residuos_electronicos', nombre: 'Gestión de residuos electrónicos', icono: '🖥️' },
+    { id: 'asesoria_ambiental', nombre: 'Asesoría ambiental', icono: '🌱' },
+    { id: 'educacion_ambiental', nombre: 'Educación ambiental', icono: '🎓' },
+    { id: 'venta_materiales_reciclados', nombre: 'Venta de materiales reciclados', icono: '🛒' }
+  ];
+
+  var RAE_CHECK_SVG = '<svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7.2l3 3 6-6.4"/></svg>';
+
+  function renderPasoServicios(data) {
+    data = data || {};
+    var seleccionados = data.servicios || [];
+    var items = SERVICIOS_DISPONIBLES.map(function (s) {
+      var activo = seleccionados.indexOf(s.id) !== -1;
+      return (
+        '<button type="button" class="rae-check-item' + (activo ? ' rae-check-item--active' : '') + '" data-servicio-id="' + s.id + '" aria-pressed="' + (activo ? 'true' : 'false') + '">' +
+          '<span class="rae-check-item__box">' + RAE_CHECK_SVG + '</span>' +
+          '<span class="rae-check-item__icon">' + s.icono + '</span>' +
+          '<span class="rae-check-item__label">' + s.nombre + '</span>' +
+        '</button>'
+      );
+    }).join('');
+
+    return (
+      '<div class="rae-step" data-step="servicios">' +
+        '<p class="rae-step__desc">¿Qué servicios ofrece tu empresa a la comunidad de RECO+? Selecciona todos los que apliquen.</p>' +
+        '<div class="rae-chip-head">' +
+          '<span class="rae-chip-count" id="raeServiciosCount">' + seleccionados.length + (seleccionados.length === 1 ? ' seleccionado' : ' seleccionados') + '</span>' +
+          '<div class="rae-chip-actions">' +
+            '<button type="button" id="raeServiciosTodos">Seleccionar todos</button>' +
+            '<span>·</span>' +
+            '<button type="button" id="raeServiciosNinguno">Ninguno</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="rae-check-list" id="raeServiciosList">' + items + '</div>' +
+        '<span class="rae-error" id="raeServiciosError" style="margin-top:10px">Selecciona al menos un servicio.</span>' +
+      '</div>'
+    );
+  }
+
+  function wirePasoServicios(container, stateSlice) {
+    var list = container.querySelector('#raeServiciosList');
+    var countEl = container.querySelector('#raeServiciosCount');
+    var todosBtn = container.querySelector('#raeServiciosTodos');
+    var ningunoBtn = container.querySelector('#raeServiciosNinguno');
+
+    if (!stateSlice.servicios) stateSlice.servicios = [];
+
+    function actualizarContador() {
+      var n = list.querySelectorAll('.rae-check-item--active').length;
+      countEl.textContent = n + (n === 1 ? ' seleccionado' : ' seleccionados');
+    }
+
+    function limpiarErrorLista() {
+      list.classList.remove('rae-check-list--invalid');
+      var err = container.querySelector('#raeServiciosError');
+      if (err) err.setAttribute('data-visible', 'false');
+    }
+
+    list.addEventListener('click', function (e) {
+      var item = e.target.closest('.rae-check-item');
+      if (!item) return;
+      var activo = item.classList.toggle('rae-check-item--active');
+      item.setAttribute('aria-pressed', activo ? 'true' : 'false');
+      actualizarContador();
+      limpiarErrorLista();
+    });
+
+    todosBtn.addEventListener('click', function () {
+      list.querySelectorAll('.rae-check-item').forEach(function (item) {
+        item.classList.add('rae-check-item--active');
+        item.setAttribute('aria-pressed', 'true');
+      });
+      actualizarContador();
+      limpiarErrorLista();
+    });
+
+    ningunoBtn.addEventListener('click', function () {
+      list.querySelectorAll('.rae-check-item').forEach(function (item) {
+        item.classList.remove('rae-check-item--active');
+        item.setAttribute('aria-pressed', 'false');
+      });
+      actualizarContador();
+    });
+  }
+
+  function validarPasoServicios(container) {
+    var list = container.querySelector('#raeServiciosList');
+    var error = container.querySelector('#raeServiciosError');
+    var activos = list.querySelectorAll('.rae-check-item--active').length;
+
+    if (activos === 0) {
+      list.classList.add('rae-check-list--invalid');
+      if (error) error.setAttribute('data-visible', 'true');
+      return false;
+    }
+    list.classList.remove('rae-check-list--invalid');
+    if (error) error.setAttribute('data-visible', 'false');
+    return true;
+  }
+
+  function recolectarPasoServicios(container, stateSlice) {
+    var list = container.querySelector('#raeServiciosList');
+    var seleccionados = [];
+    list.querySelectorAll('.rae-check-item--active').forEach(function (item) {
+      seleccionados.push(item.getAttribute('data-servicio-id'));
+    });
+    stateSlice.servicios = seleccionados;
+    return stateSlice;
+  }
+
+  /* ══════════════════════════════════════════════
+     PASO 6 — HORARIOS
+     ─────────────────────────────────────────────
+     Días de atención (selección múltiple, mismo patrón de estado
+     que Pasos 4/5 pero con chips compactos tipo píldora en vez de
+     grid/lista) + hora de apertura/cierre con <input type="time">.
+     ══════════════════════════════════════════════ */
+  var DIAS_SEMANA = [
+    { id: 'lunes', abbr: 'Lun' },
+    { id: 'martes', abbr: 'Mar' },
+    { id: 'miercoles', abbr: 'Mié' },
+    { id: 'jueves', abbr: 'Jue' },
+    { id: 'viernes', abbr: 'Vie' },
+    { id: 'sabado', abbr: 'Sáb' },
+    { id: 'domingo', abbr: 'Dom' }
+  ];
+  var DIAS_LABORABLES = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes'];
+
+  function renderPasoHorarios(data) {
+    data = data || {};
+    var diasSeleccionados = data.dias || [];
+    var chips = DIAS_SEMANA.map(function (d) {
+      var activo = diasSeleccionados.indexOf(d.id) !== -1;
+      return '<button type="button" class="rae-day-chip' + (activo ? ' rae-day-chip--active' : '') + '" data-dia-id="' + d.id + '" aria-pressed="' + (activo ? 'true' : 'false') + '">' + d.abbr + '</button>';
+    }).join('');
+
+    return (
+      '<div class="rae-step" data-step="horarios">' +
+        '<p class="rae-step__desc">¿Qué días y en qué horario atiende tu empresa o centro?</p>' +
+
+        '<div class="rae-field">' +
+          '<label>Días de atención <span class="rae-required">*</span></label>' +
+          '<div class="rae-chip-actions" style="margin-bottom:2px">' +
+            '<button type="button" id="raeDiasTodos">Todos los días</button>' +
+            '<span>·</span>' +
+            '<button type="button" id="raeDiasLaborables">Lun–Vie</button>' +
+            '<span>·</span>' +
+            '<button type="button" id="raeDiasNinguno">Ninguno</button>' +
+          '</div>' +
+          '<div class="rae-days-row" id="raeDiasGrid">' + chips + '</div>' +
+          '<span class="rae-error" id="raeDiasError">Selecciona al menos un día de atención.</span>' +
+        '</div>' +
+
+        '<div class="rae-row">' +
+          '<div class="rae-field">' +
+            '<label for="raeHoraApertura">Hora de apertura <span class="rae-required">*</span></label>' +
+            '<input type="time" id="raeHoraApertura" class="rae-input" value="' + esc(data.horaApertura) + '">' +
+            '<span class="rae-error" id="raeHoraAperturaError">Ingresa la hora de apertura.</span>' +
+          '</div>' +
+          '<div class="rae-field">' +
+            '<label for="raeHoraCierre">Hora de cierre <span class="rae-required">*</span></label>' +
+            '<input type="time" id="raeHoraCierre" class="rae-input" value="' + esc(data.horaCierre) + '">' +
+            '<span class="rae-error" id="raeHoraCierreError">Debe ser posterior a la hora de apertura.</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function wirePasoHorarios(container) {
+    var grid = container.querySelector('#raeDiasGrid');
+    var todosBtn = container.querySelector('#raeDiasTodos');
+    var laborablesBtn = container.querySelector('#raeDiasLaborables');
+    var ningunoBtn = container.querySelector('#raeDiasNinguno');
+    var aperturaInput = container.querySelector('#raeHoraApertura');
+    var cierreInput = container.querySelector('#raeHoraCierre');
+
+    function limpiarErrorDias() {
+      grid.classList.remove('rae-days-row--invalid');
+      var err = container.querySelector('#raeDiasError');
+      if (err) err.setAttribute('data-visible', 'false');
+    }
+
+    grid.addEventListener('click', function (e) {
+      var chip = e.target.closest('.rae-day-chip');
+      if (!chip) return;
+      var activo = chip.classList.toggle('rae-day-chip--active');
+      chip.setAttribute('aria-pressed', activo ? 'true' : 'false');
+      limpiarErrorDias();
+    });
+
+    todosBtn.addEventListener('click', function () {
+      grid.querySelectorAll('.rae-day-chip').forEach(function (chip) {
+        chip.classList.add('rae-day-chip--active');
+        chip.setAttribute('aria-pressed', 'true');
+      });
+      limpiarErrorDias();
+    });
+
+    laborablesBtn.addEventListener('click', function () {
+      grid.querySelectorAll('.rae-day-chip').forEach(function (chip) {
+        var activo = DIAS_LABORABLES.indexOf(chip.getAttribute('data-dia-id')) !== -1;
+        chip.classList.toggle('rae-day-chip--active', activo);
+        chip.setAttribute('aria-pressed', activo ? 'true' : 'false');
+      });
+      limpiarErrorDias();
+    });
+
+    ningunoBtn.addEventListener('click', function () {
+      grid.querySelectorAll('.rae-day-chip').forEach(function (chip) {
+        chip.classList.remove('rae-day-chip--active');
+        chip.setAttribute('aria-pressed', 'false');
+      });
+    });
+
+    aperturaInput.addEventListener('input', function () {
+      limpiarError(container, 'raeHoraApertura');
+      limpiarError(container, 'raeHoraCierre');
+    });
+    cierreInput.addEventListener('input', function () { limpiarError(container, 'raeHoraCierre'); });
+  }
+
+  function validarPasoHorarios(container) {
+    var grid = container.querySelector('#raeDiasGrid');
+    var errorDias = container.querySelector('#raeDiasError');
+    var activos = grid.querySelectorAll('.rae-day-chip--active').length;
+    var apertura = container.querySelector('#raeHoraApertura').value;
+    var cierre = container.querySelector('#raeHoraCierre').value;
+    var valido = true;
+
+    if (activos === 0) {
+      grid.classList.add('rae-days-row--invalid');
+      if (errorDias) errorDias.setAttribute('data-visible', 'true');
+      valido = false;
+    } else {
+      grid.classList.remove('rae-days-row--invalid');
+      if (errorDias) errorDias.setAttribute('data-visible', 'false');
+    }
+
+    if (!apertura) { marcarError(container, 'raeHoraApertura'); valido = false; }
+    else { limpiarError(container, 'raeHoraApertura'); }
+
+    if (!cierre || (apertura && cierre <= apertura)) { marcarError(container, 'raeHoraCierre'); valido = false; }
+    else { limpiarError(container, 'raeHoraCierre'); }
+
+    return valido;
+  }
+
+  function recolectarPasoHorarios(container, stateSlice) {
+    var grid = container.querySelector('#raeDiasGrid');
+    var dias = [];
+    grid.querySelectorAll('.rae-day-chip--active').forEach(function (chip) {
+      dias.push(chip.getAttribute('data-dia-id'));
+    });
+    stateSlice.dias = dias;
+    stateSlice.horaApertura = container.querySelector('#raeHoraApertura').value;
+    stateSlice.horaCierre = container.querySelector('#raeHoraCierre').value;
+    return stateSlice;
+  }
+
+  /* ══════════════════════════════════════════════
+     PASO 7 — INFORMACIÓN OPERATIVA
+     ─────────────────────────────────────────────
+     ¿Aceptan particulares? / ¿Aceptan empresas? → toggles Sí/No.
+     Cantidad mínima (obligatoria) y máxima (opcional) de material,
+     en kilogramos. ¿Ofrecen pago por materiales? → toggle Sí/No que,
+     al marcar "Sí", revela (con animación .rae-collapse) el bloque
+     de método de pago — selección múltiple con el mismo patrón de
+     chips que Materiales/Servicios (Pasos 4/5).
+     ══════════════════════════════════════════════ */
+  var METODOS_PAGO_DISPONIBLES = [
+    { id: 'efectivo', nombre: 'Efectivo', icono: '💵' },
+    { id: 'transferencia', nombre: 'Transferencia bancaria', icono: '🏦' },
+    { id: 'yappy', nombre: 'Yappy', icono: '📲' },
+    { id: 'cheque', nombre: 'Cheque', icono: '🧾' },
+    { id: 'otro', nombre: 'Otro', icono: '➕' }
+  ];
+
+  function renderToggleSiNo(name, valorActual, labelSi, labelNo) {
+    labelSi = labelSi || 'Sí';
+    labelNo = labelNo || 'No';
+    var activoSi = valorActual === true ? ' rae-toggle-btn--active' : '';
+    var activoNo = valorActual === false ? ' rae-toggle-btn--active' : '';
+    return (
+      '<div class="rae-toggle-row" data-toggle-name="' + name + '">' +
+        '<button type="button" class="rae-toggle-btn' + activoSi + '" data-valor="si">' +
+          '<svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7.2l3 3 6-6.4"/></svg>' +
+          '<span>' + labelSi + '</span>' +
+        '</button>' +
+        '<button type="button" class="rae-toggle-btn' + activoNo + '" data-valor="no">' +
+          '<svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l8 8M11 3l-8 8"/></svg>' +
+          '<span>' + labelNo + '</span>' +
+        '</button>' +
+      '</div>'
+    );
+  }
+
+  function wireToggleSiNo(container, name, onChange) {
+    var row = container.querySelector('.rae-toggle-row[data-toggle-name="' + name + '"]');
+    if (!row) return;
+    row.addEventListener('click', function (e) {
+      var btn = e.target.closest('.rae-toggle-btn');
+      if (!btn) return;
+      row.querySelectorAll('.rae-toggle-btn').forEach(function (b) {
+        b.classList.remove('rae-toggle-btn--active');
+      });
+      btn.classList.add('rae-toggle-btn--active');
+      var valor = btn.getAttribute('data-valor') === 'si';
+      if (onChange) onChange(valor);
+    });
+  }
+
+  function leerToggleSiNo(container, name) {
+    var row = container.querySelector('.rae-toggle-row[data-toggle-name="' + name + '"]');
+    if (!row) return null;
+    var activo = row.querySelector('.rae-toggle-btn--active');
+    if (!activo) return null;
+    return activo.getAttribute('data-valor') === 'si';
+  }
+
+  function renderPasoOperativa(data) {
+    data = data || {};
+    var pagaMateriales = data.pagaMateriales === true;
+    var metodosSeleccionados = data.metodosPago || [];
+    var chipsMetodos = METODOS_PAGO_DISPONIBLES.map(function (m) {
+      var activo = metodosSeleccionados.indexOf(m.id) !== -1;
+      return (
+        '<button type="button" class="rae-chip' + (activo ? ' rae-chip--active' : '') + '" data-metodo-id="' + m.id + '" aria-pressed="' + (activo ? 'true' : 'false') + '">' +
+          '<span class="rae-chip__icon">' + m.icono + '</span>' +
+          '<span>' + m.nombre + '</span>' +
+        '</button>'
+      );
+    }).join('');
+
+    return (
+      '<div class="rae-step" data-step="operativa">' +
+        '<p class="rae-step__desc">Cuéntanos cómo trabaja tu empresa día a día: a quién atiende, cuánto material maneja y cómo paga por él.</p>' +
+
+        '<div class="rae-field">' +
+          '<label>¿Aceptan particulares? <span class="rae-required">*</span></label>' +
+          renderToggleSiNo('aceptaParticulares', data.aceptaParticulares) +
+          '<span class="rae-error" id="raeAceptaParticularesError">Indica si aceptan particulares.</span>' +
+        '</div>' +
+
+        '<div class="rae-field">' +
+          '<label>¿Aceptan empresas? <span class="rae-required">*</span></label>' +
+          renderToggleSiNo('aceptaEmpresas', data.aceptaEmpresas) +
+          '<span class="rae-error" id="raeAceptaEmpresasError">Indica si aceptan empresas.</span>' +
+        '</div>' +
+
+        '<div class="rae-row">' +
+          '<div class="rae-field">' +
+            '<label for="raeCantidadMinima">Cantidad mínima de material (kg) <span class="rae-required">*</span></label>' +
+            '<input type="number" id="raeCantidadMinima" class="rae-input" placeholder="Ej. 5" min="0" step="0.1" value="' + esc(data.cantidadMinima) + '">' +
+            '<span class="rae-error" id="raeCantidadMinimaError">Ingresa una cantidad mínima válida.</span>' +
+          '</div>' +
+          '<div class="rae-field">' +
+            '<label for="raeCantidadMaxima">Cantidad máxima (kg) <span class="rae-optional">(opcional)</span></label>' +
+            '<input type="number" id="raeCantidadMaxima" class="rae-input" placeholder="Sin límite" min="0" step="0.1" value="' + esc(data.cantidadMaxima) + '">' +
+            '<span class="rae-error" id="raeCantidadMaximaError">Debe ser mayor que la cantidad mínima.</span>' +
+          '</div>' +
+        '</div>' +
+
+        '<div class="rae-field">' +
+          '<label>¿Ofrecen pago por materiales? <span class="rae-required">*</span></label>' +
+          renderToggleSiNo('pagaMateriales', data.pagaMateriales) +
+          '<span class="rae-error" id="raePagaMaterialesError">Indica si ofrecen pago por materiales.</span>' +
+        '</div>' +
+
+        '<div class="rae-collapse' + (pagaMateriales ? ' rae-collapse--open' : '') + '" id="raeMetodoPagoCollapse">' +
+          '<div class="rae-field">' +
+            '<label>Método de pago <span class="rae-required">*</span></label>' +
+            '<div class="rae-chip-head">' +
+              '<span class="rae-chip-count" id="raeMetodosPagoCount">' + metodosSeleccionados.length + (metodosSeleccionados.length === 1 ? ' seleccionado' : ' seleccionados') + '</span>' +
+            '</div>' +
+            '<div class="rae-chip-grid" id="raeMetodosPagoGrid">' + chipsMetodos + '</div>' +
+            '<span class="rae-error" id="raeMetodosPagoError" style="margin-top:10px">Selecciona al menos un método de pago.</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function wirePasoOperativa(container, stateSlice) {
+    var collapse = container.querySelector('#raeMetodoPagoCollapse');
+    var metodosGrid = container.querySelector('#raeMetodosPagoGrid');
+    var metodosCount = container.querySelector('#raeMetodosPagoCount');
+
+    function actualizarContadorMetodos() {
+      var n = metodosGrid.querySelectorAll('.rae-chip--active').length;
+      metodosCount.textContent = n + (n === 1 ? ' seleccionado' : ' seleccionados');
+    }
+
+    wireToggleSiNo(container, 'aceptaParticulares', function () {
+      limpiarError(container, 'raeAceptaParticulares');
+    });
+    wireToggleSiNo(container, 'aceptaEmpresas', function () {
+      limpiarError(container, 'raeAceptaEmpresas');
+    });
+    wireToggleSiNo(container, 'pagaMateriales', function (valor) {
+      limpiarError(container, 'raePagaMateriales');
+      collapse.classList.toggle('rae-collapse--open', valor === true);
+      if (!valor) {
+        metodosGrid.querySelectorAll('.rae-chip--active').forEach(function (chip) {
+          chip.classList.remove('rae-chip--active');
+          chip.setAttribute('aria-pressed', 'false');
+        });
+        actualizarContadorMetodos();
+        metodosGrid.classList.remove('rae-chip-grid--invalid');
+        var err = container.querySelector('#raeMetodosPagoError');
+        if (err) err.setAttribute('data-visible', 'false');
+      }
+    });
+
+    metodosGrid.addEventListener('click', function (e) {
+      var chip = e.target.closest('.rae-chip');
+      if (!chip) return;
+      var activo = chip.classList.toggle('rae-chip--active');
+      chip.setAttribute('aria-pressed', activo ? 'true' : 'false');
+      actualizarContadorMetodos();
+      metodosGrid.classList.remove('rae-chip-grid--invalid');
+      var err = container.querySelector('#raeMetodosPagoError');
+      if (err) err.setAttribute('data-visible', 'false');
+    });
+
+    ['raeCantidadMinima', 'raeCantidadMaxima'].forEach(function (id) {
+      var el = container.querySelector('#' + id);
+      if (!el) return;
+      el.addEventListener('input', function () {
+        limpiarError(container, 'raeCantidadMinima');
+        limpiarError(container, 'raeCantidadMaxima');
+      });
+    });
+  }
+
+  function validarPasoOperativa(container) {
+    var valido = true;
+
+    var aceptaParticulares = leerToggleSiNo(container, 'aceptaParticulares');
+    if (aceptaParticulares === null) { marcarError(container, 'raeAceptaParticulares'); valido = false; }
+    else { limpiarError(container, 'raeAceptaParticulares'); }
+
+    var aceptaEmpresas = leerToggleSiNo(container, 'aceptaEmpresas');
+    if (aceptaEmpresas === null) { marcarError(container, 'raeAceptaEmpresas'); valido = false; }
+    else { limpiarError(container, 'raeAceptaEmpresas'); }
+
+    var minInput = container.querySelector('#raeCantidadMinima');
+    var maxInput = container.querySelector('#raeCantidadMaxima');
+    var minVal = minInput.value.trim();
+    var maxVal = maxInput.value.trim();
+    var minNum = parseFloat(minVal);
+    var maxNum = parseFloat(maxVal);
+
+    if (minVal === '' || isNaN(minNum) || minNum < 0) {
+      marcarError(container, 'raeCantidadMinima'); valido = false;
+    } else {
+      limpiarError(container, 'raeCantidadMinima');
+    }
+
+    if (maxVal !== '') {
+      if (isNaN(maxNum) || maxNum <= minNum) { marcarError(container, 'raeCantidadMaxima'); valido = false; }
+      else { limpiarError(container, 'raeCantidadMaxima'); }
+    } else {
+      limpiarError(container, 'raeCantidadMaxima');
+    }
+
+    var pagaMateriales = leerToggleSiNo(container, 'pagaMateriales');
+    if (pagaMateriales === null) { marcarError(container, 'raePagaMateriales'); valido = false; }
+    else { limpiarError(container, 'raePagaMateriales'); }
+
+    if (pagaMateriales === true) {
+      var metodosGrid = container.querySelector('#raeMetodosPagoGrid');
+      var error = container.querySelector('#raeMetodosPagoError');
+      var activos = metodosGrid.querySelectorAll('.rae-chip--active').length;
+      if (activos === 0) {
+        metodosGrid.classList.add('rae-chip-grid--invalid');
+        if (error) error.setAttribute('data-visible', 'true');
+        valido = false;
+      } else {
+        metodosGrid.classList.remove('rae-chip-grid--invalid');
+        if (error) error.setAttribute('data-visible', 'false');
+      }
+    }
+
+    return valido;
+  }
+
+  function recolectarPasoOperativa(container, stateSlice) {
+    stateSlice.aceptaParticulares = leerToggleSiNo(container, 'aceptaParticulares');
+    stateSlice.aceptaEmpresas = leerToggleSiNo(container, 'aceptaEmpresas');
+    var minVal = container.querySelector('#raeCantidadMinima').value.trim();
+    var maxVal = container.querySelector('#raeCantidadMaxima').value.trim();
+    stateSlice.cantidadMinima = minVal !== '' ? parseFloat(minVal) : null;
+    stateSlice.cantidadMaxima = maxVal !== '' ? parseFloat(maxVal) : null;
+    stateSlice.pagaMateriales = leerToggleSiNo(container, 'pagaMateriales');
+
+    if (stateSlice.pagaMateriales === true) {
+      var metodosGrid = container.querySelector('#raeMetodosPagoGrid');
+      var seleccionados = [];
+      metodosGrid.querySelectorAll('.rae-chip--active').forEach(function (chip) {
+        seleccionados.push(chip.getAttribute('data-metodo-id'));
+      });
+      stateSlice.metodosPago = seleccionados;
+    } else {
+      stateSlice.metodosPago = [];
+    }
+
+    return stateSlice;
+  }
+
+  /* ══════════════════════════════════════════════
+     PASO 8 — CUENTA DE ACCESO
+     ─────────────────────────────────────────────
+     Nombre de usuario, correo, contraseña + confirmar (con botón
+     mostrar/ocultar y medidor de fortaleza), y aceptación de
+     términos y condiciones + política de privacidad (obligatorias,
+     checkboxes independientes). Mismo estándar de contraseña que
+     registro-auth.js (mínimo 6 caracteres) para quedar compatible
+     con window.recoAuth.signUp cuando se conecte el envío final.
+     ══════════════════════════════════════════════ */
+  var RAE_EYE_SVG = '<svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 10S4.5 4 10 4s8.5 6 8.5 6-3 6-8.5 6S1.5 10 1.5 10z"/><circle cx="10" cy="10" r="2.3"/></svg>';
+  var RAE_EYE_OFF_SVG = '<svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 2.5l15 15"/><path d="M8.4 4.3C8.9 4.1 9.5 4 10 4c5.5 0 8.5 6 8.5 6a15 15 0 01-2.7 3.5M5.6 5.6C3.2 7 1.5 10 1.5 10s3 6 8.5 6c1 0 1.9-.2 2.7-.5"/><path d="M8.2 8.2a2.3 2.3 0 003.2 3.2"/></svg>';
+
+  function calcularFortalezaPassword(pw) {
+    if (!pw) return 0;
+    var puntos = 0;
+    if (pw.length >= 6) puntos++;
+    if (pw.length >= 10) puntos++;
+    if (/[a-z]/.test(pw) && /[A-Z]/.test(pw)) puntos++;
+    if (/\d/.test(pw) || /[^A-Za-z0-9]/.test(pw)) puntos++;
+    return Math.min(puntos, 4);
+  }
+
+  var RAE_FORTALEZA_LABEL = ['', 'Débil', 'Aceptable', 'Buena', 'Fuerte'];
+
+  function renderCheckboxLinea(id, activo, htmlTexto) {
+    return (
+      '<div class="rae-checkbox-line' + (activo ? ' rae-checkbox-line--active' : '') + '" id="' + id + '" role="checkbox" aria-checked="' + (activo ? 'true' : 'false') + '" tabindex="0">' +
+        '<span class="rae-checkbox-line__box">' + RAE_CHECK_SVG + '</span>' +
+        '<span class="rae-checkbox-line__text">' + htmlTexto + '</span>' +
+      '</div>'
+    );
+  }
+
+  function wireCheckboxLinea(container, id, onChange) {
+    var el = container.querySelector('#' + id);
+    if (!el) return;
+    function alternar(e) {
+      // No alternar si el click fue directamente sobre un enlace interno
+      if (e.target.closest('a')) return;
+      if (e.type === 'keydown' && e.key !== ' ' && e.key !== 'Enter') return;
+      if (e.type === 'keydown') e.preventDefault();
+      var activo = !el.classList.contains('rae-checkbox-line--active');
+      el.classList.toggle('rae-checkbox-line--active', activo);
+      el.classList.remove('rae-checkbox-line--invalid');
+      el.setAttribute('aria-checked', activo ? 'true' : 'false');
+      if (onChange) onChange(activo);
+    }
+    el.addEventListener('click', alternar);
+    el.addEventListener('keydown', alternar);
+  }
+
+  function renderPasoCuenta(data) {
+    data = data || {};
+    return (
+      '<div class="rae-step" data-step="cuenta">' +
+        '<p class="rae-step__desc">Crea la cuenta con la que tu empresa administrará su perfil de aliado en RECO+.</p>' +
+
+        '<div class="rae-field">' +
+          '<label for="raeUsuario">Nombre de usuario <span class="rae-required">*</span></label>' +
+          '<input type="text" id="raeUsuario" class="rae-input" placeholder="Ej. ecorecicla_pa" maxlength="40" autocomplete="username" value="' + esc(data.usuario) + '">' +
+          '<span class="rae-hint">Sin espacios; letras, números, guion o guion bajo.</span>' +
+          '<span class="rae-error" id="raeUsuarioError">Elige un nombre de usuario válido (mínimo 3 caracteres).</span>' +
+        '</div>' +
+
+        '<div class="rae-field">' +
+          '<label for="raeCuentaEmail">Correo electrónico <span class="rae-required">*</span></label>' +
+          '<input type="email" id="raeCuentaEmail" class="rae-input" placeholder="cuenta@tuempresa.com" maxlength="140" autocomplete="email" value="' + esc(data.email) + '">' +
+          '<span class="rae-error" id="raeCuentaEmailError">Ingresa un correo electrónico válido.</span>' +
+        '</div>' +
+
+        '<div class="rae-field">' +
+          '<label for="raePassword">Contraseña <span class="rae-required">*</span></label>' +
+          '<div class="rae-pass-wrap">' +
+            '<input type="password" id="raePassword" class="rae-input" placeholder="Mínimo 6 caracteres" autocomplete="new-password" value="' + esc(data.password) + '">' +
+            '<button type="button" class="rae-pass-toggle" id="raePasswordToggle" aria-label="Mostrar contraseña">' + RAE_EYE_SVG + '</button>' +
+          '</div>' +
+          '<div class="rae-pass-strength" id="raePasswordStrength" data-nivel="0">' +
+            '<span class="rae-pass-strength__bar"></span><span class="rae-pass-strength__bar"></span><span class="rae-pass-strength__bar"></span><span class="rae-pass-strength__bar"></span>' +
+          '</div>' +
+          '<span class="rae-hint" id="raePasswordHint">Mínimo 6 caracteres.</span>' +
+          '<span class="rae-error" id="raePasswordError">La contraseña debe tener al menos 6 caracteres.</span>' +
+        '</div>' +
+
+        '<div class="rae-field">' +
+          '<label for="raePasswordConfirm">Confirmar contraseña <span class="rae-required">*</span></label>' +
+          '<div class="rae-pass-wrap">' +
+            '<input type="password" id="raePasswordConfirm" class="rae-input" placeholder="Repite la contraseña" autocomplete="new-password" value="' + esc(data.passwordConfirm) + '">' +
+            '<button type="button" class="rae-pass-toggle" id="raePasswordConfirmToggle" aria-label="Mostrar contraseña">' + RAE_EYE_SVG + '</button>' +
+          '</div>' +
+          '<span class="rae-error" id="raePasswordConfirmError">Las contraseñas no coinciden.</span>' +
+        '</div>' +
+
+        '<div style="margin-top:6px">' +
+          renderCheckboxLinea('raeAceptaTerminos', data.aceptaTerminos, 'Acepto los <a href="#" target="_blank" rel="noopener">términos y condiciones</a> de RECO+. <span class="rae-required">*</span>') +
+          '<span class="rae-error" id="raeAceptaTerminosError" style="margin:-6px 0 10px 31px">Debes aceptar los términos y condiciones.</span>' +
+
+          renderCheckboxLinea('raeAceptaPrivacidad', data.aceptaPrivacidad, 'Acepto la <a href="#" target="_blank" rel="noopener">política de privacidad</a> de RECO+. <span class="rae-required">*</span>') +
+          '<span class="rae-error" id="raeAceptaPrivacidadError" style="margin:-6px 0 0 31px">Debes aceptar la política de privacidad.</span>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function wirePasoCuenta(container, stateSlice) {
+    var usuarioInput = container.querySelector('#raeUsuario');
+    var emailInput = container.querySelector('#raeCuentaEmail');
+    var passInput = container.querySelector('#raePassword');
+    var passConfirmInput = container.querySelector('#raePasswordConfirm');
+    var passToggle = container.querySelector('#raePasswordToggle');
+    var passConfirmToggle = container.querySelector('#raePasswordConfirmToggle');
+    var strengthEl = container.querySelector('#raePasswordStrength');
+    var passHint = container.querySelector('#raePasswordHint');
+
+    [usuarioInput, emailInput].forEach(function (el) {
+      el.addEventListener('input', function () { limpiarError(container, el.id); });
+    });
+
+    function actualizarFortaleza() {
+      var nivel = calcularFortalezaPassword(passInput.value);
+      strengthEl.setAttribute('data-nivel', String(nivel));
+      passHint.textContent = passInput.value
+        ? 'Fortaleza: ' + RAE_FORTALEZA_LABEL[nivel] + ' (mínimo 6 caracteres)'
+        : 'Mínimo 6 caracteres.';
+    }
+
+    passInput.addEventListener('input', function () {
+      limpiarError(container, 'raePassword');
+      actualizarFortaleza();
+      if (passConfirmInput.value) limpiarError(container, 'raePasswordConfirm');
+    });
+    actualizarFortaleza();
+
+    passConfirmInput.addEventListener('input', function () {
+      limpiarError(container, 'raePasswordConfirm');
+    });
+
+    function alternarVisibilidad(input, btn) {
+      var oculto = input.type === 'password';
+      input.type = oculto ? 'text' : 'password';
+      btn.innerHTML = oculto ? RAE_EYE_OFF_SVG : RAE_EYE_SVG;
+      btn.setAttribute('aria-label', oculto ? 'Ocultar contraseña' : 'Mostrar contraseña');
+    }
+    passToggle.addEventListener('click', function () { alternarVisibilidad(passInput, passToggle); });
+    passConfirmToggle.addEventListener('click', function () { alternarVisibilidad(passConfirmInput, passConfirmToggle); });
+
+    wireCheckboxLinea(container, 'raeAceptaTerminos');
+    wireCheckboxLinea(container, 'raeAceptaPrivacidad');
+  }
+
+  function validarPasoCuenta(container) {
+    var valido = true;
+
+    var usuario = container.querySelector('#raeUsuario').value.trim();
+    if (!/^[A-Za-z0-9_-]{3,}$/.test(usuario)) { marcarError(container, 'raeUsuario'); valido = false; }
+    else { limpiarError(container, 'raeUsuario'); }
+
+    var email = container.querySelector('#raeCuentaEmail').value.trim();
+    if (!email || !esEmailValido(email)) { marcarError(container, 'raeCuentaEmail'); valido = false; }
+    else { limpiarError(container, 'raeCuentaEmail'); }
+
+    var password = container.querySelector('#raePassword').value;
+    if (!password || password.length < 6) { marcarError(container, 'raePassword'); valido = false; }
+    else { limpiarError(container, 'raePassword'); }
+
+    var passwordConfirm = container.querySelector('#raePasswordConfirm').value;
+    if (!passwordConfirm || passwordConfirm !== password) { marcarError(container, 'raePasswordConfirm'); valido = false; }
+    else { limpiarError(container, 'raePasswordConfirm'); }
+
+    var terminosEl = container.querySelector('#raeAceptaTerminos');
+    var terminosError = container.querySelector('#raeAceptaTerminosError');
+    if (!terminosEl.classList.contains('rae-checkbox-line--active')) {
+      terminosEl.classList.add('rae-checkbox-line--invalid');
+      if (terminosError) terminosError.setAttribute('data-visible', 'true');
+      valido = false;
+    } else {
+      terminosEl.classList.remove('rae-checkbox-line--invalid');
+      if (terminosError) terminosError.setAttribute('data-visible', 'false');
+    }
+
+    var privacidadEl = container.querySelector('#raeAceptaPrivacidad');
+    var privacidadError = container.querySelector('#raeAceptaPrivacidadError');
+    if (!privacidadEl.classList.contains('rae-checkbox-line--active')) {
+      privacidadEl.classList.add('rae-checkbox-line--invalid');
+      if (privacidadError) privacidadError.setAttribute('data-visible', 'true');
+      valido = false;
+    } else {
+      privacidadEl.classList.remove('rae-checkbox-line--invalid');
+      if (privacidadError) privacidadError.setAttribute('data-visible', 'false');
+    }
+
+    return valido;
+  }
+
+  function recolectarPasoCuenta(container, stateSlice) {
+    stateSlice.usuario = container.querySelector('#raeUsuario').value.trim();
+    stateSlice.email = container.querySelector('#raeCuentaEmail').value.trim();
+    stateSlice.password = container.querySelector('#raePassword').value;
+    stateSlice.passwordConfirm = container.querySelector('#raePasswordConfirm').value;
+    stateSlice.aceptaTerminos = container.querySelector('#raeAceptaTerminos').classList.contains('rae-checkbox-line--active');
+    stateSlice.aceptaPrivacidad = container.querySelector('#raeAceptaPrivacidad').classList.contains('rae-checkbox-line--active');
+    return stateSlice;
+  }
+
+  /* ══════════════════════════════════════════════
+     PASO 9 — INFORMACIÓN OPCIONAL PARA MEJORAR EL PERFIL
+     ─────────────────────────────────────────────
+     Todo este paso es opcional: no bloquea el registro, pero los
+     campos que sí se completan (redes, video, cantidad de residuos)
+     se validan con el mismo formato que el resto del formulario si
+     el usuario los llena. Reutiliza PROVINCIAS_PANAMA (Paso 3) para
+     "Áreas de cobertura" y el mismo patrón de chips de selección
+     múltiple que Materiales/Servicios/Método de pago (Pasos 4/5/7).
+     Las calificaciones/reseñas NO son un campo: se generan solas
+     después del registro, así que aquí solo se muestra una nota.
+     ══════════════════════════════════════════════ */
+  var RAE_MAX_FOTOS = 6;
+  var RAE_X_SVG_SM = '<svg viewBox="0 0 14 14" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><path d="M2 2l10 10M12 2L2 12"/></svg>';
+  var RAE_PLUS_SVG = '<svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 4v12M4 10h12"/></svg>';
+
+  var REDES_SOCIALES_DISPONIBLES = [
+    { id: 'facebook', elId: 'raeRedFacebook', icono: '📘', placeholder: 'facebook.com/tuempresa' },
+    { id: 'instagram', elId: 'raeRedInstagram', icono: '📸', placeholder: 'instagram.com/tuempresa' },
+    { id: 'tiktok', elId: 'raeRedTiktok', icono: '🎵', placeholder: 'tiktok.com/@tuempresa' },
+    { id: 'linkedin', elId: 'raeRedLinkedin', icono: '💼', placeholder: 'linkedin.com/company/tuempresa' }
+  ];
+
+  function renderPasoOpcional(data) {
+    data = data || {};
+    var redes = data.redesSociales || {};
+    var fotos = data.fotos || [];
+    var coberturaSeleccionadas = data.areasCobertura || [];
+
+    var redesFilas = REDES_SOCIALES_DISPONIBLES.map(function (r) {
+      return (
+        '<div class="rae-social-row">' +
+          '<span class="rae-social-row__icon">' + r.icono + '</span>' +
+          '<div class="rae-field">' +
+            '<input type="text" id="' + r.elId + '" class="rae-input" placeholder="' + r.placeholder + '" maxlength="200" value="' + esc(redes[r.id]) + '">' +
+            '<span class="rae-error" id="' + r.elId + 'Error">Ingresa un enlace válido.</span>' +
+          '</div>' +
+        '</div>'
+      );
+    }).join('');
+
+    var chipsCobertura = PROVINCIAS_PANAMA.map(function (p) {
+      var activo = coberturaSeleccionadas.indexOf(p) !== -1;
+      return '<button type="button" class="rae-chip' + (activo ? ' rae-chip--active' : '') + '" data-provincia-cobertura="' + esc(p) + '" aria-pressed="' + (activo ? 'true' : 'false') + '"><span>' + p + '</span></button>';
+    }).join('');
+
+    var fotosThumbs = fotos.map(function (f, i) {
+      return (
+        '<div class="rae-photo-thumb" data-foto-index="' + i + '">' +
+          '<img src="' + f.dataUrl + '" alt="Foto ' + (i + 1) + '">' +
+          '<button type="button" class="rae-photo-thumb__remove" data-foto-remove="' + i + '" aria-label="Quitar foto">' + RAE_X_SVG_SM + '</button>' +
+        '</div>'
+      );
+    }).join('');
+    var addBtnHtml = '<button type="button" class="rae-photo-add" id="raeFotoAddBtn"' + (fotos.length < RAE_MAX_FOTOS ? '' : ' disabled') + '>' + RAE_PLUS_SVG + '<span>Agregar</span></button>';
+
+    return (
+      '<div class="rae-step" data-step="opcional">' +
+        '<p class="rae-step__desc">Esta información es opcional, pero ayuda a que tu perfil de aliado destaque más dentro de RECO+.</p>' +
+
+        '<div class="rae-field">' +
+          '<label>Redes sociales <span class="rae-optional">(opcional)</span></label>' +
+          redesFilas +
+        '</div>' +
+
+        '<div class="rae-field">' +
+          '<label>Fotografías del centro de reciclaje <span class="rae-optional">(opcional, hasta ' + RAE_MAX_FOTOS + ')</span></label>' +
+          '<div class="rae-photo-grid" id="raeFotosGrid">' + fotosThumbs + addBtnHtml + '</div>' +
+          '<input type="file" id="raeFotoInput" accept="image/png,image/jpeg,image/webp" multiple style="display:none">' +
+          '<span class="rae-hint" id="raeFotosHint">PNG, JPG o WEBP, hasta 3 MB cada una.</span>' +
+        '</div>' +
+
+        '<div class="rae-field">' +
+          '<label for="raeVideoPresentacion">Video de presentación <span class="rae-optional">(opcional)</span></label>' +
+          '<input type="text" id="raeVideoPresentacion" class="rae-input" placeholder="Enlace de YouTube, Vimeo, etc." maxlength="200" value="' + esc(data.videoPresentacion) + '">' +
+          '<span class="rae-error" id="raeVideoPresentacionError">Ingresa un enlace de video válido.</span>' +
+        '</div>' +
+
+        '<div class="rae-field">' +
+          '<label>Áreas de cobertura <span class="rae-optional">(opcional)</span></label>' +
+          '<p class="rae-hint" style="margin:-2px 0 8px">Provincias o comarcas donde ofrecen recolección o servicio, además de tu ubicación principal.</p>' +
+          '<div class="rae-chip-grid" id="raeCoberturaGrid">' + chipsCobertura + '</div>' +
+        '</div>' +
+
+        '<div class="rae-field">' +
+          '<label for="raeResiduosMensuales">Cantidad aproximada de residuos procesados al mes (kg) <span class="rae-optional">(opcional)</span></label>' +
+          '<input type="number" id="raeResiduosMensuales" class="rae-input" placeholder="Ej. 250" min="0" step="0.1" value="' + esc(data.residuosMensuales) + '">' +
+          '<span class="rae-error" id="raeResiduosMensualesError">Ingresa una cantidad válida.</span>' +
+        '</div>' +
+
+        '<div class="rae-field">' +
+          '<label for="raeMision">Misión <span class="rae-optional">(opcional)</span></label>' +
+          '<textarea id="raeMision" class="rae-input rae-textarea" placeholder="¿Cuál es el propósito de tu empresa?" maxlength="400" style="min-height:76px">' + esc(data.mision) + '</textarea>' +
+        '</div>' +
+
+        '<div class="rae-field">' +
+          '<label for="raeVision">Visión <span class="rae-optional">(opcional)</span></label>' +
+          '<textarea id="raeVision" class="rae-input rae-textarea" placeholder="¿A dónde quiere llegar tu empresa?" maxlength="400" style="min-height:76px">' + esc(data.vision) + '</textarea>' +
+        '</div>' +
+
+        '<div class="rae-note">' +
+          '<span class="rae-note__icon">⭐</span>' +
+          '<span>Las calificaciones y reseñas de otros usuarios se activan automáticamente en tu perfil una vez completado el registro; no se configuran aquí.</span>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+
+  function wirePasoOpcional(container, stateSlice) {
+    if (!stateSlice.redesSociales) stateSlice.redesSociales = {};
+    if (!stateSlice.fotos) stateSlice.fotos = [];
+    if (!stateSlice.areasCobertura) stateSlice.areasCobertura = [];
+
+    REDES_SOCIALES_DISPONIBLES.forEach(function (r) {
+      var el = container.querySelector('#' + r.elId);
+      if (!el) return;
+      el.addEventListener('input', function () { limpiarError(container, r.elId); });
+    });
+
+    var videoInput = container.querySelector('#raeVideoPresentacion');
+    videoInput.addEventListener('input', function () { limpiarError(container, 'raeVideoPresentacion'); });
+
+    var residuosInput = container.querySelector('#raeResiduosMensuales');
+    residuosInput.addEventListener('input', function () { limpiarError(container, 'raeResiduosMensuales'); });
+
+    var coberturaGrid = container.querySelector('#raeCoberturaGrid');
+    coberturaGrid.addEventListener('click', function (e) {
+      var chip = e.target.closest('.rae-chip');
+      if (!chip) return;
+      var activo = chip.classList.toggle('rae-chip--active');
+      chip.setAttribute('aria-pressed', activo ? 'true' : 'false');
+    });
+
+    var fotosGrid = container.querySelector('#raeFotosGrid');
+    var fotoInput = container.querySelector('#raeFotoInput');
+    var fotosHint = container.querySelector('#raeFotosHint');
+
+    function reconstruirGridFotos() {
+      var addBtnHtml = '<button type="button" class="rae-photo-add" id="raeFotoAddBtn"' + (stateSlice.fotos.length < RAE_MAX_FOTOS ? '' : ' disabled') + '>' + RAE_PLUS_SVG + '<span>Agregar</span></button>';
+      var thumbs = stateSlice.fotos.map(function (f, i) {
+        return (
+          '<div class="rae-photo-thumb" data-foto-index="' + i + '">' +
+            '<img src="' + f.dataUrl + '" alt="Foto ' + (i + 1) + '">' +
+            '<button type="button" class="rae-photo-thumb__remove" data-foto-remove="' + i + '" aria-label="Quitar foto">' + RAE_X_SVG_SM + '</button>' +
+          '</div>'
+        );
+      }).join('');
+      fotosGrid.innerHTML = thumbs + addBtnHtml;
+      var nuevoAddBtn = fotosGrid.querySelector('#raeFotoAddBtn');
+      if (nuevoAddBtn) nuevoAddBtn.addEventListener('click', function () { fotoInput.click(); });
+    }
+
+    var addBtnInicial = fotosGrid.querySelector('#raeFotoAddBtn');
+    if (addBtnInicial) addBtnInicial.addEventListener('click', function () { fotoInput.click(); });
+
+    fotosGrid.addEventListener('click', function (e) {
+      var removeBtn = e.target.closest('[data-foto-remove]');
+      if (!removeBtn) return;
+      var idx = parseInt(removeBtn.getAttribute('data-foto-remove'), 10);
+      stateSlice.fotos.splice(idx, 1);
+      reconstruirGridFotos();
+    });
+
+    fotoInput.addEventListener('change', function () {
+      var files = Array.prototype.slice.call(fotoInput.files || []);
+      if (!files.length) return;
+      fotosHint.textContent = 'PNG, JPG o WEBP, hasta 3 MB cada una.';
+      fotosHint.classList.remove('rae-hint--limit');
+
+      files.forEach(function (file) {
+        if (stateSlice.fotos.length >= RAE_MAX_FOTOS) return;
+        if (!/^image\/(png|jpeg|webp)$/.test(file.type)) {
+          fotosHint.textContent = 'Algún archivo no es PNG, JPG o WEBP y fue omitido.';
+          fotosHint.classList.add('rae-hint--limit');
+          return;
+        }
+        if (file.size > 3 * 1024 * 1024) {
+          fotosHint.textContent = 'Algún archivo pesa más de 3 MB y fue omitido.';
+          fotosHint.classList.add('rae-hint--limit');
+          return;
+        }
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          stateSlice.fotos.push({ dataUrl: e.target.result, fileName: file.name });
+          reconstruirGridFotos();
+        };
+        reader.readAsDataURL(file);
+      });
+      fotoInput.value = '';
+    });
+  }
+
+  function validarPasoOpcional(container) {
+    var valido = true;
+
+    REDES_SOCIALES_DISPONIBLES.forEach(function (r) {
+      var el = container.querySelector('#' + r.elId);
+      var valor = el.value.trim();
+      if (valor && !esSitioWebValido(valor)) { marcarError(container, r.elId); valido = false; }
+      else { limpiarError(container, r.elId); }
+    });
+
+    var video = container.querySelector('#raeVideoPresentacion').value.trim();
+    if (video && !esSitioWebValido(video)) { marcarError(container, 'raeVideoPresentacion'); valido = false; }
+    else { limpiarError(container, 'raeVideoPresentacion'); }
+
+    var residuos = container.querySelector('#raeResiduosMensuales').value.trim();
+    if (residuos) {
+      var residuosNum = parseFloat(residuos);
+      if (isNaN(residuosNum) || residuosNum < 0) { marcarError(container, 'raeResiduosMensuales'); valido = false; }
+      else { limpiarError(container, 'raeResiduosMensuales'); }
+    } else {
+      limpiarError(container, 'raeResiduosMensuales');
+    }
+
+    return valido;
+  }
+
+  function recolectarPasoOpcional(container, stateSlice) {
+    var redes = {};
+    REDES_SOCIALES_DISPONIBLES.forEach(function (r) {
+      var valor = container.querySelector('#' + r.elId).value.trim();
+      if (valor && !/^https?:\/\//i.test(valor)) valor = 'https://' + valor;
+      redes[r.id] = valor;
+    });
+    stateSlice.redesSociales = redes;
+
+    var video = container.querySelector('#raeVideoPresentacion').value.trim();
+    if (video && !/^https?:\/\//i.test(video)) video = 'https://' + video;
+    stateSlice.videoPresentacion = video;
+
+    var coberturaGrid = container.querySelector('#raeCoberturaGrid');
+    var cobertura = [];
+    coberturaGrid.querySelectorAll('.rae-chip--active').forEach(function (chip) {
+      cobertura.push(chip.getAttribute('data-provincia-cobertura'));
+    });
+    stateSlice.areasCobertura = cobertura;
+
+    var residuos = container.querySelector('#raeResiduosMensuales').value.trim();
+    stateSlice.residuosMensuales = residuos !== '' ? parseFloat(residuos) : null;
+
+    stateSlice.mision = container.querySelector('#raeMision').value.trim();
+    stateSlice.vision = container.querySelector('#raeVision').value.trim();
+    // stateSlice.fotos ya se mantiene actualizado directamente por wirePasoOpcional.
+
+    return stateSlice;
+  }
+
+  /* ══════════════════════════════════════════════
      REGISTRO DE PASOS
      ─────────────────────────────────────────────
      Cada paso: { key, kicker, titulo, render, wire, validate, recolectar }
-     Los pasos 4–9 se añaden aquí en próximos mensajes.
+     Los 9 pasos del flujo ya están completos.
      ══════════════════════════════════════════════ */
   var RAE_STEPS = [
     {
@@ -549,9 +1665,55 @@
       wire: wirePasoUbicacion,
       validate: validarPasoUbicacion,
       recolectar: recolectarPasoUbicacion
+    },
+    {
+      key: 'materiales',
+      titulo: 'Materiales que reciben',
+      render: renderPasoMateriales,
+      wire: wirePasoMateriales,
+      validate: validarPasoMateriales,
+      recolectar: recolectarPasoMateriales
+    },
+    {
+      key: 'servicios',
+      titulo: 'Servicios que ofrecen',
+      render: renderPasoServicios,
+      wire: wirePasoServicios,
+      validate: validarPasoServicios,
+      recolectar: recolectarPasoServicios
+    },
+    {
+      key: 'horarios',
+      titulo: 'Horarios',
+      render: renderPasoHorarios,
+      wire: wirePasoHorarios,
+      validate: validarPasoHorarios,
+      recolectar: recolectarPasoHorarios
+    },
+    {
+      key: 'operativa',
+      titulo: 'Información operativa',
+      render: renderPasoOperativa,
+      wire: wirePasoOperativa,
+      validate: validarPasoOperativa,
+      recolectar: recolectarPasoOperativa
+    },
+    {
+      key: 'cuenta',
+      titulo: 'Cuenta de acceso',
+      render: renderPasoCuenta,
+      wire: wirePasoCuenta,
+      validate: validarPasoCuenta,
+      recolectar: recolectarPasoCuenta
+    },
+    {
+      key: 'opcional',
+      titulo: 'Información opcional',
+      render: renderPasoOpcional,
+      wire: wirePasoOpcional,
+      validate: validarPasoOpcional,
+      recolectar: recolectarPasoOpcional
     }
-    // Próximos pasos: materiales, servicios, horarios, operativa,
-    // cuenta, opcional.
   ];
 
   /* ══════════════════════════════════════════════
@@ -609,6 +1771,8 @@
     var pasoActualEl = overlayEl.querySelector('#raePasoActual');
     var progressBar = overlayEl.querySelector('#raeProgressBar');
     var atrasBtn = overlayEl.querySelector('#raeBtnAtras');
+    var siguienteBtn = overlayEl.querySelector('#raeBtnSiguiente');
+    var closeBtn = overlayEl.querySelector('#raeClose');
     var status = overlayEl.querySelector('#raeStatus');
 
     if (!RAE_STATE[paso.key]) RAE_STATE[paso.key] = {};
@@ -617,6 +1781,11 @@
     pasoActualEl.textContent = String(index + 1);
     progressBar.style.width = (((index + 1) / TOTAL_PASOS_PLANEADOS) * 100) + '%';
     atrasBtn.style.visibility = index > 0 ? 'visible' : 'hidden';
+    atrasBtn.disabled = false;
+    siguienteBtn.disabled = false;
+    siguienteBtn.style.display = '';
+    siguienteBtn.textContent = (index === RAE_STEPS.length - 1) ? 'Registrar aliado ✓' : 'Siguiente →';
+    closeBtn.disabled = false;
     status.setAttribute('data-visible', 'false');
 
     body.innerHTML = paso.render(RAE_STATE[paso.key]);
@@ -648,15 +1817,9 @@
       return;
     }
 
-    if (RAE_STEPS.length < TOTAL_PASOS_PLANEADOS) {
-      // Último paso implementado por ahora, pero faltan más en el flujo completo
-      mostrarStatus('ok', '✓ Información guardada. Los siguientes pasos del formulario se irán agregando próximamente.');
-      return;
-    }
-
-    // Todos los 9 pasos están implementados: aquí se conectará el
-    // envío final a Supabase.
-    mostrarStatus('ok', '✓ ¡Listo! (Envío final pendiente de implementar)');
+    // Último paso (9 de 9) ya validado y guardado: se envía el
+    // registro completo a Supabase (cuenta + archivos + perfil).
+    enviarRegistroFinal();
   }
 
   function mostrarStatus(tipo, mensaje) {
@@ -664,6 +1827,185 @@
     status.textContent = mensaje;
     status.setAttribute('data-tipo', tipo);
     status.setAttribute('data-visible', 'true');
+  }
+
+  function deshabilitarNavegacion(deshabilitado) {
+    var siguienteBtn = overlayEl.querySelector('#raeBtnSiguiente');
+    var atrasBtn = overlayEl.querySelector('#raeBtnAtras');
+    var closeBtn = overlayEl.querySelector('#raeClose');
+    siguienteBtn.disabled = deshabilitado;
+    atrasBtn.disabled = deshabilitado;
+    closeBtn.disabled = deshabilitado;
+    siguienteBtn.textContent = deshabilitado ? 'Enviando...' : 'Registrar aliado ✓';
+  }
+
+  /* ── Convierte un dataURL (como los que guarda el logo/las fotos en
+     memoria) a un Blob real, para poder subirlo a Supabase Storage ── */
+  function dataUrlABlob(dataUrl) {
+    var partes = dataUrl.split(',');
+    var mimeMatch = partes[0].match(/:(.*?);/);
+    var mime = mimeMatch ? mimeMatch[1] : 'image/jpeg';
+    var binario = atob(partes[1]);
+    var bytes = new Uint8Array(binario.length);
+    for (var i = 0; i < binario.length; i++) bytes[i] = binario.charCodeAt(i);
+    return { blob: new Blob([bytes], { type: mime }), mime: mime };
+  }
+
+  function extensionDeMime(mime) {
+    if (mime === 'image/png') return 'png';
+    if (mime === 'image/webp') return 'webp';
+    return 'jpg';
+  }
+
+  /* ── Sube un archivo (logo o foto) al bucket "aliados", dentro de una
+     carpeta con el id del usuario, y devuelve su URL pública ── */
+  function subirArchivoAliado(client, userId, dataUrl, nombreBase) {
+    var info = dataUrlABlob(dataUrl);
+    var ext = extensionDeMime(info.mime);
+    var ruta = userId + '/' + nombreBase + '-' + Date.now() + '-' + Math.floor(Math.random() * 1e6) + '.' + ext;
+    return client.storage.from('aliados').upload(ruta, info.blob, { contentType: info.mime, upsert: false }).then(function (res) {
+      if (res.error) throw res.error;
+      var pub = client.storage.from('aliados').getPublicUrl(ruta);
+      return pub && pub.data ? pub.data.publicUrl : null;
+    });
+  }
+
+  function traducirErrorEnvio(err) {
+    if (!err) return 'Ocurrió un error inesperado. Intenta de nuevo.';
+    var msg = (err.message || '').toLowerCase();
+    if (msg.indexOf('duplicate') !== -1 || msg.indexOf('unique') !== -1) return 'Ya existe un registro de aliado con esos datos (correo o RUC).';
+    if (msg.indexOf('row-level security') !== -1 || msg.indexOf('policy') !== -1) return 'No se pudo guardar el perfil por un problema de permisos. Contacta a soporte.';
+    if (msg.indexOf('network') !== -1 || msg.indexOf('fetch') !== -1) return 'No se pudo conectar. Revisa tu conexión a internet.';
+    return err.message || 'Ocurrió un error inesperado. Intenta de nuevo.';
+  }
+
+  /* ── Envío final: crea la cuenta (auth.js), sube logo/fotos a
+     Supabase Storage (bucket "aliados") y luego inserta la fila
+     completa en la tabla `aliados` (ver supabase-setup.sql). Si la
+     cuenta se crea pero falla un paso posterior, el usuario puede
+     reintentar "Registrar aliado" de nuevo: signUp con un correo ya
+     registrado simplemente devuelve error y se lo mostramos. ── */
+  function enviarRegistroFinal() {
+    var client = window.recoSupabase;
+    if (!client || !window.recoAuth) {
+      mostrarStatus('error', 'No se pudo conectar con el servicio. Intenta de nuevo más tarde.');
+      return;
+    }
+
+    var empresa = RAE_STATE.empresa || {};
+    var contacto = RAE_STATE.contacto || {};
+    var ubicacion = RAE_STATE.ubicacion || {};
+    var materiales = RAE_STATE.materiales || {};
+    var servicios = RAE_STATE.servicios || {};
+    var horarios = RAE_STATE.horarios || {};
+    var operativa = RAE_STATE.operativa || {};
+    var cuenta = RAE_STATE.cuenta || {};
+    var opcional = RAE_STATE.opcional || {};
+
+    deshabilitarNavegacion(true);
+    mostrarStatus('ok', 'Creando tu cuenta...');
+
+    window.recoAuth.signUp(cuenta.email, cuenta.password, {
+      tipo: 'aliado',
+      nombre_usuario: cuenta.usuario,
+      nombre_empresa: empresa.nombreEmpresa
+    }).then(function (resCuenta) {
+      if (!resCuenta.ok) {
+        throw { mensaje: resCuenta.message };
+      }
+      var userId = resCuenta.user && resCuenta.user.id;
+      if (!userId) {
+        throw { mensaje: 'No se pudo crear la cuenta. Intenta de nuevo.' };
+      }
+
+      // El signUp puede devolver { session: null } si el proyecto
+      // tiene activada la confirmación de correo (Supabase nunca
+      // entrega sesión en ese caso, sin importar qué tan rápido se
+      // confirme el email después). Sin sesión activa en el cliente,
+      // el INSERT de más abajo corre como rol "anon" y la política de
+      // RLS (auth.uid() = user_id) lo rechaza — ese es el "problema de
+      // permisos" que se ve en pantalla. Forzamos un signIn explícito
+      // con las mismas credenciales para garantizar que el cliente
+      // quede autenticado antes de insertar. Si el signUp ya dejó
+      // sesión, este signIn es redundante pero inofensivo.
+      return window.recoAuth.signIn(cuenta.email, cuenta.password).then(function (resSesion) {
+        if (!resSesion.ok || !resSesion.session) {
+          throw { mensaje: 'Tu cuenta se creó, pero debes confirmar tu correo antes de continuar. Revisa tu bandeja de entrada y vuelve a intentar el registro después de confirmar.' };
+        }
+        return userId;
+      });
+    }).then(function (userId) {
+      mostrarStatus('ok', 'Subiendo logo y fotos...');
+
+      var logoPromise = empresa.logoDataUrl
+        ? subirArchivoAliado(client, userId, empresa.logoDataUrl, 'logo')
+        : Promise.resolve(null);
+
+      var fotosPromise = Promise.all((opcional.fotos || []).map(function (f, i) {
+        return subirArchivoAliado(client, userId, f.dataUrl, 'foto-' + i);
+      }));
+
+      return Promise.all([logoPromise, fotosPromise]).then(function (resultados) {
+        var logoUrl = resultados[0];
+        var fotosUrls = resultados[1];
+
+        mostrarStatus('ok', 'Guardando tu perfil de aliado...');
+
+        var payload = {
+          user_id: userId,
+          nombre_empresa: empresa.nombreEmpresa,
+          nombre_comercial: empresa.nombreComercial || null,
+          ruc: empresa.ruc,
+          tipo_empresa: empresa.tipoEmpresa,
+          anio_fundacion: empresa.anioFundacion || null,
+          descripcion: empresa.descripcion,
+          logo_url: logoUrl,
+          email: contacto.email,
+          telefono: contacto.telefono,
+          whatsapp: contacto.whatsapp || null,
+          sitio_web: contacto.sitioWeb || null,
+          provincia: ubicacion.provincia,
+          distrito: ubicacion.distrito,
+          direccion: ubicacion.direccion,
+          lat: ubicacion.lat,
+          lng: ubicacion.lng,
+          materiales: materiales.materiales || [],
+          servicios: servicios.servicios || [],
+          dias_atencion: horarios.dias || [],
+          hora_apertura: horarios.horaApertura,
+          hora_cierre: horarios.horaCierre,
+          acepta_particulares: operativa.aceptaParticulares,
+          acepta_empresas: operativa.aceptaEmpresas,
+          cantidad_minima: operativa.cantidadMinima,
+          cantidad_maxima: operativa.cantidadMaxima,
+          paga_materiales: operativa.pagaMateriales,
+          metodos_pago: operativa.metodosPago || [],
+          redes_sociales: opcional.redesSociales || {},
+          fotos_urls: fotosUrls,
+          video_presentacion: opcional.videoPresentacion || null,
+          areas_cobertura: opcional.areasCobertura || [],
+          residuos_mensuales_kg: opcional.residuosMensuales,
+          mision: opcional.mision || null,
+          vision: opcional.vision || null
+        };
+
+        return client.from('aliados').insert([payload]);
+      });
+    }).then(function (resInsert) {
+      if (resInsert.error) {
+        throw { mensaje: traducirErrorEnvio(resInsert.error) };
+      }
+
+      registroCompletado = true;
+      mostrarStatus('ok', '✓ ¡Listo! Tu empresa quedó registrada. Revisaremos tu perfil y pronto aparecerá como aliado en RECO+.');
+      overlayEl.querySelector('#raeBtnSiguiente').style.display = 'none';
+      overlayEl.querySelector('#raeBtnAtras').style.visibility = 'hidden';
+      overlayEl.querySelector('#raeClose').disabled = false;
+    }).catch(function (err) {
+      deshabilitarNavegacion(false);
+      var mensaje = (err && err.mensaje) || traducirErrorEnvio(err);
+      mostrarStatus('error', mensaje);
+    });
   }
 
   /* ══════════════════════════════════════════════
@@ -676,7 +2018,7 @@
   }
 
   function pedirCierre() {
-    if (hayDatosSinGuardar()) {
+    if (!registroCompletado && hayDatosSinGuardar()) {
       var ok = window.confirm('¿Seguro que quieres cerrar? Se perderá la información ingresada en este formulario.');
       if (!ok) return;
     }
@@ -687,6 +2029,7 @@
     if (!modalBuilt) buildModal();
     currentStepIndex = 0;
     RAE_STATE = {};
+    registroCompletado = false;
     renderStep(currentStepIndex);
     overlayEl.setAttribute('data-open', 'true');
     document.body.style.overflow = 'hidden';
