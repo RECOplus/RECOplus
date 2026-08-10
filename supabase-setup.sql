@@ -205,6 +205,15 @@ create policy "Un aliado puede actualizar su propia fila"
   using (auth.uid() = user_id)
   with check (auth.uid() = user_id);
 
+-- Un aliado puede borrar su propia fila (botón "Borrar empresa" en
+-- la pestaña "Mi empresa" del modal de Ajustes — ver
+-- ajustes-empresa.js). Sin esta policy, RLS bloquea cualquier DELETE
+-- por defecto aunque el usuario sea dueño de la fila.
+create policy "Un aliado puede borrar su propia fila"
+  on aliados for delete
+  to authenticated
+  using (auth.uid() = user_id);
+
 create index if not exists idx_aliados_estado on aliados (estado);
 create index if not exists idx_aliados_provincia on aliados (provincia);
 

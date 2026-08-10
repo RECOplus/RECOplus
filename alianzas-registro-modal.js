@@ -18,8 +18,21 @@
  * mismos 18 que usan el escáner y los filtros del mapa — ver
  * material-map.js y mapa-more-filters.js), así que un aliado
  * registrado aquí queda compatible automáticamente con esos
- * filtros. Falta conectar el envío final a Supabase (crear la fila
- * del aliado, subir logo/fotos y dar de alta la cuenta con auth.js).
+ * filtros.
+ *
+ * UNA EMPRESA POR CUENTA: `aliados.user_id` es UNIQUE en la base de
+ * datos (ver supabase-setup.sql), así que un mismo usuario nunca
+ * puede tener dos filas de aliado. Antes de este cambio, si alguien
+ * con una empresa ya registrada volvía a hacer clic en
+ * "Registrarse →", llenaba el formulario completo de 9 pasos y
+ * recién al final se enteraba (con un error crudo de "duplicate
+ * key"). Ahora, justo después de confirmar la sesión activa
+ * (requireSesionYAbrir) y ANTES de abrir el formulario, se consulta
+ * si ese user_id ya tiene una fila en `aliados`. Si ya existe, se
+ * muestra un aviso corto en vez del formulario, con un acceso
+ * directo a Ajustes de cuenta (window.recoAjustes.open(), inyectado
+ * por ajustes-modal.js) para que pueda revisar o gestionar su
+ * cuenta/perfil de empresa desde ahí. Ver abrirAvisoYaRegistrado().
  *
  * Capa 100% aditiva: no modifica alianzas.html más allá del id ya
  * agregado al botón, ni ningún otro script del sitio.
@@ -2024,12 +2037,80 @@
     document.body.style.overflow = 'hidden';
   }
 
+  // ── AVISO "ya tienes una empresa registrada" ──
+  // Se muestra en vez del formulario de 9 pasos cuando la cuenta con
+  // sesión activa YA tiene una fila en `aliados` (columna user_id,
+  // UNIQUE en la base de datos — ver supabase-setup.sql). Ofrece un
+  // acceso directo a Ajustes de cuenta en vez de dejar que la
+  // persona llene todo el formulario para toparse recién al final
+  // con un error de registro duplicado.
+  var avisoYaRegistradoEl = null;
+
+  function buildAvisoYaRegistrado() {
+    var overlay = document.createElement('div');
+    overlay.className = 'rae-overlay';
+    overlay.setAttribute('data-open', 'false');
+
+    overlay.innerHTML =
+      '<div class="rae-modal" role="dialog" aria-modal="true" aria-labelledby="raeYaRegTitulo" style="max-width:420px">' +
+        '<div class="rae-modal__header">' +
+          '<div>' +
+            '<p class="rae-modal__kicker">Registro de aliado</p>' +
+            '<h2 class="rae-modal__title" id="raeYaRegTitulo">Ya tienes una empresa registrada</h2>' +
+          '</div>' +
+          '<button type="button" class="rae-modal__close" id="raeYaRegClose" aria-label="Cerrar">' +
+            '<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l10 10M15 5L5 15"/></svg>' +
+          '</button>' +
+        '</div>' +
+        '<div class="rae-modal__body">' +
+          '<p class="rae-step__desc">Esta cuenta ya tiene una empresa o centro de reciclaje registrado en RECO+. Solo se permite una empresa por cuenta, así que no puedes crear otra desde aquí.</p>' +
+          '<p class="rae-step__desc">Si necesitas actualizar los datos de tu empresa, o revisar tu cuenta, puedes hacerlo desde Ajustes.</p>' +
+        '</div>' +
+        '<div class="rae-modal__footer">' +
+          '<button type="button" class="rae-btn" id="raeYaRegCancelar">Cerrar</button>' +
+          '<button type="button" class="rae-btn rae-btn--primario" id="raeYaRegIrAjustes">Ir a Ajustes de cuenta →</button>' +
+        '</div>' +
+      '</div>';
+
+    document.body.appendChild(overlay);
+    avisoYaRegistradoEl = overlay;
+
+    function cerrarAviso() {
+      overlay.setAttribute('data-open', 'false');
+      document.body.style.overflow = '';
+    }
+
+    overlay.querySelector('#raeYaRegClose').addEventListener('click', cerrarAviso);
+    overlay.querySelector('#raeYaRegCancelar').addEventListener('click', cerrarAviso);
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) cerrarAviso();
+    });
+    overlay.querySelector('#raeYaRegIrAjustes').addEventListener('click', function () {
+      cerrarAviso();
+      // ajustes-modal.js expone window.recoAjustes.open() y ya está
+      // cargado en alianzas.html; si por alguna razón no está
+      // disponible, no rompemos nada, simplemente no pasa nada más
+      // (el aviso ya se cerró).
+      if (window.recoAjustes && typeof window.recoAjustes.open === 'function') {
+        window.recoAjustes.open();
+      }
+    });
+  }
+
+  function abrirAvisoYaRegistrado() {
+    if (!avisoYaRegistradoEl) buildAvisoYaRegistrado();
+    avisoYaRegistradoEl.setAttribute('data-open', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+
   // ── Verifica sesión antes de abrir el modal de registro ──
   // El registro de aliado exige sesión activa (el correo de la
   // empresa es el mismo de la cuenta con la que se inició sesión).
   // Por eso, antes de abrir el modal de pasos, se verifica la sesión
   // contra el servidor (getVerifiedSession, no la copia cacheada en
-  // localStorage) y solo entonces se abre uno u otro overlay.
+  // localStorage), y LUEGO se consulta si esa cuenta ya tiene una
+  // empresa registrada en `aliados`. Solo si hay sesión Y todavía no
+  // tiene empresa, se abre el formulario de 9 pasos.
   function requireSesionYAbrir(trigger) {
     if (!window.recoAuth) {
       console.error('[RECO+] recoAuth no está disponible. Revisa que auth.js se cargó antes que alianzas-registro-modal.js.');
@@ -2039,13 +2120,38 @@
     trigger.style.pointerEvents = 'none';
 
     window.recoAuth.getVerifiedSession().then(function (sesion) {
-      trigger.style.pointerEvents = '';
-      if (sesion && sesion.user) {
-        RAE_SESION_ACTUAL = sesion;
-        openModal();
-      } else {
+      if (!sesion || !sesion.user) {
+        trigger.style.pointerEvents = '';
         abrirAvisoSesion();
+        return;
       }
+
+      RAE_SESION_ACTUAL = sesion;
+
+      var client = window.recoSupabase;
+      if (!client) {
+        // Sin cliente de Supabase no podemos verificar de antemano; se
+        // deja pasar al formulario (la restricción UNIQUE de la base
+        // de datos igual protege contra duplicados en el envío final).
+        trigger.style.pointerEvents = '';
+        openModal();
+        return;
+      }
+
+      client.from('aliados').select('id').eq('user_id', sesion.user.id).maybeSingle().then(function (res) {
+        trigger.style.pointerEvents = '';
+        if (res.data) {
+          abrirAvisoYaRegistrado();
+        } else {
+          openModal();
+        }
+      }).catch(function () {
+        // Si la verificación falla (red, etc.), no bloqueamos el
+        // flujo: se deja abrir el formulario y, en el peor caso, el
+        // insert final fallaría igual por la restricción UNIQUE.
+        trigger.style.pointerEvents = '';
+        openModal();
+      });
     }).catch(function () {
       trigger.style.pointerEvents = '';
       abrirAvisoSesion();

@@ -1,0 +1,236 @@
+/* ══════════════════════════════════════════════════════════════
+   AJUSTES-EMPRESA.CSS
+   Capa ADITIVA — pestaña "Mi empresa" dentro del modal de Ajustes
+   (ajustes-modal.js), visible solo si la cuenta con sesión activa
+   tiene una fila en la tabla `aliados`. No modifica ajustes-modal.css
+   ni ajustes-modal.js; reutiliza las mismas variables CSS globales
+   (--bg-card, --text-primary, --accent, etc.) que ya inyecta
+   darkmode.js, así que hereda modo claro/oscuro automáticamente.
+
+   Requiere, en cualquier página que ya cargue ajustes-modal.css/js:
+     <link rel="stylesheet" href="ajustes-empresa.css">
+     <script src="ajustes-empresa.js"></script>
+   (después de ajustes-modal.js, ver alianzas.html como referencia)
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Tarjeta resumen de la empresa (logo + nombre + estado) ── */
+.ajemp-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1.5px solid var(--border-light, #a8dab5);
+  background: var(--input-bg, #f2faf4);
+}
+.ajemp-card__logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 13px;
+  background: var(--bg-muted, #e8f5ec);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  color: var(--text-muted, #8aab90);
+}
+.ajemp-card__logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.ajemp-card__info { min-width: 0; flex: 1; }
+.ajemp-card__nombre {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--text-heading, #1a5c2a);
+  margin: 0 0 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ajemp-card__tipo {
+  font-size: 0.78rem;
+  color: var(--text-muted, #8aab90);
+  margin: 0;
+}
+
+/* ── Badge de estado (pendiente / aprobado / rechazado) ── */
+.ajemp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px 4px 8px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.ajemp-badge__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.ajemp-badge[data-estado="pendiente"] {
+  background: rgba(212, 160, 23, 0.14);
+  color: #a87508;
+}
+.ajemp-badge[data-estado="pendiente"] .ajemp-badge__dot { background: #d4a017; }
+.ajemp-badge[data-estado="aprobado"] {
+  background: rgba(45, 140, 78, 0.14);
+  color: var(--accent-dark, #1a5c2a);
+}
+.ajemp-badge[data-estado="aprobado"] .ajemp-badge__dot { background: var(--accent, #2d8c4e); }
+.ajemp-badge[data-estado="rechazado"] {
+  background: rgba(224, 72, 58, 0.12);
+  color: #c23a2a;
+}
+.ajemp-badge[data-estado="rechazado"] .ajemp-badge__dot { background: #c23a2a; }
+
+/* ── Nota explicativa bajo el estado ── */
+.ajemp-estado-nota {
+  font-size: 0.78rem;
+  color: var(--text-muted, #8aab90);
+  line-height: 1.5;
+  margin: 8px 0 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Chips de selección múltiple (Materiales / Servicios) — mismo
+   lenguaje visual que .rae-chip / .rae-check-item en
+   alianzas-registro-modal.css, pero con su propio prefijo (ajemp-)
+   para no depender de que ese archivo esté cargado en esta página.
+═══════════════════════════════════════════════════════════════ */
+.ajemp-chip-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.ajemp-chip-count {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-secondary, #4a6b52);
+}
+
+.ajemp-chip-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+}
+@media (max-width: 560px) {
+  .ajemp-chip-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.ajemp-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 6px 10px;
+  border-radius: 13px;
+  border: 1.5px solid var(--border-light, #a8dab5);
+  background: var(--input-bg, #f2faf4);
+  color: var(--text-secondary, #4a6b52);
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.16s, border-color 0.16s, color 0.16s, transform 0.12s;
+}
+.ajemp-chip:hover {
+  border-color: var(--accent, #2d8c4e);
+  transform: translateY(-1px);
+}
+.ajemp-chip span {
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.ajemp-chip__icon {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+.ajemp-chip--active {
+  background: var(--accent, #2d8c4e);
+  border-color: var(--accent, #2d8c4e);
+  color: #fff;
+}
+
+/* ── Lista de servicios (checkbox + texto) ── */
+.ajemp-check-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ajemp-check-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  padding: 10px 13px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border-light, #a8dab5);
+  background: var(--input-bg, #f2faf4);
+  color: var(--text-primary, #1a2e1e);
+  font-family: inherit;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.16s, border-color 0.16s;
+}
+.ajemp-check-item:hover { border-color: var(--accent, #2d8c4e); }
+.ajemp-check-item__box {
+  width: 19px;
+  height: 19px;
+  border-radius: 6px;
+  border: 1.7px solid var(--border-light, #a8dab5);
+  background: var(--bg-card, #fff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #fff;
+  transition: background 0.16s, border-color 0.16s;
+}
+.ajemp-check-item__box svg {
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.14s, transform 0.14s;
+}
+.ajemp-check-item__icon {
+  font-size: 1.05rem;
+  width: 22px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.ajemp-check-item__label {
+  flex: 1;
+  font-size: 0.83rem;
+  font-weight: 600;
+}
+.ajemp-check-item--active {
+  border-color: var(--accent, #2d8c4e);
+  background: rgba(45,140,78,0.08);
+}
+.ajemp-check-item--active .ajemp-check-item__box {
+  background: var(--accent, #2d8c4e);
+  border-color: var(--accent, #2d8c4e);
+}
+.ajemp-check-item--active .ajemp-check-item__box svg {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ── Confirmación de borrado escribiendo el nombre ── */
+.ajemp-confirm-input {
+  margin-top: 6px;
+}
+.ajemp-confirm-nombre {
+  font-weight: 800;
+  color: var(--text-primary, #1a2e1e);
+}
