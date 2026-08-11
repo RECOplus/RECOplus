@@ -1,0 +1,137 @@
+/* ══════════════════════════════════════════════════════════════
+   CAMPANAS-MODAL.CSS
+   Capa ADITIVA — "ventanita" de opciones (Ver campañas activas /
+   Publicar una campaña) + wizard de 3 pasos para publicar,
+   abiertos desde el link "Explorar iniciativas →" de la tarjeta
+   "Proyectos y campañas" en alianzas.html.
+
+   Reutiliza las clases .rae-* de alianzas-registro-modal.css (el
+   mismo overlay, modal, inputs, chips, botones...), así que este
+   archivo solo agrega las clases NUEVAS y propias de campañas:
+   .camp-opciones (ventanita), .camp-tipo-toggle (Reciclaje/Donación)
+   y el ajuste de .camp-banner-preview sobre .rae-logo-preview.
+
+   Requiere en alianzas.html, DESPUÉS de alianzas-registro-modal.css:
+     <link rel="stylesheet" href="alianzas-registro-modal.css">
+     <link rel="stylesheet" href="campanas-modal.css">
+     <script src="alianzas-registro-modal.js"></script>
+     <script src="campanas-modal.js"></script>
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Ventanita de opciones (Ver campañas / Publicar) ── */
+.camp-opciones {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.camp-opcion {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 16px 16px;
+  border-radius: 16px;
+  border: 1.5px solid var(--border-light, #a8dab5);
+  background: var(--input-bg, #f2faf4);
+  color: var(--text-primary, #1a2e1e);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.16s, border-color 0.16s, transform 0.14s, box-shadow 0.16s;
+}
+.camp-opcion:hover {
+  border-color: var(--accent, #2d8c4e);
+  background: var(--bg-card, #fff);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(30, 80, 40, 0.12);
+}
+
+.camp-opcion__icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 13px;
+  background: var(--bg-muted, #e8f5ec);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.camp-opcion__texto {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.camp-opcion__texto strong {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-heading, #1a5c2a);
+}
+.camp-opcion__texto small {
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--text-secondary, #4a6b52);
+  font-weight: 500;
+}
+
+.camp-opcion__arrow {
+  flex-shrink: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-muted, #8aab90);
+  transition: transform 0.16s, color 0.16s;
+}
+.camp-opcion:hover .camp-opcion__arrow {
+  color: var(--accent, #2d8c4e);
+  transform: translateX(3px);
+}
+
+/* ── Toggle Reciclaje / Donación (Paso 1 — Datos de la campaña) ── */
+.camp-tipo-toggle {
+  display: flex;
+  gap: 8px;
+}
+.camp-tipo-btn {
+  flex: 1;
+  padding: 11px 14px;
+  border-radius: 11px;
+  border: 1.5px solid var(--border-light, #a8dab5);
+  background: var(--input-bg, #f2faf4);
+  color: var(--text-secondary, #4a6b52);
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.16s, border-color 0.16s, color 0.16s;
+}
+.camp-tipo-btn:hover {
+  border-color: var(--accent, #2d8c4e);
+}
+.camp-tipo-btn--active {
+  background: var(--accent, #2d8c4e);
+  border-color: var(--accent, #2d8c4e);
+  color: #fff;
+}
+
+/* ── Banner de la campaña (Paso 1): mismo componente que el logo
+   de aliados-registro-modal.css, pero rectangular tipo banner ── */
+.camp-banner-preview.rae-logo-preview {
+  width: 100%;
+  max-width: 220px;
+  height: 96px;
+  border-radius: 14px;
+}
+
+/* En pantallas angostas, el banner ocupa todo el ancho disponible */
+@media (max-width: 520px) {
+  .camp-banner-preview.rae-logo-preview {
+    max-width: none;
+  }
+}

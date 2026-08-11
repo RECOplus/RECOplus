@@ -436,6 +436,11 @@ const translations = {
     "donar.listings.solicitudes.title":  "🌿 Solicitudes de donación",
     "donar.listings.verTodas":           "Ver todas →",
 
+    "donar.campanas.title":              "🌿 Campañas de nuestros aliados 🌿",
+    "donar.campanas.subtitle":           "Empresas y centros aliados de RECO+ comparten aquí sus próximas campañas de reciclaje y donación.",
+    "donar.campanas.reciclaje.title":    "♻️ Campañas de reciclaje",
+    "donar.campanas.donacion.title":     "🎁 Campañas de donación",
+
     "donar.tracker.title":    "Sigue el camino de tu donación",
     "donar.tracker.subtitle": "Así puedes ver el impacto de tu ayuda.",
     "donar.tracker.s1.title": "Publicada",
@@ -1200,6 +1205,11 @@ const translations = {
     "donar.listings.donaciones.title":   "🌿 Available donations",
     "donar.listings.solicitudes.title":  "🌿 Donation requests",
     "donar.listings.verTodas":           "See all →",
+
+    "donar.campanas.title":              "🌿 Campaigns from our allies 🌿",
+    "donar.campanas.subtitle":           "Allied companies and centers on RECO+ share their upcoming recycling and donation campaigns here.",
+    "donar.campanas.reciclaje.title":    "♻️ Recycling campaigns",
+    "donar.campanas.donacion.title":     "🎁 Donation campaigns",
 
     "donar.tracker.title":    "Follow your donation's journey",
     "donar.tracker.subtitle": "This is how you can see the impact of your help.",

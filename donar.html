@@ -16,6 +16,8 @@
   <link rel="stylesheet" href="glow-boost.css" />
   <!-- Secciones nuevas del homepage de Donar: elección, pasos, stats, carruseles, tracker y CTA -->
   <link rel="stylesheet" href="DonarHome.css" />
+  <!-- Capa aditiva: sección "Campañas de nuestros aliados" (llega desde alianzas.html → "Explorar iniciativas") -->
+  <link rel="stylesheet" href="donar-campanas.css" />
   <!-- Capa aditiva: ventana de detalle de donación/solicitud (botón "Ver donación" / "Ayudar") -->
   <link rel="stylesheet" href="donar-detail-modal.css" />
   <!-- Capa aditiva: botón + modal de comentarios (footer, cualquier página) -->
@@ -589,6 +591,41 @@ html.dark .dm-pill__sun { opacity: 0.38; }
     </div>
   </section>
 
+  <!-- ========== CAMPAÑAS DE NUESTROS ALIADOS ==========
+       Capa aditiva (donar-campanas.js/css): campañas de reciclaje y
+       donación publicadas por empresas aliadas aprobadas (ver
+       campanas-modal.js en alianzas.html). Ancla de destino del link
+       "Ver campañas activas →" de la ventanita de campañas. -->
+  <section class="dh-section dh-campanas" id="campanas-empresas">
+    <div class="dh-section-heading">
+      <h2 class="dh-kicker" data-i18n="donar.campanas.title">🌿 Campañas de nuestros aliados 🌿</h2>
+      <p data-i18n="donar.campanas.subtitle">Empresas y centros aliados de RECO+ comparten aquí sus próximas campañas de reciclaje y donación.</p>
+    </div>
+    <div class="dh-listings-grid">
+      <div class="dh-listing-col dh-listing-col--campanas-reciclaje">
+        <div class="dh-listing-head">
+          <h3 data-i18n="donar.campanas.reciclaje.title">♻️ Campañas de reciclaje</h3>
+        </div>
+        <div class="dh-carousel-wrap">
+          <button class="dh-car-btn camp-car-prev" data-target="campCarouselReciclaje" aria-label="Anterior">‹</button>
+          <div class="dh-carousel" id="campCarouselReciclaje"></div>
+          <button class="dh-car-btn camp-car-next" data-target="campCarouselReciclaje" aria-label="Siguiente">›</button>
+        </div>
+      </div>
+
+      <div class="dh-listing-col dh-listing-col--campanas-donacion">
+        <div class="dh-listing-head">
+          <h3 data-i18n="donar.campanas.donacion.title">🎁 Campañas de donación</h3>
+        </div>
+        <div class="dh-carousel-wrap">
+          <button class="dh-car-btn camp-car-prev" data-target="campCarouselDonacion" aria-label="Anterior">‹</button>
+          <div class="dh-carousel" id="campCarouselDonacion"></div>
+          <button class="dh-car-btn camp-car-next" data-target="campCarouselDonacion" aria-label="Siguiente">›</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ========== SIGUE EL CAMINO DE TU DONACIÓN ========== -->
   <section class="dh-section dh-tracker">
     <div class="dh-section-heading">
@@ -952,6 +989,8 @@ html.dark .dm-pill__sun { opacity: 0.38; }
   <script src="DonarHome.js"></script>
   <!-- Carga las tarjetas reales de donaciones/solicitudes desde Supabase -->
   <script src="donar-listings.js"></script>
+  <!-- Capa aditiva: campañas de reciclaje/donación de empresas aliadas (#campanas-empresas) -->
+  <script src="donar-campanas.js"></script>
   <script src="donar-shimmer.js"></script>
   <script src="search.js"></script>
   <script src="navbar-auth.js"></script>
