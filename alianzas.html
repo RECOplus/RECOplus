@@ -327,7 +327,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
     <div class="bubble-nav__actions navbar__spacer">
 
       <!-- Dark mode pill -->
-      <div class="dm-pill" id="darkModeToggle" role="button" title="Cambiar modo claro/oscuro" aria-label="Toggle dark mode">
+      <div class="dm-pill" id="darkModeToggle" role="button" title="Cambiar modo claro/oscuro" aria-label="Toggle dark mode" data-i18n-title="nav.darkmode.toggle" data-i18n-aria="nav.darkmode.toggle">
         <span class="dm-pill__btn dm-pill__sun dm-sun" id="dmSunBtn">
           <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" width="16" height="16">
             <circle cx="10" cy="10" r="3.5"/>
@@ -345,7 +345,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
       </div>
 
       <!-- Language pill -->
-      <button class="lang-pill" onclick="toggleLang()" aria-label="Cambiar idioma" data-current="es">
+      <button class="lang-pill" onclick="toggleLang()" aria-label="Cambiar idioma" data-current="es" data-i18n-aria="nav.lang.toggle">
         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15">
           <circle cx="10" cy="10" r="8"/>
           <ellipse cx="10" cy="10" rx="3.5" ry="8"/>
@@ -428,14 +428,14 @@ html.dark .dm-pill__sun { opacity: 0.38; }
     </div>
 
     <div class="alianzas-carousel-wrapper">
-      <button class="carousel-btn" id="prevBtn" aria-label="Anterior">&#8249;</button>
+      <button class="carousel-btn" id="prevBtn" aria-label="Anterior" data-i18n-aria="alianzas.carousel.prev">&#8249;</button>
 
       <!-- Capa aditiva: el contenido de este carrusel ya NO es hardcodeado.
            alianzas-destacados.js lo llena con aliados reales de plan
            Premium (o muestra un estado vacío si todavía no hay ninguno). -->
       <div class="alianzas-carousel" id="aliasCarousel"></div>
 
-      <button class="carousel-btn" id="nextBtn" aria-label="Siguiente">&#8250;</button>
+      <button class="carousel-btn" id="nextBtn" aria-label="Siguiente" data-i18n-aria="alianzas.carousel.next">&#8250;</button>
     </div>
   </section>
 
