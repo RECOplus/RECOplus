@@ -1,0 +1,25 @@
+{
+  "esCount": 966,
+  "enCount": 966,
+  "missingInEn": [],
+  "missingInEs": [],
+  "sameValue": [
+    "nav.blog",
+    "card7.title",
+    "prod3.nombre",
+    "footer.newsletter",
+    "rae.contacto.waLabel",
+    "rae.mat.metal",
+    "rae.mat.tetrapak",
+    "rae.toggle.no",
+    "rae.pago.yappy",
+    "reciclar.mat.metal",
+    "reciclar.mat.tetrapak",
+    "reciclar.calc.r4u",
+    "login.email",
+    "login.google",
+    "login.apple",
+    "login.brand",
+    "contacto.footer.nav.blog"
+  ]
+}

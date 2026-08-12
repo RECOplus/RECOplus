@@ -256,6 +256,10 @@ const translations = {
     "mapa.modal.opt.donacion":   "Donación",
     "mapa.modal.opt.acopio":     "Acopio",
     "mapa.modal.opt.evento":     "Evento",
+    "mapa.modal.ph.lat":         "Latitud",
+    "mapa.modal.ph.lng":         "Longitud",
+    "mapa.modal.useLocation":    "Usar mi ubicación actual",
+    "mapa.modal.materiales":     "Materiales que acepta:",
     "mapa.modal.ph.comentarios": "Comentarios adicionales...",
     "mapa.modal.submit":         "Enviar sugerencia",
 
@@ -340,6 +344,8 @@ const translations = {
     "donar.hero.badge":       "Pequeñas acciones, gran impacto.",
     "donar.hero.card.title":  "Comunidad que se apoya",
     "donar.hero.card.desc":   "Conecta, comparte y beneficia a miles de personas tu comunidad.",
+    "donar.hero.cta1":        "Donar un objeto",
+    "donar.hero.cta2":        "Solicitar una donación",
 
     "donar.tab.donar":        "Quiero donar",
     "donar.tab.solicitar":    "Solicito ayuda",
@@ -1399,6 +1405,10 @@ const translations = {
     "mapa.modal.opt.donacion":   "Donation",
     "mapa.modal.opt.acopio":     "Drop-off",
     "mapa.modal.opt.evento":     "Event",
+    "mapa.modal.ph.lat":         "Latitude",
+    "mapa.modal.ph.lng":         "Longitude",
+    "mapa.modal.useLocation":    "Use my current location",
+    "mapa.modal.materiales":     "Materials accepted:",
     "mapa.modal.ph.comentarios": "Additional comments...",
     "mapa.modal.submit":         "Submit suggestion",
 
@@ -1483,6 +1493,8 @@ const translations = {
     "donar.hero.badge":       "Small actions, big impact.",
     "donar.hero.card.title":  "A community that supports",
     "donar.hero.card.desc":   "Connect, share and benefit thousands of people in your community.",
+    "donar.hero.cta1":        "Donate an item",
+    "donar.hero.cta2":        "Request a donation",
 
     "donar.tab.donar":        "I want to donate",
     "donar.tab.solicitar":    "I need help",
