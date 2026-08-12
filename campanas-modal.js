@@ -237,9 +237,15 @@
   }
 
   /* ══════════════════════════════════════════════
-     VERIFICACIÓN: sesión activa + aliado aprobado
+     VERIFICACIÓN: sesión activa + aliado aprobado + límite de plan
      ══════════════════════════════════════════════ */
   var aliadoActual = null; // { id, nombre_empresa, estado } del usuario con sesión activa
+
+  // Plan efectivo del usuario en el momento de abrir el wizard (se
+  // recalcula cada vez que se intenta publicar). validarPaso2 lo usa
+  // para el tope de días de vigencia según el plan — ver
+  // supabase-suscripciones.sql (mismos números reforzados por RLS).
+  var planActualCache = null;
 
   function requireAliadoAprobado() {
     if (!window.recoAuth) {
@@ -302,7 +308,7 @@
         }
 
         aliadoActual = res.data;
-        openModalPublicar();
+        verificarLimitePlanYAbrir(sesion.user.id);
       }).catch(function () {
         abrirAviso('No se pudo verificar tu empresa', 'Ocurrió un problema de conexión. Intenta de nuevo.', null);
       });
@@ -313,6 +319,58 @@
         { texto: 'Iniciar sesión →', onClick: function () { window.location.href = 'login.html'; } }
       );
     });
+  }
+
+  /* Antes de abrir el formulario de 3 pasos, revisa cuántas campañas
+     activas tiene ya el usuario y las compara contra el tope de su
+     plan (ver suscripcion-planes.js). Esto es solo la validación del
+     lado del cliente para dar feedback inmediato con un CTA a
+     suscripcion-modal.js — el tope real, infranqueable, ya lo
+     refuerza la policy de INSERT de `campanas` en
+     supabase-suscripciones.sql. Si algo falla al consultar (sin
+     conexión, funciones no cargadas), se deja pasar: el peor caso es
+     que el INSERT final sea rechazado por RLS con un mensaje claro. */
+  function verificarLimitePlanYAbrir(userId) {
+    if (!window.recoSuscripcion || !window.recoPlanes || !window.recoSupabase) {
+      planActualCache = null;
+      openModalPublicar();
+      return;
+    }
+
+    window.recoSuscripcion.getPlanActual().then(function (planId) {
+      var plan = window.recoPlanes.getPlan(planId);
+      planActualCache = plan;
+
+      if (plan.campanasActivasMax === -1) {
+        openModalPublicar();
+        return;
+      }
+
+      window.recoSupabase.from('campanas')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .eq('activa', true)
+        .in('estado', ['pendiente', 'aprobado'])
+        .then(function (res) {
+          var activas = (res && typeof res.count === 'number') ? res.count : 0;
+          if (activas >= plan.campanasActivasMax) {
+            var plural = plan.campanasActivasMax === 1 ? '' : 's';
+            abrirAviso(
+              'Alcanzaste el límite de tu plan',
+              'Tu plan ' + plan.nombre + ' permite hasta ' + plan.campanasActivasMax + ' campaña' + plural + ' activa' + plural + ' a la vez. Cierra una campaña existente o mejora tu plan para publicar más.',
+              {
+                texto: 'Ver planes →',
+                onClick: function () {
+                  if (window.recoSuscripcion && typeof window.recoSuscripcion.open === 'function') window.recoSuscripcion.open();
+                }
+              }
+            );
+            return;
+          }
+          openModalPublicar();
+        })
+        .catch(function () { openModalPublicar(); });
+    }).catch(function () { openModalPublicar(); });
   }
 
   /* ══════════════════════════════════════════════
@@ -517,10 +575,26 @@
     var fin = body.querySelector('#campFechaFin');
     var inicio = body.querySelector('#campFechaInicio').value;
     var finError = body.querySelector('#campFechaFinError');
+    var MENSAJE_FIN_DEFAULT = 'La fecha de fin debe ser igual o posterior a la de inicio.';
+
     if (!fin.value.trim() || (inicio && fin.value < inicio)) {
+      finError.textContent = MENSAJE_FIN_DEFAULT;
       marcarError(fin, finError, true);
       ok = false;
+    } else if (planActualCache && inicio && fin.value) {
+      // Refuerzo del lado del cliente del mismo tope que aplica RLS
+      // en supabase-suscripciones.sql (duración máxima por plan).
+      var dias = Math.round((new Date(fin.value) - new Date(inicio)) / 86400000);
+      if (dias > planActualCache.duracionCampanaMaxDias) {
+        finError.textContent = 'Tu plan ' + planActualCache.nombre + ' permite campañas de hasta ' + planActualCache.duracionCampanaMaxDias + ' días. Acorta el rango de fechas o mejora tu plan.';
+        marcarError(fin, finError, true);
+        ok = false;
+      } else {
+        finError.textContent = MENSAJE_FIN_DEFAULT;
+        marcarError(fin, finError, false);
+      }
     } else {
+      finError.textContent = MENSAJE_FIN_DEFAULT;
       marcarError(fin, finError, false);
     }
 

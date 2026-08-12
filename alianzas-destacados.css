@@ -1,0 +1,109 @@
+/* ══════════════════════════════════════════════════════════════
+   ALIANZAS-DESTACADOS.CSS
+   Capa ADITIVA — estilos propios de alianzas-destacados.js: el
+   modificador clicable de .aliado-card (reset de botón), el estado
+   vacío ("todavía no hay aliados Premium") y el modal de detalle de
+   un aliado (reutiliza .rae-* de alianzas-registro-modal.css para
+   el overlay/header, solo se definen aquí las clases .alid-*).
+
+   Requiere, en alianzas.html:
+     <link rel="stylesheet" href="alianzas-registro-modal.css">
+     <link rel="stylesheet" href="alianzas-destacados.css">
+     ...
+     <script src="alianzas-destacados.js"></script>
+═══════════════════════════════════════════════════════════════ */
+
+/* .aliado-card ya trae layout/color de alianzas.css; como ahora es
+   un <button>, solo hace falta resetear los defaults del navegador
+   y agregar la afordancia de clic. */
+.aliado-card--clicable {
+  font-family: inherit;
+  font-size: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.aliado-card--clicable:focus-visible {
+  outline: 2px solid #2d8c4e;
+  outline-offset: 2px;
+}
+
+/* ── Estado vacío: "todavía no hay aliados Premium" ── */
+.alid-vacio {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  padding: 28px 20px;
+  border: 1.5px dashed #c8e6c9;
+  border-radius: 16px;
+  background: #fff;
+}
+.alid-vacio__icon {
+  font-size: 1.8rem;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.alid-vacio__titulo {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 900;
+  font-size: 1rem;
+  color: #1a5c2a;
+}
+.alid-vacio__desc {
+  font-size: 0.82rem;
+  color: #4a6b52;
+  max-width: 380px;
+  line-height: 1.5;
+}
+.alid-vacio__btn {
+  margin-top: 10px;
+  background: #2d8c4e;
+  color: #fff;
+  border: none;
+  padding: 9px 18px;
+  border-radius: 999px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.15s;
+}
+.alid-vacio__btn:hover {
+  background: #1a5c2a;
+  transform: translateY(-1px);
+}
+
+/* ── Modal de detalle de un aliado ── */
+.alid-detalle__logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--input-bg, #f2faf4);
+  border: 1px solid var(--border-light, #a8dab5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.alid-detalle__logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.alid-detalle__contacto {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-light, #a8dab5);
+  font-size: 0.85rem;
+}
+.alid-detalle__contacto a {
+  color: var(--accent, #2d8c4e);
+  text-decoration: none;
+}
+.alid-detalle__contacto a:hover { text-decoration: underline; }

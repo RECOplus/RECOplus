@@ -315,7 +315,7 @@
      Falla en silencio si no hay Supabase configurado: el escáner
      debe seguir funcionando igual aunque esto no esté disponible.
      ────────────────────────────────────────────────────────── */
-  function logScan(materialKey, rawLabel, probability) {
+  function logScan(materialKey, rawLabel, probability, viaIA) {
     if (!window.recoSupabase) return;
 
     var userIdPromise = (window.recoAuth && typeof window.recoAuth.getSession === "function")
@@ -329,13 +329,58 @@
         user_id: userId,
         material_key: materialKey || null,
         label_detected: rawLabel || null,
-        confidence: typeof probability === "number" ? probability : null
+        confidence: typeof probability === "number" ? probability : null,
+        // Distingue un escaneo local (MobileNet, siempre gratis) de uno
+        // con IA (Gemini, viá /api/classify) — es la columna que cuenta
+        // la función escaneos_ia_hoy() del límite diario por plan (ver
+        // supabase-suscripciones.sql).
+        via_ia: !!viaIA
       }).then(function (res) {
         if (res && res.error) {
           console.warn("[RECO+ escáner] No se pudo registrar el escaneo:", res.error.message);
         }
       });
     });
+  }
+
+  /* ────────────────────────────────────────────────
+     Cuota diaria de escaneos con IA (según el plan del usuario)
+     -------------------------------------------------------------
+     Se consulta justo antes de llamar a /api/classify (Gemini gasta
+     cuota de la API, a diferencia del reconocimiento local con
+     MobileNet, que es y seguirá siendo ilimitado). Usa las mismas
+     capas de suscripcion-planes.js / suscripcion-modal.js que el
+     resto del sitio (ver supabase-suscripciones.sql para el límite
+     real, reforzado del lado del servidor con la función
+     escaneos_ia_hoy()). Si esas capas no están cargadas en la página,
+     o la consulta falla, se deja pasar (mismo comportamiento que
+     antes de este sistema de planes).
+     ──────────────────────────────────────────────── */
+  function verificarCuotaIA() {
+    if (!window.recoSupabase || !window.recoAuth || !window.recoSuscripcion || !window.recoPlanes) {
+      return Promise.resolve({ permitido: true });
+    }
+
+    return window.recoAuth.getVerifiedSession().then(function (sesion) {
+      var userId = sesion && sesion.user && sesion.user.id;
+      // Sin sesión: el escaneo IA se sigue permitiendo (se registra
+      // como anónimo); el límite por plan solo aplica a cuentas.
+      if (!userId) return { permitido: true };
+
+      return window.recoSuscripcion.getPlanActual().then(function (planId) {
+        var plan = window.recoPlanes.getPlan(planId);
+        if (plan.escaneosIaPorDia === -1) return { permitido: true };
+
+        return window.recoSupabase.rpc("escaneos_ia_hoy", { uid: userId }).then(function (res) {
+          var usados = (res && !res.error && typeof res.data === "number") ? res.data : 0;
+          return {
+            permitido: usados < plan.escaneosIaPorDia,
+            nombrePlan: plan.nombre,
+            limite: plan.escaneosIaPorDia
+          };
+        }).catch(function () { return { permitido: true }; });
+      });
+    }).catch(function () { return { permitido: true }; });
   }
 
   /* ──────────────────────────────────────────────────────────
@@ -352,6 +397,27 @@
   function runIAScan(iaBox, iaBtn) {
     if (!lastPhotoDataUrl) return;
 
+    iaBtn.disabled = true;
+    iaBtn.textContent = "Verificando tu cuota…";
+
+    verificarCuotaIA().then(function (cuota) {
+      if (!cuota.permitido) {
+        iaBtn.disabled = true;
+        iaBtn.textContent = "Límite diario alcanzado";
+        iaBox.className = "rc-scan-ia-result rc-scan-ia-result--nomatch";
+        iaBox.innerHTML =
+          '<div class="rc-scan-result__body">' +
+            '<div class="rc-scan-result__title">Alcanzaste tu límite diario de escaneos con IA</div>' +
+            '<p class="rc-scan-result__hint">Tu plan ' + cuota.nombrePlan + ' incluye ' + cuota.limite + ' escaneos con IA al día. Mejora tu plan para escanear sin límites.</p>' +
+            '<button type="button" class="rc-scan-ia-btn" data-abrir-suscripcion style="margin-top:8px">Ver planes →</button>' +
+          '</div>';
+        return;
+      }
+      ejecutarConsultaIA(iaBox, iaBtn);
+    });
+  }
+
+  function ejecutarConsultaIA(iaBox, iaBtn) {
     var base64 = lastPhotoDataUrl.replace(/^data:image\/\w+;base64,/, "");
 
     iaBtn.disabled = true;
@@ -392,7 +458,7 @@
               (datos.razon ? '<p class="rc-scan-result__hint">' + datos.razon + "</p>" : "") +
             "</div>";
           window.recoMaterialInfo.showByKey(key);
-          logScan(key, "[IA] " + (datos.razon || ""), null);
+          logScan(key, "[IA] " + (datos.razon || ""), null, true);
         } else {
           iaBox.className = "rc-scan-ia-result rc-scan-ia-result--nomatch";
           iaBox.innerHTML =
@@ -400,7 +466,7 @@
               '<div class="rc-scan-result__title">La IA tampoco pudo identificarlo con seguridad</div>' +
               '<p class="rc-scan-result__hint">Prueba con más luz o un encuadre más cercano, o elige el material manualmente arriba.</p>' +
             "</div>";
-          logScan(null, "[IA] " + (datos.razon || ""), null);
+          logScan(null, "[IA] " + (datos.razon || ""), null, true);
         }
       })
       .catch(function (err) {
