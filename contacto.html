@@ -531,8 +531,8 @@
       <div class="hero-grid">
         <div class="hero-text">
           <svg class="accent-leaf" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21C12 21 5 16.5 5 10.5C5 6.5 8 4 11 5.5C9.5 7 9 9 10 11C11.5 8.5 14.5 7.5 17 9C18 12 16.5 16 12 21Z"/></svg>
-          <h1>Estamos aquí<br>para ayudarte</h1>
-          <p>¿Tienes dudas, sugerencias o quieres trabajar con nosotros? Escríbenos y nos pondremos en contacto contigo lo antes posible.</p>
+          <h1 data-i18n="contacto.hero.title">Estamos aquí<br>para ayudarte</h1>
+          <p data-i18n="contacto.hero.desc">¿Tienes dudas, sugerencias o quieres trabajar con nosotros? Escríbenos y nos pondremos en contacto contigo lo antes posible.</p>
           <svg class="scribble" viewBox="0 0 60 30" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M2 24C12 26 18 6 30 8C40 10 38 22 52 6"/><path d="M44 4L53 5L51 14"/></svg>
         </div>
         <div class="hero-photo">
@@ -572,19 +572,19 @@
           <span class="icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1v-7h3z"/><path d="M3 19a2 2 0 002 2h1v-7H3z"/></svg>
           </span>
-          <div><h4>Respuesta rápida</h4><p>Te respondemos en menos de 24 horas</p></div>
+          <div><h4 data-i18n="contacto.perk1.title">Respuesta rápida</h4><p data-i18n="contacto.perk1.desc">Te respondemos en menos de 24 horas</p></div>
         </div>
         <div class="perk">
           <span class="icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21C12 21 5 16.5 5 10.5C5 6.5 8 4 11 5.5C9.5 7 9 9 10 11C11.5 8.5 14.5 7.5 17 9C18 12 16.5 16 12 21Z"/></svg>
           </span>
-          <div><h4>Comprometidos</h4><p>Atención cercana y personalizada</p></div>
+          <div><h4 data-i18n="contacto.perk2.title">Comprometidos</h4><p data-i18n="contacto.perk2.desc">Atención cercana y personalizada</p></div>
         </div>
         <div class="perk">
           <span class="icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
           </span>
-          <div><h4>Confidencial</h4><p>Tus datos están seguros con nosotros</p></div>
+          <div><h4 data-i18n="contacto.perk3.title">Confidencial</h4><p data-i18n="contacto.perk3.desc">Tus datos están seguros con nosotros</p></div>
         </div>
       </div>
     </div>
@@ -598,50 +598,50 @@
         <div class="card">
           <div class="card-title">
             <span class="leaf-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#1c6b3c" stroke-width="2.4"><path d="M12 21C12 21 5 16.5 5 10.5C5 6.5 8 4 11 5.5C9.5 7 9 9 10 11C11.5 8.5 14.5 7.5 17 9C18 12 16.5 16 12 21Z"/></svg></span>
-            <h2>Envíanos un mensaje</h2>
+            <h2 data-i18n="contacto.form.title">Envíanos un mensaje</h2>
           </div>
 
           <form id="contactForm" novalidate>
             <div class="field" id="field-nombre">
-              <label for="nombre">Nombre completo</label>
-              <input type="text" id="nombre" name="nombre" placeholder="Escribe tu nombre" autocomplete="name">
-              <span class="field-error">Por favor escribe tu nombre.</span>
+              <label for="nombre" data-i18n="contacto.form.nombreLabel">Nombre completo</label>
+              <input type="text" id="nombre" name="nombre" placeholder="Escribe tu nombre" data-i18n="contacto.form.nombrePh" autocomplete="name">
+              <span class="field-error" data-i18n="contacto.form.nombreError">Por favor escribe tu nombre.</span>
             </div>
 
             <div class="form-row">
               <div class="field" id="field-correo">
-                <label for="correo">Correo electrónico</label>
-                <input type="email" id="correo" name="correo" placeholder="Escribe tu correo" autocomplete="email">
-                <span class="field-error">Introduce un correo válido.</span>
+                <label for="correo" data-i18n="contacto.form.correoLabel">Correo electrónico</label>
+                <input type="email" id="correo" name="correo" placeholder="Escribe tu correo" data-i18n="contacto.form.correoPh" autocomplete="email">
+                <span class="field-error" data-i18n="contacto.form.correoError">Introduce un correo válido.</span>
               </div>
               <div class="field" id="field-asunto">
-                <label for="asunto">Asunto</label>
+                <label for="asunto" data-i18n="contacto.form.asuntoLabel">Asunto</label>
                 <select id="asunto" name="asunto">
-                  <option value="" selected disabled>Selecciona un asunto</option>
-                  <option value="reciclaje">Dudas sobre reciclaje</option>
-                  <option value="donaciones">Donaciones o alianzas</option>
-                  <option value="pedidos">Pedidos de tienda</option>
-                  <option value="problema">Reportar un problema</option>
-                  <option value="otro">Otro</option>
+                  <option value="" selected disabled data-i18n="contacto.form.asuntoDefault">Selecciona un asunto</option>
+                  <option value="reciclaje" data-i18n="contacto.form.asunto.reciclaje">Dudas sobre reciclaje</option>
+                  <option value="donaciones" data-i18n="contacto.form.asunto.donaciones">Donaciones o alianzas</option>
+                  <option value="pedidos" data-i18n="contacto.form.asunto.pedidos">Pedidos de tienda</option>
+                  <option value="problema" data-i18n="contacto.form.asunto.problema">Reportar un problema</option>
+                  <option value="otro" data-i18n="contacto.form.asunto.otro">Otro</option>
                 </select>
-                <span class="field-error">Selecciona un asunto.</span>
+                <span class="field-error" data-i18n="contacto.form.asuntoError">Selecciona un asunto.</span>
               </div>
             </div>
 
             <div class="field" id="field-mensaje">
-              <label for="mensaje">Mensaje</label>
-              <textarea id="mensaje" name="mensaje" placeholder="Cuéntanos cómo podemos ayudarte..."></textarea>
-              <span class="field-error">Escribe tu mensaje.</span>
+              <label for="mensaje" data-i18n="contacto.form.mensajeLabel">Mensaje</label>
+              <textarea id="mensaje" name="mensaje" placeholder="Cuéntanos cómo podemos ayudarte..." data-i18n="contacto.form.mensajePh"></textarea>
+              <span class="field-error" data-i18n="contacto.form.mensajeError">Escribe tu mensaje.</span>
             </div>
 
             <div class="checkbox-row" id="field-privacidad">
               <input type="checkbox" id="privacidad" name="privacidad">
-              <label for="privacidad">Acepto la <a href="#">política de privacidad</a> y el tratamiento de mis datos.</label>
+              <label for="privacidad" data-i18n="contacto.form.privacidad">Acepto la <a href="#">política de privacidad</a> y el tratamiento de mis datos.</label>
             </div>
 
             <button type="submit" class="submit-btn" id="submitBtn">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg>
-              Enviar mensaje
+              <span data-i18n="contacto.form.submit">Enviar mensaje</span>
             </button>
 
             <p class="form-status" id="formStatus"></p>
@@ -651,38 +651,38 @@
         <div class="card">
           <div class="card-title">
             <span class="leaf-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#1c6b3c" stroke-width="2.4"><path d="M12 21C12 21 5 16.5 5 10.5C5 6.5 8 4 11 5.5C9.5 7 9 9 10 11C11.5 8.5 14.5 7.5 17 9C18 12 16.5 16 12 21Z"/></svg></span>
-            <h2>Otras formas de contacto</h2>
+            <h2 data-i18n="contacto.otras.title">Otras formas de contacto</h2>
           </div>
 
           <div class="contact-list">
             <div class="contact-item">
               <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span>
               <div>
-                <h4>Correo electrónico</h4>
+                <h4 data-i18n="contacto.otras.correo.title">Correo electrónico</h4>
                 <p>soporte.recoplus@gmail.com</p>
-                <p class="sub">Te responderemos en menos de 24h</p>
+                <p class="sub" data-i18n="contacto.otras.correo.sub">Te responderemos en menos de 24h</p>
               </div>
             </div>
             <div class="contact-item">
               <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13 1 .35 1.99.65 2.94a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.14-1.14a2 2 0 012.11-.45c.95.3 1.94.52 2.94.65A2 2 0 0122 16.92z"/></svg></span>
               <div>
-                <h4>Teléfono / WhatsApp</h4>
+                <h4 data-i18n="contacto.otras.tel.title">Teléfono / WhatsApp</h4>
                 <p>+507 6399-1249</p>
-                <p class="sub">Lunes a Viernes de 9:00 a 18:00</p>
+                <p class="sub" data-i18n="contacto.otras.tel.sub">Lunes a Viernes de 9:00 a 18:00</p>
               </div>
             </div>
             <div class="contact-item">
               <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
               <div>
-                <h4>Dirección</h4>
+                <h4 data-i18n="contacto.otras.dir.title">Dirección</h4>
                 <p>David, Panama</p>
               </div>
             </div>
             <div class="contact-item">
               <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21C12 21 5 16.5 5 10.5C5 6.5 8 4 11 5.5C9.5 7 9 9 10 11C11.5 8.5 14.5 7.5 17 9C18 12 16.5 16 12 21Z"/></svg></span>
               <div>
-                <h4>Redes sociales</h4>
-                <p>Síguenos y escríbenos</p>
+                <h4 data-i18n="contacto.otras.redes.title">Redes sociales</h4>
+                <p data-i18n="contacto.otras.redes.sub">Síguenos y escríbenos</p>
                 <div class="socials">
                   <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17.2" cy="6.8" r="0.6" fill="currentColor"/></svg></a>
                   <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h-3a4 4 0 00-4 4v3H5v3h3v8h3v-8h3l1-3h-4V7a1 1 0 011-1h3z"/></svg></a>
@@ -705,15 +705,15 @@
         <div class="map-info">
           <div class="card-title" style="margin-bottom:6px;">
             <span class="leaf-dot"><svg viewBox="0 0 24 24" fill="none" stroke="#1c6b3c" stroke-width="2.4"><path d="M12 21C12 21 5 16.5 5 10.5C5 6.5 8 4 11 5.5C9.5 7 9 9 10 11C11.5 8.5 14.5 7.5 17 9C18 12 16.5 16 12 21Z"/></svg></span>
-            <h2>¿Dónde estamos?</h2>
+            <h2 data-i18n="contacto.mapa.title">¿Dónde estamos?</h2>
           </div>
-          <p>Visítanos en nuestras oficinas o encuéntranos en el mapa.</p>
+          <p data-i18n="contacto.mapa.desc">Visítanos en nuestras oficinas o encuéntranos en el mapa.</p>
           <a href="https://www.google.com/maps" target="_blank" rel="noopener" class="btn btn-primary" style="width:fit-content;">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Ver en Google Maps
+            <span data-i18n="contacto.mapa.btn">Ver en Google Maps</span>
           </a>
         </div>
-        <div class="map-visual" role="img" aria-label="Mapa ilustrativo de la ubicación de RECO+">
+        <div class="map-visual" role="img" aria-label="Mapa ilustrativo de la ubicación de RECO+" data-i18n-aria="contacto.mapa.alt">
           <svg class="pin" viewBox="0 0 24 24" fill="#1c6b3c"><path d="M12 22s8-8.5 8-13.5A8 8 0 004 8.5C4 13.5 12 22 12 22z"/><circle cx="12" cy="8.5" r="3" fill="white"/></svg>
         </div>
       </div>
@@ -723,35 +723,35 @@
   <!-- AYUDA -->
   <section class="help-section">
     <div class="container">
-      <h2>¿Necesitas ayuda con algo específico?</h2>
+      <h2 data-i18n="contacto.ayuda.title">¿Necesitas ayuda con algo específico?</h2>
       <div class="help-grid">
 
         <div class="help-card">
           <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0115-6.7M21 12a9 9 0 01-15 6.7"/><path d="M3 5v4h4M21 19v-4h-4"/></svg></span>
-          <h4>Dudas sobre reciclaje</h4>
-          <p>Te ayudamos a reciclar correctamente.</p>
-          <a href="#">Ir a la guía <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <h4 data-i18n="contacto.ayuda.reciclaje.title">Dudas sobre reciclaje</h4>
+          <p data-i18n="contacto.ayuda.reciclaje.desc">Te ayudamos a reciclar correctamente.</p>
+          <a href="#"><span data-i18n="contacto.ayuda.reciclaje.link">Ir a la guía</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
 
         <div class="help-card">
           <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1-1a5.5 5.5 0 10-7.8 7.8l1 1L12 22l7.8-8.5 1-1a5.5 5.5 0 000-7.9z"/></svg></span>
-          <h4>Donaciones o alianzas</h4>
-          <p>Conoce cómo colaborar con RECO+.</p>
-          <a href="#">Saber más <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <h4 data-i18n="contacto.ayuda.donaciones.title">Donaciones o alianzas</h4>
+          <p data-i18n="contacto.ayuda.donaciones.desc">Conoce cómo colaborar con RECO+.</p>
+          <a href="#"><span data-i18n="contacto.ayuda.donaciones.link">Saber más</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
 
         <div class="help-card">
           <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 7h12l1 13H5z"/><path d="M9 7a3 3 0 016 0"/></svg></span>
-          <h4>Pedidos de tienda</h4>
-          <p>Consulta sobre envíos, productos y más.</p>
-          <a href="#">Ir a la tienda <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <h4 data-i18n="contacto.ayuda.tienda.title">Pedidos de tienda</h4>
+          <p data-i18n="contacto.ayuda.tienda.desc">Consulta sobre envíos, productos y más.</p>
+          <a href="#"><span data-i18n="contacto.ayuda.tienda.link">Ir a la tienda</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
 
         <div class="help-card warning">
           <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg></span>
-          <h4>Reportar un problema</h4>
-          <p>Ayúdanos a mejorar reportando aquí.</p>
-          <a href="#">Reportar <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <h4 data-i18n="contacto.ayuda.reportar.title">Reportar un problema</h4>
+          <p data-i18n="contacto.ayuda.reportar.desc">Ayúdanos a mejorar reportando aquí.</p>
+          <a href="#"><span data-i18n="contacto.ayuda.reportar.link">Reportar</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         </div>
 
       </div>
@@ -770,12 +770,12 @@
             <ellipse cx="32" cy="54" rx="20" ry="5" fill="#e7f3ea" opacity="0.3"/>
           </svg>
           <div class="cta-text">
-            <h3>Juntos hacemos la diferencia</h3>
-            <p>Cada mensaje, idea y colaboración nos acerca a un mundo más limpio, solidario y sostenible.</p>
+            <h3 data-i18n="contacto.cta.title">Juntos hacemos la diferencia</h3>
+            <p data-i18n="contacto.cta.desc">Cada mensaje, idea y colaboración nos acerca a un mundo más limpio, solidario y sostenible.</p>
           </div>
         </div>
         <div class="cta-right">
-          <a href="#" class="btn btn-light">Únete a la comunidad
+          <a href="#" class="btn btn-light"><span data-i18n="contacto.cta.btn">Únete a la comunidad</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
           <div class="avatars">
@@ -789,7 +789,7 @@
   <!-- ALIADOS -->
   <section class="partners-section">
     <div class="container">
-      <h3>Empresas y aliados que confían en nosotros</h3>
+      <h3 data-i18n="contacto.partners.title">Empresas y aliados que confían en nosotros</h3>
       <div class="partners-row">
         <button class="arrow-btn" aria-label="Anterior">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
@@ -837,7 +837,7 @@
             <span>Cada acción cuenta.</span>
           </span>
         </a>
-        <p>Plataforma comunitaria para reciclar, donar y construir un futuro más sostenible.</p>
+        <p data-i18n="contacto.footer.desc">Plataforma comunitaria para reciclar, donar y construir un futuro más sostenible.</p>
         <div class="footer-socials">
           <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h-3a4 4 0 00-4 4v3H5v3h3v8h3v-8h3l1-3h-4V7a1 1 0 011-1h3z"/></svg></a>
           <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3.5"/></svg></a>
@@ -847,30 +847,30 @@
       </div>
 
       <div>
-        <h5>Navegación</h5>
+        <h5 data-i18n="footer.nav">Navegación</h5>
         <ul>
-          <li><a href="#">Inicio</a></li>
-          <li><a href="#">Mapa</a></li>
-          <li><a href="#">Guía</a></li>
-          <li><a href="#">Donar / Ayuda</a></li>
-          <li><a href="#">Tienda EcoTech</a></li>
-          <li><a href="#">Blog</a></li>
-          <li><a href="#">Sobre nosotros</a></li>
+          <li><a href="https://recoplus.github.io/rEcOPlus-Final/index.html" data-i18n="contacto.footer.nav.inicio">Inicio</a></li>
+          <li><a href="https://recoplus.github.io/rEcOPlus-Final/mapa.html" data-i18n="contacto.footer.nav.mapa">Mapa</a></li>
+          <li><a href="https://recoplus.github.io/rEcOPlus-Final/guia.html" data-i18n="contacto.footer.nav.guia">Guía</a></li>
+          <li><a href="https://recoplus.github.io/rEcOPlus-Final/donar.html" data-i18n="contacto.footer.nav.donar">Donar / Ayuda</a></li>
+          <li><a href="#tienda" data-i18n="contacto.footer.nav.tienda">Tienda EcoTech</a></li>
+          <li><a href="https://recoplus.github.io/rEcOPlus-Final/blog.html" data-i18n="contacto.footer.nav.blog">Blog</a></li>
+          <li><a href="#" data-i18n="contacto.footer.nav.nosotros">Sobre nosotros</a></li>
         </ul>
       </div>
 
       <div>
-        <h5>Recursos</h5>
+        <h5 data-i18n="footer.recursos">Recursos</h5>
         <ul>
-          <li><a href="#">Centro de ayuda</a></li>
-          <li><a href="#">Preguntas frecuentes</a></li>
-          <li><a href="#">Políticas y condiciones</a></li>
-          <li><a href="#">Política de privacidad</a></li>
+          <li><a href="#" data-i18n="footer.ayuda">Centro de ayuda</a></li>
+          <li><a href="#" data-i18n="footer.faq">Preguntas frecuentes</a></li>
+          <li><a href="#" data-i18n="footer.terminos">Políticas y condiciones</a></li>
+          <li><a href="#" data-i18n="footer.privacidad">Política de privacidad</a></li>
         </ul>
       </div>
 
       <div>
-        <h5>Contacto</h5>
+        <h5 data-i18n="footer.contacto">Contacto</h5>
         <ul>
           <li><a href="mailto:soporte.recoplus@gmail.com">soporte.recoplus@gmail.com</a></li>
           <li><a href="tel:+50763991249">+507 6399-1249</a></li>
@@ -879,17 +879,17 @@
       </div>
 
       <div>
-        <h5>Newsletter</h5>
-        <p style="font-size:0.85rem;color:rgba(255,255,255,0.65);margin-bottom:12px;">Recibe las últimas novedades sobre sostenibilidad.</p>
+        <h5 data-i18n="footer.newsletter">Newsletter</h5>
+        <p style="font-size:0.85rem;color:rgba(255,255,255,0.65);margin-bottom:12px;" data-i18n="contacto.footer.newsletter.desc">Recibe las últimas novedades sobre sostenibilidad.</p>
         <form class="newsletter-form" id="newsletterForm">
-          <input type="email" placeholder="Tu correo electrónico" required>
-          <button type="submit">Suscribirme</button>
+          <input type="email" placeholder="Tu correo electrónico" required data-i18n="footer.nl.ph">
+          <button type="submit" data-i18n="footer.nl.btn">Suscribirme</button>
         </form>
       </div>
     </div>
 
     <div class="footer-bottom">
-      <span>© 2026 RECO+. Todos los derechos reservados.</span>
+      <span data-i18n="footer.copy">© 2026 RECO+. Todos los derechos reservados.</span>
     </div>
   </div>
 </footer>
@@ -950,20 +950,21 @@
 
     if(!validateForm()){
       status.classList.add('error');
-      status.textContent = 'Por favor revisa los campos marcados antes de continuar.';
+      status.textContent = (window.t ? t('contacto.form.errorRevisa') : 'Por favor revisa los campos marcados antes de continuar.');
       return;
     }
 
     // Simulación de envío. Sustituye este bloque por tu llamada real
     // (fetch a tu backend, endpoint de email, etc).
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Enviando...';
+    submitBtn.textContent = (window.t ? t('contacto.form.enviando') : 'Enviando...');
 
     setTimeout(function(){
       submitBtn.disabled = false;
-      submitBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg> Enviar mensaje';
+      var textoEnviar = window.t ? t('contacto.form.submit') : 'Enviar mensaje';
+      submitBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg> <span>' + textoEnviar + '</span>';
       status.classList.add('success');
-      status.textContent = '¡Gracias! Tu mensaje fue enviado, te responderemos pronto.';
+      status.textContent = (window.t ? t('contacto.form.exito') : '¡Gracias! Tu mensaje fue enviado, te responderemos pronto.');
       form.reset();
     }, 900);
   });
