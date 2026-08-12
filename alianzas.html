@@ -283,6 +283,8 @@ html.dark .dm-pill__sun { opacity: 0.38; }
   <link rel="stylesheet" href="suscripcion-modal.css">
   <!-- Capa aditiva: aliados destacados reales (plan Premium) en vez del carrusel de ejemplo -->
   <link rel="stylesheet" href="alianzas-destacados.css">
+  <!-- Capa aditiva: efecto liquid glass (transparencia + reflejo) en toda la página de alianzas -->
+  <link rel="stylesheet" href="liquid-glass-alianzas.css">
 </head>
 <body>
 
@@ -446,7 +448,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
       <h2 data-i18n="alianzas.cta.title">¿Tu empresa quiere marcar la diferencia?</h2>
       <p data-i18n="alianzas.cta.desc">Regístrate y únete a nuestra comunidad de aliados que construyen un futuro más sostenible.</p>
     </div>
-    <a href="#" class="alianzas-cta__btn" data-i18n="alianzas.cta.btn">Quiero ser aliado →</a>
+    <a href="#" class="alianzas-cta__btn" id="btnQuieroSerAliado" data-i18n="alianzas.cta.btn">Quiero ser aliado →</a>
   </section>
 
   <!-- ========== FOOTER ========== -->
@@ -533,6 +535,21 @@ html.dark .dm-pill__sun { opacity: 0.38; }
   <script src="comentar-modal.js"></script>
   <!-- Capa aditiva: ventana modal de registro de empresa/aliado (botón "Registrarse") -->
   <script src="alianzas-registro-modal.js"></script>
+  <!-- Capa aditiva: el botón "Quiero ser aliado" del CTA final abre el
+       mismo modal de registro que "Registrarse →" en la tarjeta de
+       arriba, reusando exactamente el mismo flujo (incluyendo el guard
+       de sesión y el aviso de "ya tienes empresa registrada") en vez de
+       duplicar lógica: simplemente reenvía el click al botón original,
+       que ya escucha #btnRegistrarEmpresaAliado. -->
+  <script>
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest('#btnQuieroSerAliado');
+      if (!btn) return;
+      e.preventDefault();
+      var original = document.getElementById('btnRegistrarEmpresaAliado');
+      if (original) original.click();
+    });
+  </script>
   <!-- Capa aditiva: ventanita de campañas e iniciativas (botón "Explorar iniciativas") -->
   <script src="campanas-modal.js"></script>
   <!-- Capa aditiva: aliados destacados reales (plan Premium) -->

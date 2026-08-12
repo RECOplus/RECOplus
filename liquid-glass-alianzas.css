@@ -1,0 +1,368 @@
+/* ══════════════════════════════════════════════════════════════
+   LIQUID-GLASS-ALIANZAS.CSS
+   Capa ADITIVA (no toca alianzas.css ni alianzas.html excepto el
+   <link>). Aplica el mismo "liquid glass" translúcido —blur,
+   saturación, borde de refracción, brillo especular superior y
+   reflejo diagonal en banda— a TODAS las piezas visuales de
+   alianzas.html: hero, intro, feature cards, aliados destacados
+   (carrusel + botones), CTA banner y footer. Igual en modo claro
+   y modo oscuro (variables ya usadas por el resto del proyecto:
+   html.dark).
+
+   Cárgalo DESPUÉS de alianzas.css:
+   <link rel="stylesheet" href="liquid-glass-alianzas.css" />
+═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Modo claro: el fondo de la página es blanco (#fff), así que un
+     vidrio blanco-sobre-blanco es casi invisible. Se usa en cambio
+     un tinte verde oscuro translúcido (mismo verde de marca que
+     título/CTA) con más cuerpo, para que el panel de vidrio se
+     recorte con claridad contra el blanco y aun así se note lo que
+     hay detrás (imágenes, degradados) a través del blur. */
+  --lga-bg:            rgba(26, 92, 42, 0.10);
+  --lga-bg-strong:     rgba(26, 92, 42, 0.16);
+  --lga-bg-soft:       rgba(26, 92, 42, 0.06);
+  --lga-border:        rgba(26, 92, 42, 0.30);
+  --lga-border-strong: rgba(26, 92, 42, 0.48);
+  --lga-highlight:     rgba(255, 255, 255, 0.90);
+  --lga-blur:          20px;
+
+  --lga-shadow:        0 4px 10px rgba(30, 80, 40, 0.14),
+                        0 20px 46px rgba(30, 80, 40, 0.20),
+                        0 2px 0 rgba(255, 255, 255, 0.55) inset;
+  --lga-shadow-hover:  0 6px 14px rgba(30, 80, 40, 0.20),
+                        0 28px 60px rgba(30, 80, 40, 0.28),
+                        0 0 30px rgba(45, 140, 78, 0.24);
+  --lga-shadow-sm:     0 3px 8px rgba(30, 80, 40, 0.14),
+                        0 10px 24px rgba(30, 80, 40, 0.18);
+
+  /* Banda de reflejo diagonal — misma técnica que liquid-glass-reciclar.css */
+  --lga-shine: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.65) 45%,
+    rgba(255, 255, 255, 0.85) 50%,
+    rgba(255, 255, 255, 0.35) 56%,
+    transparent 70%
+  );
+}
+
+html.dark {
+  --lga-bg:            rgba(18, 30, 22, 0.42);
+  --lga-bg-strong:     rgba(18, 30, 22, 0.58);
+  --lga-bg-soft:       rgba(18, 30, 22, 0.28);
+  --lga-border:        rgba(255, 255, 255, 0.14);
+  --lga-border-strong: rgba(255, 255, 255, 0.22);
+  --lga-highlight:     rgba(255, 255, 255, 0.30);
+
+  --lga-shadow:        0 4px 10px rgba(0, 0, 0, 0.34),
+                        0 22px 50px rgba(0, 0, 0, 0.52),
+                        0 2px 0 rgba(255, 255, 255, 0.06) inset;
+  --lga-shadow-hover:  0 6px 16px rgba(0, 0, 0, 0.42),
+                        0 30px 64px rgba(0, 0, 0, 0.60),
+                        0 0 34px rgba(94, 207, 130, 0.24);
+  --lga-shadow-sm:     0 3px 10px rgba(0, 0, 0, 0.32),
+                        0 12px 28px rgba(0, 0, 0, 0.42);
+
+  --lga-shine: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.16) 45%,
+    rgba(255, 255, 255, 0.26) 50%,
+    rgba(255, 255, 255, 0.10) 56%,
+    transparent 70%
+  );
+}
+
+/* ──────────────────────────────────────────────────
+   1. BASE — vidrio en TODAS las piezas de la página:
+   hero content, intro, feature cards + su ícono,
+   aliados (header + carrusel + card + botones flecha),
+   CTA banner + botón, footer + columnas + newsletter
+   ────────────────────────────────────────────────── */
+.alianzas-hero__content,
+.hero__badge,
+.alianzas-intro,
+.feat-card,
+.feat-card__icon-wrap,
+.feat-card__link,
+.alianzas-aliados,
+.aliado-card,
+.carousel-btn,
+.alianzas-cta,
+.alianzas-cta__btn,
+.footer,
+.footer-brand,
+.footer-col,
+.newsletter-form,
+.newsletter-form input,
+.newsletter-form button,
+.redes a {
+  position: relative;
+  background-color: var(--lga-bg) !important;
+  backdrop-filter: blur(var(--lga-blur)) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(var(--lga-blur)) saturate(180%) !important;
+  border: 1px solid var(--lga-border) !important;
+  box-shadow:
+    inset 0 1px 0 var(--lga-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.06),
+    var(--lga-shadow) !important;
+  overflow: hidden;
+  transition: box-shadow 0.35s ease, border-color 0.35s ease,
+              transform 0.25s cubic-bezier(.4,0,.2,1),
+              background-color 0.3s ease, backdrop-filter 0.35s ease;
+}
+
+/* Reflejo diagonal (banda de brillo fija) sobre las piezas grandes
+   y medianas — no en inputs, para no dificultar la lectura */
+.alianzas-hero__content,
+.hero__badge,
+.alianzas-intro,
+.feat-card,
+.feat-card__icon-wrap,
+.feat-card__link,
+.alianzas-aliados,
+.aliado-card,
+.carousel-btn,
+.alianzas-cta,
+.alianzas-cta__btn,
+.footer-brand,
+.footer-col,
+.redes a {
+  background-image: var(--lga-shine) !important;
+  background-blend-mode: overlay;
+}
+
+/* footer-col: SIN overflow:hidden. Esta columna contiene el botón
+   "Dejar un comentario" (inyectado por comentar-modal.js) y otros
+   enlaces cuyo texto puede ser más ancho que la columna; recortarlo
+   con overflow:hidden le cortaba el texto. El reflejo diagonal de
+   footer-col ya queda contenido por su propio border-radius sin
+   necesitar overflow:hidden. */
+.footer-col {
+  overflow: visible !important;
+}
+
+/* ──────────────────────────────────────────────────
+   2. TOP HIGHLIGHT — "gota de vidrio": línea de brillo
+   fija en el borde superior de cada pieza grande,
+   inyectada vía ::after (libre en todas estas clases)
+   ────────────────────────────────────────────────── */
+.alianzas-hero__content::after,
+.alianzas-intro::after,
+.feat-card::after,
+.alianzas-aliados::after,
+.aliado-card::after,
+.alianzas-cta::after,
+.footer-brand::after,
+.footer-col::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 8%; right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--lga-highlight), transparent);
+  pointer-events: none;
+}
+
+/* ──────────────────────────────────────────────────
+   3. HOVER — realza blur, aclara borde e intensifica
+   sombra a 3 capas + leve elevación
+   ────────────────────────────────────────────────── */
+.alianzas-hero__content:hover,
+.hero__badge:hover,
+.feat-card:hover,
+.aliado-card:hover,
+.carousel-btn:hover,
+.alianzas-cta__btn:hover,
+.newsletter-form:focus-within,
+.footer-brand:hover,
+.footer-col:hover,
+.redes a:hover {
+  background-color: var(--lga-bg-strong) !important;
+  border-color: var(--lga-border-strong) !important;
+  backdrop-filter: blur(calc(var(--lga-blur) + 6px)) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(calc(var(--lga-blur) + 6px)) saturate(200%) !important;
+  box-shadow:
+    inset 0 1px 0 var(--lga-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.08),
+    var(--lga-shadow-hover) !important;
+}
+
+/* ──────────────────────────────────────────────────
+   4. REDONDEO — conserva/homogeneiza esquinas para
+   que el vidrio se vea consistente entre secciones
+   ────────────────────────────────────────────────── */
+.alianzas-hero__content { border-radius: 26px; padding: 24px 26px; }
+.alianzas-intro         { border-radius: 22px; margin: 0 40px; }
+.feat-card               { border-radius: 18px !important; }
+.feat-card__icon-wrap    { border-radius: 14px !important; }
+.feat-card__link         { border-radius: 999px !important; }
+.alianzas-aliados        { border-radius: 26px; margin: 40px; border-top: 1px solid var(--lga-border) !important; border-bottom: 1px solid var(--lga-border) !important; }
+.aliado-card              { border-radius: 16px !important; }
+.carousel-btn             { border-radius: 50% !important; }
+.alianzas-cta             { border-radius: 28px; margin: 0 40px; }
+.alianzas-cta__btn        { border-radius: 999px !important; }
+.footer-brand,
+.footer-col                { border-radius: 18px !important; padding: 20px 18px !important; }
+.redes a                   { border-radius: 50% !important; }
+.newsletter-form           { border-radius: 16px; padding: 12px !important; flex-direction: column; gap: 8px; }
+.newsletter-form input,
+.newsletter-form button    { border-radius: 999px !important; }
+
+/* ──────────────────────────────────────────────────
+   5. AJUSTES PUNTUALES DE CONTENIDO SOBRE VIDRIO
+   ────────────────────────────────────────────────── */
+
+/* El hero ya trae su propia imagen + degradado de fondo (::after de
+   .alianzas-hero__image); solo el bloque de texto pasa a vidrio,
+   flotando sobre la imagen con su propia sombra y blur. */
+.alianzas-hero__content {
+  z-index: 3;
+}
+
+/* feat-card: mantiene su acento verde de fondo (#aef8c1) mezclado
+   con el vidrio vía background-blend-mode ya declarado arriba, así
+   conserva identidad de marca pero con transparencia + reflejo.
+   En modo claro sube la opacidad (0.55) para que la tarjeta se
+   recorte con claridad sobre el fondo blanco de la sección. */
+.feat-card {
+  background-color: rgba(174, 248, 193, 0.55) !important;
+  border-color: rgba(45, 140, 78, 0.35) !important;
+}
+html.dark .feat-card {
+  background-color: rgba(94, 207, 130, 0.16) !important;
+}
+
+.feat-card__icon-wrap {
+  background-color: rgba(232, 245, 236, 0.85) !important;
+}
+html.dark .feat-card__icon-wrap {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* alianzas-aliados: sección contenedora en vidrio suave (no compite
+   visualmente con las aliado-card de adentro, que llevan su propio
+   vidrio más marcado) */
+.alianzas-aliados {
+  background-color: var(--lga-bg-soft) !important;
+  backdrop-filter: blur(calc(var(--lga-blur) - 6px)) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(calc(var(--lga-blur) - 6px)) saturate(160%) !important;
+}
+
+/* alianzas-cta: conserva su verde de marca (#1a5c2a) detrás del
+   vidrio, mezclado vía overlay para que el texto blanco siga
+   legible; el globo y el texto quedan por encima del reflejo. */
+.alianzas-cta {
+  background-color: rgba(26, 92, 42, 0.82) !important;
+  z-index: 1;
+}
+.alianzas-cta__globe,
+.alianzas-cta__text {
+  position: relative;
+  z-index: 2;
+}
+.alianzas-cta__btn {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+}
+.alianzas-cta__btn:hover {
+  background-color: rgba(255, 255, 255, 0.96) !important;
+}
+
+/* footer: panel de vidrio oscuro grande, con columnas internas en
+   su propio vidrio más claro (mismo patrón "caja grande + cajas
+   chicas" que liquid-glass-reciclar.css) */
+.footer {
+  background-color: rgba(10, 16, 12, 0.62) !important;
+  backdrop-filter: blur(var(--lga-blur)) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(var(--lga-blur)) saturate(160%) !important;
+  border: none !important;
+  border-top: 1px solid var(--lga-border) !important;
+  box-shadow: none !important;
+}
+.footer-brand,
+.footer-col {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  backdrop-filter: blur(calc(var(--lga-blur) - 8px)) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(calc(var(--lga-blur) - 8px)) saturate(150%) !important;
+}
+.footer-brand:hover,
+.footer-col:hover {
+  transform: translateY(-3px);
+}
+
+/* newsletter dentro de footer-col ya de vidrio: input/botón no
+   duplican fondo ni blur, solo redondeo en píldora */
+.footer-col .newsletter-form,
+.newsletter-form {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+.newsletter-form input {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid var(--lga-border) !important;
+}
+.newsletter-form button {
+  background-color: rgba(45, 140, 78, 0.55) !important;
+  border: 1px solid rgba(94, 207, 130, 0.45) !important;
+}
+.newsletter-form button:hover {
+  background-color: rgba(45, 140, 78, 0.75) !important;
+}
+
+/* carousel-btn: círculo de vidrio, ícono verde legible encima */
+.carousel-btn {
+  color: #2d8c4e !important;
+}
+html.dark .carousel-btn {
+  color: #8fe0a8 !important;
+}
+
+/* redes (íconos sociales del footer): círculos de vidrio pequeños */
+.redes a {
+  color: #fff !important;
+}
+
+/* Botón "Dejar un comentario" inyectado por comentar-modal.js dentro
+   de footer-col: permite que el texto haga salto de línea en vez de
+   desbordarse fuera de la columna cuando no cabe en una sola línea. */
+.comentar-footer-btn {
+  white-space: normal !important;
+  max-width: 100%;
+  text-align: left;
+}
+
+/* ──────────────────────────────────────────────────
+   6. Accesibilidad — reduced motion
+   ────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .alianzas-hero__content,
+  .hero__badge,
+  .alianzas-intro,
+  .feat-card,
+  .feat-card__icon-wrap,
+  .feat-card__link,
+  .alianzas-aliados,
+  .aliado-card,
+  .carousel-btn,
+  .alianzas-cta,
+  .alianzas-cta__btn,
+  .footer-brand,
+  .footer-col,
+  .newsletter-form,
+  .redes a {
+    transition: none !important;
+  }
+}
+
+/* ──────────────────────────────────────────────────
+   7. Mobile — reduce intensidad de blur (rendimiento)
+   ────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  :root {
+    --lga-blur: 12px;
+  }
+}
