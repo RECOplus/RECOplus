@@ -15,14 +15,22 @@
  *   - #campCarouselReciclaje → tipo = 'reciclaje'
  *   - #campCarouselDonacion  → tipo = 'donacion'
  *
+ * Además abre un modal de detalle al tocar "Ver más →" en cualquier
+ * tarjeta (#campDetailModal, ya en donar.html), con la info completa
+ * de la campaña y la zona de inscripción (tabla
+ * `campana_inscripciones`, ver supabase-campana-inscripciones.sql):
+ *   - Sin sesión           → invita a iniciar sesión.
+ *   - Con sesión, sin fila → formulario para inscribirse.
+ *   - Con sesión, con fila → confirmación + botón para darse de baja.
+ *
  * No modifica DonarHome.js, donar-listings.js ni donar.js: solo
  * pinta contenido dentro de sus propios contenedores nuevos.
  *
- * REQUIERE en donar.html, después de supabase-config.js:
+ * REQUIERE en donar.html, después de supabase-config.js y auth.js:
  *   <link rel="stylesheet" href="donar-campanas.css">
  *   ...
  *   <script src="donar-campanas.js"></script>
- * (usa window.recoSupabase ya inicializado por supabase-config.js)
+ * (usa window.recoSupabase y window.recoAuth ya inicializados)
  */
 (function () {
   'use strict';
@@ -42,7 +50,45 @@
     });
   }
 
+  /* Mismos catálogos (id → nombre/ícono) que usa campanas-modal.js
+     al publicar, así el detalle muestra los materiales/categorías
+     seleccionados con su nombre legible en vez del id crudo. */
+  var MATERIALES_DISPONIBLES = {
+    plastico: { nombre: 'Plástico', icono: '🧴' },
+    vidrio: { nombre: 'Vidrio', icono: '🍾' },
+    metal: { nombre: 'Metal', icono: '🥫' },
+    papel: { nombre: 'Papel', icono: '📄' },
+    carton: { nombre: 'Cartón', icono: '📦' },
+    libros: { nombre: 'Libros', icono: '📚' },
+    electronicos: { nombre: 'Electrónicos', icono: '💻' },
+    celulares: { nombre: 'Celulares', icono: '📱' },
+    baterias: { nombre: 'Baterías', icono: '🔋' },
+    bombillos: { nombre: 'Bombillos', icono: '💡' },
+    ropa: { nombre: 'Ropa', icono: '👕' },
+    tela: { nombre: 'Tela', icono: '🧵' },
+    cuero: { nombre: 'Cuero', icono: '🥾' },
+    muebles: { nombre: 'Muebles', icono: '🪑' },
+    juguetes: { nombre: 'Juguetes', icono: '🧸' },
+    utilesescolares: { nombre: 'Útiles escolares', icono: '✏️' },
+    tetrapak: { nombre: 'Tetra Pak', icono: '🧃' },
+    aceite: { nombre: 'Aceite de cocina', icono: '🛢️' }
+  };
+
+  var CATEGORIAS_DONACION = {
+    ropa: { nombre: 'Ropa y calzado', icono: '👕' },
+    electronicos: { nombre: 'Electrónicos', icono: '💻' },
+    muebles: { nombre: 'Muebles', icono: '🛋️' },
+    libros: { nombre: 'Libros y útiles', icono: '📚' },
+    juguetes: { nombre: 'Juguetes', icono: '🧸' },
+    alimentos: { nombre: 'Alimentos no perecederos', icono: '🥫' },
+    material_escolar: { nombre: 'Material escolar', icono: '✏️' },
+    higiene: { nombre: 'Productos de higiene', icono: '🧼' },
+    medicinas: { nombre: 'Medicinas no vencidas', icono: '💊' },
+    otro: { nombre: 'Otro', icono: '📦' }
+  };
+
   var MESES_CORTOS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+  var MESES_LARGOS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 
   // Formatea "2026-09-01" como "1 sep" (sin depender de Date() con
   // huso horario, que puede correr el día en algunos navegadores al
@@ -56,9 +102,19 @@
     return dia + ' ' + mes;
   }
 
-  function rangoVigencia(row) {
-    var ini = formatFechaCorta(row.fecha_inicio);
-    var fin = formatFechaCorta(row.fecha_fin);
+  function formatFechaLarga(fechaStr) {
+    if (!fechaStr) return '';
+    var partes = fechaStr.split('-');
+    if (partes.length !== 3) return fechaStr;
+    var dia = parseInt(partes[2], 10);
+    var mes = MESES_LARGOS[parseInt(partes[1], 10) - 1] || '';
+    return dia + ' de ' + mes + ' de ' + partes[0];
+  }
+
+  function rangoVigencia(row, largo) {
+    var formateador = largo ? formatFechaLarga : formatFechaCorta;
+    var ini = formateador(row.fecha_inicio);
+    var fin = formateador(row.fecha_fin);
     if (ini && fin) return ini + ' – ' + fin;
     return ini || fin || '';
   }
@@ -70,6 +126,20 @@
     if (Array.isArray(row.aliados)) return (row.aliados[0] && row.aliados[0].nombre_empresa) || '';
     return row.aliados.nombre_empresa || '';
   }
+
+  function catalogoDe(row) {
+    return row.tipo === 'donacion' ? CATEGORIAS_DONACION : MATERIALES_DISPONIBLES;
+  }
+
+  function itemsDe(row) {
+    var arr = row.tipo === 'donacion' ? row.categorias_donacion : row.materiales;
+    return Array.isArray(arr) ? arr : [];
+  }
+
+  /* ── Caché en memoria de las campañas ya cargadas, indexada por
+     id. Se usa para llenar el modal de detalle sin volver a pedirle
+     el registro a Supabase cuando el usuario toca "Ver más →". ── */
+  var rowsCache = {};
 
   function buildCardHTML(row) {
     var esReciclaje = row.tipo === 'reciclaje';
@@ -85,7 +155,7 @@
     var empresaHTML = empresa ? '<p class="camp-card__empresa">🏢 ' + escapeHtml(empresa) + '</p>' : '';
 
     var ubicacion = [row.distrito, row.provincia].filter(Boolean).join(', ');
-    var vigencia = rangoVigencia(row);
+    var vigencia = rangoVigencia(row, false);
 
     var metaHTML = '';
     if (ubicacion || vigencia) {
@@ -102,7 +172,7 @@
     }
 
     return (
-      '<div class="camp-card dh-glass dn-reveal is-visible">' +
+      '<div class="camp-card dh-glass dn-reveal is-visible" data-campana-id="' + row.id + '">' +
         '<div class="' + bannerClase + '"' + bannerStyle + '>' +
           '<span class="camp-card__badge ' + badgeClase + '">' + emojiTipo + ' ' + badgeTexto + '</span>' +
           (row.banner_url ? '' : bannerContenido) +
@@ -113,6 +183,7 @@
           '<p class="camp-card__desc">' + escapeHtml(row.descripcion) + '</p>' +
           metaHTML +
           metaGoalHTML +
+          '<button type="button" class="dh-card-btn camp-card__btn">Ver más →</button>' +
         '</div>' +
       '</div>'
     );
@@ -130,6 +201,8 @@
       track.innerHTML = emptyStateHTML(emptyMsg);
       return;
     }
+
+    rows.forEach(function (row) { rowsCache[String(row.id)] = row; });
 
     track.innerHTML = rows.map(buildCardHTML).join('');
   }
@@ -205,6 +278,302 @@
     });
   }
 
+  /* ══════════════════════════════════════════════════════════════
+     MODAL DE DETALLE + INSCRIPCIÓN
+     ══════════════════════════════════════════════════════════════ */
+
+  function imageOrEmojiLarge(row) {
+    var emoji = row.tipo === 'reciclaje' ? '♻️' : '🎁';
+    if (row.banner_url) {
+      return '<img src="' + escapeHtml(row.banner_url) + '" alt="' + escapeHtml(row.titulo) + '">';
+    }
+    return '<span class="donar-detail-emoji">' + emoji + '</span>';
+  }
+
+  function chipsHTML(row) {
+    var catalogo = catalogoDe(row);
+    var items = itemsDe(row);
+    if (!items.length) return '';
+    var chips = items.map(function (id) {
+      var info = catalogo[id] || { nombre: id, icono: '•' };
+      return '<span class="camp-detail-chip">' + info.icono + ' ' + escapeHtml(info.nombre) + '</span>';
+    }).join('');
+    return '<div class="camp-detail-chips">' + chips + '</div>';
+  }
+
+  function openCampDetailModal(row) {
+    var overlay = document.getElementById('campDetailModal');
+    if (!overlay || !row) return;
+
+    var esReciclaje = row.tipo === 'reciclaje';
+
+    var kicker = document.getElementById('campDetailKicker');
+    if (kicker) kicker.textContent = esReciclaje ? '♻️ Campaña de reciclaje' : '🎁 Campaña de donación';
+
+    var imgWrap = document.getElementById('campDetailImg');
+    if (imgWrap) imgWrap.innerHTML = imageOrEmojiLarge(row);
+
+    var titleEl = document.getElementById('campDetailTitle');
+    if (titleEl) titleEl.textContent = row.titulo || '';
+
+    var metaEl = document.getElementById('campDetailMeta');
+    if (metaEl) {
+      var metaRows = [];
+      var empresa = nombreEmpresa(row);
+      if (empresa) metaRows.push('<div><span class="donar-detail-meta-ic">🏢</span>' + escapeHtml(empresa) + '</div>');
+
+      var ubicacion = [row.distrito, row.provincia].filter(Boolean).join(', ');
+      if (ubicacion) metaRows.push('<div><span class="donar-detail-meta-ic">📍</span>' + escapeHtml(ubicacion) + '</div>');
+      if (row.direccion) metaRows.push('<div><span class="donar-detail-meta-ic">📌</span>' + escapeHtml(row.direccion) + '</div>');
+
+      var vigencia = rangoVigencia(row, true);
+      if (vigencia) metaRows.push('<div><span class="donar-detail-meta-ic">📅</span>' + escapeHtml(vigencia) + '</div>');
+
+      if (row.meta_cantidad) {
+        var unidad = row.meta_unidad ? escapeHtml(row.meta_unidad) : '';
+        metaRows.push('<div><span class="donar-detail-meta-ic">🎯</span>Meta: ' + row.meta_cantidad + (unidad ? ' ' + unidad : '') + '</div>');
+      }
+
+      metaEl.innerHTML = metaRows.join('') + chipsHTML(row);
+    }
+
+    var descEl = document.getElementById('campDetailDesc');
+    if (descEl) descEl.textContent = row.descripcion || '';
+
+    overlay.classList.add('open');
+    document.body.classList.add('dh-modal-lock');
+
+    renderInscribirZona(row);
+  }
+
+  function closeCampDetailModal() {
+    var overlay = document.getElementById('campDetailModal');
+    if (!overlay) return;
+    overlay.classList.remove('open');
+    document.body.classList.remove('dh-modal-lock');
+  }
+
+  /* ── Zona de inscripción: 3 estados posibles ── */
+
+  function inscribirZonaEl() {
+    return document.getElementById('campInscribirZona');
+  }
+
+  function zonaCargandoHTML() {
+    return '<p class="camp-inscribir__cargando">Cargando…</p>';
+  }
+
+  function zonaInvitadoHTML() {
+    return (
+      '<div class="camp-inscribir camp-inscribir--guest">' +
+        '<p>Inicia sesión para inscribirte en esta campaña.</p>' +
+        '<button type="button" class="dh-card-btn" id="campInsLoginBtn">Iniciar sesión →</button>' +
+      '</div>'
+    );
+  }
+
+  function zonaFormularioHTML(nombrePrefill) {
+    return (
+      '<div class="camp-inscribir">' +
+        '<h4 class="camp-inscribir__title">Inscríbete en esta campaña</h4>' +
+        '<div class="camp-inscribir__field">' +
+          '<label for="campInsNombre">Nombre completo</label>' +
+          '<input type="text" id="campInsNombre" class="donar-input" maxlength="120" value="' + escapeHtml(nombrePrefill) + '">' +
+        '</div>' +
+        '<div class="camp-inscribir__field">' +
+          '<label for="campInsTelefono">Teléfono <span class="donar-optional">(opcional)</span></label>' +
+          '<input type="tel" id="campInsTelefono" class="donar-input" maxlength="30" placeholder="Ej. 6123-4567">' +
+        '</div>' +
+        '<div class="camp-inscribir__field">' +
+          '<label for="campInsMensaje">Comentario <span class="donar-optional">(opcional)</span></label>' +
+          '<textarea id="campInsMensaje" class="donar-input donar-textarea" maxlength="300" placeholder="Ej. cuánto material aproximado llevarás, o qué te gustaría donar/aportar"></textarea>' +
+        '</div>' +
+        '<p class="camp-inscribir__status" id="campInsStatus"></p>' +
+        '<button type="button" class="dh-card-btn" id="campInsSubmitBtn">Inscribirme →</button>' +
+      '</div>'
+    );
+  }
+
+  function zonaYaInscritoHTML() {
+    return (
+      '<div class="camp-inscribir camp-inscribir--ok">' +
+        '<p>✅ Ya estás inscrito en esta campaña.</p>' +
+        '<p class="camp-inscribir__status" id="campInsStatus"></p>' +
+        '<button type="button" class="camp-inscribir__cancel" id="campInsCancelarBtn">Cancelar inscripción</button>' +
+      '</div>'
+    );
+  }
+
+  function nombrePrefillDe(user) {
+    var meta = user && user.user_metadata;
+    if (!meta) return '';
+    return meta.nombre || meta.full_name || meta.name || '';
+  }
+
+  function wireFormularioInscripcion(row, user) {
+    var zona = inscribirZonaEl();
+    if (!zona) return;
+    var submitBtn = zona.querySelector('#campInsSubmitBtn');
+    var statusEl = zona.querySelector('#campInsStatus');
+
+    submitBtn.addEventListener('click', function () {
+      var nombre = zona.querySelector('#campInsNombre').value.trim();
+      var telefono = zona.querySelector('#campInsTelefono').value.trim();
+      var mensaje = zona.querySelector('#campInsMensaje').value.trim();
+
+      if (!nombre) {
+        statusEl.textContent = 'Ingresa tu nombre para inscribirte.';
+        statusEl.setAttribute('data-tipo', 'error');
+        return;
+      }
+
+      var client = getClient();
+      if (!client) return;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Inscribiendo...';
+      statusEl.textContent = '';
+      statusEl.removeAttribute('data-tipo');
+
+      client.from('campana_inscripciones').insert({
+        campana_id: row.id,
+        user_id: user.id,
+        nombre: nombre,
+        email: user.email || '',
+        telefono: telefono || null,
+        mensaje: mensaje || null
+      }).then(function (res) {
+        if (res.error) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Inscribirme →';
+          // 23505 = ya existe una fila con esa (campana_id, user_id) —
+          // pudo pasar si el usuario tenía dos pestañas abiertas.
+          if (res.error.code === '23505') {
+            zona.innerHTML = zonaYaInscritoHTML();
+            wireYaInscrito(row, user);
+            return;
+          }
+          statusEl.textContent = 'No se pudo completar tu inscripción. Intenta de nuevo.';
+          statusEl.setAttribute('data-tipo', 'error');
+          return;
+        }
+        zona.innerHTML = zonaYaInscritoHTML();
+        wireYaInscrito(row, user);
+      });
+    });
+  }
+
+  function wireYaInscrito(row, user) {
+    var zona = inscribirZonaEl();
+    if (!zona) return;
+    var cancelarBtn = zona.querySelector('#campInsCancelarBtn');
+    var statusEl = zona.querySelector('#campInsStatus');
+
+    cancelarBtn.addEventListener('click', function () {
+      var ok = window.confirm('¿Seguro que quieres cancelar tu inscripción a esta campaña?');
+      if (!ok) return;
+
+      var client = getClient();
+      if (!client) return;
+
+      cancelarBtn.disabled = true;
+      cancelarBtn.textContent = 'Cancelando...';
+
+      client.from('campana_inscripciones').delete()
+        .eq('campana_id', row.id)
+        .eq('user_id', user.id)
+        .then(function (res) {
+          if (res.error) {
+            cancelarBtn.disabled = false;
+            cancelarBtn.textContent = 'Cancelar inscripción';
+            if (statusEl) {
+              statusEl.textContent = 'No se pudo cancelar tu inscripción. Intenta de nuevo.';
+              statusEl.setAttribute('data-tipo', 'error');
+            }
+            return;
+          }
+          zona.innerHTML = zonaFormularioHTML(nombrePrefillDe(user));
+          wireFormularioInscripcion(row, user);
+        });
+    });
+  }
+
+  function renderInscribirZona(row) {
+    var zona = inscribirZonaEl();
+    if (!zona) return;
+    zona.innerHTML = zonaCargandoHTML();
+
+    if (!window.recoAuth) {
+      console.error('[RECO+] recoAuth no está disponible. Revisa que auth.js se cargó antes que donar-campanas.js.');
+      zona.innerHTML = '';
+      return;
+    }
+
+    window.recoAuth.getVerifiedSession().then(function (sesion) {
+      var user = sesion && sesion.user;
+      if (!user) {
+        zona.innerHTML = zonaInvitadoHTML();
+        var loginBtn = zona.querySelector('#campInsLoginBtn');
+        if (loginBtn) loginBtn.addEventListener('click', function () { window.location.href = 'login.html'; });
+        return;
+      }
+
+      var client = getClient();
+      if (!client) return;
+
+      client.from('campana_inscripciones').select('id')
+        .eq('campana_id', row.id)
+        .eq('user_id', user.id)
+        .maybeSingle()
+        .then(function (res) {
+          if (res.data) {
+            zona.innerHTML = zonaYaInscritoHTML();
+            wireYaInscrito(row, user);
+          } else {
+            zona.innerHTML = zonaFormularioHTML(nombrePrefillDe(user));
+            wireFormularioInscripcion(row, user);
+          }
+        });
+    }).catch(function () {
+      zona.innerHTML = zonaInvitadoHTML();
+      var loginBtn = zona.querySelector('#campInsLoginBtn');
+      if (loginBtn) loginBtn.addEventListener('click', function () { window.location.href = 'login.html'; });
+    });
+  }
+
+  /* ── Conecta los clicks de "Ver más →" (delegado sobre los dos
+     carruseles, así funciona igual con las tarjetas que se
+     re-renderizan cada vez que cargarCampanas() recarga) y los
+     cierres del modal (X, click fuera, Escape). ── */
+  function setupDetailModal() {
+    ['campCarouselReciclaje', 'campCarouselDonacion'].forEach(function (trackId) {
+      var track = document.getElementById(trackId);
+      if (!track) return;
+      track.addEventListener('click', function (e) {
+        var btn = e.target.closest ? e.target.closest('.camp-card__btn') : null;
+        if (!btn) return;
+        var card = btn.closest('.camp-card[data-campana-id]');
+        if (!card) return;
+        var row = rowsCache[card.getAttribute('data-campana-id')];
+        if (row) openCampDetailModal(row);
+      });
+    });
+
+    var overlay = document.getElementById('campDetailModal');
+    var closeX = document.getElementById('campDetailClose');
+
+    if (closeX) closeX.addEventListener('click', closeCampDetailModal);
+    if (overlay) {
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeCampDetailModal();
+      });
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && overlay && overlay.classList.contains('open')) closeCampDetailModal();
+    });
+  }
+
   ready(cargarCampanas);
   ready(wireCarouselArrows);
+  ready(setupDetailModal);
 })();

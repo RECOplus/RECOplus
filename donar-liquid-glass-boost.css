@@ -34,9 +34,20 @@
 .dh-choice-btn,
 .dh-card-btn,
 .dh-car-btn,
-.dh-form-modal-close,
-.donar-detail-close {
+.dh-form-modal-close {
   position: relative;
+  overflow: hidden;
+}
+
+/* .donar-detail-close (la "X" del modal de detalle de donación y de
+   campaña) se excluye a propósito de la regla de arriba: ese botón
+   necesita quedarse en position:absolute (definido en
+   donar-detail-modal.css) para flotar sobre la imagen de cabecera.
+   Si hereda position:relative de ahí, pasa a fluir dentro del modal
+   y queda aplastado/cortado contra el borde. Aquí solo se le da el
+   mismo overflow:hidden (para que el shine no se salga del círculo)
+   sin tocar su position. */
+.donar-detail-close {
   overflow: hidden;
 }
 

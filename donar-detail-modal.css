@@ -35,8 +35,12 @@
   max-width: 480px;
   max-height: calc(100vh - 48px);
   overflow-y: auto;
+  overflow-x: hidden;
   border-radius: 26px;
   isolation: isolate;
+  /* Reserva el ancho del scrollbar nativo (si aparece) para que no
+     se dibuje encima ni empuje el botón de cerrar. */
+  scrollbar-gutter: stable;
   background-color: var(--bg-card, rgba(255,255,255,0.9));
   background-image:
     linear-gradient(120deg, var(--lg-shine, rgba(255,255,255,0.65)) 0%, transparent 14%, transparent 86%, var(--lg-shine, rgba(255,255,255,0.65)) 100%),
@@ -53,7 +57,7 @@
   position: absolute;
   top: 14px;
   right: 14px;
-  z-index: 2;
+  z-index: 5;
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -67,6 +71,9 @@
   justify-content: center;
   backdrop-filter: blur(6px);
   transition: background 0.2s ease, transform 0.15s ease;
+  /* flex-shrink evita que, dentro de contenedores flex/grid heredados,
+     el botón se comprima y su ícono/borde se vea cortado. */
+  flex-shrink: 0;
 }
 .donar-detail-close:hover {
   background: rgba(0, 0, 0, 0.65);

@@ -157,3 +157,113 @@
 @media (max-width: 900px) {
   .dh-campanas .dh-listings-grid { grid-template-columns: 1fr; }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   MODAL DE DETALLE DE CAMPAÑA + INSCRIPCIÓN
+   Reutiliza el shell .donar-detail-* de donar-detail-modal.css
+   (mismo overlay/tarjeta/animaciones); esto solo agrega lo propio
+   del contenido: chips de materiales/categorías y la zona de
+   inscripción con sus 3 estados (invitado / formulario / ya
+   inscrito).
+══════════════════════════════════════════════════════════════════════ */
+
+.camp-detail-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 2px 0 4px;
+}
+
+.camp-detail-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--accent, #2d8c4e);
+  background: color-mix(in srgb, var(--accent, #2d8c4e) 10%, transparent);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+.camp-inscribir {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-muted, var(--lg-border));
+}
+
+.camp-inscribir__cargando {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  color: var(--text-muted, #4b6456);
+  margin: 0;
+}
+
+.camp-inscribir__title {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--text-heading, #16281c);
+  margin: 0 0 12px;
+}
+
+.camp-inscribir--guest p,
+.camp-inscribir--ok > p {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.86rem;
+  color: var(--text-secondary, #4b6456);
+  margin: 0 0 12px;
+}
+
+.camp-inscribir--ok > p:first-child {
+  font-weight: 700;
+  color: var(--text-heading, #16281c);
+}
+
+.camp-inscribir__field {
+  margin-bottom: 12px;
+}
+
+.camp-inscribir__field label {
+  display: block;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-heading, #16281c);
+  margin-bottom: 5px;
+}
+
+.camp-inscribir__status {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  margin: 0 0 10px;
+  min-height: 1em;
+  color: var(--text-muted, #4b6456);
+}
+.camp-inscribir__status[data-tipo="error"] {
+  color: #c0392b;
+  font-weight: 600;
+}
+
+.camp-inscribir__cancel {
+  border: 1.5px solid #c0392b;
+  background: transparent;
+  color: #c0392b;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 9px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.16s, color 0.16s;
+}
+.camp-inscribir__cancel:hover {
+  background: #c0392b;
+  color: #fff;
+}
+.camp-inscribir__cancel:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+

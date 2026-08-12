@@ -923,6 +923,24 @@ html.dark .dm-pill__sun { opacity: 0.38; }
     </div>
   </div>
 
+  <!-- ========== MODAL DETALLE DE CAMPAÑA ==========
+       Se abre al tocar "Ver más →" en las tarjetas de campañas
+       (donar-campanas.js). Muestra la info completa de la campaña y,
+       según la sesión, el estado de inscripción del usuario. -->
+  <div class="donar-detail-overlay" id="campDetailModal">
+    <div class="donar-detail-modal">
+      <button class="donar-detail-close" id="campDetailClose" aria-label="Cerrar">✕</button>
+      <div class="donar-detail-img" id="campDetailImg"></div>
+      <div class="donar-detail-body">
+        <span class="donar-detail-kicker" id="campDetailKicker">Campaña</span>
+        <h3 class="donar-detail-title" id="campDetailTitle"></h3>
+        <div class="donar-detail-meta" id="campDetailMeta"></div>
+        <p class="donar-detail-desc" id="campDetailDesc"></p>
+        <div class="camp-inscribir" id="campInscribirZona"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- ========== FOOTER ========== -->
   <footer class="footer">
     <div class="footer-grid">
