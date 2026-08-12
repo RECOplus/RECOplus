@@ -623,6 +623,22 @@ body {
   color: #666;
 }
 
+/* ---- FEATURE CARDS: variante de 2 tarjetas (solo Registro y Campañas) ----
+   Capa aditiva: no toca .alianzas-features__grid base (4 columnas),
+   por si en el futuro se vuelve a usar con más tarjetas. Centra las
+   2 tarjetas y les da un ancho máximo cómodo de lectura en vez de
+   estirarlas a la mitad del grid completo. */
+.alianzas-features__grid--2col {
+  grid-template-columns: repeat(2, minmax(0, 340px));
+  justify-content: center;
+}
+
+@media (max-width: 720px) {
+  .alianzas-features__grid--2col {
+    grid-template-columns: minmax(0, 380px);
+  }
+}
+
 /* ---- RESPONSIVE ---- */
 @media (max-width: 1000px) {
   .alianzas-features__grid {

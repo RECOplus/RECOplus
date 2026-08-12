@@ -1,0 +1,200 @@
+/* ══════════════════════════════════════════════════════════════
+   SUSCRIPCION-MODAL.CSS
+   Capa ADITIVA — ventana modal "Mi plan RECO+", con las 3 tarjetas
+   de plan (Gratis / Básico / Premium) y el botón de suscripción
+   simulada (sin pasarela de pago real todavía).
+
+   Reutiliza las clases .rae-* de alianzas-registro-modal.css
+   (overlay, modal, header, botones, status) para heredar el mismo
+   look — por eso este archivo SOLO define las clases nuevas propias
+   de las tarjetas de plan (.susc-*), nada de overlay/botones base.
+
+   Requiere, en cualquier página con auth.js + supabase-config.js:
+     <link rel="stylesheet" href="alianzas-registro-modal.css">
+     <link rel="stylesheet" href="suscripcion-modal.css">
+     ...
+     <script src="suscripcion-planes.js"></script>
+     <script src="suscripcion-modal.js"></script>
+═══════════════════════════════════════════════════════════════ */
+
+.susc-planes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 6px;
+}
+@media (max-width: 640px) {
+  .susc-planes-grid { grid-template-columns: 1fr; }
+}
+
+.susc-plan {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px 15px 16px;
+  border-radius: 16px;
+  border: 1.5px solid var(--border-light, #a8dab5);
+  background: var(--input-bg, #f2faf4);
+  transition: border-color 0.18s, background 0.18s, transform 0.15s, box-shadow 0.18s;
+}
+
+.susc-plan--actual {
+  border-color: var(--accent, #2d8c4e);
+  background: rgba(45, 140, 78, 0.08);
+}
+
+.susc-plan--destacado {
+  border-color: #d4a017;
+  box-shadow: 0 8px 24px rgba(212, 160, 23, 0.16);
+}
+
+.susc-plan__ribbon {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #d4a017;
+  color: #fff;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+  box-shadow: 0 3px 8px rgba(212, 160, 23, 0.35);
+}
+
+.susc-plan__icon {
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.susc-plan__nombre {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: var(--text-heading, #1a5c2a);
+  margin: 0;
+}
+
+.susc-plan__precio {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--accent, #2d8c4e);
+  margin: -4px 0 2px;
+}
+
+.susc-plan__beneficios {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex: 1;
+}
+
+.susc-plan__beneficios li {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--text-secondary, #4a6b52);
+}
+
+.susc-plan__beneficios svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--accent, #2d8c4e);
+}
+
+.susc-plan__btn {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1.5px solid var(--accent, #2d8c4e);
+  background: var(--accent, #2d8c4e);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.15s;
+  margin-top: auto;
+}
+.susc-plan__btn:hover {
+  background: var(--accent-dark, #1a5c2a);
+  transform: translateY(-1px);
+}
+.susc-plan__btn:disabled {
+  background: var(--bg-muted, #e8f5ec);
+  border-color: var(--border-light, #a8dab5);
+  color: var(--text-muted, #8aab90);
+  cursor: default;
+  transform: none;
+}
+
+/* ── Resumen del plan actual (arriba de las tarjetas) ── */
+.susc-resumen {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  border-radius: 14px;
+  background: var(--bg-muted, #e8f5ec);
+  border: 1px solid var(--border-light, #a8dab5);
+  margin-bottom: 18px;
+}
+.susc-resumen__icon {
+  font-size: 1.6rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.susc-resumen__texto {
+  flex: 1;
+}
+.susc-resumen__titulo {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text-heading, #1a5c2a);
+}
+.susc-resumen__desc {
+  font-size: 0.78rem;
+  color: var(--text-secondary, #4a6b52);
+  margin-top: 2px;
+}
+
+/* ── Barra de uso del escáner IA (dentro del resumen, o en Ajustes) ── */
+.susc-uso {
+  margin-top: 10px;
+}
+.susc-uso__label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--text-secondary, #4a6b52);
+  margin-bottom: 5px;
+}
+.susc-uso__track {
+  height: 7px;
+  border-radius: 999px;
+  background: var(--bg-card, #fff);
+  overflow: hidden;
+}
+.susc-uso__bar {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent, #2d8c4e);
+  transition: width 0.3s cubic-bezier(.4,0,.2,1);
+}
+.susc-uso__bar--lleno {
+  background: #c23a2a;
+}
+
+@media (max-width: 640px) {
+  .susc-planes-grid { grid-template-columns: 1fr; }
+}
