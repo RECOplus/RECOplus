@@ -330,7 +330,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
     <div class="bubble-nav__actions navbar__spacer">
 
       <!-- Dark mode pill -->
-      <div class="dm-pill" id="darkModeToggle" role="button" title="Cambiar modo claro/oscuro" aria-label="Toggle dark mode">
+      <div class="dm-pill" id="darkModeToggle" role="button" title="Cambiar modo claro/oscuro" aria-label="Cambiar modo claro/oscuro" data-i18n-title="nav.darkmode.toggle" data-i18n-aria="nav.darkmode.toggle">
         <span class="dm-pill__btn dm-pill__sun dm-sun" id="dmSunBtn">
           <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" width="16" height="16">
             <circle cx="10" cy="10" r="3.5"/>
@@ -348,7 +348,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
       </div>
 
       <!-- Language pill -->
-      <button class="lang-pill" onclick="toggleLang()" aria-label="Cambiar idioma" data-current="es">
+      <button class="lang-pill" onclick="toggleLang()" aria-label="Cambiar idioma" data-i18n-aria="nav.lang.toggle" data-current="es">
         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15">
           <circle cx="10" cy="10" r="8"/>
           <ellipse cx="10" cy="10" rx="3.5" ry="8"/>
@@ -404,7 +404,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
        igual en las dos páginas. -->
   <div class="donar-detail-overlay" id="donarDetailModal">
     <div class="donar-detail-modal">
-      <button class="donar-detail-close" id="donarDetailClose" aria-label="Cerrar">✕</button>
+      <button class="donar-detail-close" id="donarDetailClose" aria-label="Cerrar" data-i18n-aria="nav.cerrar">✕</button>
       <div class="donar-detail-img" id="donarDetailImg"></div>
       <div class="donar-detail-body">
         <span class="donar-detail-kicker" id="donarDetailKicker">Donación</span>
@@ -413,7 +413,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
         <p class="donar-detail-desc" id="donarDetailDesc"></p>
       </div>
       <div class="donar-detail-footer">
-        <button class="donar-modal-close-btn" id="donarDetailCloseBtn">Cerrar</button>
+        <button class="donar-modal-close-btn" id="donarDetailCloseBtn" data-i18n="donar.modal.cerrar">Cerrar</button>
       </div>
     </div>
   </div>
@@ -436,7 +436,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
             <a href="https://recoplus.github.io/rEcOPlus-Final/mapa.html" data-i18n="nav.mapa">Mapa</a>
             <a href="https://recoplus.github.io/rEcOPlus-Final/guia.html" data-i18n="nav.guia">Guía</a>
             <a href="https://recoplus.github.io/rEcOPlus-Final/donar.html" data-i18n="nav.donar">Donar / Ayuda</a>
-            <a href="#tienda">Tienda EcoTech</a>
+            <a href="#tienda" data-i18n="tienda.title">Tienda EcoTech</a>
             <a href="https://recoplus.github.io/rEcOPlus-Final/alianzas.html" data-i18n="nav.alianzas">Alianzas</a>
             <a href="https://recoplus.github.io/rEcOPlus-Final/blog.html" data-i18n="nav.blog">Blog</a>
             <a href="https://recoplus.github.io/rEcOPlus-Final/contacto.html" data-i18n="nav.contacto">Contacto</a>

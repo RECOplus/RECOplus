@@ -29,6 +29,11 @@ const translations = {
     "nav.cerrarSesion": "Cerrar sesión",
     "nav.darkmode.toggle": "Cambiar modo claro/oscuro",
     "nav.lang.toggle":     "Cambiar idioma",
+    "nav.accesoRapido":   "Acceso rápido",
+    "nav.carousel.anterior":  "Anterior",
+    "nav.carousel.siguiente": "Siguiente",
+    "nav.cerrarVentana":  "Cerrar ventana",
+    "nav.cerrar":         "Cerrar",
 
     /* ── NAV: descripciones (tooltip al pasar el cursor) ── */
     "nav.inicio.desc":   "Vuelve a la página principal.",
@@ -104,6 +109,14 @@ const translations = {
     "card7.tag4":           "🔋 Tecnología",
     "card7.tag5":           "🌱 Impacto",
     "card7.cta":            "Leer blog →",
+
+    "acc.aria.map":        "Encontrar puntos de reciclaje",
+    "acc.aria.donate":     "Donar objetos",
+    "acc.aria.help":       "Solicitar ayuda de la comunidad",
+    "acc.aria.guide":      "Explorar la guía de reciclaje",
+    "acc.aria.allies":     "Ver alianzas y empresas",
+    "acc.aria.contact":    "Ir a la página de contacto",
+    "acc.aria.blog":       "Explorar el blog de RECO+",
 
     /* ── STATS ── */
     "stats.personas":  "Personas activas",
@@ -1178,6 +1191,11 @@ const translations = {
     "nav.cerrarSesion": "Log out",
     "nav.darkmode.toggle": "Switch light/dark mode",
     "nav.lang.toggle":     "Change language",
+    "nav.accesoRapido":   "Quick access",
+    "nav.carousel.anterior":  "Previous",
+    "nav.carousel.siguiente": "Next",
+    "nav.cerrarVentana":  "Close window",
+    "nav.cerrar":         "Close",
 
     /* ── NAV: descripciones (tooltip al pasar el cursor) ── */
     "nav.inicio.desc":   "Back to the home page.",
@@ -1253,6 +1271,14 @@ const translations = {
     "card7.tag4":           "🔋 Technology",
     "card7.tag5":           "🌱 Impact",
     "card7.cta":            "Read blog →",
+
+    "acc.aria.map":        "Find recycling points",
+    "acc.aria.donate":     "Donate items",
+    "acc.aria.help":       "Request help from the community",
+    "acc.aria.guide":      "Explore the recycling guide",
+    "acc.aria.allies":     "See alliances and companies",
+    "acc.aria.contact":    "Go to the contact page",
+    "acc.aria.blog":       "Explore the RECO+ blog",
 
     /* ── STATS ── */
     "stats.personas":   "Active people",

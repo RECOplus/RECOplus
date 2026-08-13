@@ -349,7 +349,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
 
       <!-- Capa aditiva: mini menú "tus publicaciones activas" (SOLO esta página) -->
       <div class="mis-pubs-wrap" id="misPubsWrap">
-        <button class="mis-pubs-btn" id="misPubsBtn" type="button" aria-haspopup="true" aria-expanded="false" title="Tus publicaciones activas" data-i18n-title="donar.mispubs.title">
+        <button class="mis-pubs-btn" id="misPubsBtn" type="button" aria-haspopup="true" aria-expanded="false" title="Tus publicaciones activas" aria-label="Tus publicaciones activas" data-i18n-title="donar.mispubs.title" data-i18n-aria="donar.mispubs.title">
           ♻️
         </button>
         <div class="mis-pubs-dropdown" id="misPubsDropdown">
@@ -361,7 +361,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
       </div>
 
       <!-- Dark mode pill -->
-      <div class="dm-pill" id="darkModeToggle" role="button" title="Cambiar modo claro/oscuro" aria-label="Toggle dark mode">
+      <div class="dm-pill" id="darkModeToggle" role="button" title="Cambiar modo claro/oscuro" aria-label="Cambiar modo claro/oscuro" data-i18n-title="nav.darkmode.toggle" data-i18n-aria="nav.darkmode.toggle">
         <span class="dm-pill__btn dm-pill__sun dm-sun" id="dmSunBtn">
           <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" width="16" height="16">
             <circle cx="10" cy="10" r="3.5"/>
@@ -379,7 +379,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
       </div>
 
       <!-- Language pill -->
-      <button class="lang-pill" onclick="toggleLang()" aria-label="Cambiar idioma" data-current="es">
+      <button class="lang-pill" onclick="toggleLang()" aria-label="Cambiar idioma" data-i18n-aria="nav.lang.toggle" data-current="es">
         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15">
           <circle cx="10" cy="10" r="8"/>
           <ellipse cx="10" cy="10" rx="3.5" ry="8"/>
@@ -529,7 +529,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
           <a href="https://recoplus.github.io/rEcOPlus-Final/donaciones.html" class="dh-see-all" data-i18n="donar.listings.verTodas">Ver todas →</a>
         </div>
         <div class="dh-carousel-wrap">
-          <button class="dh-car-btn dh-car-prev" aria-label="Anterior">‹</button>
+          <button class="dh-car-btn dh-car-prev" aria-label="Anterior" data-i18n-aria="nav.carousel.anterior">‹</button>
           <div class="dh-carousel" id="dhCarouselDonaciones">
             <div class="dh-card dh-glass dn-reveal">
               <div class="dh-card-img"><span class="dh-card-badge dh-card-badge--good" data-i18n="donar.sample.buenEstado">Buen estado</span>🎒</div>
@@ -553,7 +553,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
               <button class="dh-card-btn" data-i18n="donar.card.verDonacion">Ver donación →</button>
             </div>
           </div>
-          <button class="dh-car-btn dh-car-next" aria-label="Siguiente">›</button>
+          <button class="dh-car-btn dh-car-next" aria-label="Siguiente" data-i18n-aria="nav.carousel.siguiente">›</button>
         </div>
       </div>
 
@@ -563,7 +563,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
           <a href="https://recoplus.github.io/rEcOPlus-Final/donaciones.html" class="dh-see-all" data-i18n="donar.listings.verTodas">Ver todas →</a>
         </div>
         <div class="dh-carousel-wrap">
-          <button class="dh-car-btn dh-car-prev" aria-label="Anterior">‹</button>
+          <button class="dh-car-btn dh-car-prev" aria-label="Anterior" data-i18n-aria="nav.carousel.anterior">‹</button>
           <div class="dh-carousel" id="dhCarouselSolicitudes">
             <div class="dh-card dh-glass dn-reveal">
               <div class="dh-card-img">👦</div>
@@ -587,7 +587,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
               <button class="dh-card-btn" data-i18n="donar.card.ayudar">Ayudar →</button>
             </div>
           </div>
-          <button class="dh-car-btn dh-car-next" aria-label="Siguiente">›</button>
+          <button class="dh-car-btn dh-car-next" aria-label="Siguiente" data-i18n-aria="nav.carousel.siguiente">›</button>
         </div>
       </div>
     </div>
@@ -609,9 +609,9 @@ html.dark .dm-pill__sun { opacity: 0.38; }
           <h3 data-i18n="donar.campanas.reciclaje.title">♻️ Campañas de reciclaje</h3>
         </div>
         <div class="dh-carousel-wrap">
-          <button class="dh-car-btn camp-car-prev" data-target="campCarouselReciclaje" aria-label="Anterior">‹</button>
+          <button class="dh-car-btn camp-car-prev" data-target="campCarouselReciclaje" aria-label="Anterior" data-i18n-aria="nav.carousel.anterior">‹</button>
           <div class="dh-carousel" id="campCarouselReciclaje"></div>
-          <button class="dh-car-btn camp-car-next" data-target="campCarouselReciclaje" aria-label="Siguiente">›</button>
+          <button class="dh-car-btn camp-car-next" data-target="campCarouselReciclaje" aria-label="Siguiente" data-i18n-aria="nav.carousel.siguiente">›</button>
         </div>
       </div>
 
@@ -620,9 +620,9 @@ html.dark .dm-pill__sun { opacity: 0.38; }
           <h3 data-i18n="donar.campanas.donacion.title">🎁 Campañas de donación</h3>
         </div>
         <div class="dh-carousel-wrap">
-          <button class="dh-car-btn camp-car-prev" data-target="campCarouselDonacion" aria-label="Anterior">‹</button>
+          <button class="dh-car-btn camp-car-prev" data-target="campCarouselDonacion" aria-label="Anterior" data-i18n-aria="nav.carousel.anterior">‹</button>
           <div class="dh-carousel" id="campCarouselDonacion"></div>
-          <button class="dh-car-btn camp-car-next" data-target="campCarouselDonacion" aria-label="Siguiente">›</button>
+          <button class="dh-car-btn camp-car-next" data-target="campCarouselDonacion" aria-label="Siguiente" data-i18n-aria="nav.carousel.siguiente">›</button>
         </div>
       </div>
     </div>
@@ -687,7 +687,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
        (donar o solicitar) se ve dentro. -->
   <div class="dh-form-modal-overlay" id="dhFormModalOverlay">
     <div class="dh-form-modal">
-      <button class="dh-form-modal-close" id="dhFormModalClose" aria-label="Cerrar ventana">✕</button>
+      <button class="dh-form-modal-close" id="dhFormModalClose" aria-label="Cerrar ventana" data-i18n-aria="nav.cerrarVentana">✕</button>
 
   <!-- ========== TABS ========== -->
   <section class="donar-tabs-section">
@@ -911,7 +911,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
        closeDetailModal). -->
   <div class="donar-detail-overlay" id="donarDetailModal">
     <div class="donar-detail-modal">
-      <button class="donar-detail-close" id="donarDetailClose" aria-label="Cerrar">✕</button>
+      <button class="donar-detail-close" id="donarDetailClose" aria-label="Cerrar" data-i18n-aria="nav.cerrar">✕</button>
       <div class="donar-detail-img" id="donarDetailImg"></div>
       <div class="donar-detail-body">
         <span class="donar-detail-kicker" id="donarDetailKicker">Donación</span>
@@ -931,7 +931,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
        según la sesión, el estado de inscripción del usuario. -->
   <div class="donar-detail-overlay" id="campDetailModal">
     <div class="donar-detail-modal">
-      <button class="donar-detail-close" id="campDetailClose" aria-label="Cerrar">✕</button>
+      <button class="donar-detail-close" id="campDetailClose" aria-label="Cerrar" data-i18n-aria="nav.cerrar">✕</button>
       <div class="donar-detail-img" id="campDetailImg"></div>
       <div class="donar-detail-body">
         <span class="donar-detail-kicker" id="campDetailKicker">Campaña</span>
@@ -961,7 +961,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
             <a href="https://recoplus.github.io/rEcOPlus-Final/mapa.html" data-i18n="nav.mapa">Mapa</a>
             <a href="https://recoplus.github.io/rEcOPlus-Final/guia.html" data-i18n="nav.guia">Guía</a>
             <a href="https://recoplus.github.io/rEcOPlus-Final/donar.html" data-i18n="nav.donar">Donar / Ayuda</a>
-            <a href="#tienda">Tienda EcoTech</a>
+            <a href="#tienda" data-i18n="tienda.title">Tienda EcoTech</a>
             <a href="https://recoplus.github.io/rEcOPlus-Final/alianzas.html" data-i18n="nav.alianzas">Alianzas</a>
             <a href="https://recoplus.github.io/rEcOPlus-Final/blog.html" data-i18n="nav.blog">Blog</a>
             <a href="https://recoplus.github.io/rEcOPlus-Final/contacto.html" data-i18n="nav.contacto">Contacto</a>
