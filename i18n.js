@@ -617,6 +617,7 @@ const translations = {
        Formulario de 9 pasos para registrar una empresa/aliado.
        ══════════════════════════════════════════ */
     "rae.kicker": "Registro de aliado · Paso {n} de {total}",
+    "rae.kicker.simple": "Registro de aliado",
     "rae.btn.atras": "← Atrás",
     "rae.btn.siguiente": "Siguiente →",
     "rae.btn.registrar": "Registrar aliado ✓",
@@ -1928,6 +1929,7 @@ const translations = {
        9-step form to register a company/ally.
        ══════════════════════════════════════════ */
     "rae.kicker": "Ally registration · Step {n} of {total}",
+    "rae.kicker.simple": "Ally registration",
     "rae.btn.atras": "← Back",
     "rae.btn.siguiente": "Next →",
     "rae.btn.registrar": "Register ally ✓",

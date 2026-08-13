@@ -1401,7 +1401,7 @@
           '<span class="rae-social-row__icon">' + r.icono + '</span>' +
           '<div class="rae-field">' +
             '<input type="text" id="' + r.elId + '" class="rae-input" placeholder="' + r.placeholder + '" maxlength="200" value="' + esc(redes[r.id]) + '">' +
-            '<span class="rae-error" id="' + r.elId + 'Error">' + tr('rae.opcional.redError', 'Ingresa un enlace válido.') + '</span>' +
+            '<span class="rae-error" id="' + r.elId + 'Error">' + tr('rae.opcional.redesError', 'Ingresa un enlace válido.') + '</span>' +
           '</div>' +
         '</div>'
       );
@@ -1820,7 +1820,7 @@
     siguienteBtn.disabled = deshabilitado;
     atrasBtn.disabled = deshabilitado;
     closeBtn.disabled = deshabilitado;
-    siguienteBtn.textContent = deshabilitado ? tr('rae.status.enviando', 'Enviando...') : tr('rae.btn.registrar', 'Registrar aliado ✓');
+    siguienteBtn.textContent = deshabilitado ? tr('rae.btn.enviando', 'Enviando...') : tr('rae.btn.registrar', 'Registrar aliado ✓');
   }
 
   /* ── Convierte un dataURL (como los que guarda el logo/las fotos en
