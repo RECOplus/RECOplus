@@ -1,0 +1,137 @@
+[
+  {
+    "file": "alianzas-registro-modal.js",
+    "line": 172,
+    "text": "descHint.textContent = len + ' / 600 (mínimo 20 caracteres)';"
+  },
+  {
+    "file": "alianzas-registro-modal.js",
+    "line": 197,
+    "text": "logoHint.textContent = 'Formato no válido. Usa PNG, JPG o WEBP.';"
+  },
+  {
+    "file": "alianzas-registro-modal.js",
+    "line": 203,
+    "text": "logoHint.textContent = 'El archivo pesa más de 3 MB. Elige uno más liviano.';"
+  },
+  {
+    "file": "alianzas-registro-modal.js",
+    "line": 479,
+    "text": "hint.textContent = 'Tu navegador no permite obtener la ubicación automáticamente. Escríbela manualmente.';"
+  },
+  {
+    "file": "alianzas-registro-modal.js",
+    "line": 485,
+    "text": "hint.textContent = 'Obteniendo tu ubicación actual...';"
+  },
+  {
+    "file": "alianzas-registro-modal.js",
+    "line": 492,
+    "text": "hint.textContent = 'Ubicación obtenida correctamente.';"
+  },
+  {
+    "file": "alianzas-registro-modal.js",
+    "line": 496,
+    "text": "hint.textContent = 'No se pudo obtener tu ubicación. Escríbela manualmente o revisa los permisos del navegador.';"
+  },
+  {
+    "file": "alianzas-registro-modal.js",
+    "line": 1517,
+    "text": "fotosHint.textContent = 'Algún archivo no es PNG, JPG o WEBP y fue omitido.';"
+  },
+  {
+    "file": "alianzas-registro-modal.js",
+    "line": 1522,
+    "text": "fotosHint.textContent = 'Algún archivo pesa más de 3 MB y fue omitido.';"
+  },
+  {
+    "file": "app.js",
+    "line": 790,
+    "text": "() => alert(typeof t === \"function\" ? t(\"mapa.results.locateError\") : \"No se pudo obtener tu ubicación.\")"
+  },
+  {
+    "file": "campanas-modal.js",
+    "line": 450,
+    "text": "descHint.textContent = descTextarea.value.length + ' / 500 (mínimo 20 caracteres)';"
+  },
+  {
+    "file": "campanas-modal.js",
+    "line": 463,
+    "text": "window.alert('La imagen pesa demasiado (máx. 4MB).');"
+  },
+  {
+    "file": "campanas-modal.js",
+    "line": 469,
+    "text": "bannerPreview.innerHTML = '<img src=\"' + dataUrl + '\" alt=\"Banner de la campaña\">';"
+  },
+  {
+    "file": "campanas-modal.js",
+    "line": 589,
+    "text": "finError.textContent = 'Tu plan ' + planActualCache.nombre + ' permite campañas de hasta ' + planActualCache.duracionCampanaMaxDias + ' días. Acorta el rango de fechas o mejora tu plan.';"
+  },
+  {
+    "file": "campanas-modal.js",
+    "line": 775,
+    "text": "siguienteBtn.textContent = (index === CAMP_STEPS.length - 1) ? 'Publicar campaña ✓' : 'Siguiente →';"
+  },
+  {
+    "file": "campanas-modal.js",
+    "line": 827,
+    "text": "siguienteBtn.textContent = deshabilitado ? 'Publicando...' : 'Publicar campaña ✓';"
+  },
+  {
+    "file": "donar-campanas.js",
+    "line": 311,
+    "text": "if (kicker) kicker.textContent = esReciclaje ? '♻️ Campaña de reciclaje' : '🎁 Campaña de donación';"
+  },
+  {
+    "file": "donar-campanas.js",
+    "line": 456,
+    "text": "statusEl.textContent = 'No se pudo completar tu inscripción. Intenta de nuevo.';"
+  },
+  {
+    "file": "donar-campanas.js",
+    "line": 488,
+    "text": "cancelarBtn.textContent = 'Cancelar inscripción';"
+  },
+  {
+    "file": "donar-campanas.js",
+    "line": 490,
+    "text": "statusEl.textContent = 'No se pudo cancelar tu inscripción. Intenta de nuevo.';"
+  },
+  {
+    "file": "donar-listings.js",
+    "line": 176,
+    "text": "if (titleEl) titleEl.textContent = row.categoria || (isDonar ? 'Donación' : 'Solicitud');"
+  },
+  {
+    "file": "interactive.js",
+    "line": 138,
+    "text": "badge.title = 'Únete a la comunidad';"
+  },
+  {
+    "file": "reciclar-scanner.js",
+    "line": 406,
+    "text": "iaBtn.textContent = \"Límite diario alcanzado\";"
+  },
+  {
+    "file": "reciclar-scanner.js",
+    "line": 483,
+    "text": "iaBtn.textContent = \"✨ Verificar con IA (más preciso)\";"
+  },
+  {
+    "file": "reciclar-scanner.js",
+    "line": 523,
+    "text": "iaBtn.textContent = \"✨ Verificar con IA (más preciso)\";"
+  },
+  {
+    "file": "reciclar-scanner.js",
+    "line": 642,
+    "text": "iaBtn.textContent = \"✨ Verificar con IA (más preciso)\";"
+  },
+  {
+    "file": "search.js",
+    "line": 832,
+    "text": "lbl2.textContent = lang === 'en' ? 'Pages' : 'Páginas';"
+  }
+]

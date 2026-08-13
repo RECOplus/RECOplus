@@ -1,0 +1,92 @@
+[
+  {
+    "file": "ajustes-empresa.js",
+    "line": 501,
+    "text": "borrarBtn.textContent = 'Borrar empresa';"
+  },
+  {
+    "file": "ajustes-empresa.js",
+    "line": 513,
+    "text": "borrarBtn.textContent = 'Borrar empresa';"
+  },
+  {
+    "file": "alianzas-registro-modal.js",
+    "line": 214,
+    "text": "logoBtn.textContent = 'Cambiar logo';"
+  },
+  {
+    "file": "alianzas-registro-modal.js",
+    "line": 225,
+    "text": "logoBtn.textContent = 'Subir logo';"
+  },
+  {
+    "file": "alianzas-registro-modal.js",
+    "line": 1742,
+    "text": "siguienteBtn.textContent = (index === RAE_STEPS.length - 1) ? 'Registrar aliado ✓' : 'Siguiente →';"
+  },
+  {
+    "file": "campanas-modal.js",
+    "line": 470,
+    "text": "bannerBtn.textContent = 'Cambiar banner';"
+  },
+  {
+    "file": "campanas-modal.js",
+    "line": 478,
+    "text": "bannerBtn.textContent = 'Subir banner';"
+  },
+  {
+    "file": "campanas-modal.js",
+    "line": 775,
+    "text": "siguienteBtn.textContent = (index === CAMP_STEPS.length - 1) ? 'Publicar campaña ✓' : 'Siguiente →';"
+  },
+  {
+    "file": "campanas-modal.js",
+    "line": 827,
+    "text": "siguienteBtn.textContent = deshabilitado ? 'Publicando...' : 'Publicar campaña ✓';"
+  },
+  {
+    "file": "comentar-modal.js",
+    "line": 284,
+    "text": "submitBtn.textContent = tr('comentar.publicar', 'Publicar comentario');"
+  },
+  {
+    "file": "comentar-modal.js",
+    "line": 301,
+    "text": "submitBtn.textContent = tr('comentar.publicar', 'Publicar comentario');"
+  },
+  {
+    "file": "darkmode.js",
+    "line": 98,
+    "text": "btn.setAttribute(\"title\", \"Cambiar modo claro/oscuro\");"
+  },
+  {
+    "file": "donar-campanas.js",
+    "line": 488,
+    "text": "cancelarBtn.textContent = 'Cancelar inscripción';"
+  },
+  {
+    "file": "donar-empresas.js",
+    "line": 167,
+    "text": "empresaSelect.innerHTML = '<option value=\"\">Cargando empresas...</option>';"
+  },
+  {
+    "file": "reciclar-scanner.js",
+    "line": 483,
+    "text": "iaBtn.textContent = \"✨ Verificar con IA (más preciso)\";"
+  },
+  {
+    "file": "reciclar-scanner.js",
+    "line": 523,
+    "text": "iaBtn.textContent = \"✨ Verificar con IA (más preciso)\";"
+  },
+  {
+    "file": "reciclar-scanner.js",
+    "line": 642,
+    "text": "iaBtn.textContent = \"✨ Verificar con IA (más preciso)\";"
+  },
+  {
+    "file": "suscripcion-modal.js",
+    "line": 245,
+    "text": "resumen.innerHTML = '<span class=\"susc-resumen__icon\">⏳</span><div class=\"susc-resumen__texto\"><div class=\"susc-resumen__titulo\">Cargando tu plan…</div></div>';"
+  }
+]
