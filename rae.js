@@ -1401,7 +1401,7 @@
           '<span class="rae-social-row__icon">' + r.icono + '</span>' +
           '<div class="rae-field">' +
             '<input type="text" id="' + r.elId + '" class="rae-input" placeholder="' + r.placeholder + '" maxlength="200" value="' + esc(redes[r.id]) + '">' +
-            '<span class="rae-error" id="' + r.elId + 'Error">Ingresa un enlace válido.</span>' +
+            '<span class="rae-error" id="' + r.elId + 'Error">' + tr('rae.opcional.redError', 'Ingresa un enlace válido.') + '</span>' +
           '</div>' +
         '</div>'
       );
@@ -1820,7 +1820,7 @@
     siguienteBtn.disabled = deshabilitado;
     atrasBtn.disabled = deshabilitado;
     closeBtn.disabled = deshabilitado;
-    siguienteBtn.textContent = deshabilitado ? 'Enviando...' : 'Registrar aliado ✓';
+    siguienteBtn.textContent = deshabilitado ? tr('rae.status.enviando', 'Enviando...') : tr('rae.btn.registrar', 'Registrar aliado ✓');
   }
 
   /* ── Convierte un dataURL (como los que guarda el logo/las fotos en
@@ -1916,7 +1916,7 @@
         var logoUrl = resultados[0];
         var fotosUrls = resultados[1];
 
-        mostrarStatus('ok', 'Guardando tu perfil de aliado...');
+        mostrarStatus('ok', tr('rae.envio.guardandoPerfil', 'Guardando tu perfil de aliado...'));
 
         var payload = {
           user_id: userId,
@@ -1964,7 +1964,7 @@
       }
 
       registroCompletado = true;
-      mostrarStatus('ok', '✓ ¡Listo! Tu empresa quedó registrada. Revisaremos tu perfil y pronto aparecerá como aliado en RECO+.');
+      mostrarStatus('ok', tr('rae.envio.exito', '✓ ¡Listo! Tu empresa quedó registrada. Revisaremos tu perfil y pronto aparecerá como aliado en RECO+.'));
       overlayEl.querySelector('#raeBtnSiguiente').style.display = 'none';
       overlayEl.querySelector('#raeBtnAtras').style.visibility = 'hidden';
       overlayEl.querySelector('#raeClose').disabled = false;
@@ -2026,19 +2026,19 @@
       '<div class="rae-modal" role="dialog" aria-modal="true" aria-labelledby="raeAvisoTitulo" style="max-width:420px">' +
         '<div class="rae-modal__header">' +
           '<div>' +
-            '<p class="rae-modal__kicker">Registro de aliado</p>' +
-            '<h2 class="rae-modal__title" id="raeAvisoTitulo">Inicia sesión primero</h2>' +
+            '<p class="rae-modal__kicker">' + tr('rae.kicker.simple', 'Registro de aliado') + '</p>' +
+            '<h2 class="rae-modal__title" id="raeAvisoTitulo">' + tr('rae.avisoSesion.titulo', 'Inicia sesión primero') + '</h2>' +
           '</div>' +
           '<button type="button" class="rae-modal__close" id="raeAvisoClose" aria-label="Cerrar">' +
             '<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l10 10M15 5L5 15"/></svg>' +
           '</button>' +
         '</div>' +
         '<div class="rae-modal__body">' +
-          '<p class="rae-step__desc">Para registrar tu empresa como aliado, primero necesitas iniciar sesión (o crear una cuenta) en RECO+. Tu empresa quedará ligada a esa cuenta.</p>' +
+          '<p class="rae-step__desc">' + tr('rae.avisoSesion.desc', 'Para registrar tu empresa como aliado, primero necesitas iniciar sesión (o crear una cuenta) en RECO+. Tu empresa quedará ligada a esa cuenta.') + '</p>' +
         '</div>' +
         '<div class="rae-modal__footer">' +
-          '<button type="button" class="rae-btn" id="raeAvisoCancelar">Cancelar</button>' +
-          '<button type="button" class="rae-btn rae-btn--primario" id="raeAvisoIrLogin">Iniciar sesión →</button>' +
+          '<button type="button" class="rae-btn" id="raeAvisoCancelar">' + tr('rae.avisoSesion.cancelar', 'Cancelar') + '</button>' +
+          '<button type="button" class="rae-btn rae-btn--primario" id="raeAvisoIrLogin">' + tr('rae.avisoSesion.irLogin', 'Iniciar sesión →') + '</button>' +
         '</div>' +
       '</div>';
 
@@ -2084,20 +2084,20 @@
       '<div class="rae-modal" role="dialog" aria-modal="true" aria-labelledby="raeYaRegTitulo" style="max-width:420px">' +
         '<div class="rae-modal__header">' +
           '<div>' +
-            '<p class="rae-modal__kicker">Registro de aliado</p>' +
-            '<h2 class="rae-modal__title" id="raeYaRegTitulo">Ya tienes una empresa registrada</h2>' +
+            '<p class="rae-modal__kicker">' + tr('rae.kicker.simple', 'Registro de aliado') + '</p>' +
+            '<h2 class="rae-modal__title" id="raeYaRegTitulo">' + tr('rae.avisoYaReg.titulo', 'Ya tienes una empresa registrada') + '</h2>' +
           '</div>' +
           '<button type="button" class="rae-modal__close" id="raeYaRegClose" aria-label="Cerrar">' +
             '<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l10 10M15 5L5 15"/></svg>' +
           '</button>' +
         '</div>' +
         '<div class="rae-modal__body">' +
-          '<p class="rae-step__desc">Esta cuenta ya tiene una empresa o centro de reciclaje registrado en RECO+. Solo se permite una empresa por cuenta, así que no puedes crear otra desde aquí.</p>' +
-          '<p class="rae-step__desc">Si necesitas actualizar los datos de tu empresa, o revisar tu cuenta, puedes hacerlo desde Ajustes.</p>' +
+          '<p class="rae-step__desc">' + tr('rae.avisoYaReg.desc1', 'Esta cuenta ya tiene una empresa o centro de reciclaje registrado en RECO+. Solo se permite una empresa por cuenta, así que no puedes crear otra desde aquí.') + '</p>' +
+          '<p class="rae-step__desc">' + tr('rae.avisoYaReg.desc2', 'Si necesitas actualizar los datos de tu empresa, o revisar tu cuenta, puedes hacerlo desde Ajustes.') + '</p>' +
         '</div>' +
         '<div class="rae-modal__footer">' +
-          '<button type="button" class="rae-btn" id="raeYaRegCancelar">Cerrar</button>' +
-          '<button type="button" class="rae-btn rae-btn--primario" id="raeYaRegIrAjustes">Ir a Ajustes de cuenta →</button>' +
+          '<button type="button" class="rae-btn" id="raeYaRegCancelar">' + tr('rae.avisoYaReg.cerrar', 'Cerrar') + '</button>' +
+          '<button type="button" class="rae-btn rae-btn--primario" id="raeYaRegIrAjustes">' + tr('rae.avisoYaReg.irAjustes', 'Ir a Ajustes de cuenta →') + '</button>' +
         '</div>' +
       '</div>';
 
