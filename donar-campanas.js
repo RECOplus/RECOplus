@@ -53,38 +53,43 @@
   /* Mismos catálogos (id → nombre/ícono) que usa campanas-modal.js
      al publicar, así el detalle muestra los materiales/categorías
      seleccionados con su nombre legible en vez del id crudo. */
+  // `key` referencia una entrada del diccionario de i18n.js (t()),
+  // así las etiquetas se traducen solas al cambiar de idioma en vez
+  // de quedar fijas en español como antes.
   var MATERIALES_DISPONIBLES = {
-    plastico: { nombre: 'Plástico', icono: '🧴' },
-    vidrio: { nombre: 'Vidrio', icono: '🍾' },
-    metal: { nombre: 'Metal', icono: '🥫' },
-    papel: { nombre: 'Papel', icono: '📄' },
-    carton: { nombre: 'Cartón', icono: '📦' },
-    libros: { nombre: 'Libros', icono: '📚' },
-    electronicos: { nombre: 'Electrónicos', icono: '💻' },
-    celulares: { nombre: 'Celulares', icono: '📱' },
-    baterias: { nombre: 'Baterías', icono: '🔋' },
-    bombillos: { nombre: 'Bombillos', icono: '💡' },
-    ropa: { nombre: 'Ropa', icono: '👕' },
-    tela: { nombre: 'Tela', icono: '🧵' },
-    cuero: { nombre: 'Cuero', icono: '🥾' },
-    muebles: { nombre: 'Muebles', icono: '🪑' },
-    juguetes: { nombre: 'Juguetes', icono: '🧸' },
-    utilesescolares: { nombre: 'Útiles escolares', icono: '✏️' },
-    tetrapak: { nombre: 'Tetra Pak', icono: '🧃' },
-    aceite: { nombre: 'Aceite de cocina', icono: '🛢️' }
+    plastico: { key: 'rae.mat.plastico', icono: '🧴' },
+    vidrio: { key: 'rae.mat.vidrio', icono: '🍾' },
+    metal: { key: 'rae.mat.metal', icono: '🥫' },
+    papel: { key: 'rae.mat.papel', icono: '📄' },
+    carton: { key: 'rae.mat.carton', icono: '📦' },
+    libros: { key: 'rae.mat.libros', icono: '📚' },
+    electronicos: { key: 'rae.mat.electronicos', icono: '💻' },
+    celulares: { key: 'rae.mat.celulares', icono: '📱' },
+    baterias: { key: 'rae.mat.baterias', icono: '🔋' },
+    bombillos: { key: 'rae.mat.bombillos', icono: '💡' },
+    ropa: { key: 'rae.mat.ropa', icono: '👕' },
+    tela: { key: 'rae.mat.tela', icono: '🧵' },
+    cuero: { key: 'rae.mat.cuero', icono: '🥾' },
+    muebles: { key: 'rae.mat.muebles', icono: '🪑' },
+    juguetes: { key: 'rae.mat.juguetes', icono: '🧸' },
+    utilesescolares: { key: 'rae.mat.utilesescolares', icono: '✏️' },
+    tetrapak: { key: 'rae.mat.tetrapak', icono: '🧃' },
+    aceite: { key: 'rae.mat.aceite', icono: '🛢️' }
   };
 
+  // Mismas 10 categorías (y las mismas keys de i18n.js) que usa el
+  // selector "¿Qué vas a donar?" de donar.html.
   var CATEGORIAS_DONACION = {
-    ropa: { nombre: 'Ropa y calzado', icono: '👕' },
-    electronicos: { nombre: 'Electrónicos', icono: '💻' },
-    muebles: { nombre: 'Muebles', icono: '🛋️' },
-    libros: { nombre: 'Libros y útiles', icono: '📚' },
-    juguetes: { nombre: 'Juguetes', icono: '🧸' },
-    alimentos: { nombre: 'Alimentos no perecederos', icono: '🥫' },
-    material_escolar: { nombre: 'Material escolar', icono: '✏️' },
-    higiene: { nombre: 'Productos de higiene', icono: '🧼' },
-    medicinas: { nombre: 'Medicinas no vencidas', icono: '💊' },
-    otro: { nombre: 'Otro', icono: '📦' }
+    ropa: { key: 'donar.form.opt.ropa', icono: '👕' },
+    electronicos: { key: 'donar.form.opt.electronicos', icono: '💻' },
+    muebles: { key: 'donar.form.opt.muebles', icono: '🛋️' },
+    libros: { key: 'donar.form.opt.libros', icono: '📚' },
+    juguetes: { key: 'donar.form.opt.juguetes', icono: '🧸' },
+    alimentos: { key: 'donar.form.opt.alimentos', icono: '🥫' },
+    material_escolar: { key: 'donar.form.opt.materialescolar', icono: '✏️' },
+    higiene: { key: 'donar.form.opt.higiene', icono: '🧼' },
+    medicinas: { key: 'donar.form.opt.medicinas', icono: '💊' },
+    otro: { key: 'donar.form.opt.otro', icono: '📦' }
   };
 
   var MESES_CORTOS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
@@ -144,7 +149,7 @@
   function buildCardHTML(row) {
     var esReciclaje = row.tipo === 'reciclaje';
     var emojiTipo = esReciclaje ? '♻️' : '🎁';
-    var badgeTexto = esReciclaje ? 'Reciclaje' : 'Donación';
+    var badgeTexto = esReciclaje ? t('mapa.type.reciclaje') : t('mapa.type.donacion');
     var badgeClase = esReciclaje ? 'camp-card__badge--reciclaje' : 'camp-card__badge--donacion';
 
     var bannerStyle = row.banner_url ? ' style="background-image:url(\'' + escapeHtml(row.banner_url) + '\')"' : '';
@@ -168,7 +173,7 @@
     var metaGoalHTML = '';
     if (row.meta_cantidad) {
       var unidad = row.meta_unidad ? escapeHtml(row.meta_unidad) : '';
-      metaGoalHTML = '<p class="camp-card__meta-goal">🎯 Meta: ' + row.meta_cantidad + (unidad ? ' ' + unidad : '') + '</p>';
+      metaGoalHTML = '<p class="camp-card__meta-goal">' + t('donar.campanas.metaCard') + ' ' + row.meta_cantidad + (unidad ? ' ' + unidad : '') + '</p>';
     }
 
     return (
@@ -183,7 +188,7 @@
           '<p class="camp-card__desc">' + escapeHtml(row.descripcion) + '</p>' +
           metaHTML +
           metaGoalHTML +
-          '<button type="button" class="dh-card-btn camp-card__btn">Ver más →</button>' +
+          '<button type="button" class="dh-card-btn camp-card__btn">' + t('donar.campanas.verMas') + '</button>' +
         '</div>' +
       '</div>'
     );
@@ -234,10 +239,10 @@
       .then(function (res) {
         if (res.error) {
           console.error('[RECO+] Error cargando campañas de reciclaje:', res.error);
-          renderCarousel('campCarouselReciclaje', [], 'No se pudieron cargar las campañas por ahora.');
+          renderCarousel('campCarouselReciclaje', [], t('donar.campanas.errorCargar'));
           return;
         }
-        renderCarousel('campCarouselReciclaje', res.data, 'Todavía no hay campañas de reciclaje activas. ¡Sé la primera empresa en publicar una desde Alianzas!');
+        renderCarousel('campCarouselReciclaje', res.data, t('donar.campanas.vacio.reciclaje'));
       });
 
     client
@@ -251,10 +256,10 @@
       .then(function (res) {
         if (res.error) {
           console.error('[RECO+] Error cargando campañas de donación:', res.error);
-          renderCarousel('campCarouselDonacion', [], 'No se pudieron cargar las campañas por ahora.');
+          renderCarousel('campCarouselDonacion', [], t('donar.campanas.errorCargar'));
           return;
         }
-        renderCarousel('campCarouselDonacion', res.data, 'Todavía no hay campañas de donación activas. ¡Sé la primera empresa en publicar una desde Alianzas!');
+        renderCarousel('campCarouselDonacion', res.data, t('donar.campanas.vacio.donacion'));
       });
   }
 
@@ -295,20 +300,29 @@
     var items = itemsDe(row);
     if (!items.length) return '';
     var chips = items.map(function (id) {
-      var info = catalogo[id] || { nombre: id, icono: '•' };
-      return '<span class="camp-detail-chip">' + info.icono + ' ' + escapeHtml(info.nombre) + '</span>';
+      var info = catalogo[id];
+      var nombre = info ? t(info.key) : id;
+      var icono = info ? info.icono : '•';
+      return '<span class="camp-detail-chip">' + icono + ' ' + escapeHtml(nombre) + '</span>';
     }).join('');
     return '<div class="camp-detail-chips">' + chips + '</div>';
   }
+
+  // Fila de la campaña actualmente abierta en el modal de detalle (o
+  // null si está cerrado). Se usa para poder volver a pintar el modal
+  // con el idioma nuevo si el usuario cambia ES/EN mientras lo tiene
+  // abierto (ver el listener de "reco:langchange" al final del archivo).
+  var currentDetailRow = null;
 
   function openCampDetailModal(row) {
     var overlay = document.getElementById('campDetailModal');
     if (!overlay || !row) return;
 
+    currentDetailRow = row;
     var esReciclaje = row.tipo === 'reciclaje';
 
     var kicker = document.getElementById('campDetailKicker');
-    if (kicker) kicker.textContent = esReciclaje ? '♻️ Campaña de reciclaje' : '🎁 Campaña de donación';
+    if (kicker) kicker.textContent = esReciclaje ? t('donar.campdetalle.kicker.reciclaje') : t('donar.campdetalle.kicker.donacion');
 
     var imgWrap = document.getElementById('campDetailImg');
     if (imgWrap) imgWrap.innerHTML = imageOrEmojiLarge(row);
@@ -331,7 +345,7 @@
 
       if (row.meta_cantidad) {
         var unidad = row.meta_unidad ? escapeHtml(row.meta_unidad) : '';
-        metaRows.push('<div><span class="donar-detail-meta-ic">🎯</span>Meta: ' + row.meta_cantidad + (unidad ? ' ' + unidad : '') + '</div>');
+        metaRows.push('<div><span class="donar-detail-meta-ic">🎯</span>' + t('donar.campdetalle.meta') + ' ' + row.meta_cantidad + (unidad ? ' ' + unidad : '') + '</div>');
       }
 
       metaEl.innerHTML = metaRows.join('') + chipsHTML(row);
@@ -351,6 +365,7 @@
     if (!overlay) return;
     overlay.classList.remove('open');
     document.body.classList.remove('dh-modal-lock');
+    currentDetailRow = null;
   }
 
   /* ── Zona de inscripción: 3 estados posibles ── */
@@ -360,14 +375,14 @@
   }
 
   function zonaCargandoHTML() {
-    return '<p class="camp-inscribir__cargando">Cargando…</p>';
+    return '<p class="camp-inscribir__cargando">' + t('donar.campins.cargando') + '</p>';
   }
 
   function zonaInvitadoHTML() {
     return (
       '<div class="camp-inscribir camp-inscribir--guest">' +
-        '<p>Inicia sesión para inscribirte en esta campaña.</p>' +
-        '<button type="button" class="dh-card-btn" id="campInsLoginBtn">Iniciar sesión →</button>' +
+        '<p>' + t('donar.campins.invitado.desc') + '</p>' +
+        '<button type="button" class="dh-card-btn" id="campInsLoginBtn">' + t('donar.campins.invitado.btn') + '</button>' +
       '</div>'
     );
   }
@@ -375,21 +390,21 @@
   function zonaFormularioHTML(nombrePrefill) {
     return (
       '<div class="camp-inscribir">' +
-        '<h4 class="camp-inscribir__title">Inscríbete en esta campaña</h4>' +
+        '<h4 class="camp-inscribir__title">' + t('donar.campins.form.titulo') + '</h4>' +
         '<div class="camp-inscribir__field">' +
-          '<label for="campInsNombre">Nombre completo</label>' +
+          '<label for="campInsNombre">' + t('donar.campins.form.nombreLabel') + '</label>' +
           '<input type="text" id="campInsNombre" class="donar-input" maxlength="120" value="' + escapeHtml(nombrePrefill) + '">' +
         '</div>' +
         '<div class="camp-inscribir__field">' +
-          '<label for="campInsTelefono">Teléfono <span class="donar-optional">(opcional)</span></label>' +
-          '<input type="tel" id="campInsTelefono" class="donar-input" maxlength="30" placeholder="Ej. 6123-4567">' +
+          '<label for="campInsTelefono">' + t('donar.campins.form.telefonoLabel') + ' <span class="donar-optional">' + t('donar.campins.form.telefonoOpcional') + '</span></label>' +
+          '<input type="tel" id="campInsTelefono" class="donar-input" maxlength="30" placeholder="' + t('donar.campins.form.telefonoPh') + '">' +
         '</div>' +
         '<div class="camp-inscribir__field">' +
-          '<label for="campInsMensaje">Comentario <span class="donar-optional">(opcional)</span></label>' +
-          '<textarea id="campInsMensaje" class="donar-input donar-textarea" maxlength="300" placeholder="Ej. cuánto material aproximado llevarás, o qué te gustaría donar/aportar"></textarea>' +
+          '<label for="campInsMensaje">' + t('donar.campins.form.mensajeLabel') + ' <span class="donar-optional">' + t('donar.campins.form.mensajeOpcional') + '</span></label>' +
+          '<textarea id="campInsMensaje" class="donar-input donar-textarea" maxlength="300" placeholder="' + t('donar.campins.form.mensajePh') + '"></textarea>' +
         '</div>' +
         '<p class="camp-inscribir__status" id="campInsStatus"></p>' +
-        '<button type="button" class="dh-card-btn" id="campInsSubmitBtn">Inscribirme →</button>' +
+        '<button type="button" class="dh-card-btn" id="campInsSubmitBtn">' + t('donar.campins.form.submitBtn') + '</button>' +
       '</div>'
     );
   }
@@ -397,9 +412,9 @@
   function zonaYaInscritoHTML() {
     return (
       '<div class="camp-inscribir camp-inscribir--ok">' +
-        '<p>✅ Ya estás inscrito en esta campaña.</p>' +
+        '<p>' + t('donar.campins.yaInscrito.msg') + '</p>' +
         '<p class="camp-inscribir__status" id="campInsStatus"></p>' +
-        '<button type="button" class="camp-inscribir__cancel" id="campInsCancelarBtn">Cancelar inscripción</button>' +
+        '<button type="button" class="camp-inscribir__cancel" id="campInsCancelarBtn">' + t('donar.campins.yaInscrito.cancelarBtn') + '</button>' +
       '</div>'
     );
   }
@@ -422,7 +437,7 @@
       var mensaje = zona.querySelector('#campInsMensaje').value.trim();
 
       if (!nombre) {
-        statusEl.textContent = 'Ingresa tu nombre para inscribirte.';
+        statusEl.textContent = t('donar.campins.form.errorNombre');
         statusEl.setAttribute('data-tipo', 'error');
         return;
       }
@@ -431,7 +446,7 @@
       if (!client) return;
 
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Inscribiendo...';
+      submitBtn.textContent = t('donar.campins.form.enviando');
       statusEl.textContent = '';
       statusEl.removeAttribute('data-tipo');
 
@@ -445,7 +460,7 @@
       }).then(function (res) {
         if (res.error) {
           submitBtn.disabled = false;
-          submitBtn.textContent = 'Inscribirme →';
+          submitBtn.textContent = t('donar.campins.form.submitBtn');
           // 23505 = ya existe una fila con esa (campana_id, user_id) —
           // pudo pasar si el usuario tenía dos pestañas abiertas.
           if (res.error.code === '23505') {
@@ -453,7 +468,7 @@
             wireYaInscrito(row, user);
             return;
           }
-          statusEl.textContent = 'No se pudo completar tu inscripción. Intenta de nuevo.';
+          statusEl.textContent = t('donar.campins.form.errorGenerico');
           statusEl.setAttribute('data-tipo', 'error');
           return;
         }
@@ -470,14 +485,14 @@
     var statusEl = zona.querySelector('#campInsStatus');
 
     cancelarBtn.addEventListener('click', function () {
-      var ok = window.confirm('¿Seguro que quieres cancelar tu inscripción a esta campaña?');
+      var ok = window.confirm(t('donar.campins.confirmCancelar'));
       if (!ok) return;
 
       var client = getClient();
       if (!client) return;
 
       cancelarBtn.disabled = true;
-      cancelarBtn.textContent = 'Cancelando...';
+      cancelarBtn.textContent = t('donar.campins.yaInscrito.cancelando');
 
       client.from('campana_inscripciones').delete()
         .eq('campana_id', row.id)
@@ -485,9 +500,9 @@
         .then(function (res) {
           if (res.error) {
             cancelarBtn.disabled = false;
-            cancelarBtn.textContent = 'Cancelar inscripción';
+            cancelarBtn.textContent = t('donar.campins.yaInscrito.cancelarBtn');
             if (statusEl) {
-              statusEl.textContent = 'No se pudo cancelar tu inscripción. Intenta de nuevo.';
+              statusEl.textContent = t('donar.campins.yaInscrito.errorCancelar');
               statusEl.setAttribute('data-tipo', 'error');
             }
             return;
@@ -573,7 +588,22 @@
     });
   }
 
+  /* ── Idioma dinámico ──
+     Las tarjetas de campañas y el modal de detalle/inscripción se
+     generan en JS (innerHTML), así que no se actualizan solos como
+     el resto del HTML estático con data-i18n. Al recibir el evento
+     "reco:langchange" (disparado por applyLang en i18n.js) volvemos
+     a pedir y pintar las campañas, y si el modal de detalle sigue
+     abierto, también lo repintamos con el idioma nuevo. */
+  function initLangSync() {
+    document.addEventListener('reco:langchange', function () {
+      cargarCampanas();
+      if (currentDetailRow) openCampDetailModal(currentDetailRow);
+    });
+  }
+
   ready(cargarCampanas);
   ready(wireCarouselArrows);
   ready(setupDetailModal);
+  ready(initLangSync);
 })();

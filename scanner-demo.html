@@ -180,7 +180,7 @@
     <!-- navbar__spacer keeps compatibility with darkmode.js auto-injection -->
     <div class="bubble-nav__actions navbar__spacer">
       <!-- Dark mode pill: sun | moon -->
-      <div class="dm-pill" id="darkModeToggle" role="button" title="Cambiar modo claro/oscuro" aria-label="Toggle dark mode">
+      <div class="dm-pill" id="darkModeToggle" role="button" title="Cambiar modo claro/oscuro" aria-label="Cambiar modo claro/oscuro" data-i18n-title="nav.darkmode.toggle" data-i18n-aria="nav.darkmode.toggle">
         <span class="dm-pill__btn dm-pill__sun dm-sun" id="dmSunBtn">
           <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" width="16" height="16">
             <circle cx="10" cy="10" r="3.5"/>
@@ -198,7 +198,7 @@
       </div>
 
       <!-- Language toggle pill -->
-      <button class="lang-pill" onclick="toggleLang()" aria-label="Cambiar idioma" data-current="es">
+      <button class="lang-pill" onclick="toggleLang()" aria-label="Cambiar idioma" data-i18n-aria="nav.lang.toggle" data-current="es">
         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15">
           <circle cx="10" cy="10" r="8"/>
           <ellipse cx="10" cy="10" rx="3.5" ry="8"/>
@@ -221,9 +221,9 @@
 
 <div class="contenedor">
   <header class="encabezado">
-    <span class="eyebrow">RECO+ · Escáner</span>
-    <h1>¿Qué estás reciclando?</h1>
-    <p>Apunta la cámara al objeto. Lo identificamos y te decimos en qué categoría va.</p>
+    <span class="eyebrow" data-i18n="scannerdemo.eyebrow">RECO+ · Escáner</span>
+    <h1 data-i18n="scannerdemo.title">¿Qué estás reciclando?</h1>
+    <p data-i18n="scannerdemo.subtitle">Apunta la cámara al objeto. Lo identificamos y te decimos en qué categoría va.</p>
   </header>
 
   <!-- Widget del escáner -->
@@ -238,10 +238,10 @@
 
       <div class="reco-scanner__overlay" id="recoOverlay">
         <div class="reco-scanner__spinner" id="recoSpinner"></div>
-        <div class="reco-scanner__overlay-texto" id="recoOverlayTexto">
+        <div class="reco-scanner__overlay-texto" id="recoOverlayTexto" data-i18n="scannerdemo.overlay.inicial">
           Toca "Iniciar escáner" para activar la cámara.
         </div>
-        <button class="reco-scanner__overlay-boton" id="recoBotonOverlay">Iniciar escáner</button>
+        <button class="reco-scanner__overlay-boton" id="recoBotonOverlay" data-i18n="scannerdemo.btn.iniciar">Iniciar escáner</button>
       </div>
     </div>
 
@@ -250,33 +250,33 @@
       <div class="reco-scanner__resultado-texto">
         <div class="reco-scanner__resultado-material" id="recoMaterialNombre">—</div>
         <span class="reco-scanner__resultado-badge" id="recoBadge" style="display:none"></span>
-        <div class="reco-scanner__resultado-detalle" id="recoDetalle">Esperando objeto...</div>
+        <div class="reco-scanner__resultado-detalle" id="recoDetalle" data-i18n="scannerdemo.resultado.esperando">Esperando objeto...</div>
       </div>
       <div class="reco-scanner__resultado-confianza" id="recoConfianza">—</div>
     </div>
 
     <div class="reco-scanner__controles">
-      <button class="reco-scanner__btn" id="recoBtnPausar" disabled>Pausar</button>
-      <button class="reco-scanner__btn reco-scanner__btn--primario" id="recoBtnDetener" disabled>Detener cámara</button>
+      <button class="reco-scanner__btn" id="recoBtnPausar" disabled data-i18n="scannerdemo.btn.pausar">Pausar</button>
+      <button class="reco-scanner__btn reco-scanner__btn--primario" id="recoBtnDetener" disabled data-i18n="scannerdemo.btn.detener">Detener cámara</button>
     </div>
 
     <div class="reco-scanner__controles">
-      <button class="reco-scanner__btn reco-scanner__btn--ia" id="recoBtnIA" disabled>
+      <button class="reco-scanner__btn reco-scanner__btn--ia" id="recoBtnIA" disabled data-i18n="scannerdemo.btn.ia">
         ✨ Escaneo preciso (IA)
       </button>
     </div>
 
     <div class="reco-scanner__controles" id="recoVolverEscanearWrap" hidden>
-      <button class="reco-scanner__btn reco-scanner__btn--primario" id="recoBtnVolverEscanear">
+      <button class="reco-scanner__btn reco-scanner__btn--primario" id="recoBtnVolverEscanear" data-i18n="scannerdemo.btn.volverEscanear">
         🔄 Volver a escanear
       </button>
     </div>
   </div>
 
   <section class="historial">
-    <h2>Detectados en esta sesión</h2>
+    <h2 data-i18n="scannerdemo.historial.title">Detectados en esta sesión</h2>
     <ul id="recoHistorial">
-      <li style="opacity:.5">Aún no se ha detectado nada.</li>
+      <li style="opacity:.5" data-i18n="scannerdemo.historial.vacio">Aún no se ha detectado nada.</li>
     </ul>
   </section>
 </div>
@@ -324,23 +324,24 @@
     onEstado: (estado, detalle) => {
       contenedor.setAttribute('data-estado', estado);
 
+      const tr = (key, fb) => (window.t ? t(key) : fb);
       const textos = {
-        [ESTADOS.INACTIVO]: 'Toca "Iniciar escáner" para activar la cámara.',
-        [ESTADOS.SOLICITANDO_CAMARA]: 'Solicitando acceso a la cámara...',
-        [ESTADOS.CARGANDO_MODELO]: 'Cargando el modelo de reconocimiento (puede tardar unos segundos)...',
-        [ESTADOS.LISTO]: 'Listo. Apunta al objeto.',
+        [ESTADOS.INACTIVO]: tr('scannerdemo.overlay.inicial', 'Toca "Iniciar escáner" para activar la cámara.'),
+        [ESTADOS.SOLICITANDO_CAMARA]: tr('scannerdemo.overlay.solicitando', 'Solicitando acceso a la cámara...'),
+        [ESTADOS.CARGANDO_MODELO]: tr('scannerdemo.overlay.cargandoModelo', 'Cargando el modelo de reconocimiento (puede tardar unos segundos)...'),
+        [ESTADOS.LISTO]: tr('scannerdemo.overlay.listo', 'Listo. Apunta al objeto.'),
         [ESTADOS.ESCANEANDO]: '',
-        [ESTADOS.ERROR]: 'Ocurrió un problema.',
+        [ESTADOS.ERROR]: tr('scannerdemo.overlay.error', 'Ocurrió un problema.'),
       };
 
       overlayTexto.textContent = textos[estado] || '';
       spinner.style.display = (estado === ESTADOS.SOLICITANDO_CAMARA || estado === ESTADOS.CARGANDO_MODELO) ? 'block' : 'none';
       botonOverlay.style.display = (estado === ESTADOS.INACTIVO || estado === ESTADOS.ERROR) ? 'inline-block' : 'none';
-      botonOverlay.textContent = estado === ESTADOS.ERROR ? 'Reintentar' : 'Iniciar escáner';
+      botonOverlay.textContent = estado === ESTADOS.ERROR ? tr('scannerdemo.btn.reintentar', 'Reintentar') : tr('scannerdemo.btn.iniciar', 'Iniciar escáner');
 
       btnPausar.disabled = !(estado === ESTADOS.ESCANEANDO);
       btnDetener.disabled = !(estado === ESTADOS.ESCANEANDO || estado === ESTADOS.LISTO);
-      btnPausar.textContent = 'Pausar';
+      btnPausar.textContent = tr('scannerdemo.btn.pausar', 'Pausar');
 
       // El botón de IA solo tiene sentido con la cámara ya activa
       // (listo o escaneando). El sub-estado de la propia llamada IA
@@ -356,16 +357,16 @@
         // este estado) y se muestra "Volver a escanear" como única vía
         // para reactivar la clasificación en vivo.
         btnIA.disabled = true;
-        btnIA.textContent = '✨ Escaneo preciso (IA)';
+        btnIA.textContent = tr('scannerdemo.btn.ia', '✨ Escaneo preciso (IA)');
         btnPausar.disabled = true;
         volverEscanearWrap.hidden = false;
       } else if (subEstadoIA) {
         btnIA.disabled = true;
-        btnIA.textContent = subEstadoIA === 'capturando' ? '📸 Capturando...' : '🔎 Consultando IA...';
+        btnIA.textContent = subEstadoIA === 'capturando' ? tr('scannerdemo.btn.iaCapturando', '📸 Capturando...') : tr('scannerdemo.btn.iaConsultando', '🔎 Consultando IA...');
         volverEscanearWrap.hidden = true;
       } else {
         btnIA.disabled = !camaraActiva;
-        btnIA.textContent = '✨ Escaneo preciso (IA)';
+        btnIA.textContent = tr('scannerdemo.btn.ia', '✨ Escaneo preciso (IA)');
         volverEscanearWrap.hidden = true;
       }
     },
@@ -389,20 +390,25 @@
         badgeEl.style.display = 'none';
       }
 
+      const trv = (key, vars, fb) => (window.t ? t(key, vars) : fb);
       if (meta && meta.fuente === 'gemini') {
         // Resultado de un escaneo preciso puntual (una sola muestra,
         // no hay "votos" de una ventana como en MobileNet).
-        const etiquetaConfianza = { alta: 'IA · confianza alta', media: 'IA · confianza media', baja: 'IA · confianza baja' };
-        confianzaEl.textContent = etiquetaConfianza[meta.confianza] || 'IA';
+        const etiquetaConfianza = {
+          alta: trv('scannerdemo.confianza.alta', null, 'IA · confianza alta'),
+          media: trv('scannerdemo.confianza.media', null, 'IA · confianza media'),
+          baja: trv('scannerdemo.confianza.baja', null, 'IA · confianza baja'),
+        };
+        confianzaEl.textContent = etiquetaConfianza[meta.confianza] || trv('scannerdemo.confianza.ia', null, 'IA');
         detalleEl.textContent = material.mensaje
           ? material.mensaje
-          : (material.labelOriginal ? `Gemini detectó: ${material.labelOriginal}` : 'Clasificado por IA');
+          : (material.labelOriginal ? trv('scannerdemo.deteccion.gemini', { label: material.labelOriginal }, `Gemini detectó: ${material.labelOriginal}`) : trv('scannerdemo.deteccion.clasificadoIA', null, 'Clasificado por IA'));
       } else if (material.id === 'sin_confianza') {
-        confianzaEl.textContent = 'Sin certeza';
-        detalleEl.textContent = 'Acércate más o mejora la iluminación.';
+        confianzaEl.textContent = trv('scannerdemo.confianza.sinCerteza', null, 'Sin certeza');
+        detalleEl.textContent = trv('scannerdemo.confianza.detalleSinCerteza', null, 'Acércate más o mejora la iluminación.');
       } else {
         const votos = meta ? `${meta.votos}/${meta.deVentana}` : '';
-        confianzaEl.textContent = material.confianzaBaja ? 'Confianza baja' : `Consenso ${votos}`;
+        confianzaEl.textContent = material.confianzaBaja ? trv('scannerdemo.confianza.baja2', null, 'Confianza baja') : trv('scannerdemo.confianza.consenso', { votos }, `Consenso ${votos}`);
 
         // Prioriza el mensaje real de Supabase (mensaje_escaner); si
         // aún no cargó, cae al detalle técnico de qué vio el modelo.
@@ -411,8 +417,8 @@
         } else {
           const top1 = prediccionesCrudas[0];
           detalleEl.textContent = material.coincidenciaKeyword
-            ? `Detectado como "${material.coincidenciaKeyword}"`
-            : `Sin categoría exacta (visto: "${top1.label.split(',')[0]}")`;
+            ? trv('scannerdemo.deteccion.keyword', { kw: material.coincidenciaKeyword }, `Detectado como "${material.coincidenciaKeyword}"`)
+            : trv('scannerdemo.deteccion.sinCategoria', { top: top1.label.split(',')[0] }, `Sin categoría exacta (visto: "${top1.label.split(',')[0]}")`);
         }
       }
 
@@ -440,7 +446,7 @@
       overlayTexto.textContent = mensajeErrorLegible(error);
       spinner.style.display = 'none';
       botonOverlay.style.display = 'inline-block';
-      botonOverlay.textContent = 'Reintentar';
+      botonOverlay.textContent = (window.t ? t('scannerdemo.btn.reintentar') : 'Reintentar');
       console.error(`[RecoScanner] Error en "${contexto}":`, error);
     },
   });
@@ -461,12 +467,14 @@
   botonOverlay.addEventListener('click', () => scanner.iniciar());
 
   btnPausar.addEventListener('click', () => {
-    if (btnPausar.textContent === 'Pausar') {
+    const textoPausar = (window.t ? t('scannerdemo.btn.pausar') : 'Pausar');
+    const textoReanudar = (window.t ? t('scannerdemo.btn.reanudar') : 'Reanudar');
+    if (btnPausar.textContent === textoPausar) {
       scanner.pausar();
-      btnPausar.textContent = 'Reanudar';
+      btnPausar.textContent = textoReanudar;
     } else {
       scanner.reanudar();
-      btnPausar.textContent = 'Pausar';
+      btnPausar.textContent = textoPausar;
     }
   });
 
