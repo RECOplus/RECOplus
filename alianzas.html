@@ -534,7 +534,8 @@ html.dark .dm-pill__sun { opacity: 0.38; }
   <!-- Capa aditiva: botón + modal de comentarios en el footer -->
   <script src="comentar-modal.js"></script>
   <!-- Capa aditiva: ventana modal de registro de empresa/aliado (botón "Registrarse") -->
-  <script src="alianzas-registro-modal.js"></script>
+  <!-- rae.js reemplaza a alianzas-registro-modal.js: mismo formulario de 9 pasos, pero con soporte i18n (tr()/window.t()) -->
+  <script src="rae.js"></script>
   <!-- Capa aditiva: el botón "Quiero ser aliado" del CTA final abre el
        mismo modal de registro que "Registrarse →" en la tarjeta de
        arriba, reusando exactamente el mismo flujo (incluyendo el guard
