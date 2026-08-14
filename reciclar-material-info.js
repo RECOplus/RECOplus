@@ -24,12 +24,19 @@
  * editar la información.
  *
  * Mientras esa carga termina (o si falla, ej. sin internet), se usa
- * un respaldo local (MATERIALS_RESPALDO) idéntico al contenido
- * original, para que el panel nunca se muestre vacío. En cuanto los
- * datos de Supabase llegan, si la ventana ya está abierta, su
- * contenido se refresca solo con la versión más actualizada.
+ * un respaldo local (MATERIALS_RESPALDO) traducido vía el sistema
+ * i18n del sitio (i18n.js: función global t() + namespace
+ * "rminfo.*"), para que el panel nunca se muestre vacío y respete
+ * el idioma activo (ES/EN). En cuanto los datos de Supabase llegan,
+ * si la ventana ya está abierta, su contenido se refresca solo con
+ * la versión más actualizada. Si el idioma cambia mientras la
+ * ventana está abierta (evento "reco:langchange" que dispara
+ * i18n.js), también se refresca en el sitio.
  *
- * Cárgalo DESPUÉS de reciclar.js:
+ * Cárgalo DESPUÉS de i18n.js y de reciclar.js:
+ * <script src="i18n.js"></script>
+ * ...
+ * <script src="reciclar.js"></script>
  * <script src="reciclar-material-info.js"></script>
  */
 (function () {
@@ -41,6 +48,26 @@
     } else {
       fn();
     }
+  }
+
+  // Traducción segura: usa el helper global t() de i18n.js si ya
+  // está cargado; si por algún motivo no lo está, devuelve la
+  // propia clave para no romper el render (mejor una clave visible
+  // que un panel vacío).
+  function tr(key) {
+    return (typeof window.t === "function") ? window.t(key) : key;
+  }
+
+  // Idioma activo del sitio, leído igual que i18n.js (misma clave de
+  // localStorage: "reco-lang"). Se usa para elegir, de los datos que
+  // llegan de Supabase, las columnas en español (por defecto) o las
+  // columnas "_en" (cuando el usuario tiene el sitio en inglés) —
+  // así la tarjeta de info de material respeta el idioma activo
+  // también cuando el contenido viene de la base de datos y no del
+  // respaldo local traducido vía tr().
+  function isEnglish() {
+    return (typeof window.localStorage !== "undefined") &&
+      window.localStorage.getItem("reco-lang") === "en";
   }
 
   // Ícono reutilizado de cada .rc-material__icon (mismo SVG que ya
@@ -57,379 +84,164 @@
 
   // ── Respaldo local ──
   // Se usa mientras cargan los datos de Supabase, o si la carga
-  // falla. Mismo contenido que tenía este archivo originalmente.
-  // reciclable: true/false controla el badge (verde "Reciclable" /
-  // ámbar "Requiere punto especial").
-  // impacto: frase corta de cierre, coherente con la calculadora
-  // de impacto de la misma página (no repite cifras exactas, solo
-  // contextualiza).
+  // falla. Cada campo traducible guarda la CLAVE i18n (namespace
+  // "rminfo.*" en i18n.js) en vez del texto ya resuelto, para que
+  // getMaterialData() lo traduzca en el idioma activo en cada
+  // render (ver tr() más abajo). Las claves "detalleKey" de
+  // "lugares" apuntan a etiquetas genéricas reutilizadas entre
+  // materiales (ej. "rminfo.lugar.recomendado").
+  // warn: true/false controla el badge (verde "Reciclable" / ámbar
+  // "Requiere punto especial").
   var MATERIALS_RESPALDO = {
     electronicos: {
-      badge: "Requiere punto especial",
+      badgeKey: "rminfo.mat.electronicos.badge",
       warn: true,
-      preparacion: [
-        "Borra tus datos personales y haz respaldo antes de entregarlo.",
-        "Retira baterías o pilas si el dispositivo lo permite.",
-        "Entrégalo completo, sin desarmar ni retirar piezas internas."
-      ],
-      lugares: [
-        { nombre: "Centros de acopio electrónico", detalle: "Recomendado" },
-        { nombre: "Puntos de marcas participantes", detalle: "Según fabricante" },
-        { nombre: "Campañas municipales de e-waste", detalle: "Temporales" }
-      ],
-      obtienes: [
-        "Se recuperan metales como oro, cobre y aluminio.",
-        "Se evita la filtración de componentes tóxicos al suelo.",
-        "Partes reutilizables alargan la vida de otros equipos."
-      ],
-      impacto: "Cada equipo evita contaminación por plomo y mercurio."
+      prepKeys: ["rminfo.mat.electronicos.prep1", "rminfo.mat.electronicos.prep2", "rminfo.mat.electronicos.prep3"],
+      lugares: [{ nombreKey: "rminfo.mat.electronicos.lugar1", detalleKey: "rminfo.lugar.recomendado" }, { nombreKey: "rminfo.mat.electronicos.lugar2", detalleKey: "rminfo.lugar.segunFabricante" }, { nombreKey: "rminfo.mat.electronicos.lugar3", detalleKey: "rminfo.lugar.temporales" }],
+      obtieneKeys: ["rminfo.mat.electronicos.obt1", "rminfo.mat.electronicos.obt2", "rminfo.mat.electronicos.obt3"],
+      impactoKey: "rminfo.mat.electronicos.impacto"
     },
     celulares: {
-      badge: "Requiere punto especial",
+      badgeKey: "rminfo.mat.celulares.badge",
       warn: true,
-      preparacion: [
-        "Haz respaldo de tus fotos y contactos, luego borra el equipo.",
-        "Retira la funda, chip SIM y tarjeta de memoria.",
-        "Si la batería está hinchada, no la manipules: entrégala así."
-      ],
-      lugares: [
-        { nombre: "Puntos de recolección de operadoras", detalle: "Recomendado" },
-        { nombre: "Centros de acopio electrónico", detalle: "Alternativa" }
-      ],
-      obtienes: [
-        "Se recuperan metales preciosos de la placa base.",
-        "Equipos funcionales pueden reacondicionarse y donarse.",
-        "Se evita que baterías dañadas terminen en rellenos sanitarios."
-      ],
-      impacto: "Un celular reciclado recupera hasta 30 materiales distintos."
+      prepKeys: ["rminfo.mat.celulares.prep1", "rminfo.mat.celulares.prep2", "rminfo.mat.celulares.prep3"],
+      lugares: [{ nombreKey: "rminfo.mat.celulares.lugar1", detalleKey: "rminfo.lugar.recomendado" }, { nombreKey: "rminfo.mat.celulares.lugar2", detalleKey: "rminfo.lugar.alternativa" }],
+      obtieneKeys: ["rminfo.mat.celulares.obt1", "rminfo.mat.celulares.obt2", "rminfo.mat.celulares.obt3"],
+      impactoKey: "rminfo.mat.celulares.impacto"
     },
     plastico: {
-      badge: "Reciclable",
+      badgeKey: "rminfo.mat.plastico.badge",
       warn: false,
-      preparacion: [
-        "Enjuaga el envase para retirar restos de comida o líquido.",
-        "Retira tapas y etiquetas si son de un material distinto.",
-        "Aplástalo para ahorrar espacio, sin romperlo en pedazos pequeños."
-      ],
-      lugares: [
-        { nombre: "Contenedores de reciclaje municipal", detalle: "Recomendado" },
-        { nombre: "Centros de acopio de plásticos", detalle: "Mayor volumen" }
-      ],
-      obtienes: [
-        "Se transforma en fibra textil, mobiliario o nuevos envases.",
-        "Reduce la extracción de petróleo para plástico virgen.",
-        "Disminuye la cantidad de plástico que llega a ríos y mares."
-      ],
-      impacto: "Reciclar 1 kg de plástico ahorra cerca de 2 kg de CO₂."
+      prepKeys: ["rminfo.mat.plastico.prep1", "rminfo.mat.plastico.prep2", "rminfo.mat.plastico.prep3"],
+      lugares: [{ nombreKey: "rminfo.mat.plastico.lugar1", detalleKey: "rminfo.lugar.recomendado" }, { nombreKey: "rminfo.mat.plastico.lugar2", detalleKey: "rminfo.lugar.mayorVolumen" }],
+      obtieneKeys: ["rminfo.mat.plastico.obt1", "rminfo.mat.plastico.obt2", "rminfo.mat.plastico.obt3"],
+      impactoKey: "rminfo.mat.plastico.impacto"
     },
     metal: {
-      badge: "Reciclable",
+      badgeKey: "rminfo.mat.metal.badge",
       warn: false,
-      preparacion: [
-        "Enjuaga latas y envases metálicos para quitar residuos.",
-        "Separa tapas de plástico o vidrio si vienen combinadas.",
-        "No es necesario aplastar las latas, pero ayuda al transporte."
-      ],
-      lugares: [
-        { nombre: "Contenedores de reciclaje municipal", detalle: "Recomendado" },
-        { nombre: "Chatarrerías y centros de acopio metálico", detalle: "Mayor volumen" }
-      ],
-      obtienes: [
-        "El metal se funde y reutiliza casi sin perder calidad.",
-        "Ahorra energía frente a la extracción de metal nuevo.",
-        "Reduce la minería y su impacto ambiental asociado."
-      ],
-      impacto: "El aluminio reciclado usa hasta 95% menos energía que el nuevo."
+      prepKeys: ["rminfo.mat.metal.prep1", "rminfo.mat.metal.prep2", "rminfo.mat.metal.prep3"],
+      lugares: [{ nombreKey: "rminfo.mat.metal.lugar1", detalleKey: "rminfo.lugar.recomendado" }, { nombreKey: "rminfo.mat.metal.lugar2", detalleKey: "rminfo.lugar.mayorVolumen" }],
+      obtieneKeys: ["rminfo.mat.metal.obt1", "rminfo.mat.metal.obt2", "rminfo.mat.metal.obt3"],
+      impactoKey: "rminfo.mat.metal.impacto"
     },
     papel: {
-      badge: "Reciclable",
+      badgeKey: "rminfo.mat.papel.badge",
       warn: false,
-      preparacion: [
-        "Mantenlo seco: el papel mojado no se puede reciclar.",
-        "Retira clips, grapas y espirales metálicas.",
-        "Separa el papel encerado o plastificado, que no aplica aquí."
-      ],
-      lugares: [
-        { nombre: "Contenedores de reciclaje municipal", detalle: "Recomendado" },
-        { nombre: "Centros de acopio de papel y cartón", detalle: "Mayor volumen" }
-      ],
-      obtienes: [
-        "Se convierte en nuevo papel, cartón o empaques.",
-        "Cada tonelada reciclada salva árboles de tala directa.",
-        "Reduce el consumo de agua frente a producir papel virgen."
-      ],
-      impacto: "Reciclar papel ahorra agua, energía y árboles en pie."
+      prepKeys: ["rminfo.mat.papel.prep1", "rminfo.mat.papel.prep2", "rminfo.mat.papel.prep3"],
+      lugares: [{ nombreKey: "rminfo.mat.papel.lugar1", detalleKey: "rminfo.lugar.recomendado" }, { nombreKey: "rminfo.mat.papel.lugar2", detalleKey: "rminfo.lugar.mayorVolumen" }],
+      obtieneKeys: ["rminfo.mat.papel.obt1", "rminfo.mat.papel.obt2", "rminfo.mat.papel.obt3"],
+      impactoKey: "rminfo.mat.papel.impacto"
     },
     vidrio: {
-      badge: "Reciclable",
+      badgeKey: "rminfo.mat.vidrio.badge",
       warn: false,
-      preparacion: [
-        "Enjuaga el envase y retira tapas metálicas o plásticas.",
-        "No es necesario quitar etiquetas de papel.",
-        "Envuelve el vidrio roto para evitar accidentes al transportarlo."
-      ],
-      lugares: [
-        { nombre: "Contenedores de reciclaje municipal", detalle: "Recomendado" },
-        { nombre: "Centros de acopio de vidrio", detalle: "Mayor volumen" }
-      ],
-      obtienes: [
-        "El vidrio se funde y reutiliza infinitas veces sin perder calidad.",
-        "Se ahorra energía frente a fabricar vidrio desde materia prima.",
-        "Se reduce la extracción de arena y otros minerales."
-      ],
-      impacto: "El vidrio es 100% reciclable sin perder pureza ni calidad."
+      prepKeys: ["rminfo.mat.vidrio.prep1", "rminfo.mat.vidrio.prep2", "rminfo.mat.vidrio.prep3"],
+      lugares: [{ nombreKey: "rminfo.mat.vidrio.lugar1", detalleKey: "rminfo.lugar.recomendado" }, { nombreKey: "rminfo.mat.vidrio.lugar2", detalleKey: "rminfo.lugar.mayorVolumen" }],
+      obtieneKeys: ["rminfo.mat.vidrio.obt1", "rminfo.mat.vidrio.obt2", "rminfo.mat.vidrio.obt3"],
+      impactoKey: "rminfo.mat.vidrio.impacto"
     },
     ropa: {
-      badge: "Reciclable / Donable",
+      badgeKey: "rminfo.mat.ropa.badge",
       warn: false,
-      preparacion: [
-        "Lava y seca la ropa antes de entregarla.",
-        "Separa piezas en buen estado (donación) de las dañadas (textil).",
-        "Junta pares de zapatos y accesorios para facilitar la entrega."
-      ],
-      lugares: [
-        { nombre: "Fundaciones y bancos de ropa", detalle: "Si está en buen estado" },
-        { nombre: "Puntos de acopio textil", detalle: "Ropa dañada o incompleta" }
-      ],
-      obtienes: [
-        "Prendas en buen estado ayudan directamente a otras familias.",
-        "La ropa dañada se transforma en trapos industriales o relleno.",
-        "Se reduce la demanda de fibras textiles nuevas."
-      ],
-      impacto: "Donar una prenda puede darle hasta 3 vidas útiles más."
+      prepKeys: ["rminfo.mat.ropa.prep1", "rminfo.mat.ropa.prep2", "rminfo.mat.ropa.prep3"],
+      lugares: [{ nombreKey: "rminfo.mat.ropa.lugar1", detalleKey: "rminfo.lugar.siBuenEstado" }, { nombreKey: "rminfo.mat.ropa.lugar2", detalleKey: "rminfo.lugar.ropaDaniada" }],
+      obtieneKeys: ["rminfo.mat.ropa.obt1", "rminfo.mat.ropa.obt2", "rminfo.mat.ropa.obt3"],
+      impactoKey: "rminfo.mat.ropa.impacto"
     },
     muebles: {
-      badge: "Reutilizable",
+      badgeKey: "rminfo.mat.muebles.badge",
       warn: false,
-      preparacion: [
-        "Verifica que el mueble esté funcional o fácilmente reparable.",
-        "Límpialo y, si puedes, toma fotos para facilitar la donación.",
-        "Desarma piezas grandes solo si esto no daña la estructura."
-      ],
-      lugares: [
-        { nombre: "Fundaciones y bancos de muebles", detalle: "Si está en buen estado" },
-        { nombre: "Puntos de acopio de madera y metal", detalle: "Muebles dañados" }
-      ],
-      obtienes: [
-        "Muebles reutilizables equipan hogares que los necesitan.",
-        "La madera y el metal se pueden separar y reciclar por tipo.",
-        "Se evita el volumen de relleno sanitario que ocupan los muebles."
-      ],
-      impacto: "Un mueble donado reduce directamente residuos voluminosos."
+      prepKeys: ["rminfo.mat.muebles.prep1", "rminfo.mat.muebles.prep2", "rminfo.mat.muebles.prep3"],
+      lugares: [{ nombreKey: "rminfo.mat.muebles.lugar1", detalleKey: "rminfo.lugar.siBuenEstado" }, { nombreKey: "rminfo.mat.muebles.lugar2", detalleKey: "rminfo.lugar.mueblesDaniados" }],
+      obtieneKeys: ["rminfo.mat.muebles.obt1", "rminfo.mat.muebles.obt2", "rminfo.mat.muebles.obt3"],
+      impactoKey: "rminfo.mat.muebles.impacto"
     },
     libros: {
-      badge: "Reutilizable",
+      badgeKey: "rminfo.mat.libros.badge",
       warn: false,
-      preparacion: [
-        "Verifica que estén completos y en buen estado de lectura.",
-        "Retira separadores, notas adhesivas o material suelto.",
-        "Agrúpalos por tema o nivel escolar si vas a donarlos."
-      ],
-      lugares: [
-        { nombre: "Bibliotecas comunitarias y escuelas", detalle: "Recomendado" },
-        { nombre: "Centros de acopio de papel", detalle: "Si están muy deteriorados" }
-      ],
-      obtienes: [
-        "Libros en buen estado llegan a nuevos lectores.",
-        "Los que no se pueden reutilizar se reciclan como papel.",
-        "Se fomenta el acceso a la lectura en comunidades con menos recursos."
-      ],
-      impacto: "Un libro donado puede pasar por decenas de lectores más."
+      prepKeys: ["rminfo.mat.libros.prep1", "rminfo.mat.libros.prep2", "rminfo.mat.libros.prep3"],
+      lugares: [{ nombreKey: "rminfo.mat.libros.lugar1", detalleKey: "rminfo.lugar.recomendado" }, { nombreKey: "rminfo.mat.libros.lugar2", detalleKey: "rminfo.lugar.muyDeteriorados" }],
+      obtieneKeys: ["rminfo.mat.libros.obt1", "rminfo.mat.libros.obt2", "rminfo.mat.libros.obt3"],
+      impactoKey: "rminfo.mat.libros.impacto"
     },
     juguetes: {
-      badge: "Reutilizable",
+      badgeKey: "rminfo.mat.juguetes.badge",
       warn: false,
-      preparacion: [
-        "Límpialos y verifica que funcionen o estén completos.",
-        "Junta piezas sueltas del mismo juguete en una bolsa.",
-        "Retira pilas si el juguete las usa."
-      ],
-      lugares: [
-        { nombre: "Fundaciones y campañas de juguetes", detalle: "Recomendado" },
-        { nombre: "Centros de acopio según material", detalle: "Juguetes dañados" }
-      ],
-      obtienes: [
-        "Juguetes funcionales alegran a otros niños directamente.",
-        "Piezas plásticas o metálicas pueden reciclarse por separado.",
-        "Se reduce la producción de juguetes nuevos y su huella asociada."
-      ],
-      impacto: "Donar juguetes reduce residuos y genera impacto social directo."
+      prepKeys: ["rminfo.mat.juguetes.prep1", "rminfo.mat.juguetes.prep2", "rminfo.mat.juguetes.prep3"],
+      lugares: [{ nombreKey: "rminfo.mat.juguetes.lugar1", detalleKey: "rminfo.lugar.recomendado" }, { nombreKey: "rminfo.mat.juguetes.lugar2", detalleKey: "rminfo.lugar.juguetesDaniados" }],
+      obtieneKeys: ["rminfo.mat.juguetes.obt1", "rminfo.mat.juguetes.obt2", "rminfo.mat.juguetes.obt3"],
+      impactoKey: "rminfo.mat.juguetes.impacto"
     },
     baterias: {
-      badge: "Requiere punto especial",
+      badgeKey: "rminfo.mat.baterias.badge",
       warn: true,
-      preparacion: [
-        "Nunca las tires a la basura común ni al reciclaje mixto.",
-        "Cubre los polos con cinta si están sueltas, para evitar cortocircuitos.",
-        "Si están hinchadas o dañadas, transpórtalas con cuidado extra."
-      ],
-      lugares: [
-        { nombre: "Puntos de acopio de baterías", detalle: "Obligatorio" },
-        { nombre: "Tiendas de electrónica participantes", detalle: "Alternativa" }
-      ],
-      obtienes: [
-        "Se evita la contaminación de suelo y agua por metales pesados.",
-        "Se recuperan materiales como litio, níquel y cadmio.",
-        "Se previene el riesgo de incendios por descarte inadecuado."
-      ],
-      impacto: "Una sola batería mal desechada puede contaminar litros de agua."
+      prepKeys: ["rminfo.mat.baterias.prep1", "rminfo.mat.baterias.prep2", "rminfo.mat.baterias.prep3"],
+      lugares: [{ nombreKey: "rminfo.mat.baterias.lugar1", detalleKey: "rminfo.lugar.obligatorio" }, { nombreKey: "rminfo.mat.baterias.lugar2", detalleKey: "rminfo.lugar.alternativa" }],
+      obtieneKeys: ["rminfo.mat.baterias.obt1", "rminfo.mat.baterias.obt2", "rminfo.mat.baterias.obt3"],
+      impactoKey: "rminfo.mat.baterias.impacto"
     },
     bombillos: {
-      badge: "Requiere punto especial",
+      badgeKey: "rminfo.mat.bombillos.badge",
       warn: true,
-      preparacion: [
-        "Transpórtalos con cuidado para evitar que se rompan.",
-        "Si es un bombillo ahorrador o fluorescente, no lo tires con la basura.",
-        "Guárdalo en su empaque original si aún lo conservas."
-      ],
-      lugares: [
-        { nombre: "Puntos de acopio de residuos especiales", detalle: "Obligatorio" },
-        { nombre: "Tiendas de iluminación participantes", detalle: "Alternativa" }
-      ],
-      obtienes: [
-        "Se evita la liberación de mercurio en bombillos fluorescentes.",
-        "Se recuperan vidrio y componentes metálicos internos.",
-        "Se reduce el riesgo de contaminación en rellenos sanitarios."
-      ],
-      impacto: "Los bombillos fluorescentes requieren manejo especial por su mercurio."
+      prepKeys: ["rminfo.mat.bombillos.prep1", "rminfo.mat.bombillos.prep2", "rminfo.mat.bombillos.prep3"],
+      lugares: [{ nombreKey: "rminfo.mat.bombillos.lugar1", detalleKey: "rminfo.lugar.obligatorio" }, { nombreKey: "rminfo.mat.bombillos.lugar2", detalleKey: "rminfo.lugar.alternativa" }],
+      obtieneKeys: ["rminfo.mat.bombillos.obt1", "rminfo.mat.bombillos.obt2", "rminfo.mat.bombillos.obt3"],
+      impactoKey: "rminfo.mat.bombillos.impacto"
     },
     carton: {
-      badge: "Reciclable",
+      badgeKey: "rminfo.mat.carton.badge",
       warn: false,
-      preparacion: [
-        "Desarma o aplasta las cajas para ahorrar espacio.",
-        "Retira cinta adhesiva, grapas y restos de plástico o poliestireno.",
-        "Mantenlo seco: el cartón mojado o engrasado no se puede reciclar."
-      ],
-      lugares: [
-        { nombre: "Contenedores de reciclaje municipal", detalle: "Recomendado" },
-        { nombre: "Centros de acopio de papel y cartón", detalle: "Mayor volumen" }
-      ],
-      obtienes: [
-        "Se convierte en nuevas cajas, empaques o papel reciclado.",
-        "Cada tonelada reciclada reduce la tala de árboles.",
-        "Disminuye el volumen de residuos que llega a los rellenos sanitarios."
-      ],
-      impacto: "El cartón puede reciclarse hasta 7 veces antes de perder calidad.",
-      tipsExtra: [
-        "El cartón encerado (como el de pizza con grasa) no se recicla junto al cartón normal.",
-        "Guarda las cajas planas: ocupan menos espacio y facilitan el transporte al punto de acopio."
-      ]
+      prepKeys: ["rminfo.mat.carton.prep1", "rminfo.mat.carton.prep2", "rminfo.mat.carton.prep3"],
+      lugares: [{ nombreKey: "rminfo.mat.carton.lugar1", detalleKey: "rminfo.lugar.recomendado" }, { nombreKey: "rminfo.mat.carton.lugar2", detalleKey: "rminfo.lugar.mayorVolumen" }],
+      obtieneKeys: ["rminfo.mat.carton.obt1", "rminfo.mat.carton.obt2", "rminfo.mat.carton.obt3"],
+      impactoKey: "rminfo.mat.carton.impacto",
+      tipKeys: ["rminfo.mat.carton.tip1", "rminfo.mat.carton.tip2"]
     },
     tetrapak: {
-      badge: "Reciclable",
+      badgeKey: "rminfo.mat.tetrapak.badge",
       warn: false,
-      preparacion: [
-        "Enjuaga el envase para retirar restos de líquido.",
-        "Aplástalo para ahorrar espacio, sin necesidad de desarmarlo.",
-        "Si tiene tapa de plástico, puedes dejarla puesta o separarla según el punto de acopio."
-      ],
-      lugares: [
-        { nombre: "Contenedores de reciclaje municipal", detalle: "Recomendado" },
-        { nombre: "Centros de acopio especializados en Tetra Pak", detalle: "Mayor volumen" }
-      ],
-      obtienes: [
-        "Sus capas de cartón, plástico y aluminio se separan y reutilizan por separado.",
-        "Se transforma en láminas, techos ecológicos o nuevo papel.",
-        "Se reduce la cantidad de envases multicapa en rellenos sanitarios."
-      ],
-      impacto: "Un envase Tetra Pak combina 3 materiales que pueden recuperarse por separado.",
-      tipsExtra: [
-        "No es necesario retirar el plástico interior: la planta de reciclaje se encarga de separarlo.",
-        "Evita aplastarlo demasiado si el punto de acopio pide entregarlo armado para facilitar el conteo."
-      ]
+      prepKeys: ["rminfo.mat.tetrapak.prep1", "rminfo.mat.tetrapak.prep2", "rminfo.mat.tetrapak.prep3"],
+      lugares: [{ nombreKey: "rminfo.mat.tetrapak.lugar1", detalleKey: "rminfo.lugar.recomendado" }, { nombreKey: "rminfo.mat.tetrapak.lugar2", detalleKey: "rminfo.lugar.mayorVolumen" }],
+      obtieneKeys: ["rminfo.mat.tetrapak.obt1", "rminfo.mat.tetrapak.obt2", "rminfo.mat.tetrapak.obt3"],
+      impactoKey: "rminfo.mat.tetrapak.impacto",
+      tipKeys: ["rminfo.mat.tetrapak.tip1", "rminfo.mat.tetrapak.tip2"]
     },
     aceite: {
-      badge: "Requiere punto especial",
+      badgeKey: "rminfo.mat.aceite.badge",
       warn: true,
-      preparacion: [
-        "Deja enfriar el aceite antes de manipularlo.",
-        "Viértelo en una botella plástica limpia y ciérrala bien; nunca lo tires por el drenaje.",
-        "Evita mezclarlo con agua u otros líquidos para facilitar su reciclaje."
-      ],
-      lugares: [
-        { nombre: "Puntos de acopio de aceite usado", detalle: "Obligatorio" },
-        { nombre: "Restaurantes o negocios participantes", detalle: "Alternativa" }
-      ],
-      obtienes: [
-        "Se transforma en biodiesel u otros combustibles alternativos.",
-        "Se evita la contaminación de ríos, mares y sistemas de agua potable.",
-        "Se previene la obstrucción de tuberías y plantas de tratamiento."
-      ],
-      impacto: "Un litro de aceite mal desechado puede contaminar hasta 1,000 litros de agua.",
-      tipsExtra: [
-        "Nunca lo mezcles con el aceite de motor u otros químicos: son procesos de reciclaje distintos.",
-        "Reutiliza el mismo envase varias veces antes de entregarlo, para acumular más cantidad de una vez."
-      ]
+      prepKeys: ["rminfo.mat.aceite.prep1", "rminfo.mat.aceite.prep2", "rminfo.mat.aceite.prep3"],
+      lugares: [{ nombreKey: "rminfo.mat.aceite.lugar1", detalleKey: "rminfo.lugar.obligatorio" }, { nombreKey: "rminfo.mat.aceite.lugar2", detalleKey: "rminfo.lugar.alternativa" }],
+      obtieneKeys: ["rminfo.mat.aceite.obt1", "rminfo.mat.aceite.obt2", "rminfo.mat.aceite.obt3"],
+      impactoKey: "rminfo.mat.aceite.impacto",
+      tipKeys: ["rminfo.mat.aceite.tip1", "rminfo.mat.aceite.tip2"]
     },
     tela: {
-      badge: "Reciclable / Donable",
+      badgeKey: "rminfo.mat.tela.badge",
       warn: false,
-      preparacion: [
-        "Lava y seca bien la tela antes de entregarla.",
-        "Separa retazos limpios y en buen estado de los muy desgastados o manchados.",
-        "Corta o dobla piezas grandes para facilitar el transporte."
-      ],
-      lugares: [
-        { nombre: "Puntos de acopio textil", detalle: "Recomendado" },
-        { nombre: "Talleres de costura o reciclaje textil", detalle: "Alternativa" }
-      ],
-      obtienes: [
-        "Se transforma en trapos industriales, relleno o nuevas fibras.",
-        "Retazos en buen estado pueden reutilizarse en manualidades o costura.",
-        "Se reduce la demanda de fibras textiles nuevas."
-      ],
-      impacto: "Reciclar textiles evita que terminen ocupando espacio en rellenos sanitarios.",
-      tipsExtra: [
-        "Los retazos pequeños también sirven: no los deseches solo por no ser prendas completas.",
-        "Separa telas sintéticas (poliester, nylon) de las naturales (algodón, lino) si el punto de acopio lo pide."
-      ]
+      prepKeys: ["rminfo.mat.tela.prep1", "rminfo.mat.tela.prep2", "rminfo.mat.tela.prep3"],
+      lugares: [{ nombreKey: "rminfo.mat.tela.lugar1", detalleKey: "rminfo.lugar.recomendado" }, { nombreKey: "rminfo.mat.tela.lugar2", detalleKey: "rminfo.lugar.alternativa" }],
+      obtieneKeys: ["rminfo.mat.tela.obt1", "rminfo.mat.tela.obt2", "rminfo.mat.tela.obt3"],
+      impactoKey: "rminfo.mat.tela.impacto",
+      tipKeys: ["rminfo.mat.tela.tip1", "rminfo.mat.tela.tip2"]
     },
     cuero: {
-      badge: "Reutilizable",
+      badgeKey: "rminfo.mat.cuero.badge",
       warn: false,
-      preparacion: [
-        "Limpia el cuero y verifica que no tenga hongos ni mal olor.",
-        "Separa piezas grandes (zapatos, carteras, cinturones) de los retazos pequeños.",
-        "Evita mojarlo antes de entregarlo, ya que puede dañar el material."
-      ],
-      lugares: [
-        { nombre: "Fundaciones y bancos de ropa", detalle: "Si está en buen estado" },
-        { nombre: "Talleres de marroquinería o zapaterías", detalle: "Retazos y reparación" }
-      ],
-      obtienes: [
-        "Artículos en buen estado pueden reutilizarse directamente.",
-        "Los retazos se aprovechan en talleres para reparaciones o piezas nuevas.",
-        "Se reduce la demanda de cuero nuevo y su proceso de curtido."
-      ],
-      impacto: "El curtido de cuero nuevo consume grandes cantidades de agua y químicos.",
-      tipsExtra: [
-        "Aplica una capa de acondicionador antes de guardarlo si no lo donas de inmediato, para evitar que se reseque.",
-        "El cuero sintético (cuerina) no se procesa igual que el cuero real: sepáralos si sabes cuál es cuál."
-      ]
+      prepKeys: ["rminfo.mat.cuero.prep1", "rminfo.mat.cuero.prep2", "rminfo.mat.cuero.prep3"],
+      lugares: [{ nombreKey: "rminfo.mat.cuero.lugar1", detalleKey: "rminfo.lugar.siBuenEstado" }, { nombreKey: "rminfo.mat.cuero.lugar2", detalleKey: "rminfo.lugar.retazosReparacion" }],
+      obtieneKeys: ["rminfo.mat.cuero.obt1", "rminfo.mat.cuero.obt2", "rminfo.mat.cuero.obt3"],
+      impactoKey: "rminfo.mat.cuero.impacto",
+      tipKeys: ["rminfo.mat.cuero.tip1", "rminfo.mat.cuero.tip2"]
     },
     utilesescolares: {
-      badge: "Reutilizable",
+      badgeKey: "rminfo.mat.utilesescolares.badge",
       warn: false,
-      preparacion: [
-        "Verifica que cuadernos, lápices y colores estén en buen estado o con uso restante.",
-        "Agrupa por tipo: escritura, dibujo, geometría, mochilas.",
-        "Limpia estuches y mochilas antes de donarlos."
-      ],
-      lugares: [
-        { nombre: "Escuelas y bibliotecas comunitarias", detalle: "Recomendado" },
-        { nombre: "Fundaciones educativas", detalle: "Alternativa" }
-      ],
-      obtienes: [
-        "Útiles en buen estado llegan directamente a estudiantes que los necesitan.",
-        "Se reduce el desperdicio de materiales escolares aún funcionales.",
-        "Se facilita el acceso a la educación en comunidades con menos recursos."
-      ],
-      impacto: "Donar útiles escolares reduce directamente la barrera económica de estudiar.",
-      tipsExtra: [
-        "Los lápices y colores usados a la mitad también sirven: no necesitan estar nuevos.",
-        "Revisa que marcadores y borradores aún funcionen antes de incluirlos en la donación."
-      ]
+      prepKeys: ["rminfo.mat.utilesescolares.prep1", "rminfo.mat.utilesescolares.prep2", "rminfo.mat.utilesescolares.prep3"],
+      lugares: [{ nombreKey: "rminfo.mat.utilesescolares.lugar1", detalleKey: "rminfo.lugar.recomendado" }, { nombreKey: "rminfo.mat.utilesescolares.lugar2", detalleKey: "rminfo.lugar.alternativa" }],
+      obtieneKeys: ["rminfo.mat.utilesescolares.obt1", "rminfo.mat.utilesescolares.obt2", "rminfo.mat.utilesescolares.obt3"],
+      impactoKey: "rminfo.mat.utilesescolares.impacto",
+      tipKeys: ["rminfo.mat.utilesescolares.tip1", "rminfo.mat.utilesescolares.tip2"]
     }
   };
 
@@ -447,7 +259,7 @@
 
     categoriasPromise = window.recoSupabase
       .from("categorias")
-      .select("id, badge, requiere_punto_especial, mensaje_escaner, preparacion, lugares, obtienes, impacto, tipo_objeto, materiales_compuestos, tiempo_descomposicion, tips_extra, alerta_seguridad, dato_curioso")
+      .select("id, badge, requiere_punto_especial, mensaje_escaner, preparacion, lugares, obtienes, impacto, tipo_objeto, materiales_compuestos, tiempo_descomposicion, tips_extra, alerta_seguridad, dato_curioso, badge_en, mensaje_escaner_en, preparacion_en, lugares_en, obtienes_en, impacto_en, tipo_objeto_en, materiales_compuestos_en, tiempo_descomposicion_en, tips_extra_en, alerta_seguridad_en, dato_curioso_en")
       .then(function (res) {
         if (res.error || !res.data) {
           console.warn("[RECO+ info materiales] No se pudieron cargar categorías de Supabase, usando respaldo local:", res.error && res.error.message);
@@ -472,40 +284,49 @@
   loadCategorias();
 
   /** Devuelve los datos de un material, priorizando Supabase y
-   *  cayendo al respaldo local si aún no está listo o falló. */
+   *  cayendo al respaldo local (traducido al idioma activo vía
+   *  tr()) si aún no está listo o falló. */
   function getMaterialData(materialKey) {
     var fila = categoriasCache && categoriasCache[materialKey];
     if (fila) {
+      // Si el sitio está en inglés, se priorizan las columnas "_en"
+      // (traducción guardada en Supabase); si alguna viniera vacía
+      // (ej. categoría nueva aún sin traducir), se cae de regreso a
+      // la columna en español correspondiente para no dejar el panel
+      // con huecos.
+      var en = isEnglish();
       return {
-        badge: fila.badge,
+        badge: (en && fila.badge_en) || fila.badge,
         warn: !!fila.requiere_punto_especial,
-        mensaje: fila.mensaje_escaner || "",
-        preparacion: Array.isArray(fila.preparacion) ? fila.preparacion : [],
-        lugares: Array.isArray(fila.lugares) ? fila.lugares : [],
-        obtienes: Array.isArray(fila.obtienes) ? fila.obtienes : [],
-        impacto: fila.impacto || "",
-        tipoObjeto: fila.tipo_objeto || "",
-        materialesCompuestos: Array.isArray(fila.materiales_compuestos) ? fila.materiales_compuestos : [],
-        tiempoDescomposicion: fila.tiempo_descomposicion || "",
-        tipsExtra: Array.isArray(fila.tips_extra) ? fila.tips_extra : [],
-        alertaSeguridad: fila.alerta_seguridad || "",
-        datoCurioso: fila.dato_curioso || ""
+        mensaje: (en ? (fila.mensaje_escaner_en || fila.mensaje_escaner) : fila.mensaje_escaner) || "",
+        preparacion: (en && Array.isArray(fila.preparacion_en) && fila.preparacion_en.length) ? fila.preparacion_en : (Array.isArray(fila.preparacion) ? fila.preparacion : []),
+        lugares: (en && Array.isArray(fila.lugares_en) && fila.lugares_en.length) ? fila.lugares_en : (Array.isArray(fila.lugares) ? fila.lugares : []),
+        obtienes: (en && Array.isArray(fila.obtienes_en) && fila.obtienes_en.length) ? fila.obtienes_en : (Array.isArray(fila.obtienes) ? fila.obtienes : []),
+        impacto: ((en ? (fila.impacto_en || fila.impacto) : fila.impacto)) || "",
+        tipoObjeto: ((en ? (fila.tipo_objeto_en || fila.tipo_objeto) : fila.tipo_objeto)) || "",
+        materialesCompuestos: (en && Array.isArray(fila.materiales_compuestos_en) && fila.materiales_compuestos_en.length) ? fila.materiales_compuestos_en : (Array.isArray(fila.materiales_compuestos) ? fila.materiales_compuestos : []),
+        tiempoDescomposicion: ((en ? (fila.tiempo_descomposicion_en || fila.tiempo_descomposicion) : fila.tiempo_descomposicion)) || "",
+        tipsExtra: (en && Array.isArray(fila.tips_extra_en) && fila.tips_extra_en.length) ? fila.tips_extra_en : (Array.isArray(fila.tips_extra) ? fila.tips_extra : []),
+        alertaSeguridad: ((en ? (fila.alerta_seguridad_en || fila.alerta_seguridad) : fila.alerta_seguridad)) || "",
+        datoCurioso: ((en ? (fila.dato_curioso_en || fila.dato_curioso) : fila.dato_curioso)) || ""
       };
     }
     var respaldo = MATERIALS_RESPALDO[materialKey];
     if (!respaldo) return null;
     return {
-      badge: respaldo.badge,
+      badge: tr(respaldo.badgeKey),
       warn: respaldo.warn,
       mensaje: "",
-      preparacion: respaldo.preparacion,
-      lugares: respaldo.lugares,
-      obtienes: respaldo.obtienes,
-      impacto: respaldo.impacto,
+      preparacion: respaldo.prepKeys.map(tr),
+      lugares: respaldo.lugares.map(function (l) {
+        return { nombre: tr(l.nombreKey), detalle: tr(l.detalleKey) };
+      }),
+      obtienes: respaldo.obtieneKeys.map(tr),
+      impacto: tr(respaldo.impactoKey),
       tipoObjeto: "",
       materialesCompuestos: [],
       tiempoDescomposicion: "",
-      tipsExtra: Array.isArray(respaldo.tipsExtra) ? respaldo.tipsExtra : [],
+      tipsExtra: Array.isArray(respaldo.tipKeys) ? respaldo.tipKeys.map(tr) : [],
       alertaSeguridad: "",
       datoCurioso: ""
     };
@@ -559,43 +380,43 @@
         (data.alertaSeguridad ? '<p class="rc-minfo__alerta">⚠️ ' + data.alertaSeguridad + "</p>" : "") +
 
         '<div class="rc-minfo__section" data-minfo-section="categoria">' +
-          (data.tipoObjeto ? '<div class="rc-minfo__categoria"><strong>Tipo de objeto:</strong> ' + data.tipoObjeto + "</div>" : "") +
+          (data.tipoObjeto ? '<div class="rc-minfo__categoria"><strong>' + tr("rminfo.tipoObjeto") + '</strong> ' + data.tipoObjeto + "</div>" : "") +
           (tieneCompuestos
-            ? '<div class="rc-minfo__compuestos"><strong>Materiales que lo componen:</strong> ' + data.materialesCompuestos.join(", ") + "</div>"
+            ? '<div class="rc-minfo__compuestos"><strong>' + tr("rminfo.materialesCompuestos") + '</strong> ' + data.materialesCompuestos.join(", ") + "</div>"
             : "") +
-          (data.tiempoDescomposicion ? '<div class="rc-minfo__descomp"><strong>Tiempo de descomposición:</strong> ' + data.tiempoDescomposicion + "</div>" : "") +
+          (data.tiempoDescomposicion ? '<div class="rc-minfo__descomp"><strong>' + tr("rminfo.tiempoDescomposicion") + '</strong> ' + data.tiempoDescomposicion + "</div>" : "") +
         "</div>" +
 
         '<div class="rc-minfo__grid">' +
           '<div class="rc-minfo__block" data-minfo-section="preparar">' +
-            '<div class="rc-minfo__block-head">' + ICONS.prep + "<span>Cómo prepararlo</span></div>" +
+            '<div class="rc-minfo__block-head">' + ICONS.prep + "<span>" + tr("rminfo.comoPrepararlo") + "</span></div>" +
             "<ul>" + renderList(data.preparacion) + "</ul>" +
           "</div>" +
 
           '<div class="rc-minfo__block" data-minfo-section="lugares">' +
-            '<div class="rc-minfo__block-head">' + ICONS.lugar + "<span>Dónde llevarlo</span></div>" +
+            '<div class="rc-minfo__block-head">' + ICONS.lugar + "<span>" + tr("rminfo.dondeLlevarlo") + "</span></div>" +
             '<div class="rc-minfo__points">' + renderLugares(data.lugares) + "</div>" +
           "</div>" +
 
           '<div class="rc-minfo__block">' +
-            '<div class="rc-minfo__block-head">' + ICONS.obtienes + "<span>Qué se obtiene</span></div>" +
+            '<div class="rc-minfo__block-head">' + ICONS.obtienes + "<span>" + tr("rminfo.queSeObtiene") + "</span></div>" +
             "<ul>" + renderList(data.obtienes) + "</ul>" +
           "</div>" +
 
           (tieneTipsExtra
             ? '<div class="rc-minfo__block rc-minfo__block--tips" data-minfo-section="tipsextra">' +
-                '<div class="rc-minfo__block-head">' + ICONS.prep + "<span>Tips extra</span></div>" +
+                '<div class="rc-minfo__block-head">' + ICONS.prep + "<span>" + tr("rminfo.tipsExtra") + "</span></div>" +
                 "<ul>" + renderList(data.tipsExtra) + "</ul>" +
               "</div>"
             : "") +
         "</div>" +
 
-        (data.datoCurioso ? '<p class="rc-minfo__curioso">💡 <strong>¿Sabías que…?</strong> ' + data.datoCurioso + "</p>" : "") +
+        (data.datoCurioso ? '<p class="rc-minfo__curioso">💡 <strong>' + tr("rminfo.sabiasQue") + '</strong> ' + data.datoCurioso + "</p>" : "") +
 
         '<div class="rc-minfo__footer">' +
-          '<span class="rc-minfo__impact">' + ICONS.obtienes + '<strong>Impacto:</strong>&nbsp;' + data.impacto + "</span>" +
+          '<span class="rc-minfo__impact">' + ICONS.obtienes + '<strong>' + tr("rminfo.impacto") + '</strong>&nbsp;' + data.impacto + "</span>" +
           '<a class="rc-minfo__cta" href="mapa.html?material=' + encodeURIComponent(materialKey) + '">' +
-            ICONS.mapa + "<span>Ver puntos en el mapa</span>" +
+            ICONS.mapa + "<span>" + tr("rminfo.verEnMapa") + "</span>" +
           "</a>" +
         "</div>" +
       "</div>"
@@ -618,18 +439,18 @@
       overlay.className = "rc-minfo-overlay";
       overlay.innerHTML =
         '<div class="rc-minfo" id="rcMaterialInfo" role="dialog" aria-modal="true" aria-label="Información del material">' +
-          '<button type="button" class="rc-minfo__close" id="rcMinfoClose" aria-label="Cerrar">' +
+          '<button type="button" class="rc-minfo__close" id="rcMinfoClose" aria-label="' + tr("rminfo.cerrar") + '">' +
             '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="16" height="16"><path d="M5 5l10 10M15 5L5 15"/></svg>' +
           "</button>" +
           '<div class="rc-minfo__scrollbody" id="rcMinfoBody" aria-live="polite"></div>' +
           '<div class="rc-minfo__nav">' +
-            '<button type="button" class="rc-minfo__navbtn rc-minfo__navbtn--prev" id="rcMinfoPrev" aria-label="Material anterior">' +
+            '<button type="button" class="rc-minfo__navbtn rc-minfo__navbtn--prev" id="rcMinfoPrev" aria-label="' + tr("rminfo.anterior") + '">' +
               '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M12 4l-6 6 6 6"/></svg>' +
-              "<span>Anterior</span>" +
+              "<span>" + tr("rminfo.anterior") + "</span>" +
             "</button>" +
             '<span class="rc-minfo__navcount" id="rcMinfoCount"></span>' +
-            '<button type="button" class="rc-minfo__navbtn rc-minfo__navbtn--next" id="rcMinfoNext" aria-label="Material siguiente">' +
-              "<span>Siguiente</span>" +
+            '<button type="button" class="rc-minfo__navbtn rc-minfo__navbtn--next" id="rcMinfoNext" aria-label="' + tr("rminfo.siguiente") + '">' +
+              "<span>" + tr("rminfo.siguiente") + "</span>" +
               '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M8 4l6 6-6 6"/></svg>' +
             "</button>" +
           "</div>" +
@@ -643,6 +464,19 @@
     var prevBtn = document.getElementById("rcMinfoPrev");
     var nextBtn = document.getElementById("rcMinfoNext");
     var countEl = document.getElementById("rcMinfoCount");
+
+    // Refresca los textos fijos de la ventana (botones Anterior/
+    // Siguiente, aria-labels) según el idioma activo — se llama al
+    // crear la ventana y cada vez que cambia el idioma.
+    function refreshChromeTexts() {
+      closeBtn.setAttribute("aria-label", tr("rminfo.cerrar"));
+      prevBtn.setAttribute("aria-label", tr("rminfo.anterior"));
+      nextBtn.setAttribute("aria-label", tr("rminfo.siguiente"));
+      var prevSpan = prevBtn.querySelector("span");
+      var nextSpan = nextBtn.querySelector("span");
+      if (prevSpan) prevSpan.textContent = tr("rminfo.anterior");
+      if (nextSpan) nextSpan.textContent = tr("rminfo.siguiente");
+    }
 
     // Clave y elemento del material mostrado actualmente, para poder
     // refrescar el contenido cuando lleguen los datos de Supabase, y
@@ -728,6 +562,17 @@
     // con el contenido actualizado (sin cerrarla ni parpadear).
     categoriasPromise.then(function (mapa) {
       if (mapa && currentKey && currentEl && isOpen()) {
+        showMaterial(currentEl, { silent: true });
+      }
+    });
+
+    // Cuando el usuario cambia de idioma (toggle ES/EN del navbar,
+    // evento disparado por i18n.js), refresca tanto los textos fijos
+    // de la ventana como el contenido del material actualmente
+    // mostrado, para que la traducción se aplique sin cerrar el modal.
+    document.addEventListener("reco:langchange", function () {
+      refreshChromeTexts();
+      if (currentKey && currentEl && isOpen()) {
         showMaterial(currentEl, { silent: true });
       }
     });
@@ -822,7 +667,7 @@
           var badgeIcon = data.warn
             ? '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" width="11" height="11"><path d="M10 3l8 14H2L10 3z"/><line x1="10" y1="8.5" x2="10" y2="12"/><circle cx="10" cy="14.5" r="0.6" fill="currentColor"/></svg>'
             : '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M4 10l4 4 8-8"/></svg>';
-          var mensaje = data.mensaje || (data.warn ? "⚠️ Esto se recicla, pero necesita un punto especial." : "✅ Esto se recicla.");
+          var mensaje = data.mensaje || (data.warn ? tr("rminfo.puntoEspecial") : tr("rminfo.esReciclable"));
           return (
             '<div class="rc-minfo__head">' +
               "<div>" +
@@ -838,10 +683,10 @@
         if (sectionKey === "categoria") {
           var tieneCompuestos = data.materialesCompuestos && data.materialesCompuestos.length > 0;
           var out =
-            (data.tipoObjeto ? '<div class="rc-minfo__categoria"><strong>Tipo de objeto:</strong> ' + data.tipoObjeto + "</div>" : "") +
-            (tieneCompuestos ? '<div class="rc-minfo__compuestos"><strong>Materiales que lo componen:</strong> ' + data.materialesCompuestos.join(", ") + "</div>" : "") +
-            (data.tiempoDescomposicion ? '<div class="rc-minfo__descomp"><strong>Tiempo de descomposición:</strong> ' + data.tiempoDescomposicion + "</div>" : "");
-          return out || '<p class="rc-minfo__categoria">Sin datos de categoría para este material todavía.</p>';
+            (data.tipoObjeto ? '<div class="rc-minfo__categoria"><strong>' + tr("rminfo.tipoObjeto") + '</strong> ' + data.tipoObjeto + "</div>" : "") +
+            (tieneCompuestos ? '<div class="rc-minfo__compuestos"><strong>' + tr("rminfo.materialesCompuestos") + '</strong> ' + data.materialesCompuestos.join(", ") + "</div>" : "") +
+            (data.tiempoDescomposicion ? '<div class="rc-minfo__descomp"><strong>' + tr("rminfo.tiempoDescomposicion") + '</strong> ' + data.tiempoDescomposicion + "</div>" : "");
+          return out || '<p class="rc-minfo__categoria">' + tr("rminfo.sinCategoria") + "</p>";
         }
 
         if (sectionKey === "preparar") {

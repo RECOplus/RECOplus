@@ -81,6 +81,16 @@
     return (val && val !== key) ? val : fallback;
   }
 
+  // Idioma activo del sitio (misma clave de localStorage que usa
+  // i18n.js). Se usa para elegir, de los datos de Supabase, las
+  // columnas "_en" cuando el sitio está en inglés — igual que en
+  // reciclar-material-info.js — así el resultado del escáner también
+  // respeta el idioma activo.
+  function isEnglish() {
+    return (typeof window.localStorage !== "undefined") &&
+      window.localStorage.getItem("reco-lang") === "en";
+  }
+
   function ready(fn) {
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", fn);
@@ -203,7 +213,7 @@
 
     categoriasPromise = window.recoSupabase
       .from("categorias")
-      .select("id, nombre, reciclable, requiere_punto_especial, badge, mensaje_escaner")
+      .select("id, nombre, reciclable, requiere_punto_especial, badge, mensaje_escaner, badge_en, mensaje_escaner_en")
       .then(function (res) {
         if (res.error || !res.data) {
           console.warn("[RECO+ escáner] No se pudieron cargar categorías de Supabase, usando respaldo local:", res.error && res.error.message);
@@ -235,10 +245,11 @@
   function getInfoCategoria(key) {
     var fila = categoriasCache && categoriasCache[key];
     if (fila) {
+      var en = isEnglish();
       return {
-        badge: fila.badge,
+        badge: (en && fila.badge_en) || fila.badge,
         warn: !!fila.requiere_punto_especial,
-        mensaje: fila.mensaje_escaner || "",
+        mensaje: (en ? (fila.mensaje_escaner_en || fila.mensaje_escaner) : fila.mensaje_escaner) || "",
         reciclable: fila.reciclable !== false,
         requierePuntoEspecial: !!fila.requiere_punto_especial
       };
@@ -595,8 +606,8 @@
       // cargó, se arma uno equivalente con el badge del respaldo local.
       var mensajeReciclable = data.mensaje
         || (data.requierePuntoEspecial
-          ? "⚠️ Esto se recicla, pero necesita un punto especial."
-          : "✅ Esto se recicla.");
+          ? tr("reciclar.escaner.mensajePuntoEspecial", "⚠️ Esto se recicla, pero necesita un punto especial.")
+          : tr("reciclar.escaner.mensajeReciclable", "✅ Esto se recicla."));
 
       result.className = "rc-scan-result rc-scan-result--match";
       result.innerHTML =
