@@ -705,5 +705,30 @@
         return "";
       }
     };
+
+    // ── Abrir material directamente vía URL (?material=clave) ──
+    // Permite enlazar desde fuera de esta página (ej. la barra de
+    // búsqueda del index) directo a la ficha de un material, sin
+    // que el usuario tenga que buscarlo manualmente en la grilla.
+    // Se ejecuta después de exponer window.recoMaterialInfo para que
+    // showByKey ya esté disponible, y espera a que las categorías de
+    // Supabase respondan (o fallen) para mostrar el contenido ya
+    // resuelto en el idioma activo desde el primer render.
+    try {
+      var paramsIniciales = new URLSearchParams(window.location.search);
+      var materialSolicitado = paramsIniciales.get("material");
+      if (materialSolicitado && MATERIALS_RESPALDO[materialSolicitado]) {
+        categoriasPromise.then(function () {
+          window.recoMaterialInfo.showByKey(materialSolicitado);
+          var materialEl = document.querySelector('.rc-material[data-material="' + materialSolicitado + '"]');
+          if (materialEl) {
+            materialEl.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        });
+      }
+    } catch (e) {
+      // URLSearchParams no disponible o URL malformada: se ignora en
+      // silencio, la página sigue funcionando igual sin auto-apertura.
+    }
   });
 })();
