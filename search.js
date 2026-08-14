@@ -656,15 +656,26 @@
                     keywordsEn: ['map','location','point','recycling','nearby','where','place','center']
                 },
                 {
-                    url: 'donar.html',
+                    url: 'donar.html?tab=donar',
                     icon: '💚',
                     badge: 'Donar',
-                    titleEs: 'Donar / Pedir ayuda',
-                    titleEn: 'Donate / Request help',
-                    descEs: 'Dona objetos que ya no usas o pide lo que necesitas',
-                    descEn: 'Donate unused items or request what you need',
-                    keywordsEs: ['donar','donacion','ropa','muebles','electronico','ayuda','objeto','dar','necesito','solicitar','pedir','regalo'],
-                    keywordsEn: ['donate','donation','clothes','furniture','electronics','help','give','request','need','gift']
+                    titleEs: 'Donar objetos',
+                    titleEn: 'Donate items',
+                    descEs: 'Dona ropa, muebles, electrónicos u otros objetos que ya no usas',
+                    descEn: 'Donate clothes, furniture, electronics or other unused items',
+                    keywordsEs: ['donar','donacion','ropa','muebles','electronico','objeto','dar','entregar','dono','ofrezco','tengo para donar','regalo'],
+                    keywordsEn: ['donate','donation','clothes','furniture','electronics','give','deliver','offer','i want to donate','gift']
+                },
+                {
+                    url: 'donar.html?tab=solicitar',
+                    icon: '🙏',
+                    badge: 'Solicitar',
+                    titleEs: 'Solicitar ayuda',
+                    titleEn: 'Request help',
+                    descEs: 'Pide ropa, muebles, alimentos u otra ayuda a la comunidad',
+                    descEn: 'Request clothes, furniture, food or other help from the community',
+                    keywordsEs: ['ayuda','necesito','pedir','solicitar','solicitud','apoyo','quiero pedir','necesito ayuda','requiero','necesito ropa','necesito muebles','necesito comida','banco de alimentos'],
+                    keywordsEn: ['help','need','request','ask','support','i need help','require','assistance','need clothes','need furniture','need food','food bank']
                 },
                 {
                     url: 'guia.html',
@@ -759,6 +770,30 @@
                 { q: 'school supplies',  url: 'reciclar.html?material=utilesescolares', icon: '✏️', descEs: 'Ficha de reciclaje — Útiles escolares', descEn: 'Recycling info — School supplies' },
             ];
 
+            /* ── Puntos en el mapa por material ──
+               Misma palabra clave, pero apuntando a mapa.html?q=X para
+               que el usuario también pueda ir directo a los puntos de
+               reciclaje de ese material en vez de solo a la ficha info. */
+            var MAP_MATERIALS = [
+                { q: 'plastico',  qEn: 'plastic',   filtro: 'plastico',        icon: '📍', labelEs: 'Puntos de reciclaje — Plástico',        labelEn: 'Recycling points — Plastic' },
+                { q: 'vidrio',    qEn: 'glass',      filtro: 'vidrio',          icon: '📍', labelEs: 'Puntos de reciclaje — Vidrio',          labelEn: 'Recycling points — Glass' },
+                { q: 'papel',     qEn: 'paper',      filtro: 'papel',           icon: '📍', labelEs: 'Puntos de reciclaje — Papel',           labelEn: 'Recycling points — Paper' },
+                { q: 'carton',    qEn: 'cardboard',  filtro: 'carton',          icon: '📍', labelEs: 'Puntos de reciclaje — Cartón',          labelEn: 'Recycling points — Cardboard' },
+                { q: 'metal',     qEn: 'metal',      filtro: 'metal',           icon: '📍', labelEs: 'Puntos de reciclaje — Metal',           labelEn: 'Recycling points — Metal' },
+                { q: 'ropa',      qEn: 'clothes',    filtro: 'ropa',            icon: '📍', labelEs: 'Puntos de reciclaje — Ropa',            labelEn: 'Recycling points — Clothes' },
+                { q: 'electronico', qEn: 'electronics', filtro: 'electronicos', icon: '📍', labelEs: 'Puntos de reciclaje — Electrónicos',    labelEn: 'Recycling points — Electronics' },
+                { q: 'celular',   qEn: 'phone',      filtro: 'celulares',       icon: '📍', labelEs: 'Puntos de reciclaje — Celulares',       labelEn: 'Recycling points — Cellphones' },
+                { q: 'bateria',   qEn: 'battery',    filtro: 'baterias',        icon: '📍', labelEs: 'Puntos de reciclaje — Baterías',        labelEn: 'Recycling points — Batteries' },
+                { q: 'bombillo',  qEn: 'light bulb', filtro: 'bombillos',       icon: '📍', labelEs: 'Puntos de reciclaje — Bombillos',       labelEn: 'Recycling points — Light bulbs' },
+                { q: 'mueble',    qEn: 'furniture',  filtro: 'muebles',         icon: '📍', labelEs: 'Puntos de reciclaje — Muebles',         labelEn: 'Recycling points — Furniture' },
+                { q: 'juguete',   qEn: 'toy',        filtro: 'juguetes',        icon: '📍', labelEs: 'Puntos de reciclaje — Juguetes',        labelEn: 'Recycling points — Toys' },
+                { q: 'libro',     qEn: 'book',       filtro: 'libros',          icon: '📍', labelEs: 'Puntos de reciclaje — Libros',          labelEn: 'Recycling points — Books' },
+                { q: 'aceite',    qEn: 'oil',        filtro: 'aceite',          icon: '📍', labelEs: 'Puntos de reciclaje — Aceite de cocina', labelEn: 'Recycling points — Cooking oil' },
+                { q: 'cuero',     qEn: 'leather',    filtro: 'cuero',           icon: '📍', labelEs: 'Puntos de reciclaje — Cuero',           labelEn: 'Recycling points — Leather' },
+                { q: 'utiles escolares', qEn: 'school supplies', filtro: 'utilesescolares', icon: '📍', labelEs: 'Puntos de reciclaje — Útiles escolares', labelEn: 'Recycling points — School supplies' },
+                { q: 'donacion',  qEn: 'donation',   filtro: 'donacion',        icon: '📍', labelEs: 'Puntos de donación en el mapa',         labelEn: 'Donation points on the map' },
+            ];
+
             var input   = document.getElementById('heroSearchInput');
             var btn     = document.getElementById('heroSearchBtn');
             var dropdown = document.getElementById('heroSearchDropdown');
@@ -791,6 +826,22 @@
                             desc:  lang === 'en' ? 'Ver guía / Go to guide' : 'Ver guía',
                             badge: lang === 'en' ? 'Material' : 'Material',
                             type: 'material'
+                        });
+                    }
+                });
+
+                /* 1b. Map matches (puntos de reciclaje del material en el mapa) */
+                MAP_MATERIALS.forEach(function(m) {
+                    var kwEs = normalize(m.q);
+                    var kwEn = normalize(m.qEn);
+                    if (kwEs.indexOf(q) === 0 || q.indexOf(kwEs) === 0 || kwEn.indexOf(q) === 0 || q.indexOf(kwEn) === 0) {
+                        found.push({
+                            url: 'mapa.html?q=' + encodeURIComponent(m.filtro),
+                            icon: m.icon,
+                            title: lang === 'en' ? m.labelEn : m.labelEs,
+                            desc:  lang === 'en' ? 'See on the map' : 'Ver en el mapa',
+                            badge: lang === 'en' ? 'Map' : 'Mapa',
+                            type: 'mapa'
                         });
                     }
                 });
@@ -838,6 +889,7 @@
                 var lang = currentLang();
                 var pages = items.filter(function(i) { return i.type === 'page'; });
                 var mats  = items.filter(function(i) { return i.type === 'material'; });
+                var maps  = items.filter(function(i) { return i.type === 'mapa'; });
 
                 if (mats.length) {
                     var lbl = document.createElement('div');
@@ -845,6 +897,13 @@
                     lbl.textContent = lang === 'en' ? 'Materials' : 'Materiales';
                     results.appendChild(lbl);
                     mats.forEach(function(r) { results.appendChild(buildRow(r)); });
+                }
+                if (maps.length) {
+                    var lbl3 = document.createElement('div');
+                    lbl3.className = 'sg-section-label';
+                    lbl3.textContent = lang === 'en' ? 'Map' : 'Mapa';
+                    results.appendChild(lbl3);
+                    maps.forEach(function(r) { results.appendChild(buildRow(r)); });
                 }
                 if (pages.length) {
                     var lbl2 = document.createElement('div');
