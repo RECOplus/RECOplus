@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RECO+ | Guía</title>
   <link rel="stylesheet" href="paginaguiastyle.css" />
+  <!-- Capa aditiva: rediseño de Guía como centro de aprendizaje -->
+  <link rel="stylesheet" href="guia-hub.css" />
   <!-- Capa aditiva: botón + modal de comentarios (footer, cualquier página) -->
   <link rel="stylesheet" href="comentar-modal.css" />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" />
@@ -358,386 +360,213 @@ html.dark .dm-pill__sun { opacity: 0.38; }
     </div>
   </header>
 </div>
-  <!-- ========== HERO ========== -->
-  <section class="hero">
-    <div class="hero__content">
-      <h1 class="hero__title" data-i18n="guia.hero.title">Guía</h1>
-      <p class="hero__subtitle" data-i18n="guia.hero.subtitle">
-        Todo lo que necesitas saber para conectar,<br>
-        reciclar y transformar tu comunidad.
-      </p>
-      <div class="hero__divider"></div>
-      <div class="hero__badge">
-        <span class="badge-leaf"><img src="img/reciclaje.png" alt="reciclaje"></span>
-        <span data-i18n="guia.hero.badge">Aprende, actúa y genera impacto positivo.</span>
-      </div>
-    </div>
-    <div class="hero__illustration">
-      <div class="hero__float-icons">
-        <span class="float-icon fi--recycle"><img src="img/reciclaje.png" alt="reciclaje"></span>
-        <span class="float-icon fi--pin"><img src="img/ubicacion v2.png" alt="ubicación"></span>
-        <span class="float-icon fi--heart"><img src="img/mano con corazon.png" alt="corazón"></span>
-      </div>
-      <img src="img/banner guia.png" alt="banner guía" class="hero__banner-img">
-    </div>
-  </section>
 
-  <!-- ========== STEPS INTRO ========== -->
-  <section class="steps-intro">
-    <p class="steps-intro__text">
-      <img src="img/librito con hoja.png" alt="libreto con hoja">
-      <span data-i18n="guia.steps.intro"><strong>Explora nuestras guías prácticas en solo <span class="highlight">3 pasos clave</span></strong></span>
-      <span class="steps-intro__wave">〰</span>
-    </p>
-  </section>
+  <!-- ════════════════════════════════════════════
+       GH HERO — Centro de aprendizaje: título + videos principales + "Más videos"
+       ════════════════════════════════════════════ -->
+  <section class="gh gh-hero">
+    <div class="gh-wrap gh-hero__inner">
+      <h1 class="gh-hero__title gh-reveal" data-i18n="guia.hero.title">
+        Aprende, explora y actúa<br>
+        por un <span class="gh-accent">planeta</span> más sostenible.
+      </h1>
 
-  <!-- ========== GUIDE CARDS ========== -->
-  <section class="cards">
+      <div class="gh-learn__grid">
+        <div>
+          <div class="gh-learn__eyebrow gh-reveal">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg>
+            <span data-i18n="guia.hero.eyebrow">Videos principales</span>
+          </div>
 
-    <!-- Card 1 -->
-    <article class="card">
-      <div class="card__header">
-        <span class="card__number">1</span>
-        <span class="card__icon"><img src="img/ubicacion v2.png" alt="ubicación"></span>
-        <h2 class="card__title" data-i18n="guia.card1.title">Cómo encontrar<br>puntos de reciclaje</h2>
-      </div>
-      <p class="card__desc" data-i18n="guia.card1.desc">
-        Descubre cómo ubicar centros de reciclaje cercanos y contribuir al cuidado del planeta.
-      </p>
-      <ul class="card__list">
-        <li data-i18n="guia.card1.li1">✅ Usa el mapa interactivo</li>
-        <li data-i18n="guia.card1.li2">✅ Filtra por tipo de material</li>
-        <li data-i18n="guia.card1.li3">✅ Obtén direcciones y horarios</li>
-      </ul>
-      <a href="https://recoplus.github.io/rEcOPlus-Final/mapa.html" class="card__link" data-i18n="guia.card1.cta">Ver guía completa →</a>
-      <div class="card__illustration card__illustration--phone">
-        <div class="phone-mockup">
-          <div class="phone-screen"><img src="img/celular con ubicacion.png" alt="ubicación"></div>
+          <div class="gh-video-row">
+            <a href="#" class="gh-video-card gh-reveal">
+              <div class="gh-video-card__thumb">
+                <span class="gh-video-card__icon"><svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg></span>
+                <span class="gh-video-card__badge">02:45</span>
+              </div>
+              <div class="gh-video-card__body">
+                <h3 class="gh-video-card__title" data-i18n="guia.video1.title">El poder de reciclar</h3>
+                <p class="gh-video-card__desc" data-i18n="guia.video1.desc">Pequeñas acciones que generan grandes cambios al planeta.</p>
+              </div>
+            </a>
+
+            <a href="#" class="gh-video-card gh-reveal">
+              <div class="gh-video-card__thumb">
+                <span class="gh-video-card__icon"><svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg></span>
+                <span class="gh-video-card__badge">03:10</span>
+              </div>
+              <div class="gh-video-card__body">
+                <h3 class="gh-video-card__title" data-i18n="guia.video2.title">Donar es transformar</h3>
+                <p class="gh-video-card__desc" data-i18n="guia.video2.desc">Tus donaciones pueden mejorar la vida de muchas personas.</p>
+              </div>
+            </a>
+
+            <a href="#" class="gh-video-card gh-reveal">
+              <div class="gh-video-card__thumb">
+                <span class="gh-video-card__icon"><svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg></span>
+                <span class="gh-video-card__badge">02:20</span>
+              </div>
+              <div class="gh-video-card__body">
+                <h3 class="gh-video-card__title" data-i18n="guia.video3.title">Nuestro planeta, nuestro hogar</h3>
+                <p class="gh-video-card__desc" data-i18n="guia.video3.desc">Acciones simples que protegen nuestro planeta cada día.</p>
+              </div>
+            </a>
+          </div>
         </div>
-        <div class="card__deco-leaf"></div>
-      </div>
-    </article>
 
-    <!-- Card 2 -->
-    <article class="card">
-      <div class="card__header">
-        <span class="card__number">2</span>
-        <span class="card__icon"><img src="img/corazon.png" alt="corazón"></span>
-        <h2 class="card__title" data-i18n="guia.card2.title">Cómo donar o<br>solicitar ayuda</h2>
-      </div>
-      <p class="card__desc" data-i18n="guia.card2.desc">
-        Conecta con tu comunidad donando objetos o pidiendo ayuda cuando lo necesites.
-      </p>
-      <ul class="card__list">
-        <li data-i18n="guia.card2.li1">✅ Publica tu solicitud o donación</li>
-        <li data-i18n="guia.card2.li2">✅ Conecta con personas cercanas</li>
-        <li data-i18n="guia.card2.li3">✅ Genera impacto social</li>
-      </ul>
-      <a href="https://recoplus.github.io/rEcOPlus-Final/guia.html" class="card__link" data-i18n="guia.card2.cta">Ver guía completa →</a>
-      <div class="card__illustration card__illustration--box">
-        <div class="donation-box"><img src="img/caja.png" alt="caja"></div>
-        <div class="card__deco-leaf"></div>
-      </div>
-    </article>
+        <aside class="gh-learn__side gh-reveal">
+          <div class="gh-learn__side-head">
+            <span data-i18n="guia.hero.masVideos">Más videos</span>
+          </div>
 
-    <!-- Card 3 -->
-    <article class="card">
-      <div class="card__header">
-        <span class="card__number">3</span>
-        <span class="card__icon"><img src="img/manos v2.png" alt="manos"></span>
-        <h2 class="card__title" data-i18n="guia.card3.title">Cómo pagar y obtener<br>beneficios premium</h2>
-      </div>
-      <p class="card__desc" data-i18n="guia.card3.desc">
-        Conoce las opciones de pago disponibles y disfruta de beneficios exclusivos en RECO+.
-      </p>
-      <ul class="card__list">
-        <li data-i18n="guia.card3.li1">✅ Métodos de pago seguros</li>
-        <li data-i18n="guia.card3.li2">✅ Beneficios por ser premium</li>
-        <li data-i18n="guia.card3.li3">✅ Gestiona tu suscripción</li>
-      </ul>
-      <a href="#" class="card__link" data-i18n="guia.card3.cta">Ver guía completa →</a>
-      <div class="card__illustration card__illustration--card">
-        <span class="credit-card"><img src="img/librito con hoja.png" alt="tarjeta de crédito"></span>
-        <div class="card__deco-leaf">🌿</div>
-      </div>
-    </article>
+          <a href="#" class="gh-mini">
+            <span class="gh-mini__thumb"><svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg></span>
+            <span class="gh-mini__text">
+              <span class="gh-mini__title" data-i18n="guia.mini1.title">Cómo separar correctamente</span>
+              <span class="gh-mini__desc" data-i18n="guia.mini1.desc">01:58 · Aprende a clasificar tus residuos</span>
+            </span>
+          </a>
+          <a href="#" class="gh-mini">
+            <span class="gh-mini__thumb"><svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg></span>
+            <span class="gh-mini__text">
+              <span class="gh-mini__title" data-i18n="guia.mini2.title">Qué pasa con tus residuos</span>
+              <span class="gh-mini__desc" data-i18n="guia.mini2.desc">02:05 · El viaje hasta su transformación</span>
+            </span>
+          </a>
+          <a href="#" class="gh-mini">
+            <span class="gh-mini__thumb"><svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg></span>
+            <span class="gh-mini__text">
+              <span class="gh-mini__title" data-i18n="guia.mini3.title">Reutilizar para vivir mejor</span>
+              <span class="gh-mini__desc" data-i18n="guia.mini3.desc">01:45 · Dale una segunda vida a lo que ya no usas</span>
+            </span>
+          </a>
+          <a href="#" class="gh-mini">
+            <span class="gh-mini__thumb"><svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg></span>
+            <span class="gh-mini__text">
+              <span class="gh-mini__title" data-i18n="guia.mini4.title">Economía circular explicada fácil</span>
+              <span class="gh-mini__desc" data-i18n="guia.mini4.desc">02:30 · El ciclo que crea un futuro sostenible</span>
+            </span>
+          </a>
 
-  </section>
-
-  <!-- ========== CÓMO FUNCIONA ========== -->
-  <section class="como-funciona">
-    <h2 data-i18n="guia.como.title">¿Cómo funciona la Tienda EcoTech?</h2>
-    <div class="pasos">
-      <div class="paso">
-        <div class="paso-num">1</div>
-        <div class="paso-icono">📱</div>
-        <h3 data-i18n="guia.paso1.title">Publica tu producto</h3>
-        <p data-i18n="guia.paso1.desc">Sube fotos, describe tu producto y establece tu precio.</p>
-      </div>
-      <div class="paso-arrow">→</div>
-      <div class="paso">
-        <div class="paso-num">2</div>
-        <div class="paso-icono">💬</div>
-        <h3 data-i18n="guia.paso2.title">Encuentra compradores</h3>
-        <p data-i18n="guia.paso2.desc">Personas interesadas te contactarán a través de la plataforma.</p>
-      </div>
-      <div class="paso-arrow">→</div>
-      <div class="paso">
-        <div class="paso-num">3</div>
-        <div class="paso-icono">💵</div>
-        <h3 data-i18n="guia.paso3.title">Gana dinero reciclando</h3>
-        <p data-i18n="guia.paso3.desc">Cierra la venta y recibe tu dinero. Nosotros tomamos una pequeña comisión para mantener la plataforma.</p>
+          <button type="button" class="gh-learn__side-btn" data-i18n="guia.hero.verTodos">Ver todos los videos</button>
+        </aside>
       </div>
     </div>
   </section>
 
+  <!-- ════════════════════════════════════════════
+       GH GUIDE — Guía de reciclaje y donación (switch + chips + panel de pasos)
+       ════════════════════════════════════════════ -->
+  <section class="gh gh-guide">
+    <div class="gh-wrap">
+      <div class="gh-guide__header gh-reveal">
+        <div>
+          <h2 data-i18n="guia.guide.title">Guía de reciclaje y donación</h2>
+          <p data-i18n="guia.guide.subtitle">Selecciona una categoría para obtener instrucciones paso a paso.</p>
+        </div>
+        <div class="gh-switch">
+          <button type="button" class="gh-switch__btn active" data-mode="reciclar">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16"><path d="M10 2a6 6 0 016 6c0 4-6 10-6 10S4 12 4 8a6 6 0 016-6z"/><circle cx="10" cy="8" r="2"/></svg>
+            <span data-i18n="nav.reciclar">Reciclar</span>
+          </button>
+          <button type="button" class="gh-switch__btn" data-mode="donar">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16"><path d="M3 11c0-2.5 2-4 4-3l3 1.5 5-1.5c1.2-.2 2.5.6 2.5 2 0 1.2-.8 2-2 2l-3.5.5"/><path d="M3 11l2 5h3l7-4"/></svg>
+            <span data-i18n="nav.donar">Donar</span>
+          </button>
+        </div>
+      </div>
 
-  <!-- ========== HELP BANNER ========== -->
-    <div class="help-banner__globe"><img src="img/mundo.png" alt="planeta"></div>
-    <div class="help-banner__text">
-      <h3 class="help-banner__title" data-i18n="guia.help.title">¿Necesitas más ayuda?</h3>
-      <p class="help-banner__subtitle" data-i18n="guia.help.subtitle">
-        Estamos aquí para acompañarte en cada paso<br>hacia un mundo más sostenible.
-      </p>
-    </div>
-    <div class="help-banner__features">
-      <div class="help-feature">
-        <span class="help-feature__icon"><img src="img/mensaje.png" alt="mensaje"></span>
-        <span class="help-feature__label" data-i18n="guia.help.soporte">Soporte<br>personalizado</span>
-      </div>
-      <div class="help-feature__divider"></div>
-      <div class="help-feature">
-        <span class="help-feature__icon"><img src="img/librito con hoja.png" alt="recursos"></span>
-        <span class="help-feature__label" data-i18n="guia.help.recursos">Recursos y<br>tutoriales</span>
-      </div>
-      <div class="help-feature__divider"></div>
-      <div class="help-feature">
-        <span class="help-feature__icon"><img src="img/personas.png" alt="personas"></span>
-        <span class="help-feature__label" data-i18n="guia.help.comunidad">Comunidad<br>activa</span>
+      <div class="gh-chips gh-reveal" id="ghChips"></div>
+
+      <div class="gh-panel gh-reveal" id="ghGuide" data-mode="reciclar">
+        <div class="gh-panel__visual">
+          <div class="gh-panel__visual-icon" id="ghPanelIcon"></div>
+        </div>
+        <div class="gh-panel__body">
+          <span class="gh-panel__badge" id="ghPanelBadge">Cómo reciclarlo</span>
+          <h3 class="gh-panel__title" id="ghPanelTitle">Plástico</h3>
+          <p class="gh-panel__desc" id="ghPanelDesc"></p>
+          <ol class="gh-steps" id="ghPanelSteps"></ol>
+          <a href="mapa.html" class="gh-panel__cta" id="ghPanelCta">Encuentra un punto de reciclaje →</a>
+        </div>
       </div>
     </div>
-    <a href="#" class="help-banner__cta" data-i18n="guia.help.cta">Ir a Centro de Ayuda →</a>
   </section>
 
-  <section class="tienda" id="tienda">
-    <div class="tienda-header">
-        <div class="tienda-title">
-            <span class="tienda-icon"><img src="img/bolsa.png" alt="tienda"></span>
-            <div>
-                <h2 data-i18n="tienda.title">Tienda RECOTech</h2>
-                <p data-i18n="tienda.subtitle">Reutiliza tecnología y reduce residuos.</p>
-            </div>
-        </div>
-        <a href="#" class="ver-todos-btn" data-i18n="tienda.ver-todos">Ver todos los productos →</a>
-    </div>
+  <!-- ════════════════════════════════════════════
+       GH INFO — ¿Sabías qué? / Impacto de tu acción / Consejos rápidos
+       ════════════════════════════════════════════ -->
+  <section class="gh gh-info">
+    <div class="gh-wrap gh-info__grid">
 
-    <div class="productos-carousel-wrapper">
-    <div class="productos-grid">
-
-        <div class="producto destacado-badge">
-            <span class="badge" data-i18n="tienda.badge">Destacado</span>
-            <div class="producto-img"><img src="https://www.laptopcentercr.com/cdn/shop/products/RU100202-2_large.jpeg?v=1490650031" alt="placa madre"></div>
-            <p class="producto-nombre" data-i18n="prod1.nombre">Tarjeta madre<br>Laptop HP</p>
-            <p class="producto-estado" data-i18n="prod1.estado">Buen estado</p>
-            <p class="producto-precio">$450.00</p>
-            <a href="#" class="ver-producto-btn" data-i18n="tienda.ver-prod">Ver producto</a>
+      <div class="gh-box gh-reveal">
+        <div class="gh-box__icon">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="20" height="20"><path d="M10 2.3a5.2 5.2 0 00-2.8 9.6c.5.3.8.9.8 1.5v.3h4v-.3c0-.6.3-1.2.8-1.5A5.2 5.2 0 0010 2.3z"/><path d="M8.1 16.6h3.8M8.7 18.4h2.6"/></svg>
         </div>
-
-        <div class="producto">
-            <div class="producto-img"><img src="img/motor de lavadora.png" alt="motor de lavadora"></div>
-            <p class="producto-nombre" data-i18n="prod2.nombre">Motor de lavadora<br>Whirlpool</p>
-            <p class="producto-estado" data-i18n="prod2.estado">Usado</p>
-            <p class="producto-precio">$380.00</p>
-            <a href="#" class="ver-producto-btn" data-i18n="tienda.ver-prod">Ver producto</a>
-        </div>
-
-        <div class="producto">
-            <div class="producto-img"><img src="img/webcam.png" alt="webcam"></div>
-            <p class="producto-nombre" data-i18n="prod3.nombre">Webcam<br>Logitech C920</p>
-            <p class="producto-estado" data-i18n="prod3.estado">Buen estado</p>
-            <p class="producto-precio">$250.00</p>
-            <a href="#" class="ver-producto-btn" data-i18n="tienda.ver-prod">Ver producto</a>
-        </div>
-
-        <div class="producto">
-            <div class="producto-img"><img src="img/pantalla de celular.png" alt="pantalla de celular"></div>
-            <p class="producto-nombre" data-i18n="prod4.nombre">Pantalla de celular<br>Samsung A50</p>
-            <p class="producto-estado" data-i18n="prod4.estado">Usado</p>
-            <p class="producto-precio">$300.00</p>
-            <a href="#" class="ver-producto-btn" data-i18n="tienda.ver-prod">Ver producto</a>
-        </div>
-
-        <div class="producto">
-            <div class="producto-img"><img src="img/fuente de poder.png" alt="fuente de poder"></div>
-            <p class="producto-nombre" data-i18n="prod5.nombre">Fuente de poder<br>600W</p>
-            <p class="producto-estado" data-i18n="prod5.estado">Buen estado</p>
-            <p class="producto-precio">$350.00</p>
-            <a href="#" class="ver-producto-btn" data-i18n="tienda.ver-prod">Ver producto</a>
-        </div>
-
-        <div class="producto">
-            <div class="producto-img"><img src="img/memoria ram.png" alt="memoria ram"></div>
-            <p class="producto-nombre" data-i18n="prod6.nombre">Memoria RAM<br>8GB DDR4</p>
-            <p class="producto-estado" data-i18n="prod6.estado">Buen estado</p>
-            <p class="producto-precio">$400.00</p>
-            <a href="#" class="ver-producto-btn" data-i18n="tienda.ver-prod">Ver producto</a>
-        </div>
-
-    </div>
-    </div>
-
-    <!-- Badges de confianza -->
-    <div class="trust-badges">
-        <div class="badge-item">
-            <span class="badge-icon"><img src="img/escudo.png" alt="escudo"></span>
-            <div>
-                <strong data-i18n="trust.segura">Compra segura</strong>
-                <p data-i18n="trust.segura.desc">Productos verificados</p>
-            </div>
-        </div>
-        <div class="badge-item">
-            <span class="badge-icon"><img src="img/reciclaje.png" alt="reciclar"></span>
-            <div>
-                <strong data-i18n="trust.ahorra">Ahorra y reutiliza</strong>
-                <p data-i18n="trust.ahorra.desc">Dale una segunda vida</p>
-            </div>
-        </div>
-        <div class="badge-item">
-            <span class="badge-icon"><img src="img/dinero.png" alt="dinero"></span>
-            <div>
-                <strong data-i18n="trust.vende">Vende fácil</strong>
-                <p data-i18n="trust.vende.desc">Publica en minutos</p>
-            </div>
-        </div>
-        <div class="badge-item">
-            <span class="badge-icon">%</span>
-            <div>
-                <strong data-i18n="trust.comision">Comisión accesible</strong>
-                <p data-i18n="trust.comision.desc">Solo 10% por venta</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-  <!-- ========== MATERIALES ========== -->
-  <section class="materiales">
-    <div class="materiales__header">
-      <span class="materiales__icon"><img src="img/caja.png" alt="donación"></span>
-      <div>
-        <h2 class="materiales__title" data-i18n="guia.mat.title">¿Qué puedes donar?</h2>
-        <p class="materiales__subtitle" data-i18n="guia.mat.subtitle">Conoce qué materiales aceptamos y cuáles no para mantener un proceso seguro y sostenible.</p>
-      </div>
-    </div>
-
-    <div class="materiales__grid">
-
-      <!-- SÍ SE PUEDE -->
-      <div class="materiales__col materiales__col--si">
-        <div class="materiales__col-header">
-          <span class="materiales__badge materiales__badge--si" data-i18n="guia.mat.si">SÍ se puede donar</span>
-        </div>
-        <ul class="materiales__list">
-          <li class="mat-item">
-            <span class="mat-item__icon">👕</span>
-            <div>
-              <strong data-i18n="guia.si.item1.title">Ropa y calzado</strong>
-              <p data-i18n="guia.si.item1.desc">En buen estado, limpia y sin roturas graves.</p>
-            </div>
-          </li>
-          <li class="mat-item">
-            <span class="mat-item__icon">📱</span>
-            <div>
-              <strong data-i18n="guia.si.item2.title">Electrónicos funcionales</strong>
-              <p data-i18n="guia.si.item2.desc">Celulares, tablets, computadores que aún funcionen.</p>
-            </div>
-          </li>
-          <li class="mat-item">
-            <span class="mat-item__icon">📚</span>
-            <div>
-              <strong data-i18n="guia.si.item3.title">Libros y útiles escolares</strong>
-              <p data-i18n="guia.si.item3.desc">Libros de texto, cuadernos, colores y materiales de estudio.</p>
-            </div>
-          </li>
-          <li class="mat-item">
-            <span class="mat-item__icon">🪑</span>
-            <div>
-              <strong data-i18n="guia.si.item4.title">Muebles en buen estado</strong>
-              <p data-i18n="guia.si.item4.desc">Sillas, mesas, estantes sin daños estructurales.</p>
-            </div>
-          </li>
-          <li class="mat-item">
-            <span class="mat-item__icon">🧸</span>
-            <div>
-              <strong data-i18n="guia.si.item5.title">Juguetes</strong>
-              <p data-i18n="guia.si.item5.desc">Completos, limpios y sin piezas peligrosas.</p>
-            </div>
-          </li>
-          <li class="mat-item">
-            <span class="mat-item__icon">🥫</span>
-            <div>
-              <strong data-i18n="guia.si.item6.title">Alimentos no perecederos</strong>
-              <p data-i18n="guia.si.item6.desc">Enlatados, granos y productos con fecha de vencimiento vigente.</p>
-            </div>
-          </li>
-        </ul>
+        <h3 data-i18n="guia.info.title">¿Sabías qué?</h3>
+        <p data-i18n="guia.info.text1">Reciclar 1 tonelada de papel salva aproximadamente <strong>17 árboles</strong> y ahorra miles de litros de agua.</p>
+        <p data-i18n="guia.info.text2">Donar ropa que ya no usas puede ayudar a proteger el medio ambiente y a quienes más lo necesitan.</p>
       </div>
 
-      <!-- NO SE PUEDE -->
-      <div class="materiales__col materiales__col--no">
-        <div class="materiales__col-header">
-          <span class="materiales__badge materiales__badge--no" data-i18n="guia.mat.no">NO se puede donar</span>
+      <div class="gh-box gh-reveal">
+        <div class="gh-box__icon">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="20" height="20"><path d="M3 17V10M9 17V6M15 17v-4M17 17V3"/></svg>
         </div>
-        <ul class="materiales__list">
-          <li class="mat-item">
-            <span class="mat-item__icon">🔋</span>
-            <div>
-              <strong data-i18n="guia.no.item1.title">Baterías y pilas sueltas</strong>
-              <p data-i18n="guia.no.item1.desc">Representan un riesgo ambiental y deben ir a puntos especializados.</p>
-            </div>
-          </li>
-          <li class="mat-item">
-            <span class="mat-item__icon">💊</span>
-            <div>
-              <strong data-i18n="guia.no.item2.title">Medicamentos</strong>
-              <p data-i18n="guia.no.item2.desc">Vencidos o sin vencer; su manejo requiere protocolos especiales.</p>
-            </div>
-          </li>
-          <li class="mat-item">
-            <span class="mat-item__icon">🧪</span>
-            <div>
-              <strong data-i18n="guia.no.item3.title">Productos químicos o inflamables</strong>
-              <p data-i18n="guia.no.item3.desc">Pinturas, solventes, aerosoles u otros materiales peligrosos.</p>
-            </div>
-          </li>
-          <li class="mat-item">
-            <span class="mat-item__icon">🪟</span>
-            <div>
-              <strong data-i18n="guia.no.item4.title">Vidrios rotos o espejos</strong>
-              <p data-i18n="guia.no.item4.desc">Representan un riesgo de lesiones durante el transporte.</p>
-            </div>
-          </li>
-          <li class="mat-item">
-            <span class="mat-item__icon">🗑️</span>
-            <div>
-              <strong data-i18n="guia.no.item5.title">Ropa en muy mal estado</strong>
-              <p data-i18n="guia.no.item5.desc">Prendas con manchas permanentes, rasgaduras graves o mal olor.</p>
-            </div>
-          </li>
-          <li class="mat-item">
-            <span class="mat-item__icon">🍞</span>
-            <div>
-              <strong data-i18n="guia.no.item6.title">Alimentos perecederos o vencidos</strong>
-              <p data-i18n="guia.no.item6.desc">Comida fresca sin refrigeración o productos caducados.</p>
-            </div>
-          </li>
+        <h3 data-i18n="guia.impact.title">Impacto de tu acción</h3>
+        <p data-i18n="guia.impact.subtitle">Cada acción cuenta y genera un impacto real.</p>
+        <div class="gh-stats-grid">
+          <div class="stat-item">
+            <span class="stat-number">+500,000</span>
+            <span data-i18n="stats.personas">Personas activas</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">120</span>
+            <span data-i18n="stats.toneladas">Toneladas recicladas</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">+50</span>
+            <span data-i18n="stats.puntos">Puntos de reciclaje</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">30</span>
+            <span data-i18n="stats.comunidades">Comunidades</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="gh-box gh-reveal">
+        <div class="gh-box__icon">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="20" height="20"><path d="M4 10l4 4 8-9"/></svg>
+        </div>
+        <h3 data-i18n="guia.tips.title">Consejos rápidos</h3>
+        <ul class="gh-checklist">
+          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M4 10l4 4 8-9"/></svg><span data-i18n="guia.tips.li1">Reduce lo que consumes.</span></li>
+          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M4 10l4 4 8-9"/></svg><span data-i18n="guia.tips.li2">Reutiliza siempre que puedas.</span></li>
+          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M4 10l4 4 8-9"/></svg><span data-i18n="guia.tips.li3">Recicla correctamente.</span></li>
+          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M4 10l4 4 8-9"/></svg><span data-i18n="guia.tips.li4">Dona lo que ya no uses.</span></li>
+          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M4 10l4 4 8-9"/></svg><span data-i18n="guia.tips.li5">Inspira a más personas a actuar.</span></li>
         </ul>
       </div>
 
     </div>
+  </section>
 
-    <div class="materiales__nota">
-      <span>💡</span>
-      <p data-i18n="guia.mat.nota">¿Tienes dudas sobre un artículo específico? <a href="https://recoplus.github.io/rEcOPlus-Final/contacto.html">Contáctanos</a> y te ayudamos a decidir.</p>
+  <!-- ════════════════════════════════════════════
+       GH CTA — Cierre final
+       ════════════════════════════════════════════ -->
+  <section class="gh gh-cta">
+    <div class="gh-wrap gh-cta__inner gh-reveal">
+      <div class="gh-cta__avatars">
+        <img src="img/persona1.png" alt="">
+        <img src="img/persona2.png" alt="">
+        <img src="img/persona3.png" alt="">
+      </div>
+      <h2 data-i18n="guia.cta.title">Juntos construimos un futuro mejor</h2>
+      <p data-i18n="guia.cta.subtitle">Infórmate, aprende y actúa hoy. El cambio empieza contigo.</p>
+      <a href="login.html" class="gh-cta__btn" data-i18n="guia.cta.btn">
+        <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z"/></svg>
+        Únete a la comunidad
+      </a>
     </div>
   </section>
 
@@ -759,7 +588,6 @@ html.dark .dm-pill__sun { opacity: 0.38; }
         <a href="https://recoplus.github.io/rEcOPlus-Final/mapa.html"     data-i18n="nav.mapa">Mapa</a>
         <a href="https://recoplus.github.io/rEcOPlus-Final/guia.html"     data-i18n="nav.guia">Guía</a>
         <a href="https://recoplus.github.io/rEcOPlus-Final/donar.html"    data-i18n="nav.donar">Donar / Ayuda</a>
-        <a href="#tienda"       data-i18n="tienda.title">Tienda EcoTech</a>
         <a href="https://recoplus.github.io/rEcOPlus-Final/blog.html"     data-i18n="nav.blog">Blog</a>
         <a href="https://recoplus.github.io/rEcOPlus-Final/alianzas.html" data-i18n="nav.alianzas">Alianzas</a>
         <a href="https://recoplus.github.io/rEcOPlus-Final/contacto.html" data-i18n="nav.contacto">Contacto</a>
@@ -799,6 +627,8 @@ html.dark .dm-pill__sun { opacity: 0.38; }
   <script src="nav-preview.js"></script>
   <script src="search.js"></script>
   <script src="script.js"></script>
+  <!-- Capa aditiva: lógica del nuevo hub de Guía (switch, chips, panel de pasos, reveal on scroll) -->
+  <script src="guia-hub.js"></script>
   <script src="navbar-auth.js"></script>
   <script src="ajustes-modal.js?v=2"></script>
   <!-- Capa aditiva: pestaña "Mi empresa" en Ajustes -->
