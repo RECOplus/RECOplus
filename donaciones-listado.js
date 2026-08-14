@@ -60,13 +60,30 @@
     return new Date(dateStr).toLocaleDateString(currentLang() === 'en' ? 'en-US' : 'es-PA');
   }
 
+  /* Mismo criterio que donar-listings.js: el valor se guardó tal cual
+     lo eligió el usuario (en el idioma que tenía la página al publicar),
+     así que se detecta por palabra clave en ambos idiomas y se vuelve a
+     traducir con t() según el idioma actual de quien lo está viendo. */
   function disponibilidadBadge(disponibilidad) {
     if (!disponibilidad) return null;
     var val = disponibilidad.toLowerCase();
-    if (val.indexOf('inmediata') !== -1 || val.indexOf('antes posible') !== -1) {
-      return { text: disponibilidad, cls: 'dl-card-badge--good' };
+    var key;
+    if (val.indexOf('antes posible') !== -1 || val.indexOf('as soon as possible') !== -1 || val.indexOf('asap') !== -1) {
+      key = 'donar.form.opt.cuanto-antes';
+    } else if (val.indexOf('inmediata') !== -1 || val.indexOf('immediate') !== -1) {
+      key = 'donar.form.opt.inmediata';
+    } else if (val.indexOf('esta semana') !== -1 || val.indexOf('this week') !== -1) {
+      key = 'donar.form.opt.semana';
+    } else if (val.indexOf('este mes') !== -1 || val.indexOf('this month') !== -1) {
+      key = 'donar.form.opt.mes';
     }
-    return { text: disponibilidad, cls: 'dl-card-badge--warn' };
+
+    if (!key) {
+      return { text: disponibilidad, cls: 'dl-card-badge--warn' };
+    }
+
+    var esUrgente = key === 'donar.form.opt.inmediata' || key === 'donar.form.opt.cuanto-antes';
+    return { text: t(key), cls: esUrgente ? 'dl-card-badge--good' : 'dl-card-badge--warn' };
   }
 
   /* ── Estado en memoria ── */
@@ -211,4 +228,9 @@
     setupControls();
     loadAll();
   });
+
+  // Si allRows ya está cargado, repintar sin volver a pedirle nada a
+  // Supabase alcanza para refrescar los badges de disponibilidad (y
+  // el resto de textos con t()) al idioma nuevo.
+  document.addEventListener('reco:langchange', applyFiltersAndRender);
 })();

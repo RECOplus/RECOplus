@@ -70,6 +70,17 @@
   // la imagen otra vez.
   var lastPhotoDataUrl = null;
 
+  // i18n.js define t(key, vars) como función global (window.t). Si por
+  // algún motivo no está cargada, usamos el texto en español como
+  // respaldo para que el escáner nunca se quede sin texto. Se define
+  // aquí (fuera de ready()) para que runIAScan/ejecutarConsultaIA
+  // también puedan usarla, no solo el render de resultados locales.
+  function tr(key, fallback, vars) {
+    if (typeof window.t !== "function") return fallback;
+    var val = window.t(key, vars);
+    return (val && val !== key) ? val : fallback;
+  }
+
   function ready(fn) {
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", fn);
@@ -398,18 +409,18 @@
     if (!lastPhotoDataUrl) return;
 
     iaBtn.disabled = true;
-    iaBtn.textContent = "Verificando tu cuota…";
+    iaBtn.textContent = tr("rscan.ia.verificandoCuota", "Verificando tu cuota…");
 
     verificarCuotaIA().then(function (cuota) {
       if (!cuota.permitido) {
         iaBtn.disabled = true;
-        iaBtn.textContent = "Límite diario alcanzado";
+        iaBtn.textContent = tr("rscan.ia.limiteAlcanzado", "Límite diario alcanzado");
         iaBox.className = "rc-scan-ia-result rc-scan-ia-result--nomatch";
         iaBox.innerHTML =
           '<div class="rc-scan-result__body">' +
-            '<div class="rc-scan-result__title">Alcanzaste tu límite diario de escaneos con IA</div>' +
-            '<p class="rc-scan-result__hint">Tu plan ' + cuota.nombrePlan + ' incluye ' + cuota.limite + ' escaneos con IA al día. Mejora tu plan para escanear sin límites.</p>' +
-            '<button type="button" class="rc-scan-ia-btn" data-abrir-suscripcion style="margin-top:8px">Ver planes →</button>' +
+            '<div class="rc-scan-result__title">' + tr("rscan.ia.limiteTitulo", "Alcanzaste tu límite diario de escaneos con IA") + '</div>' +
+            '<p class="rc-scan-result__hint">' + tr("rscan.ia.limiteDesc", 'Tu plan ' + cuota.nombrePlan + ' incluye ' + cuota.limite + ' escaneos con IA al día. Mejora tu plan para escanear sin límites.', { plan: cuota.nombrePlan, limite: cuota.limite }) + '</p>' +
+            '<button type="button" class="rc-scan-ia-btn" data-abrir-suscripcion style="margin-top:8px">' + tr("rscan.ia.verPlanesBtn", "Ver planes →") + '</button>' +
           '</div>';
         return;
       }
@@ -421,11 +432,11 @@
     var base64 = lastPhotoDataUrl.replace(/^data:image\/\w+;base64,/, "");
 
     iaBtn.disabled = true;
-    iaBtn.textContent = "Consultando IA…";
+    iaBtn.textContent = tr("rscan.ia.consultando", "Consultando IA…");
     iaBox.className = "rc-scan-ia-result rc-scan-ia-result--busy";
     iaBox.innerHTML =
       '<div class="rc-scan-result__spinner" aria-hidden="true"></div>' +
-      "<p>Consultando el escaneo preciso con IA…</p>";
+      "<p>" + tr("rscan.ia.consultandoDesc", "Consultando el escaneo preciso con IA…") + "</p>";
 
     fetch(CLASSIFY_ENDPOINT, {
       method: "POST",
@@ -447,11 +458,15 @@
 
         if (esValido) {
           var label = window.recoMaterialInfo.getLabel(key);
-          var etiquetaConfianza = { alta: "Confianza alta", media: "Confianza media", baja: "Confianza baja" }[datos.confianza] || "IA";
+          var etiquetaConfianza = {
+            alta: tr("rscan.ia.confianzaAlta", "Confianza alta"),
+            media: tr("rscan.ia.confianzaMedia", "Confianza media"),
+            baja: tr("rscan.ia.confianzaBaja", "Confianza baja")
+          }[datos.confianza] || tr("rscan.ia.confianzaGenerica", "IA");
           iaBox.className = "rc-scan-ia-result rc-scan-ia-result--match";
           iaBox.innerHTML =
             '<div class="rc-scan-result__body">' +
-              '<span class="rc-scan-result__eyebrow">Escaneo preciso (IA) detectó</span>' +
+              '<span class="rc-scan-result__eyebrow">' + tr("rscan.ia.detecto", "Escaneo preciso (IA) detectó") + '</span>' +
               '<div class="rc-scan-result__title">' + label + "</div>" +
               '<span class="rc-minfo__badge">' + etiquetaConfianza + "</span>" +
               (datos.mensaje ? '<p class="rc-scan-result__hint rc-scan-result__hint--ok">' + datos.mensaje + "</p>" : "") +
@@ -463,8 +478,8 @@
           iaBox.className = "rc-scan-ia-result rc-scan-ia-result--nomatch";
           iaBox.innerHTML =
             '<div class="rc-scan-result__body">' +
-              '<div class="rc-scan-result__title">La IA tampoco pudo identificarlo con seguridad</div>' +
-              '<p class="rc-scan-result__hint">Prueba con más luz o un encuadre más cercano, o elige el material manualmente arriba.</p>' +
+              '<div class="rc-scan-result__title">' + tr("rscan.ia.tampocoIdentifico", "La IA tampoco pudo identificarlo con seguridad") + '</div>' +
+              '<p class="rc-scan-result__hint">' + tr("rscan.ia.sugerenciaOtraFoto", "Prueba con más luz o un encuadre más cercano, o elige el material manualmente arriba.") + '</p>' +
             "</div>";
           logScan(null, "[IA] " + (datos.razon || ""), null, true);
         }
@@ -474,13 +489,13 @@
         iaBox.className = "rc-scan-ia-result rc-scan-ia-result--error";
         iaBox.innerHTML =
           '<div class="rc-scan-result__body">' +
-            '<div class="rc-scan-result__title">No se pudo consultar el escaneo preciso</div>' +
-            '<p class="rc-scan-result__hint">Intenta de nuevo en unos segundos.</p>' +
+            '<div class="rc-scan-result__title">' + tr("rscan.ia.noSePudoConsultar", "No se pudo consultar el escaneo preciso") + '</div>' +
+            '<p class="rc-scan-result__hint">' + tr("rscan.ia.intentaDeNuevo", "Intenta de nuevo en unos segundos.") + '</p>' +
           "</div>";
       })
       .then(function () {
         iaBtn.disabled = false;
-        iaBtn.textContent = "✨ Verificar con IA (más preciso)";
+        iaBtn.textContent = tr("rscan.ia.btnDefault", "✨ Verificar con IA (más preciso)");
       });
   }
 
@@ -520,7 +535,7 @@
       iaBtn.id = "rcScanIABtn";
       iaBtn.type = "button";
       iaBtn.className = "rc-scan-ia-btn";
-      iaBtn.textContent = "✨ Verificar con IA (más preciso)";
+      iaBtn.textContent = tr("rscan.ia.btnDefault", "✨ Verificar con IA (más preciso)");
       iaBtn.disabled = true;
       iaBtn.hidden = true;
       result.insertAdjacentElement("afterend", iaBtn);
@@ -540,14 +555,15 @@
       runIAScan(iaBox, iaBtn);
     });
 
-    // i18n.js define t(key) como función global (window.t). Si por
-    // algún motivo no está cargada, usamos el texto en español como
-    // respaldo para que el escáner nunca se quede sin texto.
-    function tr(key, fallback) {
-      if (typeof window.t !== "function") return fallback;
-      var val = window.t(key);
-      return (val && val !== key) ? val : fallback;
-    }
+    // Si el usuario cambia el idioma mientras el botón está en su
+    // estado por defecto (no ocupado en una consulta), refrescamos su
+    // texto al vuelo. Si está deshabilitado (cargando, límite
+    // alcanzado, etc.) lo dejamos como está para no pisar ese estado.
+    document.addEventListener("reco:langchange", function () {
+      if (!iaBtn.disabled) {
+        iaBtn.textContent = tr("rscan.ia.btnDefault", "✨ Verificar con IA (más preciso)");
+      }
+    });
 
     function renderLoadingModel() {
       result.className = "rc-scan-result rc-scan-result--busy";
@@ -639,7 +655,7 @@
         lastPhotoDataUrl = loaded.dataUrl;
         iaBtn.hidden = false;
         iaBtn.disabled = false;
-        iaBtn.textContent = "✨ Verificar con IA (más preciso)";
+        iaBtn.textContent = tr("rscan.ia.btnDefault", "✨ Verificar con IA (más preciso)");
         iaBox.className = "rc-scan-ia-result"; // oculta cualquier resultado de IA de una foto anterior
 
         var firstLoad = !modelPromise;

@@ -46,20 +46,66 @@
     return CATEGORY_EMOJI[categoria] || '📦';
   }
 
+  /* ── Etiqueta traducida para la categoría ──
+     `categoria` se guarda en Supabase en español (el valor fijo del
+     <option>, ver donar.js), así que aquí se mapea a su clave i18n
+     (ya preparada en i18n.js, sección "DONAR: mapeo de categorías")
+     y se traduce según el idioma actual. CATEGORY_EMOJI de arriba
+     sigue usando el valor crudo como llave: no se toca. ── */
+  var CATEGORIA_I18N_KEY = {
+    'Ropa y calzado': 'donar.cat.ropaCalzado',
+    'Electrónicos': 'donar.cat.electronicos',
+    'Muebles': 'donar.cat.muebles',
+    'Libros y útiles': 'donar.cat.librosUtiles',
+    'Juguetes': 'donar.cat.juguetes',
+    'Alimentos no perecederos': 'donar.cat.alimentosNoPerecederos',
+    'Alimentos': 'donar.cat.alimentos',
+    'Material escolar': 'donar.cat.materialEscolar',
+    'Productos de higiene': 'donar.cat.higiene',
+    'Medicinas no vencidas': 'donar.cat.medicinas',
+    'Otro': 'donar.cat.otro'
+  };
+
+  function categoriaLabel(categoria) {
+    if (!categoria) return categoria;
+    var key = CATEGORIA_I18N_KEY[categoria];
+    return key ? t(key) : categoria; // valor sin mapear: se muestra tal cual
+  }
+
   /* ── Caché en memoria de las filas ya cargadas (donaciones y
      solicitudes), indexada por id. Se usa para llenar el modal de
      detalle sin tener que volver a pedirle el registro a Supabase
      cuando el usuario toca "Ver donación" / "Ayudar". ── */
   var rowsCache = {};
 
-  /* ── Texto legible para el badge de disponibilidad ── */
+  /* ── Texto legible para el badge de disponibilidad ──
+     El valor viene guardado en Supabase tal cual lo eligió el usuario
+     en el <select> (en el idioma en que estaba la página al publicar),
+     así que aquí lo reconocemos por palabra clave en ambos idiomas y
+     lo volvemos a traducir con t() según el idioma ACTUAL de quien
+     está viendo la tarjeta — así una donación publicada en español se
+     ve en inglés si el visitante cambió el idioma, y viceversa. ── */
   function disponibilidadBadge(disponibilidad) {
     if (!disponibilidad) return null;
     var val = disponibilidad.toLowerCase();
-    if (val.indexOf('inmediata') !== -1 || val.indexOf('antes posible') !== -1) {
-      return { text: disponibilidad, cls: 'dh-card-badge--good' };
+    var key;
+    if (val.indexOf('antes posible') !== -1 || val.indexOf('as soon as possible') !== -1 || val.indexOf('asap') !== -1) {
+      key = 'donar.form.opt.cuanto-antes';
+    } else if (val.indexOf('inmediata') !== -1 || val.indexOf('immediate') !== -1) {
+      key = 'donar.form.opt.inmediata';
+    } else if (val.indexOf('esta semana') !== -1 || val.indexOf('this week') !== -1) {
+      key = 'donar.form.opt.semana';
+    } else if (val.indexOf('este mes') !== -1 || val.indexOf('this month') !== -1) {
+      key = 'donar.form.opt.mes';
     }
-    return { text: disponibilidad, cls: 'dh-card-badge--warn' };
+
+    if (!key) {
+      // Valor no reconocido (dato antiguo o manual): se muestra tal cual.
+      return { text: disponibilidad, cls: 'dh-card-badge--warn' };
+    }
+
+    var esUrgente = key === 'donar.form.opt.inmediata' || key === 'donar.form.opt.cuanto-antes';
+    return { text: t(key), cls: esUrgente ? 'dh-card-badge--good' : 'dh-card-badge--warn' };
   }
 
   function escapeHtml(str) {
@@ -85,8 +131,9 @@
      tabla `donaciones`. actionLabel cambia según la columna
      (Donaciones → "Ver donación", Solicitudes → "Ayudar"). ── */
   function buildCardHTML(row, actionLabel) {
+    var catLabel = categoriaLabel(row.categoria);
     var img = row.imagen_base64
-      ? '<img src="' + row.imagen_base64 + '" alt="' + escapeHtml(row.categoria) + '" style="width:100%;height:100%;object-fit:cover;border-radius:14px;">'
+      ? '<img src="' + row.imagen_base64 + '" alt="' + escapeHtml(catLabel) + '" style="width:100%;height:100%;object-fit:cover;border-radius:14px;">'
       : emojiFor(row.categoria);
 
     var badge = disponibilidadBadge(row.disponibilidad);
@@ -96,7 +143,7 @@
 
     var titulo = row.descripcion
       ? (row.descripcion.length > 42 ? row.descripcion.slice(0, 42) + '…' : row.descripcion)
-      : row.categoria;
+      : catLabel;
 
     var ubicacion = row.ubicacion ? '📍 ' + escapeHtml(row.ubicacion) : '📍 ' + t('donar.listings.ubicacionSinEspecificar');
 
@@ -105,7 +152,7 @@
         '<div class="dh-card-img">' + badgeHTML + img + '</div>' +
         '<h4>' + escapeHtml(titulo) + '</h4>' +
         '<p class="dh-card-meta">' + ubicacion + '</p>' +
-        '<p class="dh-card-cat">' + escapeHtml(row.categoria) + ' · ' + timeAgo(row.created_at) + '</p>' +
+        '<p class="dh-card-cat">' + escapeHtml(catLabel) + ' · ' + timeAgo(row.created_at) + '</p>' +
         '<button class="dh-card-btn">' + actionLabel + ' →</button>' +
       '</div>'
     );
@@ -148,7 +195,7 @@
   /* ── Imagen grande (o emoji) para la cabecera del modal de detalle ── */
   function imageOrEmojiLarge(row) {
     if (row.imagen_base64) {
-      return '<img src="' + row.imagen_base64 + '" alt="' + escapeHtml(row.categoria) + '">';
+      return '<img src="' + row.imagen_base64 + '" alt="' + escapeHtml(categoriaLabel(row.categoria)) + '">';
     }
     return '<span class="donar-detail-emoji">' + emojiFor(row.categoria) + '</span>';
   }
@@ -173,7 +220,7 @@
     }
 
     var titleEl = document.getElementById('donarDetailTitle');
-    if (titleEl) titleEl.textContent = row.categoria || (isDonar ? 'Donación' : 'Solicitud');
+    if (titleEl) titleEl.textContent = categoriaLabel(row.categoria) || (isDonar ? t('donar.listings.kicker.donacion') : t('donar.listings.kicker.solicitud'));
 
     var metaEl = document.getElementById('donarDetailMeta');
     if (metaEl) {
@@ -295,4 +342,10 @@
 
   ready(loadListings);
   ready(setupDetailModal);
+
+  // Si el visitante cambia el idioma después de que las tarjetas ya
+  // se pintaron, las volvemos a pedir/pintar para que el badge de
+  // disponibilidad (y el resto de textos armados con t()) se
+  // actualicen sin tener que recargar la página.
+  document.addEventListener('reco:langchange', loadListings);
 })();
