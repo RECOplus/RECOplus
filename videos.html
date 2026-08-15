@@ -4,11 +4,11 @@
   <script src="darkmode.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RECO+ | Guía</title>
+  <title>RECO+ | Biblioteca de videos</title>
   <link rel="stylesheet" href="paginaguiastyle.css" />
-  <!-- Capa aditiva: rediseño de Guía como centro de aprendizaje -->
-  <link rel="stylesheet" href="guia-hub.css" />
-  <!-- Capa aditiva: efecto liquid glass (transparencia) igual al de reciclar.html -->
+  <!-- Capa aditiva: página "Biblioteca de videos" (listado + filtro por categoría) -->
+  <link rel="stylesheet" href="videos-hub.css" />
+  <!-- Capa aditiva: efecto liquid glass (transparencia) igual al de guia.html -->
   <link rel="stylesheet" href="liquid-glass-guia.css" />
   <!-- Capa aditiva: corrige el fondo oscuro forzado de liquid-glass-guia.css en modo claro -->
   <link rel="stylesheet" href="liquid-glass-guia-light-fix.css" />
@@ -366,279 +366,40 @@ html.dark .dm-pill__sun { opacity: 0.38; }
 </div>
 
   <!-- ════════════════════════════════════════════
-       GH HERO — Centro de aprendizaje: título + videos principales + "Más videos"
+       VH HERO — Título + breadcrumb de vuelta a Guía
        ════════════════════════════════════════════ -->
-  <section class="gh gh-hero">
-    <div class="gh-wrap gh-hero__inner">
-      <h1 class="gh-hero__title gh-reveal" data-i18n="guia.hero.title">
-        Aprende, explora y actúa<br>
-        por un <span class="gh-accent">planeta</span> más sostenible.
-      </h1>
-
-      <div class="gh-learn__grid">
-        <div>
-          <div class="gh-learn__eyebrow gh-reveal">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg>
-            <span data-i18n="guia.hero.eyebrow">Videos principales</span>
-          </div>
-
-          <div class="gh-video-row">
-            <a href="videos.html?v=v1" class="gh-video-card gh-reveal">
-              <div class="gh-video-card__thumb">
-                <span class="gh-video-card__art"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 3h6v3l1.5 2v12a1 1 0 01-1 1h-7a1 1 0 01-1-1V8L9 6V3z"/></svg></span>
-                <span class="gh-video-card__icon"><svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg></span>
-                <span class="gh-video-card__badge">02:45</span>
-              </div>
-              <div class="gh-video-card__body">
-                <h3 class="gh-video-card__title" data-i18n="guia.video1.title">El poder de reciclar</h3>
-                <p class="gh-video-card__desc" data-i18n="guia.video1.desc">Pequeñas acciones que generan grandes cambios al planeta.</p>
-              </div>
-            </a>
-
-            <a href="videos.html?v=v2" class="gh-video-card gh-reveal">
-              <div class="gh-video-card__thumb">
-                <span class="gh-video-card__art"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9.3C.5 8 2 4 6 4c2 0 3.5 1.2 4 2.5C10.5 5.2 12 4 14 4c4 0 5.5 4 4 7.7C19.5 16.4 12 21 12 21z"/></svg></span>
-                <span class="gh-video-card__icon"><svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg></span>
-                <span class="gh-video-card__badge">03:10</span>
-              </div>
-              <div class="gh-video-card__body">
-                <h3 class="gh-video-card__title" data-i18n="guia.video2.title">Donar es transformar</h3>
-                <p class="gh-video-card__desc" data-i18n="guia.video2.desc">Tus donaciones pueden mejorar la vida de muchas personas.</p>
-              </div>
-            </a>
-
-            <a href="videos.html?v=v3" class="gh-video-card gh-reveal">
-              <div class="gh-video-card__thumb">
-                <span class="gh-video-card__art"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 3c-3 3-3 15 0 18M12 3c3 3 3 15 0 18" fill="none" stroke="#0d2014" stroke-width="1"/><path d="M3.5 9h17M3.5 15h17" stroke="#0d2014" stroke-width="1" fill="none"/></svg></span>
-                <span class="gh-video-card__icon"><svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg></span>
-                <span class="gh-video-card__badge">02:20</span>
-              </div>
-              <div class="gh-video-card__body">
-                <h3 class="gh-video-card__title" data-i18n="guia.video3.title">Nuestro planeta, nuestro hogar</h3>
-                <p class="gh-video-card__desc" data-i18n="guia.video3.desc">Acciones simples que protegen nuestro planeta cada día.</p>
-              </div>
-            </a>
-          </div>
-        </div>
-
-        <aside class="gh-learn__side gh-reveal">
-          <div class="gh-learn__side-head">
-            <span data-i18n="guia.hero.masVideos">Más videos</span>
-          </div>
-
-          <a href="videos.html?v=v4" class="gh-mini">
-            <span class="gh-mini__thumb"><svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg></span>
-            <span class="gh-mini__text">
-              <span class="gh-mini__title" data-i18n="guia.mini1.title">Cómo separar correctamente</span>
-              <span class="gh-mini__desc" data-i18n="guia.mini1.desc">01:58 · Aprende a clasificar tus residuos</span>
-            </span>
-          </a>
-          <a href="videos.html?v=v5" class="gh-mini">
-            <span class="gh-mini__thumb"><svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg></span>
-            <span class="gh-mini__text">
-              <span class="gh-mini__title" data-i18n="guia.mini2.title">Qué pasa con tus residuos</span>
-              <span class="gh-mini__desc" data-i18n="guia.mini2.desc">02:05 · El viaje hasta su transformación</span>
-            </span>
-          </a>
-          <a href="videos.html?v=v6" class="gh-mini">
-            <span class="gh-mini__thumb"><svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg></span>
-            <span class="gh-mini__text">
-              <span class="gh-mini__title" data-i18n="guia.mini3.title">Reutilizar para vivir mejor</span>
-              <span class="gh-mini__desc" data-i18n="guia.mini3.desc">01:45 · Dale una segunda vida a lo que ya no usas</span>
-            </span>
-          </a>
-          <a href="videos.html?v=v7" class="gh-mini">
-            <span class="gh-mini__thumb"><svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg></span>
-            <span class="gh-mini__text">
-              <span class="gh-mini__title" data-i18n="guia.mini4.title">Economía circular explicada fácil</span>
-              <span class="gh-mini__desc" data-i18n="guia.mini4.desc">02:30 · El ciclo que crea un futuro sostenible</span>
-            </span>
-          </a>
-
-          <a href="videos.html" class="gh-learn__side-btn" data-i18n="guia.hero.verTodos">Ver todos los videos</a>
-        </aside>
-      </div>
-    </div>
-  </section>
-
-  <!-- ════════════════════════════════════════════
-       GH GUIDE — Guía de reciclaje y donación (switch + chips + panel de pasos)
-       ════════════════════════════════════════════ -->
-  <section class="gh gh-guide">
-    <div class="gh-wrap">
-      <div class="gh-guide__header gh-reveal">
-        <div>
-          <h2 data-i18n="guia.guide.title">Guía de reciclaje y donación</h2>
-          <p data-i18n="guia.guide.subtitle">Selecciona una categoría para obtener instrucciones paso a paso.</p>
-        </div>
-        <div class="gh-switch">
-          <button type="button" class="gh-switch__btn active" data-mode="reciclar">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16"><path d="M10 2a6 6 0 016 6c0 4-6 10-6 10S4 12 4 8a6 6 0 016-6z"/><circle cx="10" cy="8" r="2"/></svg>
-            <span data-i18n="nav.reciclar">Reciclar</span>
-          </button>
-          <button type="button" class="gh-switch__btn" data-mode="donar">
-            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16"><path d="M3 11c0-2.5 2-4 4-3l3 1.5 5-1.5c1.2-.2 2.5.6 2.5 2 0 1.2-.8 2-2 2l-3.5.5"/><path d="M3 11l2 5h3l7-4"/></svg>
-            <span data-i18n="nav.donar">Donar</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="gh-chips gh-reveal" id="ghChips"></div>
-
-      <div class="gh-guide__panels">
-        <div class="gh-panel gh-reveal" id="ghGuide" data-mode="reciclar">
-          <div class="gh-panel__visual">
-            <div class="gh-panel__visual-icon" id="ghPanelIcon"></div>
-          </div>
-          <div class="gh-panel__body">
-            <span class="gh-panel__badge" id="ghPanelBadge">Cómo reciclarlo</span>
-            <h3 class="gh-panel__title" id="ghPanelTitle">Plástico</h3>
-            <p class="gh-panel__desc" id="ghPanelDesc"></p>
-            <ol class="gh-steps" id="ghPanelSteps"></ol>
-            <a href="mapa.html" class="gh-panel__cta" id="ghPanelCta">Encuentra un punto de reciclaje →</a>
-          </div>
-        </div>
-
-        <div class="gh-donate-panel gh-reveal">
-          <div class="gh-donate-panel__head">
-            <div class="gh-donate-panel__icon">
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 11c0-2.5 2-4 4-3l3 1.5 5-1.5c1.2-.2 2.5.6 2.5 2 0 1.2-.8 2-2 2l-3.5.5"/><path d="M3 11l2 5h3l7-4"/></svg>
-            </div>
-            <div>
-              <h3 data-i18n="guia.donatepanel.title">¿Qué puedes donar?</h3>
-              <p data-i18n="guia.donatepanel.subtitle">Tus donaciones pueden marcar una gran diferencia.</p>
-            </div>
-          </div>
-
-          <div class="gh-donate-panel__cats">
-            <div class="gh-donate-cat">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 4L4 7l2 3 2-1v11h8V9l2 1 2-3-4-3-2 2h-2L8 4z"/></svg>
-              <span data-i18n="guia.donatepanel.cat1">Ropa</span>
-            </div>
-            <div class="gh-donate-cat">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="9" cy="8" r="3"/><circle cx="15" cy="8" r="3"/><path d="M6 12c-1.5 2-1.5 6 1 8h10c2.5-2 2.5-6 1-8"/></svg>
-              <span data-i18n="guia.donatepanel.cat2">Juguetes</span>
-            </div>
-            <div class="gh-donate-cat">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 5.5A1.5 1.5 0 015.5 4H11v16H5.5A1.5 1.5 0 014 18.5v-13z"/><path d="M20 5.5A1.5 1.5 0 0018.5 4H13v16h5.5a1.5 1.5 0 001.5-1.5v-13z"/></svg>
-              <span data-i18n="guia.donatepanel.cat3">Libros</span>
-            </div>
-            <div class="gh-donate-cat">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/></svg>
-              <span data-i18n="guia.donatepanel.cat4">Útiles</span>
-            </div>
-            <div class="gh-donate-cat">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 11V7a2 2 0 012-2h10a2 2 0 012 2v4"/><rect x="4" y="11" width="16" height="6" rx="1"/><line x1="5" y1="17" x2="5" y2="20"/><line x1="19" y1="17" x2="19" y2="20"/></svg>
-              <span data-i18n="guia.donatepanel.cat5">Hogar</span>
-            </div>
-            <div class="gh-donate-cat">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>
-              <span data-i18n="guia.donatepanel.cat6">Y más</span>
-            </div>
-          </div>
-
-          <span class="gh-donate-panel__steps-label" data-i18n="guia.donatepanel.stepslabel">Pasos para donar</span>
-          <div class="gh-donate-steps">
-            <div class="gh-donate-step">
-              <div class="gh-donate-step__icon">1</div>
-              <span data-i18n="guia.donatepanel.step1">Selecciona</span>
-            </div>
-            <div class="gh-donate-step">
-              <div class="gh-donate-step__icon">2</div>
-              <span data-i18n="guia.donatepanel.step2">Limpia y organiza</span>
-            </div>
-            <div class="gh-donate-step">
-              <div class="gh-donate-step__icon">3</div>
-              <span data-i18n="guia.donatepanel.step3">Entrega o agenda</span>
-            </div>
-            <div class="gh-donate-step">
-              <div class="gh-donate-step__icon">4</div>
-              <span data-i18n="guia.donatepanel.step4">Transforma vidas</span>
-            </div>
-          </div>
-
-          <a href="donar.html" class="gh-donate-panel__cta" data-i18n="guia.donatepanel.cta">
-            Ir a Donar / Ayuda →
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ════════════════════════════════════════════
-       GH INFO — ¿Sabías qué? / Impacto de tu acción / Consejos rápidos
-       ════════════════════════════════════════════ -->
-  <section class="gh gh-info">
-    <div class="gh-wrap gh-info__grid">
-
-      <div class="gh-box gh-reveal">
-        <div class="gh-box__icon">
-          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="20" height="20"><path d="M10 2.3a5.2 5.2 0 00-2.8 9.6c.5.3.8.9.8 1.5v.3h4v-.3c0-.6.3-1.2.8-1.5A5.2 5.2 0 0010 2.3z"/><path d="M8.1 16.6h3.8M8.7 18.4h2.6"/></svg>
-        </div>
-        <h3 data-i18n="guia.info.title">¿Sabías qué?</h3>
-        <p data-i18n="guia.info.text1">Reciclar 1 tonelada de papel salva aproximadamente <strong>17 árboles</strong> y ahorra miles de litros de agua.</p>
-        <p data-i18n="guia.info.text2">Donar ropa que ya no usas puede ayudar a proteger el medio ambiente y a quienes más lo necesitan.</p>
-      </div>
-
-      <div class="gh-box gh-reveal">
-        <div class="gh-box__icon">
-          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="20" height="20"><path d="M3 17V10M9 17V6M15 17v-4M17 17V3"/></svg>
-        </div>
-        <h3 data-i18n="guia.impact.title">Impacto de tu acción</h3>
-        <p data-i18n="guia.impact.subtitle">Cada acción cuenta y genera un impacto real.</p>
-        <div class="gh-stats-grid">
-          <div class="stat-item" data-target="500000" data-prefix="+" data-suffix="" data-format="short">
-            <span class="stat-number">+500K</span>
-            <span data-i18n="stats.personas">Personas activas</span>
-          </div>
-          <div class="stat-item" data-target="120" data-prefix="" data-suffix="">
-            <span class="stat-number">120</span>
-            <span data-i18n="stats.toneladas">Toneladas recicladas</span>
-          </div>
-          <div class="stat-item" data-target="50" data-prefix="+" data-suffix="">
-            <span class="stat-number">+50</span>
-            <span data-i18n="stats.puntos">Puntos de reciclaje</span>
-          </div>
-          <div class="stat-item" data-target="30" data-prefix="" data-suffix="">
-            <span class="stat-number">30</span>
-            <span data-i18n="stats.comunidades">Comunidades</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="gh-box gh-reveal">
-        <div class="gh-box__icon">
-          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="20" height="20"><path d="M4 10l4 4 8-9"/></svg>
-        </div>
-        <h3 data-i18n="guia.tips.title">Consejos rápidos</h3>
-        <ul class="gh-checklist">
-          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M4 10l4 4 8-9"/></svg><span data-i18n="guia.tips.li1">Reduce lo que consumes.</span></li>
-          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M4 10l4 4 8-9"/></svg><span data-i18n="guia.tips.li2">Reutiliza siempre que puedas.</span></li>
-          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M4 10l4 4 8-9"/></svg><span data-i18n="guia.tips.li3">Recicla correctamente.</span></li>
-          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M4 10l4 4 8-9"/></svg><span data-i18n="guia.tips.li4">Dona lo que ya no uses.</span></li>
-          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M4 10l4 4 8-9"/></svg><span data-i18n="guia.tips.li5">Inspira a más personas a actuar.</span></li>
-        </ul>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ════════════════════════════════════════════
-       GH CTA — Cierre final
-       ════════════════════════════════════════════ -->
-  <section class="gh gh-cta">
-    <div class="gh-wrap gh-cta__inner gh-reveal">
-      <div class="gh-cta__avatars">
-        <img src="img/persona1.png" alt="">
-        <img src="img/persona2.png" alt="">
-        <img src="img/persona3.png" alt="">
-      </div>
-      <h2 data-i18n="guia.cta.title">Juntos construimos un futuro mejor</h2>
-      <p data-i18n="guia.cta.subtitle">Infórmate, aprende y actúa hoy. El cambio empieza contigo.</p>
-      <a href="login.html" class="gh-cta__btn" data-i18n="guia.cta.btn">
-        <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z"/></svg>
-        Únete a la comunidad
+  <section class="vh vh-hero">
+    <div class="vh-wrap vh-hero__inner">
+      <a href="guia.html" class="vh-back">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" width="14" height="14" stroke-linecap="round"><path d="M12.5 4L7 10l5.5 6"/></svg>
+        <span data-i18n="videos.hero.back">Volver a Guía</span>
       </a>
+      <h1 class="vh-hero__title" data-i18n="videos.hero.title">Biblioteca de videos</h1>
+      <p class="vh-hero__subtitle" data-i18n="videos.hero.subtitle">Todo lo que necesitas saber sobre reciclar, donar y vivir de forma más sostenible, explicado en video.</p>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════
+       VH FILTROS — chips por categoría
+       ════════════════════════════════════════════ -->
+  <section class="vh vh-filters">
+    <div class="vh-wrap">
+      <div class="vh-chips" id="vhChips"></div>
+      <p class="vh-count" id="vhCount"></p>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════
+       VH GRID — tarjetas de video
+       ════════════════════════════════════════════ -->
+  <section class="vh vh-grid-section">
+    <div class="vh-wrap">
+      <div class="vh-grid" id="vhGrid"></div>
+      <div class="vh-empty" id="vhEmpty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" width="34" height="34"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+        <strong data-i18n="videos.empty.title">No hay videos en esta categoría</strong>
+        <span data-i18n="videos.empty.desc">Prueba con otra categoría o vuelve a "Todos" para ver la biblioteca completa.</span>
+      </div>
     </div>
   </section>
 
@@ -699,8 +460,9 @@ html.dark .dm-pill__sun { opacity: 0.38; }
   <script src="nav-preview.js"></script>
   <script src="search.js"></script>
   <script src="script.js"></script>
-  <!-- Capa aditiva: lógica del nuevo hub de Guía (switch, chips, panel de pasos, reveal on scroll) -->
-  <script src="guia-hub.js"></script>
+  <!-- Capa aditiva: datos + lógica de la biblioteca de videos (filtro por categoría, deep-link ?v=/?cat=) -->
+  <script src="videos-data.js"></script>
+  <script src="videos-hub.js"></script>
   <script src="navbar-auth.js"></script>
   <script src="ajustes-modal.js?v=2"></script>
   <!-- Capa aditiva: pestaña "Mi empresa" en Ajustes -->

@@ -425,6 +425,38 @@ const translations = {
     "guia.cta.subtitle": "Infórmate, aprende y actúa hoy. El cambio empieza contigo.",
     "guia.cta.btn":      "Únete a la comunidad",
 
+    /* ── BIBLIOTECA DE VIDEOS (página videos.html) ── */
+    "videos.hero.back":     "Volver a Guía",
+    "videos.hero.title":    "Biblioteca de videos",
+    "videos.hero.subtitle": "Todo lo que necesitas saber sobre reciclar, donar y vivir de forma más sostenible, explicado en video.",
+
+    "videos.cat.todos":          "Todos",
+    "videos.cat.reciclaje":      "Reciclaje",
+    "videos.cat.donacion":       "Donación",
+    "videos.cat.sostenibilidad": "Sostenibilidad",
+    "videos.cat.comunidad":      "Comunidad",
+
+    "videos.results.count": "Mostrando {n} videos",
+
+    "videos.empty.title": "No hay videos en esta categoría",
+    "videos.empty.desc":  "Prueba con otra categoría o vuelve a \"Todos\" para ver la biblioteca completa.",
+
+    "videos.v4.desc":  "Aprende a clasificar cada material antes de llevarlo a un punto de reciclaje.",
+    "videos.v5.desc":  "Sigue el viaje de tus residuos desde el contenedor hasta su transformación.",
+    "videos.v6.desc":  "Dale una segunda vida a los objetos que ya no usas.",
+    "videos.v7.desc":  "Entiende el ciclo que convierte residuos en nuevos recursos.",
+
+    "videos.v8.title": "Cómo donar de forma segura",
+    "videos.v8.desc":  "Consejos prácticos para coordinar una donación sin contratiempos.",
+    "videos.v9.title": "El impacto de tu donación",
+    "videos.v9.desc":  "Conoce a dónde llega lo que compartes y cómo cambia vidas.",
+    "videos.v10.title": "Historias que transforman vidas",
+    "videos.v10.desc":  "Testimonios reales de personas que reciclan y donan con RECO+.",
+    "videos.v11.title": "Comunidades que reciclan juntas",
+    "videos.v11.desc":  "Cómo un barrio organizado puede multiplicar su impacto ambiental.",
+    "videos.v12.title": "Reduce, reutiliza, recicla",
+    "videos.v12.desc":  "Los tres pilares que sostienen un estilo de vida sostenible.",
+
     /* ── DONAR (página donar.html) ── */
     "donar.hero.title":       "Donar /<br>Solicitar ayuda",
     "donar.hero.subtitle":    "Comparte lo que ya no necesitas o pide apoyo a<br>quienes pueden ayudarte. Juntos construimos<br>una comunidad más sólida y sostenible.",
@@ -2219,6 +2251,38 @@ const translations = {
     "guia.cta.title":    "Together we build a better future",
     "guia.cta.subtitle": "Learn, get informed and act today. Change starts with you.",
     "guia.cta.btn":      "Join the community",
+
+    /* ── VIDEO LIBRARY (videos.html page) ── */
+    "videos.hero.back":     "Back to Guide",
+    "videos.hero.title":    "Video library",
+    "videos.hero.subtitle": "Everything you need to know about recycling, donating, and living more sustainably, explained on video.",
+
+    "videos.cat.todos":          "All",
+    "videos.cat.reciclaje":      "Recycling",
+    "videos.cat.donacion":       "Donating",
+    "videos.cat.sostenibilidad": "Sustainability",
+    "videos.cat.comunidad":      "Community",
+
+    "videos.results.count": "Showing {n} videos",
+
+    "videos.empty.title": "No videos in this category",
+    "videos.empty.desc":  "Try another category or go back to \"All\" to see the full library.",
+
+    "videos.v4.desc":  "Learn how to sort each material before taking it to a recycling point.",
+    "videos.v5.desc":  "Follow your waste's journey from the bin to its transformation.",
+    "videos.v6.desc":  "Give a second life to things you no longer use.",
+    "videos.v7.desc":  "Understand the cycle that turns waste into new resources.",
+
+    "videos.v8.title": "How to donate safely",
+    "videos.v8.desc":  "Practical tips for coordinating a donation without hiccups.",
+    "videos.v9.title": "The impact of your donation",
+    "videos.v9.desc":  "See where what you share ends up and how it changes lives.",
+    "videos.v10.title": "Stories that change lives",
+    "videos.v10.desc":  "Real testimonials from people who recycle and donate with RECO+.",
+    "videos.v11.title": "Communities that recycle together",
+    "videos.v11.desc":  "How an organized neighborhood can multiply its environmental impact.",
+    "videos.v12.title": "Reduce, reuse, recycle",
+    "videos.v12.desc":  "The three pillars that support a sustainable lifestyle.",
 
     /* ── DONAR (donar.html page) ── */
     "donar.hero.title":       "Donate /<br>Request help",

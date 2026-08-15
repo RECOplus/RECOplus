@@ -302,13 +302,8 @@
       document.querySelectorAll(".gh-reveal").forEach(function (el) { el.classList.add("is-visible"); });
     }
 
-    // Botón "Ver todos los videos" del sidebar → ancla a la guía
-    var sideBtn = document.querySelector(".gh-learn__side-btn");
-    if (sideBtn) {
-      sideBtn.addEventListener("click", function () {
-        var target = document.querySelector(".gh-guide");
-        if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-    }
+    // Nota: el botón "Ver todos los videos" del sidebar ahora es un
+    // enlace real a videos.html (biblioteca de videos con filtro por
+    // categoría), por lo que ya no necesita JS aquí.
   });
 })();
