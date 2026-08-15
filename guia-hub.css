@@ -168,6 +168,21 @@ html:not(.dark) .gh-hero {
   background: linear-gradient(135deg, rgba(60,110,200,0.42) 0%, rgba(12,22,40,0.88) 100%);
 }
 
+.gh-video-card__art {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.32;
+  color: #fff;
+  pointer-events: none;
+  filter: drop-shadow(0 0 16px rgba(126,232,154,0.65));
+}
+.gh-video-card__art svg { width: 62px; height: 62px; }
+.gh-video-card:nth-child(2) .gh-video-card__art { filter: drop-shadow(0 0 16px rgba(255,170,130,0.6)); }
+.gh-video-card:nth-child(3) .gh-video-card__art { filter: drop-shadow(0 0 16px rgba(140,180,255,0.6)); }
+
 .gh-video-card__icon {
   width: 44px; height: 44px;
   border-radius: 50%;
@@ -381,15 +396,23 @@ html:not(.dark) .gh-hero {
 
 .gh-panel {
   display: grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: 190px 1fr;
   gap: 0;
   background: var(--bg-card, #fff);
   border: 1px solid var(--border-card, #d4eeda);
   border-radius: 22px;
   overflow: hidden;
   box-shadow: 0 10px 34px rgba(20,60,35,0.10);
+  height: 100%;
 }
 html.dark .gh-panel { box-shadow: 0 10px 34px rgba(0,0,0,0.30); }
+
+.gh-guide__panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: stretch;
+}
 
 .gh-panel__visual {
   position: relative;
@@ -417,7 +440,7 @@ html.dark .gh-panel__visual-icon {
 }
 .gh-panel__visual-icon svg { width: 38px; height: 38px; }
 
-.gh-panel__body { padding: 28px 30px; min-width: 0; }
+.gh-panel__body { padding: 26px 24px; min-width: 0; display: flex; flex-direction: column; }
 .gh-panel__badge {
   display: inline-block;
   font-size: 0.72rem;
@@ -445,10 +468,11 @@ html.dark .gh-panel__visual-icon {
 
 .gh-steps {
   list-style: none;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   counter-reset: gh-step;
+  margin-bottom: 8px;
 }
 .gh-steps li {
   position: relative;
@@ -475,13 +499,235 @@ html.dark .gh-panel__visual-icon {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin-top: 22px;
+  margin-top: auto;
+  padding-top: 18px;
   font-size: 0.85rem;
   font-weight: 700;
   color: var(--accent, #2d8c4e);
   text-decoration: none;
 }
 .gh-panel__cta:hover { text-decoration: underline; }
+
+/* ─────────────────────────────────────────────
+   PANEL COMPAÑERO — ¿Qué puedes donar? (fijo, junto al panel dinámico)
+   ───────────────────────────────────────────── */
+.gh-donate-panel {
+  background: var(--bg-card, #fff);
+  border: 1px solid var(--border-card, #d4eeda);
+  border-radius: 22px;
+  padding: 26px 26px 24px;
+  box-shadow: 0 10px 34px rgba(20,60,35,0.10);
+  display: flex;
+  flex-direction: column;
+}
+html.dark .gh-donate-panel { box-shadow: 0 10px 34px rgba(0,0,0,0.30); }
+
+.gh-donate-panel__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.gh-donate-panel__icon {
+  flex-shrink: 0;
+  width: 50px; height: 50px;
+  border-radius: 50%;
+  background: var(--accent-light, #e8f5ec);
+  color: var(--accent, #2d8c4e);
+  display: flex; align-items: center; justify-content: center;
+}
+.gh-donate-panel__icon svg { width: 22px; height: 22px; }
+.gh-donate-panel__head h3 {
+  font-weight: 800;
+  font-size: 1.12rem;
+  color: var(--text-primary, #1a2e1e);
+  margin-bottom: 4px;
+}
+.gh-donate-panel__head p {
+  font-size: 0.84rem;
+  color: var(--text-secondary, #4a6b52);
+  line-height: 1.5;
+}
+
+.gh-donate-panel__cats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 22px;
+}
+.gh-donate-cat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-muted, #e8f5ec);
+  border-radius: 14px;
+  padding: 12px 4px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-primary, #1a2e1e);
+  text-align: center;
+  line-height: 1.2;
+}
+.gh-donate-cat svg { width: 17px; height: 17px; color: var(--accent, #2d8c4e); }
+
+.gh-donate-panel__steps-label {
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-secondary, #4a6b52);
+  margin-bottom: 14px;
+}
+.gh-donate-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 22px;
+}
+.gh-donate-step { text-align: center; }
+.gh-donate-step__icon {
+  width: 36px; height: 36px;
+  margin: 0 auto 8px;
+  border-radius: 50%;
+  background: var(--accent, #2d8c4e);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800;
+  font-size: 0.82rem;
+}
+.gh-donate-step span {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-primary, #1a2e1e);
+  line-height: 1.28;
+  display: block;
+}
+
+.gh-donate-panel__cta {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--accent, #2d8c4e);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.86rem;
+  padding: 12px;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.15s;
+}
+.gh-donate-panel__cta:hover { background: #1a5c2a; transform: translateY(-1px); }
+
+/* ─────────────────────────────────────────────
+   ¿QUÉ PUEDES DONAR? — SÍ / NO
+   ───────────────────────────────────────────── */
+.gh-materials {
+  background: var(--bg-secondary, #fff);
+  padding: 8px 0 60px;
+  transition: background 0.28s;
+}
+
+.gh-materials__header {
+  margin-bottom: 26px;
+}
+.gh-materials__header h2 {
+  font-weight: 800;
+  font-size: 1.6rem;
+  color: var(--text-heading, #1a5c2a);
+  margin-bottom: 6px;
+}
+.gh-materials__header p {
+  font-size: 0.92rem;
+  color: var(--text-secondary, #4a6b52);
+  max-width: 560px;
+}
+
+.gh-materials__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+
+.gh-mat-col {
+  background: var(--bg-card, #fff);
+  border: 1.5px solid var(--border-card, #d4eeda);
+  border-radius: 20px;
+  padding: 24px 22px 26px;
+}
+.gh-mat-col--no { border-color: rgba(229,57,53,0.28); }
+html.dark .gh-mat-col--no { border-color: rgba(229,57,53,0.22); }
+
+.gh-mat-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 800;
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  padding: 6px 16px;
+  border-radius: 999px;
+  margin-bottom: 18px;
+}
+.gh-mat-badge--si { background: var(--accent, #2d8c4e); color: #fff; }
+.gh-mat-badge--no { background: #e53935; color: #fff; }
+
+.gh-mat-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.gh-mat-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.gh-mat-item__icon {
+  flex-shrink: 0;
+  width: 34px; height: 34px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.05rem;
+  background: var(--accent-light, #e8f5ec);
+  color: var(--accent, #2d8c4e);
+}
+.gh-mat-col--no .gh-mat-item__icon { background: rgba(229,57,53,0.12); color: #e53935; }
+html.dark .gh-mat-col--no .gh-mat-item__icon { background: rgba(229,57,53,0.16); }
+
+.gh-mat-item strong {
+  display: block;
+  font-size: 0.87rem;
+  color: var(--text-primary, #1a2e1e);
+  margin-bottom: 2px;
+}
+.gh-mat-item p {
+  font-size: 0.8rem;
+  color: var(--text-secondary, #4a6b52);
+  line-height: 1.45;
+}
+
+.gh-materials__note {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--accent-light, #e8f5ec);
+  border: 1px solid var(--border-card, #d4eeda);
+  border-radius: 14px;
+  padding: 14px 20px;
+  font-size: 0.88rem;
+  color: var(--text-primary, #1a2e1e);
+  font-weight: 600;
+}
+.gh-materials__note svg { flex-shrink: 0; color: var(--accent, #2d8c4e); }
+.gh-materials__note a { color: var(--accent, #2d8c4e); font-weight: 800; text-decoration: underline; }
+
+@media (max-width: 980px) {
+  .gh-materials__grid { grid-template-columns: 1fr; }
+}
 
 /* ─────────────────────────────────────────────
    INFO ROW — sabías qué / impacto / consejos
@@ -632,11 +878,11 @@ html.dark .gh-panel__visual-icon {
   .gh-wrap { padding: 0 24px; }
   .gh-learn__grid { grid-template-columns: 1fr; }
   .gh-video-row { grid-template-columns: 1fr 1fr; }
+  .gh-guide__panels { grid-template-columns: 1fr; }
   .gh-panel { grid-template-columns: 1fr; }
   .gh-panel__visual { padding: 22px; }
   .gh-panel__visual-icon { width: 76px; height: 76px; }
   .gh-panel__visual-icon svg { width: 32px; height: 32px; }
-  .gh-steps { grid-template-columns: 1fr 1fr; }
   .gh-info__grid { grid-template-columns: 1fr; }
   .gh-stats-grid { grid-template-columns: repeat(4, 1fr); }
 }
@@ -645,7 +891,8 @@ html.dark .gh-panel__visual-icon {
   .gh-hero { padding: 128px 0 32px; }
   .gh-video-row { grid-template-columns: 1fr; }
   .gh-guide__header { flex-direction: column; align-items: flex-start; }
-  .gh-steps { grid-template-columns: 1fr 1fr; }
+  .gh-donate-panel__cats { grid-template-columns: repeat(3, 1fr); }
+  .gh-donate-steps { grid-template-columns: 1fr 1fr; }
   .gh-stats-grid { grid-template-columns: 1fr 1fr; }
   .gh-cta__btn { width: 100%; justify-content: center; }
 }

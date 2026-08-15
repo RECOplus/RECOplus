@@ -381,6 +381,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
           <div class="gh-video-row">
             <a href="#" class="gh-video-card gh-reveal">
               <div class="gh-video-card__thumb">
+                <span class="gh-video-card__art"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 3h6v3l1.5 2v12a1 1 0 01-1 1h-7a1 1 0 01-1-1V8L9 6V3z"/></svg></span>
                 <span class="gh-video-card__icon"><svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg></span>
                 <span class="gh-video-card__badge">02:45</span>
               </div>
@@ -392,6 +393,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
 
             <a href="#" class="gh-video-card gh-reveal">
               <div class="gh-video-card__thumb">
+                <span class="gh-video-card__art"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9.3C.5 8 2 4 6 4c2 0 3.5 1.2 4 2.5C10.5 5.2 12 4 14 4c4 0 5.5 4 4 7.7C19.5 16.4 12 21 12 21z"/></svg></span>
                 <span class="gh-video-card__icon"><svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg></span>
                 <span class="gh-video-card__badge">03:10</span>
               </div>
@@ -403,6 +405,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
 
             <a href="#" class="gh-video-card gh-reveal">
               <div class="gh-video-card__thumb">
+                <span class="gh-video-card__art"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 3c-3 3-3 15 0 18M12 3c3 3 3 15 0 18" fill="none" stroke="#0d2014" stroke-width="1"/><path d="M3.5 9h17M3.5 15h17" stroke="#0d2014" stroke-width="1" fill="none"/></svg></span>
                 <span class="gh-video-card__icon"><svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg></span>
                 <span class="gh-video-card__badge">02:20</span>
               </div>
@@ -478,16 +481,81 @@ html.dark .dm-pill__sun { opacity: 0.38; }
 
       <div class="gh-chips gh-reveal" id="ghChips"></div>
 
-      <div class="gh-panel gh-reveal" id="ghGuide" data-mode="reciclar">
-        <div class="gh-panel__visual">
-          <div class="gh-panel__visual-icon" id="ghPanelIcon"></div>
+      <div class="gh-guide__panels">
+        <div class="gh-panel gh-reveal" id="ghGuide" data-mode="reciclar">
+          <div class="gh-panel__visual">
+            <div class="gh-panel__visual-icon" id="ghPanelIcon"></div>
+          </div>
+          <div class="gh-panel__body">
+            <span class="gh-panel__badge" id="ghPanelBadge">Cómo reciclarlo</span>
+            <h3 class="gh-panel__title" id="ghPanelTitle">Plástico</h3>
+            <p class="gh-panel__desc" id="ghPanelDesc"></p>
+            <ol class="gh-steps" id="ghPanelSteps"></ol>
+            <a href="mapa.html" class="gh-panel__cta" id="ghPanelCta">Encuentra un punto de reciclaje →</a>
+          </div>
         </div>
-        <div class="gh-panel__body">
-          <span class="gh-panel__badge" id="ghPanelBadge">Cómo reciclarlo</span>
-          <h3 class="gh-panel__title" id="ghPanelTitle">Plástico</h3>
-          <p class="gh-panel__desc" id="ghPanelDesc"></p>
-          <ol class="gh-steps" id="ghPanelSteps"></ol>
-          <a href="mapa.html" class="gh-panel__cta" id="ghPanelCta">Encuentra un punto de reciclaje →</a>
+
+        <div class="gh-donate-panel gh-reveal">
+          <div class="gh-donate-panel__head">
+            <div class="gh-donate-panel__icon">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 11c0-2.5 2-4 4-3l3 1.5 5-1.5c1.2-.2 2.5.6 2.5 2 0 1.2-.8 2-2 2l-3.5.5"/><path d="M3 11l2 5h3l7-4"/></svg>
+            </div>
+            <div>
+              <h3 data-i18n="guia.donatepanel.title">¿Qué puedes donar?</h3>
+              <p data-i18n="guia.donatepanel.subtitle">Tus donaciones pueden marcar una gran diferencia.</p>
+            </div>
+          </div>
+
+          <div class="gh-donate-panel__cats">
+            <div class="gh-donate-cat">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 4L4 7l2 3 2-1v11h8V9l2 1 2-3-4-3-2 2h-2L8 4z"/></svg>
+              <span data-i18n="guia.donatepanel.cat1">Ropa</span>
+            </div>
+            <div class="gh-donate-cat">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="9" cy="8" r="3"/><circle cx="15" cy="8" r="3"/><path d="M6 12c-1.5 2-1.5 6 1 8h10c2.5-2 2.5-6 1-8"/></svg>
+              <span data-i18n="guia.donatepanel.cat2">Juguetes</span>
+            </div>
+            <div class="gh-donate-cat">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 5.5A1.5 1.5 0 015.5 4H11v16H5.5A1.5 1.5 0 014 18.5v-13z"/><path d="M20 5.5A1.5 1.5 0 0018.5 4H13v16h5.5a1.5 1.5 0 001.5-1.5v-13z"/></svg>
+              <span data-i18n="guia.donatepanel.cat3">Libros</span>
+            </div>
+            <div class="gh-donate-cat">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/></svg>
+              <span data-i18n="guia.donatepanel.cat4">Útiles</span>
+            </div>
+            <div class="gh-donate-cat">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 11V7a2 2 0 012-2h10a2 2 0 012 2v4"/><rect x="4" y="11" width="16" height="6" rx="1"/><line x1="5" y1="17" x2="5" y2="20"/><line x1="19" y1="17" x2="19" y2="20"/></svg>
+              <span data-i18n="guia.donatepanel.cat5">Hogar</span>
+            </div>
+            <div class="gh-donate-cat">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>
+              <span data-i18n="guia.donatepanel.cat6">Y más</span>
+            </div>
+          </div>
+
+          <span class="gh-donate-panel__steps-label" data-i18n="guia.donatepanel.stepslabel">Pasos para donar</span>
+          <div class="gh-donate-steps">
+            <div class="gh-donate-step">
+              <div class="gh-donate-step__icon">1</div>
+              <span data-i18n="guia.donatepanel.step1">Selecciona</span>
+            </div>
+            <div class="gh-donate-step">
+              <div class="gh-donate-step__icon">2</div>
+              <span data-i18n="guia.donatepanel.step2">Limpia y organiza</span>
+            </div>
+            <div class="gh-donate-step">
+              <div class="gh-donate-step__icon">3</div>
+              <span data-i18n="guia.donatepanel.step3">Entrega o agenda</span>
+            </div>
+            <div class="gh-donate-step">
+              <div class="gh-donate-step__icon">4</div>
+              <span data-i18n="guia.donatepanel.step4">Transforma vidas</span>
+            </div>
+          </div>
+
+          <a href="donar.html" class="gh-donate-panel__cta" data-i18n="guia.donatepanel.cta">
+            Ir a Donar / Ayuda →
+          </a>
         </div>
       </div>
     </div>
