@@ -14,6 +14,8 @@
   <link rel="stylesheet" href="liquid-glass-guia-light-fix.css" />
   <!-- Capa aditiva: botón + modal de comentarios (footer, cualquier página) -->
   <link rel="stylesheet" href="comentar-modal.css" />
+  <!-- Capa aditiva: botón + modal de "Subir video" (comunidad) -->
+  <link rel="stylesheet" href="subir-video-modal.css" />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" />
 <style>
 /* ── BUBBLE NAV — CSS variables for light/dark ── */
@@ -384,7 +386,13 @@ html.dark .dm-pill__sun { opacity: 0.38; }
        ════════════════════════════════════════════ -->
   <section class="vh vh-filters">
     <div class="vh-wrap">
-      <div class="vh-chips" id="vhChips"></div>
+      <div class="vh-filters__row">
+        <div class="vh-chips" id="vhChips"></div>
+        <button type="button" class="vh-upload-btn" data-subir-video-btn>
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13V4M6.5 7.5L10 4l3.5 3.5"/><path d="M4 13v1.5A1.5 1.5 0 005.5 16h9a1.5 1.5 0 001.5-1.5V13"/></svg>
+          <span data-i18n="subirvideo.boton">Subir video</span>
+        </button>
+      </div>
       <p class="vh-count" id="vhCount"></p>
     </div>
   </section>
@@ -462,6 +470,8 @@ html.dark .dm-pill__sun { opacity: 0.38; }
   <script src="script.js"></script>
   <!-- Capa aditiva: datos + lógica de la biblioteca de videos (filtro por categoría, deep-link ?v=/?cat=) -->
   <script src="videos-data.js"></script>
+  <!-- Capa aditiva: mezcla videos aprobados de la comunidad (tabla videos_usuario) en la biblioteca -->
+  <script src="videos-supabase.js"></script>
   <script src="videos-hub.js"></script>
   <script src="navbar-auth.js"></script>
   <script src="ajustes-modal.js?v=2"></script>
@@ -474,5 +484,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
   <script src="ajustes-suscripcion.js"></script>
   <!-- Capa aditiva: botón + modal de comentarios en el footer -->
   <script src="comentar-modal.js"></script>
+  <!-- Capa aditiva: botón + modal de "Subir video" (comunidad) -->
+  <script src="subir-video-modal.js"></script>
 </body>
 </html>

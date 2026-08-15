@@ -232,6 +232,12 @@ html.dark .vh-card:hover { box-shadow: 0 16px 36px rgba(0,0,0,0.4); }
   line-height: 1.5;
 }
 
+/* Tarjetas de video subido por la comunidad (fuente real vía Supabase) */
+.vh-card--community { cursor: pointer; }
+.vh-card--community .vh-card__badge {
+  background: rgba(45,140,78,0.55);
+}
+
 /* Resalta la tarjeta a la que se llegó desde un enlace directo (?v=) */
 @keyframes vhPulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(45,140,78,0.45); }

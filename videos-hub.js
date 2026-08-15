@@ -93,18 +93,23 @@
     grid.innerHTML = "";
     list.forEach(function (video) {
       var card = document.createElement("article");
-      card.className = "vh-card";
+      card.className = "vh-card" + (video.isCommunity ? " vh-card--community" : "");
       card.dataset.id = video.id;
       card.dataset.variant = video.variant;
+      var badgeHTML = video.duration
+        ? '<span class="vh-card__badge">' + video.duration + "</span>"
+        : (video.isCommunity ? '<span class="vh-card__badge">' + tr("videos.badge.comunidad", "Comunidad") + "</span>" : "");
+      var titleText = video.titleKey ? tr(video.titleKey, video.titleFallback) : video.titleFallback;
+      var descText = video.descKey ? tr(video.descKey, video.descFallback) : video.descFallback;
       card.innerHTML =
         '<div class="vh-card__thumb">' +
           '<span class="vh-card__cat">' + catLabel(video.category) + "</span>" +
           '<span class="vh-card__icon">' + PLAY_ICON + "</span>" +
-          '<span class="vh-card__badge">' + video.duration + "</span>" +
+          badgeHTML +
         "</div>" +
         '<div class="vh-card__body">' +
-          '<h3 class="vh-card__title">' + tr(video.titleKey, video.titleFallback) + "</h3>" +
-          '<p class="vh-card__desc">' + tr(video.descKey, video.descFallback) + "</p>" +
+          '<h3 class="vh-card__title">' + titleText + "</h3>" +
+          '<p class="vh-card__desc">' + descText + "</p>" +
         "</div>";
       grid.appendChild(card);
     });
@@ -154,6 +159,13 @@
     renderGrid();
   }
   document.addEventListener("reco:langchange", refreshOnLangChange);
+
+  // Permite a capas aditivas (ej. videos-supabase.js) pedir un
+  // re-render del grid después de inyectar videos nuevos en
+  // RECO_VIDEOS_DATA.videos una vez que ya cargó de forma asíncrona.
+  window.recoVideosHubRefresh = function () {
+    renderGrid();
+  };
 
   ready(function () {
     if (!gridWrap()) return;
