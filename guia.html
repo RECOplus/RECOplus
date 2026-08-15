@@ -8,6 +8,10 @@
   <link rel="stylesheet" href="paginaguiastyle.css" />
   <!-- Capa aditiva: rediseño de Guía como centro de aprendizaje -->
   <link rel="stylesheet" href="guia-hub.css" />
+  <!-- Capa aditiva: efecto liquid glass (transparencia) igual al de reciclar.html -->
+  <link rel="stylesheet" href="liquid-glass-guia.css" />
+  <!-- Capa aditiva: corrige el fondo oscuro forzado de liquid-glass-guia.css en modo claro -->
+  <link rel="stylesheet" href="liquid-glass-guia-light-fix.css" />
   <!-- Capa aditiva: botón + modal de comentarios (footer, cualquier página) -->
   <link rel="stylesheet" href="comentar-modal.css" />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" />
@@ -583,19 +587,19 @@ html.dark .dm-pill__sun { opacity: 0.38; }
         <h3 data-i18n="guia.impact.title">Impacto de tu acción</h3>
         <p data-i18n="guia.impact.subtitle">Cada acción cuenta y genera un impacto real.</p>
         <div class="gh-stats-grid">
-          <div class="stat-item">
-            <span class="stat-number">+500,000</span>
+          <div class="stat-item" data-target="500000" data-prefix="+" data-suffix="" data-format="short">
+            <span class="stat-number">+500K</span>
             <span data-i18n="stats.personas">Personas activas</span>
           </div>
-          <div class="stat-item">
+          <div class="stat-item" data-target="120" data-prefix="" data-suffix="">
             <span class="stat-number">120</span>
             <span data-i18n="stats.toneladas">Toneladas recicladas</span>
           </div>
-          <div class="stat-item">
+          <div class="stat-item" data-target="50" data-prefix="+" data-suffix="">
             <span class="stat-number">+50</span>
             <span data-i18n="stats.puntos">Puntos de reciclaje</span>
           </div>
-          <div class="stat-item">
+          <div class="stat-item" data-target="30" data-prefix="" data-suffix="">
             <span class="stat-number">30</span>
             <span data-i18n="stats.comunidades">Comunidades</span>
           </div>

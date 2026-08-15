@@ -1,0 +1,63 @@
+/* ══════════════════════════════════════════════════════════════
+   LIQUID-GLASS-GUIA-LIGHT-FIX.CSS
+   Capa ADITIVA sobre liquid-glass-guia.css. No lo modifica.
+
+   PROBLEMA QUE RESUELVE (mismo bug que resuelve
+   liquid-glass-reciclar-light-fix.css en reciclar.html):
+   liquid-glass-guia.css define las variables --lgg-* SOLO con
+   valores oscuros (en :root, y de nuevo un poco más oscuras en
+   html.dark), y las aplica con !important a .gh-panel,
+   .gh-donate-panel, .gh-box, .gh-chip, .gh-switch, .gh-donate-cat
+   y .gh-stats-grid .stat-item. Como nunca existe una versión clara
+   de esas variables, en modo claro esos elementos seguirían
+   mostrando un fondo oscuro translúcido sobre una página clara —
+   se vería como una mancha grisácea sin contraste.
+
+   EXCEPCIÓN INTENCIONAL: el hero, las video-cards, el sidebar
+   "Más videos", el CTA final y el footer de guia.html viven sobre
+   fondos SIEMPRE oscuros (mismo degradado en claro y oscuro), así
+   que liquid-glass-guia.css ya los deja con vidrio oscuro fijo
+   (valores directos, no --lgg-*). Este archivo NO los toca.
+
+   SOLUCIÓN:
+   Redefinir las mismas variables --lgg-* bajo html:not(.dark), con
+   la misma paleta clara que ya usa liquid-glass-reciclar-light-fix.css
+   para mantener coherencia visual entre reciclar.html y guia.html.
+
+   Cárgalo DESPUÉS de liquid-glass-guia.css:
+   <link rel="stylesheet" href="liquid-glass-guia-light-fix.css" />
+═══════════════════════════════════════════════════════════════ */
+
+html:not(.dark) {
+  /* Vidrio claro: blanco translúcido en vez de negro translúcido,
+     mismos valores que usa liquid-glass-reciclar-light-fix.css. */
+  --lgg-bg:            rgba(255, 255, 255, 0.72);
+  --lgg-bg-strong:     rgba(255, 255, 255, 0.90);
+  --lgg-border:        rgba(45, 140, 78, 0.20);
+  --lgg-border-strong: rgba(45, 140, 78, 0.36);
+  --lgg-highlight:     rgba(255, 255, 255, 0.80);
+
+  /* Sombras verdes suaves en 3 capas, coherentes con el resto del
+     sitio en modo claro, en vez de las sombras negras profundas
+     pensadas para fondo oscuro. */
+  --lgg-shadow:        0 4px 10px rgba(30, 80, 40, 0.10),
+                        0 20px 46px rgba(30, 80, 40, 0.16),
+                        0 2px 0 rgba(30, 80, 40, 0.06);
+  --lgg-shadow-hover:  0 6px 14px rgba(30, 80, 40, 0.13),
+                        0 28px 60px rgba(30, 80, 40, 0.20),
+                        0 0 30px rgba(45, 140, 78, 0.14);
+  --lgg-shadow-sm:     0 3px 8px rgba(30, 80, 40, 0.09),
+                        0 10px 24px rgba(30, 80, 40, 0.13);
+
+  /* Reflejo diagonal: mismo efecto pero más sutil sobre vidrio
+     claro (una banda blanca muy brillante sobre fondo ya blanco
+     casi no se notaría). */
+  --lgg-shine: linear-gradient(
+    115deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.30) 45%,
+    rgba(255, 255, 255, 0.45) 50%,
+    rgba(255, 255, 255, 0.20) 56%,
+    transparent 68%
+  );
+}
