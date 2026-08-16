@@ -1,0 +1,63 @@
+/* ══════════════════════════════════════════════════════════════
+   LIQUID-GLASS-VIDEOS-LIGHT-FIX.CSS
+   Capa ADITIVA sobre liquid-glass-videos.css. No lo modifica.
+
+   PROBLEMA QUE RESUELVE (mismo bug que resuelve
+   liquid-glass-guia-light-fix.css / liquid-glass-reciclar-light-fix.css):
+   liquid-glass-videos.css define las variables --lgv-* solo con
+   valores oscuros, y las aplica con !important a .vh-search__input,
+   .vh-chip, .vh-card y .vh-empty. Como nunca existe una versión
+   clara de esas variables, en modo claro esos elementos se verían
+   con un fondo oscuro translúcido sobre la página blanca de
+   videos.html (.vh-filters / .vh-grid-section usan
+   var(--bg-secondary, #fff)) — una mancha grisácea sin contraste.
+
+   EXCEPCIÓN INTENCIONAL: el hero de videos.html vive sobre un
+   degradado SIEMPRE oscuro (igual en claro y oscuro, definido en
+   videos-hub.css), así que su marco de vidrio en
+   liquid-glass-videos.css usa valores fijos, no --lgv-*. Este
+   archivo no lo toca.
+
+   SOLUCIÓN:
+   Redefinir las mismas variables --lgv-* bajo html:not(.dark), con
+   la misma paleta clara que ya usan liquid-glass-guia-light-fix.css
+   y liquid-glass-reciclar-light-fix.css, para mantener coherencia
+   visual entre todas las páginas del sitio.
+
+   Cárgalo DESPUÉS de liquid-glass-videos.css:
+   <link rel="stylesheet" href="liquid-glass-videos-light-fix.css" />
+═══════════════════════════════════════════════════════════════ */
+
+html:not(.dark) {
+  /* Vidrio claro: blanco translúcido en vez de negro translúcido,
+     mismos valores que el resto del sitio en modo claro. */
+  --lgv-bg:            rgba(255, 255, 255, 0.72);
+  --lgv-bg-strong:     rgba(255, 255, 255, 0.90);
+  --lgv-border:        rgba(45, 140, 78, 0.20);
+  --lgv-border-strong: rgba(45, 140, 78, 0.36);
+  --lgv-highlight:     rgba(255, 255, 255, 0.80);
+
+  /* Sombras verdes suaves en 3 capas, coherentes con el resto del
+     sitio en modo claro, en vez de las sombras negras profundas
+     pensadas para fondo oscuro. */
+  --lgv-shadow:        0 4px 10px rgba(30, 80, 40, 0.10),
+                        0 20px 46px rgba(30, 80, 40, 0.16),
+                        0 2px 0 rgba(30, 80, 40, 0.06);
+  --lgv-shadow-hover:  0 6px 14px rgba(30, 80, 40, 0.13),
+                        0 28px 60px rgba(30, 80, 40, 0.20),
+                        0 0 30px rgba(45, 140, 78, 0.14);
+  --lgv-shadow-sm:     0 3px 8px rgba(30, 80, 40, 0.09),
+                        0 10px 24px rgba(30, 80, 40, 0.13);
+
+  /* Reflejo diagonal: mismo efecto pero más sutil sobre vidrio
+     claro (una banda blanca muy brillante sobre fondo ya blanco
+     casi no se notaría). */
+  --lgv-shine: linear-gradient(
+    115deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.30) 45%,
+    rgba(255, 255, 255, 0.45) 50%,
+    rgba(255, 255, 255, 0.20) 56%,
+    transparent 68%
+  );
+}

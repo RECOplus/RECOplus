@@ -1,0 +1,204 @@
+/* ══════════════════════════════════════════════════════════════
+   LIQUID-GLASS-VIDEOS-FX.CSS
+   Capa ADITIVA de luces, glow y animaciones sobre el vidrio ya
+   aplicado por liquid-glass-videos.css / liquid-glass-videos-light-fix.css.
+   No sobrescribe nada de esas hojas ni de videos-hub.css: solo
+   añade brillo, movimiento y feedback interactivo — mismo lenguaje
+   visual que liquid-glass-fx.css usa en index.html, adaptado al
+   namespace ".vh-" de videos.html.
+
+   Cárgalo AL FINAL, después de liquid-glass-videos-light-fix.css:
+   <link rel="stylesheet" href="liquid-glass-videos-fx.css" />
+═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --fxv-glow:      rgba(94, 207, 130, 0.55);
+  --fxv-glow-soft: rgba(94, 207, 130, 0.28);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   KEYFRAMES
+═══════════════════════════════════════════════════════════════ */
+
+@keyframes vhfx-orb-float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-10px) scale(1.05); }
+}
+
+@keyframes vhfx-fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes vhfx-sheen-sweep {
+  0%   { background-position: -140% 0; }
+  100% { background-position: 240% 0; }
+}
+
+@keyframes vhfx-glow-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--fxv-glow-soft), var(--lgv-shadow-sm, 0 3px 8px rgba(0,0,0,.26)); }
+  50%      { box-shadow: 0 0 20px 3px var(--fxv-glow-soft), var(--lgv-shadow-sm, 0 3px 8px rgba(0,0,0,.26)); }
+}
+
+@keyframes vhfx-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+
+@keyframes vhfx-badge-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(94,207,130,.45); }
+  50%      { box-shadow: 0 0 10px 2px rgba(94,207,130,.35); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HERO — orbes flotantes + entrada animada + link "Volver" con glow
+═══════════════════════════════════════════════════════════════ */
+
+.vh-hero::before,
+.vh-hero::after {
+  animation: vhfx-orb-float 11s ease-in-out infinite;
+}
+.vh-hero::after { animation-delay: 3s; }
+
+.vh-hero__inner > * {
+  animation: vhfx-fade-up .7s cubic-bezier(.2,.7,.3,1) both;
+}
+.vh-back         { animation-delay: .02s; }
+.vh-hero__title    { animation-delay: .08s; }
+.vh-hero__subtitle  { animation-delay: .14s; }
+
+.vh-back:hover {
+  text-shadow: 0 0 10px var(--fxv-glow-soft);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BARRA DE BÚSQUEDA — icono animado al enfocar
+═══════════════════════════════════════════════════════════════ */
+
+.vh-search__icon {
+  transition: transform .3s ease, filter .3s ease;
+}
+.vh-search:focus-within .vh-search__icon {
+  transform: scale(1.15) rotate(-8deg);
+  filter: drop-shadow(0 0 6px var(--fxv-glow-soft));
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CHIPS — glow al activar/hover + feedback al presionar
+═══════════════════════════════════════════════════════════════ */
+
+.vh-chip {
+  transition:
+    box-shadow .3s ease,
+    transform .22s cubic-bezier(.34,1.56,.64,1),
+    background-color .22s ease,
+    border-color .22s ease !important;
+}
+.vh-chip:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.30),
+    inset 0 -1px 0 rgba(0,0,0,.20),
+    0 0 0 2px var(--fxv-glow-soft),
+    var(--lgv-shadow-hover, 0 10px 26px rgba(0,0,0,.3)) !important;
+}
+.vh-chip:hover svg {
+  opacity: 1;
+  filter: drop-shadow(0 0 4px var(--fxv-glow-soft));
+}
+.vh-chip:active {
+  transform: scale(.95) !important;
+}
+.vh-chip.active {
+  animation: vhfx-glow-pulse 2.8s ease-in-out infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BOTÓN "Subir video" — shimmer sweep + lift al hover
+═══════════════════════════════════════════════════════════════ */
+
+.vh-upload-btn {
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow .3s ease, transform .2s ease !important;
+}
+.vh-upload-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 20%, rgba(255,255,255,.5) 45%, transparent 60%);
+  background-size: 250% 100%;
+  animation: vhfx-sheen-sweep 3.2s ease-in-out infinite;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+.vh-upload-btn > * {
+  position: relative;
+  z-index: 1;
+}
+.vh-upload-btn:hover {
+  box-shadow: 0 0 0 3px var(--fxv-glow-soft), 0 10px 26px rgba(26,92,42,.35) !important;
+  transform: translateY(-2px) scale(1.03) !important;
+}
+.vh-upload-btn:active {
+  transform: translateY(0) scale(.97) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TARJETAS DE VIDEO — halo al hover + icono con glow + badge
+   pulsante en videos de la comunidad
+═══════════════════════════════════════════════════════════════ */
+
+.vh-card {
+  transition:
+    transform .3s cubic-bezier(.34,1.56,.64,1),
+    border-color .25s,
+    box-shadow .25s,
+    opacity .25s,
+    background-color .3s !important;
+}
+.vh-card:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.30),
+    inset 0 -1px 0 rgba(0,0,0,.24),
+    0 0 0 1px var(--fxv-glow-soft),
+    var(--lgv-shadow-hover, 0 16px 36px rgba(0,0,0,.16)) !important;
+}
+.vh-card__icon {
+  transition: transform .25s cubic-bezier(.34,1.56,.64,1), background .25s ease, filter .25s ease;
+}
+.vh-card:hover .vh-card__icon {
+  filter: drop-shadow(0 0 8px var(--fxv-glow-soft));
+}
+.vh-card--community .vh-card__badge {
+  animation: vhfx-badge-pulse 2.6s ease-in-out infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ESTADO VACÍO — icono flotante con glow
+═══════════════════════════════════════════════════════════════ */
+
+.vh-empty svg {
+  animation: vhfx-float 3.4s ease-in-out infinite;
+  filter: drop-shadow(0 0 6px var(--fxv-glow-soft));
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Reduced motion / accesibilidad
+═══════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .vh-hero::before,
+  .vh-hero::after,
+  .vh-hero__inner > *,
+  .vh-chip,
+  .vh-chip.active,
+  .vh-upload-btn,
+  .vh-upload-btn::before,
+  .vh-card,
+  .vh-card__icon,
+  .vh-card--community .vh-card__badge,
+  .vh-empty svg {
+    animation: none !important;
+    transition: none !important;
+  }
+}

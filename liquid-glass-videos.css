@@ -1,0 +1,199 @@
+/* ══════════════════════════════════════════════════════════════
+   LIQUID-GLASS-VIDEOS.CSS
+   Capa ADITIVA (no toca videos-hub.css, subir-video-modal.css ni
+   videos.html excepto el <link>). Aplica el mismo "liquid glass"
+   con transparencia que ya usan reciclar.html / guia.html / mapa.html
+   a la barra de búsqueda, los chips de categoría, el botón "Subir
+   video", las tarjetas de video y el estado vacío de videos.html —
+   igual en modo claro y modo oscuro.
+
+   NOTA: videos.html ya cargaba liquid-glass-guia.css, pero esa hoja
+   solo apunta a la clase ".gh-*" de guia.html (y a piezas globales
+   como el footer) — nunca tocaba ".vh-*", el namespace propio de
+   videos-hub.css. Esta hoja es la versión equivalente para ese
+   namespace.
+
+   Cárgalo DESPUÉS de videos-hub.css y subir-video-modal.css:
+   <link rel="stylesheet" href="liquid-glass-videos.css" />
+═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --lgv-bg:            rgba(18, 26, 20, 0.55);
+  --lgv-bg-strong:     rgba(14, 20, 16, 0.68);
+  --lgv-border:        rgba(255, 255, 255, 0.14);
+  --lgv-border-strong: rgba(255, 255, 255, 0.20);
+  --lgv-highlight:     rgba(255, 255, 255, 0.22);
+
+  /* Sombras en 3 capas: contacto cercano, difusión amplia y halo
+     de color verde — mismo criterio que liquid-glass-guia.css */
+  --lgv-shadow:        0 4px 10px rgba(0, 0, 0, 0.28),
+                        0 20px 46px rgba(0, 0, 0, 0.50),
+                        0 2px 0 rgba(0, 0, 0, 0.20);
+  --lgv-shadow-hover:  0 6px 14px rgba(0, 0, 0, 0.34),
+                        0 28px 60px rgba(0, 0, 0, 0.58),
+                        0 0 30px rgba(45, 140, 78, 0.20);
+  --lgv-shadow-sm:     0 3px 8px rgba(0, 0, 0, 0.26),
+                        0 10px 24px rgba(0, 0, 0, 0.38);
+
+  --lgv-blur: 20px;
+
+  --lgv-shine: linear-gradient(
+    115deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.16) 45%,
+    rgba(255, 255, 255, 0.26) 50%,
+    rgba(255, 255, 255, 0.10) 56%,
+    transparent 68%
+  );
+}
+
+html.dark {
+  --lgv-bg:            rgba(10, 16, 12, 0.62);
+  --lgv-bg-strong:     rgba(8, 13, 10, 0.75);
+  --lgv-border:        rgba(255, 255, 255, 0.10);
+  --lgv-border-strong: rgba(255, 255, 255, 0.16);
+  --lgv-shadow:        0 4px 10px rgba(0, 0, 0, 0.42),
+                        0 22px 50px rgba(0, 0, 0, 0.66),
+                        0 2px 0 rgba(0, 0, 0, 0.30);
+  --lgv-shadow-hover:  0 6px 16px rgba(0, 0, 0, 0.50),
+                        0 30px 64px rgba(0, 0, 0, 0.74),
+                        0 0 34px rgba(94, 207, 130, 0.26);
+  --lgv-shadow-sm:     0 3px 10px rgba(0, 0, 0, 0.40),
+                        0 12px 28px rgba(0, 0, 0, 0.52);
+}
+
+/* ── HERO: marco de vidrio (no toca el degradado de fondo fijo ni
+   los orbes ::before/::after ya usados por videos-hub.css) ── */
+.vh-hero {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    inset 0 -1px 0 rgba(255, 255, 255, 0.06),
+    0 14px 40px rgba(0, 0, 0, 0.35);
+}
+
+/* ── BARRA DE BÚSQUEDA: vidrio con blur, texto/placeholder siguen
+   heredando var(--text-primary)/(--text-muted) para adaptarse al
+   tema — solo tocamos fondo, borde, blur y sombra ── */
+.vh-search__input {
+  background: var(--lgv-bg) !important;
+  backdrop-filter: blur(var(--lgv-blur)) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(var(--lgv-blur)) saturate(160%) !important;
+  border-color: var(--lgv-border) !important;
+  box-shadow:
+    inset 0 1px 0 var(--lgv-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.20),
+    var(--lgv-shadow-sm) !important;
+}
+.vh-search__input:focus {
+  border-color: rgba(94, 207, 130, 0.45) !important;
+  box-shadow:
+    inset 0 1px 0 var(--lgv-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.20),
+    0 0 0 3px rgba(45, 140, 78, 0.18),
+    var(--lgv-shadow-sm) !important;
+}
+.vh-search__clear {
+  background: var(--lgv-bg-strong) !important;
+  backdrop-filter: blur(calc(var(--lgv-blur) - 10px)) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(calc(var(--lgv-blur) - 10px)) saturate(150%) !important;
+}
+
+/* ── CHIPS de categoría: vidrio + reflejo diagonal; el chip activo
+   suma acento verde translúcido, mismo tratamiento que .gh-chip.active ── */
+.vh-chip {
+  background-color: var(--lgv-bg) !important;
+  background-image: var(--lgv-shine) !important;
+  background-blend-mode: overlay;
+  backdrop-filter: blur(var(--lgv-blur)) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(var(--lgv-blur)) saturate(160%) !important;
+  border-color: var(--lgv-border) !important;
+  box-shadow:
+    inset 0 1px 0 var(--lgv-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.20),
+    var(--lgv-shadow-sm) !important;
+}
+.vh-chip:hover {
+  background-color: var(--lgv-bg-strong) !important;
+  border-color: rgba(94, 207, 130, 0.45) !important;
+}
+.vh-chip.active {
+  background-color: rgba(45, 140, 78, 0.55) !important;
+  background-image: linear-gradient(180deg, rgba(45,140,78,0.40), rgba(26,92,42,0.35)), var(--lgv-shine) !important;
+  border-color: rgba(94, 207, 130, 0.45) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.24),
+    inset 0 -1px 0 rgba(0,0,0,0.24),
+    0 4px 10px rgba(0,0,0,0.22),
+    0 14px 30px rgba(45,140,78,0.32) !important;
+}
+
+/* ── BOTÓN "Subir video": mismo vidrio con acento verde que
+   .gh-donate-panel__cta en guia.html ── */
+.vh-upload-btn {
+  background-color: rgba(45, 140, 78, 0.72) !important;
+  background-image: linear-gradient(180deg, rgba(45,140,78,0.45), rgba(26,92,42,0.40)), var(--lgv-shine) !important;
+  backdrop-filter: blur(calc(var(--lgv-blur) - 8px)) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(calc(var(--lgv-blur) - 8px)) saturate(160%) !important;
+  border: 1px solid rgba(94, 207, 130, 0.45) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.24),
+    inset 0 -1px 0 rgba(0,0,0,0.22),
+    0 4px 10px rgba(0,0,0,0.20),
+    0 14px 30px rgba(45,140,78,0.30) !important;
+}
+.vh-upload-btn:hover {
+  background-color: rgba(45, 140, 78, 0.88) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.30),
+    inset 0 -1px 0 rgba(0,0,0,0.24),
+    0 6px 14px rgba(0,0,0,0.26),
+    0 20px 42px rgba(45,140,78,0.40) !important;
+}
+
+/* ── TARJETAS DE VIDEO: vidrio + reflejo diagonal + "gota de luz"
+   arriba, mismo tratamiento que .gh-video-card / .gh-panel ── */
+.vh-card {
+  background-color: var(--lgv-bg) !important;
+  background-image: var(--lgv-shine) !important;
+  background-blend-mode: overlay;
+  backdrop-filter: blur(var(--lgv-blur)) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(var(--lgv-blur)) saturate(160%) !important;
+  border-color: var(--lgv-border) !important;
+  box-shadow:
+    inset 0 1px 0 var(--lgv-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.22),
+    var(--lgv-shadow) !important;
+}
+.vh-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 8%; right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
+  pointer-events: none;
+}
+.vh-card:hover {
+  background-color: var(--lgv-bg-strong) !important;
+  border-color: var(--lgv-border-strong) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.34),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.28),
+    var(--lgv-shadow-hover) !important;
+}
+
+/* ── ESTADO VACÍO: panel de vidrio suave, mismo criterio que
+   .vh-card pero sin reflejo diagonal (pieza más chica) ── */
+.vh-empty {
+  background: var(--lgv-bg) !important;
+  backdrop-filter: blur(var(--lgv-blur)) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(var(--lgv-blur)) saturate(150%) !important;
+  border: 1px solid var(--lgv-border) !important;
+  border-radius: 22px;
+  box-shadow: var(--lgv-shadow-sm) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vh-chip, .vh-card, .vh-upload-btn, .vh-search__input, .vh-search__clear, .vh-empty {
+    transition: none !important;
+  }
+}
