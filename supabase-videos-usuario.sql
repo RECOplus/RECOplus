@@ -13,6 +13,16 @@
 -- patrón de moderación que `aliados` y `campanas`.
 -- ═══════════════════════════════════════════════════════════════
 
+-- Tipo enum para el estado de moderación (para que Supabase Table
+-- Editor lo muestre como un selector desplegable en vez de texto
+-- libre — mismo patrón que estado_aliado / estado_campana).
+do $$
+begin
+  if not exists (select 1 from pg_type where typname = 'estado_video') then
+    create type estado_video as enum ('pendiente', 'aprobado', 'rechazado');
+  end if;
+end$$;
+
 create table if not exists videos_usuario (
   id bigint generated always as identity primary key,
   user_id uuid not null references auth.users (id) on delete cascade,
@@ -40,7 +50,7 @@ create table if not exists videos_usuario (
   -- Estado de moderación (mismo patrón que `aliados` / `campanas`):
   -- un video nuevo entra como 'pendiente' y no aparece en
   -- videos.html hasta que se aprueba a mano.
-  estado text not null default 'pendiente' check (estado in ('pendiente', 'aprobado', 'rechazado')),
+  estado estado_video not null default 'pendiente',
 
   created_at timestamptz not null default now()
 );

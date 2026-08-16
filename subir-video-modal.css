@@ -38,7 +38,7 @@
   white-space: nowrap;
   transition: background 0.2s, border-color 0.2s, transform 0.15s;
 }
-.subir-video-btn svg { flex-shrink: 0; }
+.subir-video-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
 .subir-video-btn:hover {
   background: rgba(126, 232, 154, 0.22);
   border-color: rgba(126, 232, 154, 0.5);
@@ -61,21 +61,23 @@
 .vh-upload-btn {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   flex-shrink: 0;
+  width: auto;
   background: var(--accent, #2d8c4e);
   border: 1.5px solid var(--accent, #2d8c4e);
   color: #fff;
   font-family: 'DM Sans', Arial, sans-serif;
-  font-size: 0.84rem;
+  font-size: 0.78rem;
   font-weight: 700;
-  padding: 10px 18px;
+  line-height: 1;
+  padding: 9px 15px;
   border-radius: 999px;
   cursor: pointer;
   white-space: nowrap;
   transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
 }
-.vh-upload-btn svg { flex-shrink: 0; }
+.vh-upload-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
 .vh-upload-btn:hover {
   background: var(--accent-dark, #1a5c2a);
   transform: translateY(-1px);
@@ -85,7 +87,7 @@
 
 @media (max-width: 640px) {
   .vh-filters__row { flex-direction: column; align-items: stretch; }
-  .vh-upload-btn { justify-content: center; }
+  .vh-upload-btn { align-self: center; width: auto; justify-content: center; }
 }
 
 /* ── Overlay + modal (mismo patrón que comentar-overlay/comentar-modal) ── */
