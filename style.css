@@ -2792,76 +2792,7 @@ html.dark .logo-dark { opacity: 0; transform: translate(-50%, -50%) scale(0.92);
   opacity: 1;
 }
 
-/* ── Tooltip de descripción al pasar el cursor sobre cada link ── */
-.bubble-nav__links a {
-  position: relative;
-}
-
-.bubble-nav__links a[data-tooltip]::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  top: calc(100% + 10px);
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
-  width: max-content;
-  max-width: 190px;
-  padding: 7px 12px;
-  border-radius: 10px;
-  background: var(--nav-bg);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  border: 1px solid var(--nav-border);
-  box-shadow: var(--nav-shadow);
-  color: var(--nav-link-hover-color);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.72rem;
-  font-weight: 500;
-  line-height: 1.35;
-  text-align: center;
-  white-space: normal;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  z-index: 20;
-  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
-}
-
-.bubble-nav__links a[data-tooltip]::before {
-  content: "";
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
-  width: 9px;
-  height: 9px;
-  background: var(--nav-bg);
-  border-left: 1px solid var(--nav-border);
-  border-top: 1px solid var(--nav-border);
-  border-radius: 2px;
-  rotate: 45deg;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  z-index: 21;
-  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
-}
-
-.bubble-nav__links a[data-tooltip]:hover::after,
-.bubble-nav__links a[data-tooltip]:hover::before,
-.bubble-nav__links a[data-tooltip]:focus-visible::after,
-.bubble-nav__links a[data-tooltip]:focus-visible::before {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(0);
-  transition-delay: 0.25s;
-}
-
-@media (max-width: 900px) {
-  .bubble-nav__links a[data-tooltip]::after,
-  .bubble-nav__links a[data-tooltip]::before {
-    display: none;
-  }
-}
+/* ── (Tooltip nativo eliminado — reemplazado por la mini-tarjeta de nav-preview.js) ── */
 
 /* ── RIGHT ACTIONS ── */
 .bubble-nav__actions {

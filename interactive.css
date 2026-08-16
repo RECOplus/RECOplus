@@ -518,40 +518,10 @@ html.dark .section-dot.active {
 }
 
 /* ══════════════════════════════════════════════
-   16. TOOLTIP NATIVO mejorado en links del nav
+   16. (Tooltip nativo eliminado — reemplazado por la
+       mini-tarjeta de nav-preview.js, que ya cubre
+       este mismo hover con más info y mejor diseño)
    ══════════════════════════════════════════════ */
-.bubble-nav__links a[data-tooltip] {
-  position: relative;
-}
-.bubble-nav__links a[data-tooltip]::before {
-  content: attr(data-tooltip);
-  position: absolute;
-  bottom: calc(100% + 10px);
-  left: 50%;
-  transform: translateX(-50%) translateY(4px) scale(0.92);
-  background: rgba(20,20,20,0.88);
-  color: #fff;
-  font-size: 11px;
-  white-space: nowrap;
-  padding: 4px 10px;
-  border-radius: 6px;
-  pointer-events: none;
-  opacity: 0;
-  transition:
-    opacity 125ms ease-out,
-    transform 125ms var(--ease-spring);
-  backdrop-filter: blur(6px);
-  z-index: 100;
-}
-html.dark .bubble-nav__links a[data-tooltip]::before {
-  background: rgba(240,240,240,0.90);
-  color: #111;
-}
-.bubble-nav__links a[data-tooltip]:hover::before {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0) scale(1);
-  transition-delay: 350ms;
-}
 
 /* ══════════════════════════════════════════════
    17. LOGO: giro al cambiar de tema
