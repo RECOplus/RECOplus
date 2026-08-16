@@ -25,6 +25,8 @@
   <link rel="stylesheet" href="nav-cta-link-fix.css">
   <!-- Capa aditiva: chip de usuario con foto/avatar + menú cuando hay sesión -->
   <link rel="stylesheet" href="navbar-auth.css">
+  <!-- Capa aditiva: campana de notificaciones -->
+  <link rel="stylesheet" href="notificaciones.css">
 
   <!-- Capa aditiva: estilos del botón "Cómo llegar", el punto azul de ubicación y el panel de ruta del mini-mapa (compartidos con mapa.html) -->
   <link rel="stylesheet" href="mapa-dark-theme.css">
@@ -340,99 +342,6 @@
     </div>
   </section>
 
-  <!-- CALCULADORA + HISTORIAL -->
-  <section class="rc-grid-2 rc-reveal">
-    <div class="rc-panel">
-      <div class="rc-panel__head">
-        <span class="rc-panel__icon">
-          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17"><path d="M3 10a7 7 0 0112-5M17 10a7 7 0 01-12 5"/><path d="M3 4v4h4M17 16v-4h-4"/></svg>
-        </span>
-        <h2 data-i18n="reciclar.calc.title">Calculadora de impacto</h2>
-      </div>
-      <p class="rc-panel__sub" data-i18n="reciclar.calc.sub">Ingresa los materiales que reciclaste hoy y descubre tu impacto positivo.</p>
-
-      <div class="rc-calc__inputs">
-        <div class="rc-field">
-          <label><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" width="14" height="14"><path d="M9 2h2v3l1.5 2v11a1 1 0 01-1 1H8.5a1 1 0 01-1-1V7L9 5V2z"/></svg><span data-i18n="reciclar.calc.f1">Botellas de plástico</span></label>
-          <div class="rc-input-wrap"><input type="number" id="rcBotellas" value="5" min="0"><span class="unit" data-i18n="reciclar.calc.uds">uds</span></div>
-        </div>
-        <div class="rc-field">
-          <label><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" width="14" height="14"><ellipse cx="10" cy="10" rx="6" ry="8"/></svg><span data-i18n="reciclar.calc.f2">Latas de aluminio</span></label>
-          <div class="rc-input-wrap"><input type="number" id="rcLatas" value="3" min="0"><span class="unit" data-i18n="reciclar.calc.uds">uds</span></div>
-        </div>
-        <div class="rc-field">
-          <label><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" width="14" height="14"><path d="M4 3h12v14l-2.5-1.5L11 17l-1-1-1 1-2.5-1.5L4 17V3z"/></svg><span data-i18n="reciclar.calc.f3">Hojas de papel</span></label>
-          <div class="rc-input-wrap"><input type="number" id="rcHojas" value="10" min="0"><span class="unit" data-i18n="reciclar.calc.uds">uds</span></div>
-        </div>
-        <button class="rc-btn rc-btn--solid" id="rcCalcBtn">
-          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><path d="M3 10a7 7 0 0112-5M17 10a7 7 0 01-12 5"/><path d="M3 4v4h4M17 16v-4h-4"/></svg>
-          <span data-i18n="reciclar.calc.btn">Calcular impacto</span>
-        </button>
-      </div>
-
-      <div class="rc-calc__results">
-        <div class="rc-result">
-          <span data-i18n="reciclar.calc.r1">Árboles protegidos</span>
-          <strong id="rcArboles">2</strong>
-          <em data-i18n="reciclar.calc.r1u">árboles</em>
-        </div>
-        <div class="rc-result">
-          <span data-i18n="reciclar.calc.r2">Energía ahorrada</span>
-          <strong id="rcEnergia">1.25</strong>
-          <em>kWh</em>
-        </div>
-        <div class="rc-result">
-          <span data-i18n="reciclar.calc.r3">Agua ahorrada</span>
-          <strong id="rcAgua">45</strong>
-          <em data-i18n="reciclar.calc.r3u">litros</em>
-        </div>
-        <div class="rc-result">
-          <span data-i18n="reciclar.calc.r4">CO₂ evitado</span>
-          <strong id="rcCo2">3.2</strong>
-          <em data-i18n="reciclar.calc.r4u">kg</em>
-        </div>
-      </div>
-    </div>
-
-    <div class="rc-panel">
-      <div class="rc-panel__head">
-        <span class="rc-panel__icon">
-          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" width="17" height="17"><path d="M10 2v4M10 14v4M2 10h4M14 10h4"/><circle cx="10" cy="10" r="3.4"/></svg>
-        </span>
-        <h2><span data-i18n="reciclar.historial.title.pre">Mi</span> <span data-i18n="reciclar.historial.title">Historial de reciclaje</span></h2>
-      </div>
-
-      <div class="rc-history">
-        <div class="rc-history__ring">
-          <div class="rc-history__ring-inner">
-            <small data-i18n="reciclar.historial.nivel">Nivel actual</small>
-            <strong data-i18n="reciclar.historial.brote">Brote</strong>
-            <span class="rc-history__progress">350 / 1000 pts</span>
-          </div>
-        </div>
-        <div class="rc-history__stats">
-          <div class="rc-stat">
-            <span class="rc-stat__label"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" width="15" height="15"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 10l2 2 4-4"/></svg><span data-i18n="reciclar.historial.s1">Objetos reciclados</span></span>
-            <strong>128</strong>
-          </div>
-          <div class="rc-stat">
-            <span class="rc-stat__label"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" width="15" height="15"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg><span data-i18n="reciclar.historial.s2">Impacto generado</span></span>
-            <strong>15.6 kg CO₂</strong>
-          </div>
-          <div class="rc-stat">
-            <span class="rc-stat__label"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" width="15" height="15"><path d="M10 2a6 6 0 016 6c0 4-6 10-6 10S4 12 4 8a6 6 0 016-6z"/><circle cx="10" cy="8" r="2"/></svg><span data-i18n="reciclar.historial.s3">Puntos acumulados</span></span>
-            <strong>350 pts</strong>
-          </div>
-          <div class="rc-stat">
-            <span class="rc-stat__label"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" width="15" height="15"><path d="M10 2l2.3 5 5.5.5-4.1 3.8L15 17l-5-3-5 3 1.3-5.7L2.2 7.5l5.5-.5L10 2z"/></svg><span data-i18n="reciclar.historial.s4">Insignias ganadas</span></span>
-            <strong>5</strong>
-          </div>
-        </div>
-      </div>
-      <button class="rc-btn rc-btn--solid rc-btn--full" data-i18n="reciclar.historial.btn">Ver mi historial completo</button>
-    </div>
-  </section>
-
   <!-- CTA FINAL -->
   <section class="rc-cta rc-reveal">
     <svg class="rc-cta__deco" viewBox="0 0 20 20" fill="currentColor"><path d="M10 1l2.6 5.6 6.2.5-4.6 4.3 1.3 6.1L10 14.7 4.5 17.5l1.3-6.1L1.2 7.1l6.2-.5L10 1z"/></svg>
@@ -524,6 +433,8 @@
 <script src="liquid-glass-fx.js"></script>
 <script src="reciclar-shimmer.js"></script>
 <script src="navbar-auth.js"></script>
+<!-- Capa aditiva: campana de notificaciones -->
+<script src="notificaciones.js"></script>
 <script src="ajustes-modal.js?v=2"></script>
 <!-- Capa aditiva: pestaña "Mi empresa" en Ajustes -->
 <script src="ajustes-empresa.js"></script>

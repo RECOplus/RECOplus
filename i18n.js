@@ -36,6 +36,17 @@ const translations = {
     "nav.cerrarVentana":  "Cerrar ventana",
     "nav.cerrar":         "Cerrar",
 
+    /* ── NOTIFICACIONES ── */
+    "notif.titulo":        "Notificaciones",
+    "notif.marcarTodas":   "Marcar todas como leídas",
+    "notif.vacio":         "No tienes notificaciones todavía.",
+    "notif.tiempo.ahora":  "Ahora",
+    "notif.tiempo.min":    "min",
+    "notif.tiempo.hr":     "h",
+    "notif.tiempo.dia":    "d",
+    "notif.tiempo.semana": "sem",
+    "notif.tiempo.mes":    "mes",
+
     /* ── NAV: descripciones (tooltip al pasar el cursor) ── */
     "nav.inicio.desc":   "Vuelve a la página principal.",
     "nav.reciclar.desc": "Centros de reciclaje cerca de ti.",
@@ -1919,6 +1930,17 @@ const translations = {
     "nav.carousel.siguiente": "Next",
     "nav.cerrarVentana":  "Close window",
     "nav.cerrar":         "Close",
+
+    /* ── NOTIFICATIONS ── */
+    "notif.titulo":        "Notifications",
+    "notif.marcarTodas":   "Mark all as read",
+    "notif.vacio":         "You don't have any notifications yet.",
+    "notif.tiempo.ahora":  "Now",
+    "notif.tiempo.min":    "m",
+    "notif.tiempo.hr":     "h",
+    "notif.tiempo.dia":    "d",
+    "notif.tiempo.semana": "w",
+    "notif.tiempo.mes":    "mo",
 
     /* ── NAV: descripciones (tooltip al pasar el cursor) ── */
     "nav.inicio.desc":   "Back to the home page.",
