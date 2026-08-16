@@ -21,39 +21,39 @@
      ═══════════════════════════════════════════════════════════ */
   var PAGE_DATA = {
     "index.html": {
-      icon: "♻️", color: "#2d8c4e", bg: "#e8f5ec", border: "#a8dab5",
-      es: { label: "Inicio",       desc: "El punto de partida: busca, recicla y conecta con tu comunidad.",                   pill: "Ir a Inicio" },
-      en: { label: "Home",         desc: "The starting point: search, recycle and connect with your community.",              pill: "Go to Home" }
+      icon: "🏠", color: "#2d8c4e", bg: "#e8f5ec", border: "#a8dab5",
+      es: { label: "Inicio",        desc: "Vuelve al punto de partida: explora el mapa, dona o descubre tu impacto en un vistazo.",  pill: "Ir a Inicio" },
+      en: { label: "Home",          desc: "Back to the starting point: explore the map, donate, or see your impact at a glance.",       pill: "Go to Home" }
     },
-    "mapa.html": {
-      icon: "📍", color: "#1a7a3a", bg: "#dff2e6", border: "#8ecfa0",
-      es: { label: "Mapa",         desc: "Encuentra puntos de reciclaje y donación cerca de ti con filtros por material.",    pill: "Ir al Mapa" },
-      en: { label: "Map",          desc: "Find recycling and donation points near you with filters by material.",             pill: "Go to Map" }
-    },
-    "guia.html": {
-      icon: "📖", color: "#2d6e8c", bg: "#e0f0f8", border: "#8ec8e0",
-      es: { label: "Guía",         desc: "Aprende paso a paso cómo reciclar, donar y generar impacto positivo.",             pill: "Ir a la Guía" },
-      en: { label: "Guide",        desc: "Learn step by step how to recycle, donate and create a positive impact.",          pill: "Go to Guide" }
+    "reciclar.html": {
+      icon: "♻️", color: "#0e8a7d", bg: "#e0f5f2", border: "#8ad6c9",
+      es: { label: "Reciclar",      desc: "Descubre qué reciclar, escanea objetos y encuentra el centro más cercano.",              pill: "Ir a Reciclar" },
+      en: { label: "Recycle",       desc: "Find out what to recycle, scan objects, and locate the nearest center.",                    pill: "Go to Recycle" }
     },
     "donar.html": {
       icon: "🤝", color: "#8c4a2d", bg: "#f8ede0", border: "#e0b48e",
-      es: { label: "Donar / Ayuda", desc: "Publica donaciones o solicitudes y conecta con quienes más lo necesitan.",        pill: "Ir a Donar" },
-      en: { label: "Donate / Help", desc: "Post donations or requests and connect with those who need it most.",             pill: "Go to Donate" }
+      es: { label: "Donar / Ayuda", desc: "Comparte lo que ya no usas o solicita ayuda a tu comunidad.",                              pill: "Ir a Donar" },
+      en: { label: "Donate / Help", desc: "Share what you no longer need or ask your community for help.",                            pill: "Go to Donate" }
     },
-    "blog.html": {
-      icon: "✍️", color: "#5a2d8c", bg: "#ede0f8", border: "#c4a0e0",
-      es: { label: "Blog",         desc: "Artículos, tips y noticias sobre sostenibilidad y medio ambiente.",                pill: "Ir al Blog" },
-      en: { label: "Blog",         desc: "Articles, tips and news about sustainability and the environment.",                pill: "Go to Blog" }
+    "guia.html": {
+      icon: "📖", color: "#2d6e8c", bg: "#e0f0f8", border: "#8ec8e0",
+      es: { label: "Guía",          desc: "Aprende paso a paso cómo reciclar, donar y generar un impacto real.",                     pill: "Ir a la Guía" },
+      en: { label: "Guide",         desc: "Learn step by step how to recycle, donate and make a real impact.",                          pill: "Go to Guide" }
+    },
+    "scanner-demo.html": {
+      icon: "🔍", color: "#6b3fa0", bg: "#f0e6f8", border: "#c9a8e0",
+      es: { label: "Escáner",       desc: "Escanea cualquier objeto y descubre al instante si es reciclable.",                       pill: "Probar el Escáner" },
+      en: { label: "Scanner",       desc: "Scan any object and instantly find out if it's recyclable.",                                pill: "Try the Scanner" }
+    },
+    "mapa.html": {
+      icon: "📍", color: "#1a7a3a", bg: "#dff2e6", border: "#8ecfa0",
+      es: { label: "Mapa",          desc: "Encuentra puntos de reciclaje y donación cerca de ti con filtros por material.",         pill: "Ir al Mapa" },
+      en: { label: "Map",           desc: "Find recycling and donation points near you with filters by material.",                    pill: "Go to Map" }
     },
     "alianzas.html": {
-      icon: "🏢", color: "#1a5c2a", bg: "#e8f5ec", border: "#a8dab5",
-      es: { label: "Alianzas",     desc: "Espacio para empresas y fundaciones que colaboran con RECO+.",                    pill: "Ir a Alianzas" },
-      en: { label: "Alliances",    desc: "A space for companies and foundations that collaborate with RECO+.",              pill: "Go to Alliances" }
-    },
-    "contacto.html": {
-      icon: "💬", color: "#2d5a8c", bg: "#e0ecf8", border: "#8eb8e0",
-      es: { label: "Contacto",     desc: "¿Tienes dudas o sugerencias? Escríbenos, estamos para ayudarte.",                pill: "Ir a Contacto" },
-      en: { label: "Contact",      desc: "Have questions or suggestions? Write to us, we're here to help.",                pill: "Go to Contact" }
+      icon: "🏢", color: "#b8860b", bg: "#faf3df", border: "#e8d19a",
+      es: { label: "Alianzas",      desc: "Descubre las empresas y fundaciones que impulsan el cambio junto a RECO+.",                pill: "Ir a Alianzas" },
+      en: { label: "Alliances",     desc: "Meet the companies and foundations driving change alongside RECO+.",                       pill: "Go to Alliances" }
     }
   };
 

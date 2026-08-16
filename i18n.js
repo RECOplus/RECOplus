@@ -23,6 +23,7 @@ const translations = {
     "nav.blog":     "Blog",
     "nav.alianzas": "Alianzas",
     "nav.contacto": "Contacto",
+    "nav.scanner":  "Escáner",
     "nav.unete":    "Únete",
     "nav.ajustes":      "Ajustes",
     "nav.otraCuenta":   "Iniciar con otra cuenta",
@@ -42,6 +43,9 @@ const translations = {
     "nav.guia.desc":     "Aprende paso a paso cómo reciclar y donar.",
     "nav.contacto.desc": "Escríbenos, respondemos en menos de 24h.",
     "nav.blog.desc":     "Historias, tips y noticias sobre sostenibilidad.",
+    "nav.mapa.desc":     "Explora el mapa de reciclaje y donación.",
+    "nav.alianzas.desc": "Empresas que impulsan el cambio.",
+    "nav.scanner.desc":  "Identifica el material al instante con IA.",
 
     /* ── HERO ── */
     "hero.title":       "Conecta, recicla<br>y transforma",
@@ -1903,6 +1907,7 @@ const translations = {
     "nav.blog":     "Blog",
     "nav.alianzas": "Alliances",
     "nav.contacto": "Contact",
+    "nav.scanner":  "Scanner",
     "nav.unete":    "Join",
     "nav.ajustes":      "Settings",
     "nav.otraCuenta":   "Sign in with another account",
@@ -1922,6 +1927,9 @@ const translations = {
     "nav.guia.desc":     "Learn step by step how to recycle and donate.",
     "nav.contacto.desc": "Write to us, we reply in under 24h.",
     "nav.blog.desc":     "Stories, tips and news about sustainability.",
+    "nav.mapa.desc":     "Explore the recycling and donation map.",
+    "nav.alianzas.desc": "Companies driving the change.",
+    "nav.scanner.desc":  "Instantly identify the material with AI.",
 
     /* ── HERO ── */
     "hero.title":       "Connect, recycle<br>and transform",
