@@ -28,6 +28,7 @@
   var MAX_BYTES = 100 * 1024 * 1024; // 100MB
   var ALLOWED_TYPES = ['video/mp4', 'video/webm', 'video/quicktime', 'video/ogg'];
   var ALLOWED_EXT = ['.mp4', '.webm', '.mov', '.ogg', '.ogv'];
+  var DUPLICATE_CHECK_DEBOUNCE = 500; // ms — evita una consulta por cada tecla al pegar/escribir el link
 
   var CATEGORIAS = [
     { key: 'reciclaje', labelKey: 'videos.cat.reciclaje', fallback: 'Reciclaje' },
@@ -40,6 +41,11 @@
   var modalBuilt = false;
   var activeTab = 'link';
   var archivoSeleccionado = null;
+  var archivoHashActual = null; // hash SHA-256 ya calculado del archivo seleccionado (o null mientras se calcula/si no aplica)
+  var linkEsDuplicado = false; // true si la URL actual del campo "link" ya existe en la base de datos
+  var archivoEsDuplicado = false; // true si el archivo seleccionado (por contenido) ya existe en la base de datos
+  var linkCheckTimer = null; // debounce de la verificación de duplicado del link
+  var linkCheckToken = 0; // evita que una consulta vieja pise el resultado de una más reciente
   var sesionActual = null;
 
   function ready(fn) {
@@ -149,6 +155,107 @@
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   }
 
+  /* ══════════════════════════════════════════════
+     DETECCIÓN DE VIDEOS DUPLICADOS
+     ─────────────────────────────────────
+     Antes de aceptar un envío se consulta la tabla `videos_usuario`
+     (columnas video_url_normalizada / archivo_hash, ver
+     supabase-migrar-videos-duplicados.sql) para saber si ese mismo
+     video (por link o por contenido de archivo) ya fue compartido
+     por CUALQUIER usuario, sin importar el estado de moderación
+     (pendiente, aprobado o rechazado): así se evita que alguien
+     reenvíe algo ya publicado o ya en revisión.
+     ══════════════════════════════════════════════ */
+
+  // Reduce una URL a una forma canónica para comparar
+  // "youtube.com/watch?v=X" y "https://www.youtube.com/watch?v=X&
+  // feature=share" como el mismo video: minusculas, sin protocolo,
+  // sin "www.", sin slash final, y sin parámetros de tracking
+  // conocidos (dejando intactos los que sí identifican al video,
+  // como YouTube "v" o Vimeo el propio path).
+  var TRACKING_PARAMS = ['feature', 'si', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'fbclid', 'igshid', 'ref', 'ref_src', 'source'];
+
+  function normalizarVideoUrl(url) {
+    if (!url) return '';
+    var limpio = url.trim();
+    if (!/^https?:\/\//i.test(limpio)) limpio = 'https://' + limpio;
+
+    try {
+      var u = new URL(limpio);
+      var host = u.hostname.toLowerCase().replace(/^www\./, '');
+
+      // youtu.be/XXXX y youtube.com/watch?v=XXXX apuntan al mismo
+      // video: se normalizan ambos a "youtube.com/watch?v=XXXX".
+      if (host === 'youtu.be') {
+        var vid = u.pathname.replace(/^\//, '');
+        return 'youtube.com/watch?v=' + vid;
+      }
+
+      TRACKING_PARAMS.forEach(function (p) { u.searchParams.delete(p); });
+
+      // Ordena los parámetros restantes para que el orden en que se
+      // pegó el link no cambie el resultado de la comparación.
+      var params = Array.from(u.searchParams.entries()).sort(function (a, b) {
+        return a[0].localeCompare(b[0]);
+      });
+      var query = params.map(function (p) { return p[0] + '=' + p[1]; }).join('&');
+
+      var path = u.pathname.replace(/\/+$/, ''); // sin slash final
+      return host + path + (query ? '?' + query : '');
+    } catch (e) {
+      // URL no parseable: usar el texto tal cual, en minúsculas y sin
+      // protocolo/slash final, como mejor esfuerzo.
+      return limpio.toLowerCase().replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/+$/, '');
+    }
+  }
+
+  // Hash SHA-256 (hex) del CONTENIDO del archivo, calculado en el
+  // navegador con Web Crypto (no requiere subir nada para saber si
+  // ya existe). Devuelve una Promise<string>.
+  function calcularHashArchivo(file) {
+    if (!(window.crypto && window.crypto.subtle && window.crypto.subtle.digest)) {
+      return Promise.resolve(null); // navegador sin soporte: se omite la verificación por hash
+    }
+    return file.arrayBuffer().then(function (buffer) {
+      return window.crypto.subtle.digest('SHA-256', buffer);
+    }).then(function (hashBuffer) {
+      var bytes = new Uint8Array(hashBuffer);
+      var hex = '';
+      for (var i = 0; i < bytes.length; i++) hex += bytes[i].toString(16).padStart(2, '0');
+      return hex;
+    }).catch(function () {
+      return null;
+    });
+  }
+
+  // Consulta si ya existe un video con esa video_url_normalizada.
+  // Devuelve Promise<boolean>.
+  function existeVideoConUrl(urlNormalizada) {
+    if (!window.recoSupabase || !urlNormalizada) return Promise.resolve(false);
+    return window.recoSupabase
+      .from(TABLE)
+      .select('id')
+      .eq('video_url_normalizada', urlNormalizada)
+      .limit(1)
+      .maybeSingle()
+      .then(function (res) { return !!(res && res.data); })
+      .catch(function () { return false; });
+  }
+
+  // Consulta si ya existe un video con ese archivo_hash.
+  // Devuelve Promise<boolean>.
+  function existeVideoConHash(hash) {
+    if (!window.recoSupabase || !hash) return Promise.resolve(false);
+    return window.recoSupabase
+      .from(TABLE)
+      .select('id')
+      .eq('archivo_hash', hash)
+      .limit(1)
+      .maybeSingle()
+      .then(function (res) { return !!(res && res.data); })
+      .catch(function () { return false; });
+  }
+
   function buildCategoriaOptions() {
     return CATEGORIAS.map(function (cat) {
       return '<option value="' + cat.key + '" data-i18n="' + cat.labelKey + '">' + tr(cat.labelKey, cat.fallback) + '</option>';
@@ -256,23 +363,56 @@
     }
 
     archivoSeleccionado = file;
+    archivoHashActual = null;
+    archivoEsDuplicado = false;
     var drop = body.querySelector('#svDrop');
     drop.classList.add('has-file');
     body.querySelector('#svFileName').textContent = file.name;
     body.querySelector('#svFileSize').textContent = formatBytes(file.size);
-    ocultarStatus(statusEl);
+    var submitBtn = body.querySelector('#svSubmitBtn');
+
+    mostrarStatus(statusEl, 'info', tr('subirvideo.statusVerificandoArchivo', 'Comprobando si este archivo ya existe…'));
+    if (submitBtn) submitBtn.disabled = true;
+
+    calcularHashArchivo(file).then(function (hash) {
+      // El usuario pudo haber quitado/cambiado el archivo mientras se
+      // calculaba el hash; solo aplicar el resultado si sigue siendo
+      // este mismo archivo.
+      if (archivoSeleccionado !== file) return;
+      archivoHashActual = hash;
+      return existeVideoConHash(hash);
+    }).then(function (duplicado) {
+      if (archivoSeleccionado !== file) return;
+      archivoEsDuplicado = !!duplicado;
+      if (submitBtn) submitBtn.disabled = false;
+      if (archivoEsDuplicado) {
+        mostrarStatus(statusEl, 'error', tr('subirvideo.statusArchivoDuplicado', 'Este archivo ya fue subido antes. No puedes publicarlo de nuevo.'));
+        drop.classList.add('has-duplicate');
+      } else {
+        ocultarStatus(statusEl);
+        drop.classList.remove('has-duplicate');
+      }
+    });
   }
 
   function quitarArchivo(body) {
     archivoSeleccionado = null;
+    archivoHashActual = null;
+    archivoEsDuplicado = false;
     var drop = body.querySelector('#svDrop');
     drop.classList.remove('has-file');
+    drop.classList.remove('has-duplicate');
     var input = body.querySelector('#svFileInput');
     if (input) input.value = '';
+    var statusEl = body.querySelector('#svStatus');
+    ocultarStatus(statusEl);
   }
 
   function wireForm(body, user) {
     archivoSeleccionado = null;
+    archivoHashActual = null;
+    archivoEsDuplicado = false;
+    linkEsDuplicado = false;
     setTab(body, 'link');
 
     body.querySelectorAll('.sv-tab').forEach(function (btn) {
@@ -282,6 +422,40 @@
     var drop = body.querySelector('#svDrop');
     var fileInput = body.querySelector('#svFileInput');
     var statusEl = body.querySelector('#svStatus');
+    var linkInput = body.querySelector('#svLinkInput');
+    var submitBtn = body.querySelector('#svSubmitBtn');
+
+    // Verificación en vivo del link (con debounce): apenas el usuario
+    // termina de escribir/pegar una URL con pinta válida, se consulta
+    // si ya existe. No bloquea la escritura, solo avisa y deshabilita
+    // el envío mientras el link siga siendo un duplicado.
+    linkInput.addEventListener('input', function () {
+      linkEsDuplicado = false;
+      window.clearTimeout(linkCheckTimer);
+
+      var valor = linkInput.value.trim();
+      if (!valor || valor.length < 6) {
+        ocultarStatus(statusEl);
+        return;
+      }
+
+      var miToken = ++linkCheckToken;
+      linkCheckTimer = window.setTimeout(function () {
+        var normalizada = normalizarVideoUrl(valor);
+        mostrarStatus(statusEl, 'info', tr('subirvideo.statusVerificandoLink', 'Comprobando si este video ya existe…'));
+        existeVideoConUrl(normalizada).then(function (duplicado) {
+          if (miToken !== linkCheckToken) return; // el usuario ya siguió escribiendo; este resultado quedó viejo
+          linkEsDuplicado = duplicado;
+          if (duplicado) {
+            mostrarStatus(statusEl, 'error', tr('subirvideo.statusLinkDuplicado', 'Este video ya fue compartido antes. No puedes publicarlo de nuevo.'));
+            linkInput.classList.add('sv-input--invalid');
+          } else {
+            ocultarStatus(statusEl);
+            linkInput.classList.remove('sv-input--invalid');
+          }
+        });
+      }, DUPLICATE_CHECK_DEBOUNCE);
+    });
 
     drop.addEventListener('click', function (e) {
       if (drop.classList.contains('has-file')) return;
@@ -337,9 +511,21 @@
         mostrarStatus(statusEl, 'error', tr('subirvideo.statusLinkInvalido', 'Ese enlace no parece válido. Debe empezar con http:// o https://'));
         return;
       }
+      // Bloqueo inmediato si la verificación en vivo (mientras el
+      // usuario escribía) ya marcó este link como duplicado.
+      if (linkEsDuplicado) {
+        mostrarStatus(statusEl, 'error', tr('subirvideo.statusLinkDuplicado', 'Este video ya fue compartido antes. No puedes publicarlo de nuevo.'));
+        return;
+      }
     } else {
       if (!archivoSeleccionado) {
         mostrarStatus(statusEl, 'error', tr('subirvideo.statusFaltaArchivo', 'Elige un archivo de video para subir.'));
+        return;
+      }
+      // Bloqueo inmediato si la verificación por hash (al elegir el
+      // archivo) ya lo marcó como duplicado.
+      if (archivoEsDuplicado) {
+        mostrarStatus(statusEl, 'error', tr('subirvideo.statusArchivoDuplicado', 'Este archivo ya fue subido antes. No puedes publicarlo de nuevo.'));
         return;
       }
     }
@@ -354,7 +540,7 @@
 
     var autorNombre = getDisplayName(user);
 
-    function insertarVideo(videoUrl) {
+    function insertarVideo(videoUrl, urlNormalizada, archivoHash) {
       submitBtn.textContent = tr('subirvideo.publicando', 'Publicando…');
       return window.recoSupabase.from(TABLE).insert({
         user_id: user.id,
@@ -363,63 +549,101 @@
         descripcion: descripcion || null,
         categoria: categoria,
         tipo: activeTab,
-        video_url: videoUrl
+        video_url: videoUrl,
+        video_url_normalizada: urlNormalizada || null,
+        archivo_hash: archivoHash || null
       });
     }
 
-    var flujo;
-
+    // Comprobación final, justo antes de insertar: cubre el caso de
+    // que el usuario haya pegado el link o elegido el archivo y
+    // presionado "Enviar" tan rápido que la verificación en vivo
+    // (con debounce) todavía no había terminado, o que alguien más
+    // haya publicado el mismo video en ese instante. Si ya se sabe
+    // que es duplicado no vuelve a consultar; si aún no se sabe,
+    // consulta una vez más antes de proceder.
+    var comprobacionFinal;
     if (activeTab === 'link') {
-      flujo = insertarVideo(link);
+      var urlNormalizada = normalizarVideoUrl(link);
+      comprobacionFinal = existeVideoConUrl(urlNormalizada).then(function (duplicado) {
+        if (duplicado) throw { _duplicado: true, _esLink: true };
+        return { urlNormalizada: urlNormalizada };
+      });
     } else {
-      submitBtn.textContent = tr('subirvideo.subiendo', 'Subiendo video…');
-      var ext = '';
-      var puntoIdx = archivoSeleccionado.name.lastIndexOf('.');
-      if (puntoIdx !== -1) ext = archivoSeleccionado.name.slice(puntoIdx);
-      var pathArchivo = user.id + '/' + Date.now() + '-' + Math.random().toString(36).slice(2, 8) + ext;
-
-      flujo = window.recoSupabase.storage
-        .from(BUCKET)
-        .upload(pathArchivo, archivoSeleccionado, { cacheControl: '3600', upsert: false })
-        .then(function (subidaRes) {
-          if (subidaRes.error) {
-            return { error: subidaRes.error, _uploadFail: true };
-          }
-          var pub = window.recoSupabase.storage.from(BUCKET).getPublicUrl(pathArchivo);
-          var publicUrl = pub && pub.data ? pub.data.publicUrl : null;
-          if (!publicUrl) {
-            return { error: { message: 'No se pudo obtener la URL pública.' }, _uploadFail: true };
-          }
-          return insertarVideo(publicUrl);
+      comprobacionFinal = (archivoHashActual ? Promise.resolve(archivoHashActual) : calcularHashArchivo(archivoSeleccionado)).then(function (hash) {
+        archivoHashActual = hash;
+        return existeVideoConHash(hash).then(function (duplicado) {
+          if (duplicado) throw { _duplicado: true, _esLink: false };
+          return { archivoHash: hash };
         });
+      });
     }
 
-    flujo
-      .then(function (res) {
-        submitBtn.disabled = false;
-        submitBtn.textContent = tr('subirvideo.publicar', 'Enviar video');
+    comprobacionFinal.then(function (datos) {
+      var flujo;
 
-        if (res && res.error) {
-          if (res._uploadFail) {
-            mostrarStatus(statusEl, 'error', tr('subirvideo.statusErrorSubida', 'No se pudo subir el archivo. Intenta de nuevo.'));
-          } else {
-            mostrarStatus(statusEl, 'error', tr('subirvideo.statusError', 'No se pudo publicar tu video. Intenta de nuevo.'));
-          }
-          return;
+      if (activeTab === 'link') {
+        flujo = insertarVideo(link, datos.urlNormalizada, null);
+      } else {
+        submitBtn.textContent = tr('subirvideo.subiendo', 'Subiendo video…');
+        var ext = '';
+        var puntoIdx = archivoSeleccionado.name.lastIndexOf('.');
+        if (puntoIdx !== -1) ext = archivoSeleccionado.name.slice(puntoIdx);
+        var pathArchivo = user.id + '/' + Date.now() + '-' + Math.random().toString(36).slice(2, 8) + ext;
+
+        flujo = window.recoSupabase.storage
+          .from(BUCKET)
+          .upload(pathArchivo, archivoSeleccionado, { cacheControl: '3600', upsert: false })
+          .then(function (subidaRes) {
+            if (subidaRes.error) {
+              return { error: subidaRes.error, _uploadFail: true };
+            }
+            var pub = window.recoSupabase.storage.from(BUCKET).getPublicUrl(pathArchivo);
+            var publicUrl = pub && pub.data ? pub.data.publicUrl : null;
+            if (!publicUrl) {
+              return { error: { message: 'No se pudo obtener la URL pública.' }, _uploadFail: true };
+            }
+            return insertarVideo(publicUrl, null, datos.archivoHash);
+          });
+      }
+
+      return flujo;
+    }).then(function (res) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = tr('subirvideo.publicar', 'Enviar video');
+
+      if (res && res.error) {
+        if (res._uploadFail) {
+          mostrarStatus(statusEl, 'error', tr('subirvideo.statusErrorSubida', 'No se pudo subir el archivo. Intenta de nuevo.'));
+        } else {
+          mostrarStatus(statusEl, 'error', tr('subirvideo.statusError', 'No se pudo publicar tu video. Intenta de nuevo.'));
         }
+        return;
+      }
 
-        mostrarStatus(statusEl, 'ok', tr('subirvideo.statusOk', '¡Gracias! Tu video quedó en revisión y pronto estará en la biblioteca.'));
-        body.querySelector('#svTituloInput').value = '';
-        body.querySelector('#svDescInput').value = '';
-        body.querySelector('#svLinkInput').value = '';
-        quitarArchivo(body);
-        setTimeout(closeModal, 1600);
-      })
-      .catch(function () {
-        submitBtn.disabled = false;
-        submitBtn.textContent = tr('subirvideo.publicar', 'Enviar video');
-        mostrarStatus(statusEl, 'error', tr('subirvideo.statusErrorConexion', 'No se pudo conectar. Revisa tu internet.'));
-      });
+      mostrarStatus(statusEl, 'ok', tr('subirvideo.statusOk', '¡Gracias! Tu video quedó en revisión y pronto estará en la biblioteca.'));
+      body.querySelector('#svTituloInput').value = '';
+      body.querySelector('#svDescInput').value = '';
+      body.querySelector('#svLinkInput').value = '';
+      quitarArchivo(body);
+      setTimeout(closeModal, 1600);
+    }).catch(function (err) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = tr('subirvideo.publicar', 'Enviar video');
+
+      if (err && err._duplicado) {
+        if (err._esLink) {
+          linkEsDuplicado = true;
+          mostrarStatus(statusEl, 'error', tr('subirvideo.statusLinkDuplicado', 'Este video ya fue compartido antes. No puedes publicarlo de nuevo.'));
+        } else {
+          archivoEsDuplicado = true;
+          mostrarStatus(statusEl, 'error', tr('subirvideo.statusArchivoDuplicado', 'Este archivo ya fue subido antes. No puedes publicarlo de nuevo.'));
+        }
+        return;
+      }
+
+      mostrarStatus(statusEl, 'error', tr('subirvideo.statusErrorConexion', 'No se pudo conectar. Revisa tu internet.'));
+    });
   }
 
   function mostrarStatus(el, tipo, mensaje) {

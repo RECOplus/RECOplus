@@ -1,0 +1,429 @@
+/* ══════════════════════════════════════════════════════════════
+   GUIA-EFFECTS.CSS
+   Luces, glows y animaciones para guia.html — mismo lenguaje
+   visual que reciclar-effects.css / mapa-effects.css / index.css:
+   orbes de fondo flotantes, partículas de luz, barra de progreso,
+   glow pulsante en iconos y botones, sparkles, sheen en tarjetas,
+   anillos de luz en pasos numerados. 100% aditivo: no toca
+   guia-hub.css ni paginaguiastyle.css.
+
+   Cárgalo DESPUÉS de guia-hub.css y liquid-glass-guia.css:
+   <link rel="stylesheet" href="guia-effects.css" />
+═══════════════════════════════════════════════════════════════ */
+
+@keyframes ghxFloatSlow {
+  0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+  50%       { transform: translateY(-14px) translateX(6px) rotate(2deg); }
+}
+@keyframes ghxFloatSlow2 {
+  0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+  50%       { transform: translateY(12px) translateX(-8px) rotate(-2deg); }
+}
+@keyframes ghxGlowPulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50%       { opacity: 1; transform: scale(1.08); }
+}
+@keyframes ghxParticleDrift {
+  0%   { transform: translateY(0) translateX(0) scale(1);   opacity: 0.55; }
+  33%  { transform: translateY(-16px) translateX(6px) scale(1.08); }
+  66%  { transform: translateY(-6px) translateX(-4px) scale(0.95); }
+  100% { transform: translateY(-20px) translateX(3px) scale(1); opacity: 0; }
+}
+@keyframes ghxTwinkle {
+  0%, 100% { filter: brightness(0.85); }
+  50%       { filter: brightness(1.5); }
+}
+@keyframes ghxBorderFlow {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+@keyframes ghxSubtlePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(45,140,78,0); }
+  50%       { box-shadow: 0 0 0 9px rgba(45,140,78,0.16); }
+}
+@keyframes ghxRingPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(45,140,78,0.45); }
+  100% { box-shadow: 0 0 0 14px rgba(45,140,78,0); }
+}
+@keyframes ghxRingPulseBig {
+  0%   { box-shadow: 0 0 0 0 rgba(94,207,130,0.5); }
+  100% { box-shadow: 0 0 0 18px rgba(94,207,130,0); }
+}
+@keyframes ghxSparklePop {
+  0%, 100% { transform: scale(0); opacity: 0; }
+  50%      { transform: scale(1); opacity: 1; }
+}
+@keyframes ghxIconGlow {
+  0%, 100% { filter: drop-shadow(0 0 3px rgba(45,140,78,0.35)); }
+  50%       { filter: drop-shadow(0 0 9px rgba(45,140,78,0.65)); }
+}
+@keyframes ghxIconGlowLight {
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(126,232,154,0.45)); }
+  50%       { filter: drop-shadow(0 0 10px rgba(126,232,154,0.8)); }
+}
+@keyframes ghxShimmerText {
+  0%, 100% { text-shadow: 0 0 6px rgba(45,140,78,0.25); }
+  50%       { text-shadow: 0 0 14px rgba(45,140,78,0.55); }
+}
+
+/* ── 1. SCROLL PROGRESS BAR ── */
+#reco-progress-guia {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, #2d8c4e, #5ecf82, #a8f0c0, #5ecf82, #2d8c4e);
+  background-size: 250% auto;
+  animation: ghxBorderFlow 1.6s linear infinite;
+  z-index: 9999;
+  transition: width 0.1s linear;
+  box-shadow: 0 0 12px rgba(45,140,78,0.65), 0 0 4px rgba(94,207,130,0.8);
+  border-radius: 0 3px 3px 0;
+  pointer-events: none;
+}
+
+/* ── 2. HERO: orbes de fondo más vivos + partículas de luz ── */
+.gh-hero {
+  isolation: isolate;
+}
+.gh-hero::before {
+  animation: ghxFloatSlow 9s ease-in-out infinite;
+  box-shadow: 0 0 60px 20px rgba(94,207,130,0.06);
+}
+.gh-hero::after {
+  animation: ghxFloatSlow2 8s ease-in-out infinite;
+  animation-delay: 1.5s;
+  box-shadow: 0 0 60px 20px rgba(45,140,78,0.06);
+}
+
+.gh-lights {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: inherit;
+}
+.gh-lights .light-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(126,232,154,0.9), rgba(126,232,154,0.18) 60%, transparent 75%);
+  box-shadow: 0 0 10px 3px rgba(126,232,154,0.5);
+  animation: ghxParticleDrift linear infinite, ghxTwinkle ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ── 3. VIDEO CARDS: sheen animado en hover + glow del ícono play ── */
+.gh-video-card {
+  isolation: isolate;
+}
+.gh-video-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(120deg,
+    transparent 30%,
+    rgba(255,255,255,0.14) 48%,
+    rgba(255,255,255,0.22) 50%,
+    rgba(255,255,255,0.14) 52%,
+    transparent 70%);
+  background-size: 250% 250%;
+  background-position: -40% -40%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+.gh-video-card:hover::after {
+  opacity: 1;
+  animation: ghxSheenSlide 1.4s ease-in-out infinite;
+}
+@keyframes ghxSheenSlide {
+  0%   { background-position: -40% -40%; }
+  100% { background-position: 140% 140%; }
+}
+.gh-video-card:hover .gh-video-card__icon {
+  box-shadow: 0 0 18px 4px rgba(126,232,154,0.45);
+}
+.gh-video-card__badge {
+  transition: box-shadow 0.25s ease;
+}
+.gh-video-card:hover .gh-video-card__badge {
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+/* ── 4. SIDEBAR "Más videos": glow sutil permanente + hover ── */
+.gh-learn__side {
+  position: relative;
+  transition: box-shadow 0.3s ease;
+}
+.gh-learn__side:hover {
+  box-shadow: 0 0 0 1px rgba(126,232,154,0.25), 0 16px 36px rgba(0,0,0,0.30);
+}
+.gh-mini__thumb {
+  transition: box-shadow 0.25s ease, transform 0.25s cubic-bezier(.34,1.56,.64,1);
+}
+.gh-mini:hover .gh-mini__thumb {
+  box-shadow: 0 0 14px 3px rgba(126,232,154,0.4);
+  transform: scale(1.06);
+}
+.gh-learn__side-btn {
+  --glow-color: rgba(126, 232, 154, 0.55);
+  position: relative;
+  isolation: isolate;
+}
+.gh-learn__side-btn::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  box-shadow: 0 0 0 0 var(--glow-color);
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+}
+.gh-learn__side-btn:hover::after {
+  opacity: 1;
+  animation: ghxGlowBreathe 1.4s ease-in-out infinite;
+}
+@keyframes ghxGlowBreathe {
+  0%, 100% { box-shadow: 0 0 14px 3px var(--glow-color); }
+  50%      { box-shadow: 0 0 28px 7px var(--glow-color); }
+}
+
+/* ── 5. SWITCH (Reciclar / Donar): glow en el botón activo ── */
+.gh-switch__btn.active {
+  box-shadow: 0 0 16px rgba(45,140,78,0.35);
+  animation: ghxSubtlePulse 3s ease-in-out infinite;
+}
+
+/* ── 6. CHIPS de materiales/donación: sheen + glow al activo ── */
+.gh-chip {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.gh-chip::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(120deg, transparent 30%, rgba(126,232,154,0.35) 50%, transparent 70%);
+  background-size: 250% 250%;
+  background-position: 0% 0%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.gh-chip:hover::after {
+  opacity: 1;
+  animation: ghxSheenSlide 1.6s ease-in-out infinite;
+}
+.gh-chip.active {
+  box-shadow: 0 0 14px rgba(45,140,78,0.35);
+  animation: ghxSubtlePulse 3.2s ease-in-out infinite;
+}
+
+/* ── 7. PANEL de guía dinámico: glow permanente del icono circular ── */
+.gh-panel__visual-icon {
+  animation: ghxIconGlow 2.6s ease-in-out infinite;
+}
+.gh-panel:hover .gh-panel__visual-icon {
+  animation: ghxIconGlow 1.1s ease-in-out infinite;
+  transform: scale(1.06);
+  transition: transform 0.25s cubic-bezier(.34,1.56,.64,1);
+}
+.gh-panel,
+.gh-donate-panel {
+  transition: box-shadow 0.35s ease, transform 0.3s cubic-bezier(.4,0,.2,1);
+}
+.gh-panel:hover,
+.gh-donate-panel:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px rgba(20,60,35,0.16), 0 0 22px rgba(45,140,78,0.14);
+}
+html.dark .gh-panel:hover,
+html.dark .gh-donate-panel:hover {
+  box-shadow: 0 16px 40px rgba(0,0,0,0.40), 0 0 26px rgba(94,207,130,0.18);
+}
+
+/* Pasos numerados dentro del panel: anillo de luz al hover del item */
+.gh-steps li::before {
+  transition: box-shadow 0.25s ease;
+}
+.gh-steps li:hover::before {
+  box-shadow: 0 0 0 0 rgba(45,140,78,0.45);
+  animation: ghxRingPulse 1.2s ease-out infinite;
+}
+
+/* ── 8. PANEL "¿Qué puedes donar?": icono + pasos con glow ── */
+.gh-donate-panel__icon {
+  animation: ghxIconGlow 2.8s ease-in-out infinite;
+}
+.gh-donate-cat {
+  transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), box-shadow 0.25s ease;
+}
+.gh-donate-cat:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 14px rgba(45,140,78,0.25);
+}
+.gh-donate-cat:hover svg {
+  animation: ghxIconGlow 1s ease-in-out infinite;
+}
+.gh-donate-step__icon {
+  position: relative;
+  transition: transform 0.25s cubic-bezier(.34,1.56,.64,1);
+}
+.gh-donate-step:hover .gh-donate-step__icon {
+  transform: scale(1.12);
+  box-shadow: 0 0 0 0 rgba(45,140,78,0.45);
+  animation: ghxRingPulseBig 1.1s ease-out infinite;
+}
+.gh-donate-panel__cta {
+  --glow-color: rgba(126, 232, 154, 0.55);
+  position: relative;
+  isolation: isolate;
+}
+.gh-donate-panel__cta::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  box-shadow: 0 0 0 0 var(--glow-color);
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+}
+.gh-donate-panel__cta:hover::after {
+  opacity: 1;
+  animation: ghxGlowBreathe 1.3s ease-in-out infinite;
+}
+
+/* ── 9. INFO BOXES — ¿Sabías qué? / Impacto / Consejos ── */
+.gh-box {
+  transition: box-shadow 0.3s ease, transform 0.25s cubic-bezier(.4,0,.2,1);
+}
+.gh-box:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 32px rgba(20,60,35,0.14), 0 0 20px rgba(45,140,78,0.14);
+}
+html.dark .gh-box:hover {
+  box-shadow: 0 14px 32px rgba(0,0,0,0.35), 0 0 24px rgba(94,207,130,0.18);
+}
+.gh-box__icon {
+  animation: ghxIconGlow 2.6s ease-in-out infinite;
+}
+
+/* Stat items: número con shimmer + glow en hover */
+.gh-stats-grid .stat-number {
+  transition: text-shadow 0.3s ease;
+}
+.gh-stats-grid .stat-item:hover .stat-number {
+  animation: ghxShimmerText 1.6s ease-in-out infinite;
+}
+.gh-stats-grid .stat-item:hover {
+  box-shadow: 0 0 16px rgba(45,140,78,0.25);
+}
+
+/* Checklist: check icon con pop + glow al hover del item */
+.gh-checklist li svg {
+  transition: filter 0.25s ease, transform 0.2s cubic-bezier(.34,1.56,.64,1);
+}
+.gh-checklist li:hover svg {
+  filter: drop-shadow(0 0 6px rgba(45,140,78,0.55));
+  transform: scale(1.15);
+}
+
+/* ── 10. CTA FINAL: orbe pulsante + avatares con glow + sparkles en botón ── */
+.gh-cta::before {
+  animation: ghxGlowPulse 5s ease-in-out infinite;
+}
+.gh-cta__avatars img {
+  transition: box-shadow 0.25s ease, transform 0.2s ease;
+}
+.gh-cta__avatars img:hover {
+  box-shadow: 0 0 16px 4px rgba(126,232,154,0.5);
+  transform: translateY(-3px) scale(1.08);
+  z-index: 2;
+  position: relative;
+}
+
+.gh-cta__btn {
+  --glow-color: rgba(126, 232, 154, 0.6);
+  position: relative;
+  isolation: isolate;
+  overflow: visible !important;
+}
+.gh-cta__btn::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: inherit;
+  box-shadow: 0 0 0 0 var(--glow-color);
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+}
+.gh-cta__btn:hover::after {
+  opacity: 1;
+  animation: ghxGlowBreathe 1.3s ease-in-out infinite;
+}
+.gh-cta__btn:active::after {
+  animation: none;
+  box-shadow: 0 0 36px 10px var(--glow-color);
+}
+.gh-cta__btn .btn-sparkle {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.gh-cta__btn:hover .btn-sparkle {
+  opacity: 1;
+}
+.gh-cta__btn .btn-sparkle::before,
+.gh-cta__btn .btn-sparkle::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #2d8c4e;
+  box-shadow: 0 0 6px 1px #2d8c4e, 0 0 12px 3px var(--glow-color);
+}
+.gh-cta__btn .btn-sparkle::before { top: 20%; left: 14%; animation: ghxSparklePop 1.3s ease-in-out infinite; }
+.gh-cta__btn .btn-sparkle::after  { top: 65%; left: 82%; animation: ghxSparklePop 1.3s ease-in-out 0.55s infinite; }
+
+/* ── 11. REVEAL ON SCROLL (gh-reveal ya existe en guia-hub.css) ── */
+
+/* ── 12. RESPETAR REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  .gh-hero::before, .gh-hero::after,
+  .gh-video-card::after,
+  .gh-learn__side-btn::after,
+  .gh-switch__btn.active,
+  .gh-chip::after, .gh-chip.active,
+  .gh-panel__visual-icon,
+  .gh-steps li:hover::before,
+  .gh-donate-panel__icon,
+  .gh-donate-step:hover .gh-donate-step__icon,
+  .gh-donate-panel__cta::after,
+  .gh-box__icon,
+  .gh-stats-grid .stat-item:hover .stat-number,
+  .gh-cta::before,
+  .gh-cta__btn::after,
+  .gh-cta__btn .btn-sparkle::before,
+  .gh-cta__btn .btn-sparkle::after,
+  #reco-progress-guia {
+    animation: none !important;
+  }
+  .gh-lights { display: none; }
+  .gh-lights .light-dot { animation: none !important; }
+}

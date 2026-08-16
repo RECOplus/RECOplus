@@ -12,6 +12,8 @@
   <link rel="stylesheet" href="liquid-glass-guia.css" />
   <!-- Capa aditiva: corrige el fondo oscuro forzado de liquid-glass-guia.css en modo claro -->
   <link rel="stylesheet" href="liquid-glass-guia-light-fix.css" />
+  <!-- Capa aditiva: luces, glows y animaciones extra (mismo lenguaje visual que reciclar-effects.css) -->
+  <link rel="stylesheet" href="guia-effects.css" />
   <!-- Capa aditiva: botón + modal de comentarios (footer, cualquier página) -->
   <link rel="stylesheet" href="comentar-modal.css" />
   <!-- Capa aditiva: botón + modal de "Subir video" (comunidad) -->
@@ -582,8 +584,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
           <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="20" height="20"><path d="M10 2.3a5.2 5.2 0 00-2.8 9.6c.5.3.8.9.8 1.5v.3h4v-.3c0-.6.3-1.2.8-1.5A5.2 5.2 0 0010 2.3z"/><path d="M8.1 16.6h3.8M8.7 18.4h2.6"/></svg>
         </div>
         <h3 data-i18n="guia.info.title">¿Sabías qué?</h3>
-        <p data-i18n="guia.info.text1">Reciclar 1 tonelada de papel salva aproximadamente <strong>17 árboles</strong> y ahorra miles de litros de agua.</p>
-        <p data-i18n="guia.info.text2">Donar ropa que ya no usas puede ayudar a proteger el medio ambiente y a quienes más lo necesitan.</p>
+        <p class="gh-rotate-text" id="ghInfoRotate" data-gh-rotate-keys="guia.info.text1,guia.info.text2,guia.info.text3,guia.info.text4,guia.info.text5,guia.info.text6">Reciclar 1 tonelada de papel salva aproximadamente <strong>17 árboles</strong> y ahorra miles de litros de agua.</p>
       </div>
 
       <div class="gh-box gh-reveal">
@@ -617,7 +618,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
           <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="20" height="20"><path d="M4 10l4 4 8-9"/></svg>
         </div>
         <h3 data-i18n="guia.tips.title">Consejos rápidos</h3>
-        <ul class="gh-checklist">
+        <ul class="gh-checklist gh-rotate-list" id="ghTipsRotate" data-gh-rotate-keys="guia.tips.li1,guia.tips.li2,guia.tips.li3,guia.tips.li4,guia.tips.li5,guia.tips.li6,guia.tips.li7,guia.tips.li8,guia.tips.li9,guia.tips.li10" data-gh-rotate-visible="5">
           <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M4 10l4 4 8-9"/></svg><span data-i18n="guia.tips.li1">Reduce lo que consumes.</span></li>
           <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M4 10l4 4 8-9"/></svg><span data-i18n="guia.tips.li2">Reutiliza siempre que puedas.</span></li>
           <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M4 10l4 4 8-9"/></svg><span data-i18n="guia.tips.li3">Recicla correctamente.</span></li>
@@ -707,6 +708,10 @@ html.dark .dm-pill__sun { opacity: 0.38; }
   <script src="script.js"></script>
   <!-- Capa aditiva: lógica del nuevo hub de Guía (switch, chips, panel de pasos, reveal on scroll) -->
   <script src="guia-hub.js"></script>
+  <!-- Capa aditiva: rotación automática de ¿Sabías qué? y Consejos rápidos -->
+  <script src="guia-tips-rotate.js"></script>
+  <!-- Capa aditiva: luces, partículas y barra de progreso (mismo patrón que reciclar-effects.js) -->
+  <script src="guia-effects.js"></script>
   <script src="navbar-auth.js"></script>
   <script src="ajustes-modal.js?v=2"></script>
   <!-- Capa aditiva: pestaña "Mi empresa" en Ajustes -->

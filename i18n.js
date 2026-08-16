@@ -410,6 +410,10 @@ const translations = {
     "guia.info.title": "¿Sabías qué?",
     "guia.info.text1": "Reciclar 1 tonelada de papel salva aproximadamente <strong>17 árboles</strong> y ahorra miles de litros de agua.",
     "guia.info.text2": "Donar ropa que ya no usas puede ayudar a proteger el medio ambiente y a quienes más lo necesitan.",
+    "guia.info.text3": "Una botella de plástico puede tardar hasta <strong>450 años</strong> en descomponerse en el ambiente.",
+    "guia.info.text4": "Reciclar una lata de aluminio ahorra suficiente energía para tener un televisor encendido durante <strong>3 horas</strong>.",
+    "guia.info.text5": "El vidrio es 100% reciclable y se puede reutilizar <strong>de forma infinita</strong> sin perder calidad.",
+    "guia.info.text6": "Cada tonelada de plástico reciclado ahorra cerca de <strong>5,774 kWh</strong> de energía.",
 
     "guia.impact.title":    "Impacto de tu acción",
     "guia.impact.subtitle": "Cada acción cuenta y genera un impacto real.",
@@ -420,6 +424,11 @@ const translations = {
     "guia.tips.li3":   "Recicla correctamente.",
     "guia.tips.li4":   "Dona lo que ya no uses.",
     "guia.tips.li5":   "Inspira a más personas a actuar.",
+    "guia.tips.li6":   "Separa tus residuos desde casa.",
+    "guia.tips.li7":   "Lleva tu propia bolsa reutilizable.",
+    "guia.tips.li8":   "Evita los plásticos de un solo uso.",
+    "guia.tips.li9":   "Comparte lo que aprendes con tu familia.",
+    "guia.tips.li10":  "Elige productos con menos empaque.",
 
     "guia.cta.title":    "Juntos construimos un futuro mejor",
     "guia.cta.subtitle": "Infórmate, aprende y actúa hoy. El cambio empieza contigo.",
@@ -496,6 +505,10 @@ const translations = {
     "subirvideo.statusError":  "No se pudo publicar tu video. Intenta de nuevo.",
     "subirvideo.statusOk":     "¡Gracias! Tu video quedó en revisión y pronto estará en la biblioteca.",
     "subirvideo.statusErrorConexion": "No se pudo conectar. Revisa tu internet.",
+    "subirvideo.statusLinkDuplicado": "Este video ya fue compartido antes. No puedes publicarlo de nuevo.",
+    "subirvideo.statusArchivoDuplicado": "Este archivo ya fue subido antes. No puedes publicarlo de nuevo.",
+    "subirvideo.statusVerificandoLink": "Comprobando si este video ya existe…",
+    "subirvideo.statusVerificandoArchivo": "Comprobando si este archivo ya existe…",
 
     /* ── DONAR (página donar.html) ── */
     "donar.hero.title":       "Donar /<br>Solicitar ayuda",
@@ -2277,6 +2290,10 @@ const translations = {
     "guia.info.title": "Did you know?",
     "guia.info.text1": "Recycling 1 ton of paper saves approximately <strong>17 trees</strong> and thousands of liters of water.",
     "guia.info.text2": "Donating clothes you no longer use can help protect the environment and those who need it most.",
+    "guia.info.text3": "A plastic bottle can take up to <strong>450 years</strong> to break down in the environment.",
+    "guia.info.text4": "Recycling one aluminum can saves enough energy to power a TV for <strong>3 hours</strong>.",
+    "guia.info.text5": "Glass is 100% recyclable and can be reused <strong>endlessly</strong> without losing quality.",
+    "guia.info.text6": "Every ton of recycled plastic saves around <strong>5,774 kWh</strong> of energy.",
 
     "guia.impact.title":    "The impact of your action",
     "guia.impact.subtitle": "Every action counts and creates a real impact.",
@@ -2287,6 +2304,11 @@ const translations = {
     "guia.tips.li3":   "Recycle correctly.",
     "guia.tips.li4":   "Donate what you no longer use.",
     "guia.tips.li5":   "Inspire more people to take action.",
+    "guia.tips.li6":   "Sort your waste at home.",
+    "guia.tips.li7":   "Bring your own reusable bag.",
+    "guia.tips.li8":   "Avoid single-use plastics.",
+    "guia.tips.li9":   "Share what you learn with your family.",
+    "guia.tips.li10":  "Choose products with less packaging.",
 
     "guia.cta.title":    "Together we build a better future",
     "guia.cta.subtitle": "Learn, get informed and act today. Change starts with you.",
@@ -2363,6 +2385,10 @@ const translations = {
     "subirvideo.statusError":  "Couldn't publish your video. Try again.",
     "subirvideo.statusOk":     "Thanks! Your video is under review and will be in the library soon.",
     "subirvideo.statusErrorConexion": "Couldn't connect. Check your internet.",
+    "subirvideo.statusLinkDuplicado": "This video has already been shared before. You can't publish it again.",
+    "subirvideo.statusArchivoDuplicado": "This file has already been uploaded before. You can't publish it again.",
+    "subirvideo.statusVerificandoLink": "Checking if this video already exists…",
+    "subirvideo.statusVerificandoArchivo": "Checking if this file already exists…",
 
     /* ── DONAR (donar.html page) ── */
     "donar.hero.title":       "Donate /<br>Request help",
