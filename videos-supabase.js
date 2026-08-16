@@ -102,9 +102,12 @@
 
   /* ══════════════════════════════════════════════
      CLIC en una tarjeta de video de la comunidad:
-     abre el video original (link externo o archivo
-     en Storage) en una pestaña nueva. Se delega en
-     #vhGrid porque las tarjetas se generan dinámicamente.
+     abre el video original en el modal reproductor
+     del sitio (video-player-modal.js) en vez de una
+     pestaña nueva. Si ese modal no está cargado en la
+     página por algún motivo, cae de vuelta a
+     window.open como antes. Se delega en #vhGrid
+     porque las tarjetas se generan dinámicamente.
      ══════════════════════════════════════════════ */
   function wireClicksComunidad() {
     var grid = document.getElementById('vhGrid');
@@ -118,7 +121,12 @@
       var data = window.RECO_VIDEOS_DATA;
       if (!data || !data.videos) return;
       var video = data.videos.filter(function (v) { return v.id === id; })[0];
-      if (video && video.videoUrl) {
+      if (!video || !video.videoUrl) return;
+
+      if (typeof window.recoAbrirVideoModal === 'function') {
+        var titulo = video.titleKey ? tr(video.titleKey, video.titleFallback) : video.titleFallback;
+        window.recoAbrirVideoModal(video.videoUrl, titulo);
+      } else {
         window.open(video.videoUrl, '_blank', 'noopener');
       }
     });

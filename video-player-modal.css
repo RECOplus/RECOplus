@@ -1,0 +1,158 @@
+/* ══════════════════════════════════════════════════════════════
+   VIDEO-PLAYER-MODAL.CSS
+   Capa ADITIVA — modal ligero que reproduce un video (YouTube,
+   Vimeo o archivo directo .mp4/.webm) dentro del propio sitio,
+   sin salir a una pestaña nueva. Se abre al hacer clic en una
+   tarjeta de video de la comunidad (.vh-card--community) en
+   videos.html.
+
+   Reusa las mismas variables de tema que ajustes-modal.css /
+   comentar-modal.css (--bg-card, --text-primary, --accent, etc.)
+   inyectadas por darkmode.js, así que hereda modo claro/oscuro
+   automáticamente.
+
+   Requiere:
+     <link rel="stylesheet" href="video-player-modal.css">
+     <script src="video-player-modal.js"></script>
+═══════════════════════════════════════════════════════════════ */
+
+.vpm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: rgba(6, 14, 8, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s cubic-bezier(.4,0,.2,1);
+}
+html.dark .vpm-overlay {
+  background: rgba(0, 0, 0, 0.82);
+}
+.vpm-overlay[data-open="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.vpm-modal {
+  width: 100%;
+  max-width: 860px;
+  background: var(--bg-card, #0d1a10);
+  color: var(--text-primary, #1a2e1e);
+  border-radius: 18px;
+  border: 1px solid var(--border-card, #2a3f2e);
+  box-shadow: 0 28px 80px rgba(0,0,0,0.45), 0 8px 24px rgba(0,0,0,0.24);
+  overflow: hidden;
+  transform: translateY(16px) scale(0.97);
+  transition: transform 0.24s cubic-bezier(.2,.8,.3,1.05);
+}
+.vpm-overlay[data-open="true"] .vpm-modal {
+  transform: translateY(0) scale(1);
+}
+
+/* ── Header ── */
+.vpm-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px 14px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
+.vpm-modal__title {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 0.98rem;
+  color: var(--text-primary, #eafff1);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.vpm-modal__close {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255,255,255,0.08);
+  color: #eafff1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.18s, color 0.18s, transform 0.15s;
+}
+.vpm-modal__close:hover {
+  background: var(--accent, #2d8c4e);
+  transform: rotate(90deg);
+}
+
+/* ── Body: contenedor responsive 16:9 ── */
+.vpm-modal__body {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+.vpm-modal__body iframe,
+.vpm-modal__body video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+  background: #000;
+}
+
+/* Estado de carga / error */
+.vpm-modal__state {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: rgba(255,255,255,0.75);
+  font-size: 0.86rem;
+  text-align: center;
+  padding: 20px;
+}
+.vpm-modal__body[data-state="loading"] .vpm-modal__state--loading,
+.vpm-modal__body[data-state="error"] .vpm-modal__state--error {
+  display: flex;
+}
+
+.vpm-spinner {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.18);
+  border-top-color: #7ee89a;
+  animation: vpmSpin 0.8s linear infinite;
+}
+@keyframes vpmSpin { to { transform: rotate(360deg); } }
+
+.vpm-modal__state--error a {
+  color: #7ee89a;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  .vpm-overlay { padding: 0; }
+  .vpm-modal { max-width: 100%; border-radius: 0; height: 100%; display: flex; flex-direction: column; }
+  .vpm-modal__body { flex: 1; aspect-ratio: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vpm-overlay, .vpm-modal, .vpm-modal__close { transition: none; }
+}
