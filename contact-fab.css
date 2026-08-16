@@ -1,0 +1,139 @@
+/* ══════════════════════════════════════════════════════════════
+   CONTACT-FAB.CSS
+   Capa ADITIVA — barra flotante compacta con 3 botones (WhatsApp,
+   Llamar, Instagram) fija en la esquina inferior derecha de
+   CUALQUIER página del sitio. Inyectada por contact-fab.js, no
+   requiere tocar el HTML de cada página salvo el <link> + <script>.
+
+   Diseño: pill vertical de vidrio (mismo lenguaje "liquid glass"
+   que el resto del sitio) con 3 círculos de ícono. En reposo ocupa
+   muy poco espacio (48px de ancho); al pasar el cursor sobre un
+   botón, aparece una etiqueta de texto a la izquierda sin empujar
+   el layout (position: absolute, no reserva espacio).
+
+   Requiere en cualquier página:
+     <link rel="stylesheet" href="contact-fab.css">
+     <script src="contact-fab.js"></script>
+═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --fab-bg:        rgba(242, 250, 244, 0.72);
+  --fab-border:    rgba(168, 218, 181, 0.55);
+  --fab-shadow:    0 8px 28px rgba(30, 80, 40, 0.18), 0 2px 8px rgba(30, 80, 40, 0.10);
+  --fab-icon:      #2a4a34;
+  --fab-label-bg:  rgba(20, 30, 22, 0.92);
+  --fab-label-fg:  #fff;
+}
+html.dark {
+  --fab-bg:        rgba(14, 24, 17, 0.72);
+  --fab-border:    rgba(94, 207, 130, 0.24);
+  --fab-shadow:    0 8px 28px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.30);
+  --fab-icon:      #d4ead8;
+  --fab-label-bg:  rgba(240, 240, 240, 0.94);
+  --fab-label-fg:  #111;
+}
+
+.reco-fab {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 9990;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  padding: 9px;
+  border-radius: 999px;
+  background: var(--fab-bg);
+  border: 1px solid var(--fab-border);
+  box-shadow: var(--fab-shadow);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s, transform 0.25s;
+}
+
+.reco-fab__btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  color: #fff;
+  text-decoration: none;
+  transition: transform 0.2s cubic-bezier(.4,0,.2,1), box-shadow 0.2s;
+}
+.reco-fab__btn svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.reco-fab__btn:hover {
+  transform: scale(1.09);
+}
+.reco-fab__btn:active {
+  transform: scale(0.96);
+}
+
+/* ── Colores por red ── */
+.reco-fab__btn--whatsapp { background: #25d366; box-shadow: 0 3px 10px rgba(37,211,102,0.38); }
+.reco-fab__btn--whatsapp:hover { box-shadow: 0 5px 16px rgba(37,211,102,0.50); }
+
+.reco-fab__btn--call { background: linear-gradient(135deg, #2d8c4e 0%, #1a5c2a 100%); box-shadow: 0 3px 10px rgba(45,140,78,0.38); }
+.reco-fab__btn--call:hover { box-shadow: 0 5px 16px rgba(45,140,78,0.50); }
+
+.reco-fab__btn--instagram {
+  background: radial-gradient(circle at 30% 110%, #ffdb73 0%, #fd5949 30%, #d6249f 60%, #285AEB 90%);
+  box-shadow: 0 3px 10px rgba(214,36,159,0.35);
+}
+.reco-fab__btn--instagram:hover { box-shadow: 0 5px 16px rgba(214,36,159,0.48); }
+
+/* ── Etiqueta flotante al hacer hover (no reserva espacio: absolute) ── */
+.reco-fab__btn::after {
+  content: attr(data-label);
+  position: absolute;
+  right: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%) translateX(6px);
+  white-space: nowrap;
+  background: var(--fab-label-bg);
+  color: var(--fab-label-fg);
+  font-family: 'DM Sans', 'Arial', sans-serif;
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.16s ease, transform 0.16s ease;
+}
+.reco-fab__btn:hover::after,
+.reco-fab__btn:focus-visible::after {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+  transition-delay: 0.12s;
+}
+
+/* ── Responsive: un poco más compacta y respetando el "safe area" en móvil ── */
+@media (max-width: 640px) {
+  .reco-fab {
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    gap: 7px;
+    padding: 7px;
+  }
+  .reco-fab__btn { width: 38px; height: 38px; }
+  .reco-fab__btn svg { width: 18px; height: 18px; }
+  /* En pantallas chicas evitamos que la etiqueta se salga del viewport */
+  .reco-fab__btn::after { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reco-fab__btn,
+  .reco-fab__btn::after {
+    transition: none !important;
+  }
+}
