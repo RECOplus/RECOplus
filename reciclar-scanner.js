@@ -431,8 +431,19 @@
           '<div class="rc-scan-result__body">' +
             '<div class="rc-scan-result__title">' + tr("rscan.ia.limiteTitulo", "Alcanzaste tu límite diario de escaneos con IA") + '</div>' +
             '<p class="rc-scan-result__hint">' + tr("rscan.ia.limiteDesc", 'Tu plan ' + cuota.nombrePlan + ' incluye ' + cuota.limite + ' escaneos con IA al día. Mejora tu plan para escanear sin límites.', { plan: cuota.nombrePlan, limite: cuota.limite }) + '</p>' +
-            '<button type="button" class="rc-scan-ia-btn" data-abrir-suscripcion style="margin-top:8px">' + tr("rscan.ia.verPlanesBtn", "Ver planes →") + '</button>' +
+            '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">' +
+              '<button type="button" class="rc-scan-ia-btn" data-abrir-suscripcion>' + tr("rscan.ia.verPlanesBtn", "Ver planes →") + '</button>' +
+              '<button type="button" class="rc-scan-ia-btn" id="rcScanPagoSimuladoBtn">' + tr("rscan.ia.pagoSimuladoBtn", "🧪 Simular pago Premium") + '</button>' +
+            '</div>' +
           '</div>';
+        var pagoBtn = iaBox.querySelector('#rcScanPagoSimuladoBtn');
+        if (pagoBtn && window.recoPagoSimulado) {
+          pagoBtn.addEventListener('click', function () {
+            window.recoPagoSimulado.open({ motivo: 'Para escanear con IA sin límite diario necesitas el plan Premium.' });
+          });
+        } else if (pagoBtn) {
+          pagoBtn.hidden = true;
+        }
         return;
       }
       ejecutarConsultaIA(iaBox, iaBtn);

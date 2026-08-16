@@ -333,11 +333,15 @@ html.dark {
 .reco-tut-arrow--left   { right: -8px; border-bottom: none; border-left: none; }
 .reco-tut-tooltip--centered .reco-tut-arrow { display: none; }
 
-/* ── BOTÓN FLOTANTE (FAB) ── */
+/* ── BOTÓN FLOTANTE (FAB) ──
+   Se posiciona por encima de la barra de contactos (.reco-fab,
+   ver contact-fab.css: 3 botones de 42px + paddings/gaps ≈ 162px
+   de alto, arrancando en bottom:18px → termina en ~180px) para
+   que no se superpongan en la esquina inferior derecha. */
 .reco-tut-fab {
   position: fixed;
   right: 24px;
-  bottom: 24px;
+  bottom: 196px;
   width: 52px;
   height: 52px;
   border-radius: 50%;
@@ -396,7 +400,10 @@ html.dark {
   }
   .reco-tut-tooltip--centered.is-visible { transform: translateY(0); }
   .reco-tut-arrow { display: none !important; }
-  .reco-tut-fab { right: 16px; bottom: 16px; width: 48px; height: 48px; }
+  /* Se apila arriba de la barra de contactos (.reco-fab), que en
+     móvil mide ~38px × 3 botones + paddings/gaps ≈ 142px de alto,
+     arrancando en bottom:12px → termina en ~154px. */
+  .reco-tut-fab { right: 16px; bottom: 168px; width: 48px; height: 48px; }
 }
 
 /* ── ACCESIBILIDAD / MOVIMIENTO REDUCIDO ── */
@@ -457,7 +464,7 @@ html.dark {
 .reco-tut-fab-hint {
   position: fixed;
   right: 84px;
-  bottom: 38px;
+  bottom: 210px;
   background: var(--tut-bg);
   border: 1px solid var(--tut-border);
   color: var(--tut-text);

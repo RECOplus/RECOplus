@@ -676,7 +676,20 @@
     getSesion().then(function (session) {
       sesionActual = session;
       if (session && session.user) {
-        renderForm(body, session.user);
+        // Subir video es una función Premium: si el sistema de pago
+        // simulado está disponible en esta página, se chequea el plan
+        // antes de mostrar el formulario. Si no está cargado (página
+        // sin esos scripts), se deja pasar para no romper el flujo.
+        if (window.recoPagoSimulado) {
+          closeModal();
+          window.recoPagoSimulado.requierePremium(function () {
+            overlayEl.setAttribute('data-open', 'true');
+            document.body.style.overflow = 'hidden';
+            renderForm(body, session.user);
+          }, { motivo: 'Para subir videos a la comunidad necesitas el plan Premium.' });
+        } else {
+          renderForm(body, session.user);
+        }
       } else {
         renderLoginPrompt(body);
       }
