@@ -388,6 +388,13 @@ html.dark .dm-pill__sun { opacity: 0.38; }
        ════════════════════════════════════════════ -->
   <section class="vh vh-filters">
     <div class="vh-wrap">
+      <div class="vh-search">
+        <svg class="vh-search__icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" width="17" height="17"><circle cx="9" cy="9" r="6.5"/><path d="M18 18l-4.3-4.3"/></svg>
+        <input type="search" id="vhSearchInput" class="vh-search__input" data-i18n-placeholder="videos.search.placeholder" placeholder="Buscar videos…" autocomplete="off" />
+        <button type="button" id="vhSearchClear" class="vh-search__clear" data-i18n-aria="videos.search.limpiar" aria-label="Limpiar búsqueda">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" width="13" height="13"><path d="M5 5l10 10M15 5L5 15"/></svg>
+        </button>
+      </div>
       <div class="vh-filters__row">
         <div class="vh-chips" id="vhChips"></div>
         <button type="button" class="vh-upload-btn" data-subir-video-btn>

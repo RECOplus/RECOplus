@@ -441,6 +441,11 @@ const translations = {
     "videos.empty.title": "No hay videos en esta categoría",
     "videos.empty.desc":  "Prueba con otra categoría o vuelve a \"Todos\" para ver la biblioteca completa.",
 
+    "videos.search.placeholder":  "Buscar videos…",
+    "videos.search.limpiar":      "Limpiar búsqueda",
+    "videos.search.empty.title":  "No encontramos videos para “{q}”",
+    "videos.search.empty.desc":   "Prueba con otra palabra o borra la búsqueda para ver toda la categoría.",
+
     "videos.v4.desc":  "Aprende a clasificar cada material antes de llevarlo a un punto de reciclaje.",
     "videos.v5.desc":  "Sigue el viaje de tus residuos desde el contenedor hasta su transformación.",
     "videos.v6.desc":  "Dale una segunda vida a los objetos que ya no usas.",
@@ -2303,6 +2308,11 @@ const translations = {
     "videos.empty.title": "No videos in this category",
     "videos.empty.desc":  "Try another category or go back to \"All\" to see the full library.",
 
+    "videos.search.placeholder":  "Search videos…",
+    "videos.search.limpiar":      "Clear search",
+    "videos.search.empty.title":  "No videos found for “{q}”",
+    "videos.search.empty.desc":   "Try a different word or clear the search to see the full category.",
+
     "videos.v4.desc":  "Learn how to sort each material before taking it to a recycling point.",
     "videos.v5.desc":  "Follow your waste's journey from the bin to its transformation.",
     "videos.v6.desc":  "Give a second life to things you no longer use.",
@@ -3826,6 +3836,12 @@ function applyLang(lang) {
   document.querySelectorAll("[data-i18n-tooltip]").forEach(el => {
     const key = el.getAttribute("data-i18n-tooltip");
     if (dict[key]) el.setAttribute("data-tooltip", dict[key]);
+  });
+
+  // Atributos "placeholder" traducibles (inputs de búsqueda, formularios)
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+    const key = el.getAttribute("data-i18n-placeholder");
+    if (dict[key]) el.setAttribute("placeholder", dict[key]);
   });
 
   // Actualiza el atributo lang del documento

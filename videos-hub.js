@@ -28,11 +28,24 @@
 
   var DATA = window.RECO_VIDEOS_DATA || { categories: [], videos: [] };
   var currentFilter = "todos";
+  var currentSearch = "";
 
   function chipsWrap() { return document.getElementById("vhChips"); }
   function gridWrap() { return document.getElementById("vhGrid"); }
   function emptyState() { return document.getElementById("vhEmpty"); }
   function countLabel() { return document.getElementById("vhCount"); }
+  function searchInput() { return document.getElementById("vhSearchInput"); }
+  function searchClearBtn() { return document.getElementById("vhSearchClear"); }
+
+  // Quita acentos y pasa a minúsculas para que la búsqueda encuentre
+  // "donacion" aunque el texto real diga "Donación", etc.
+  function normalize(str) {
+    return (str || "")
+      .toString()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  }
 
   function buildChips() {
     var wrap = chipsWrap();
@@ -64,9 +77,20 @@
     return tr(cat.labelKey, cat.fallback);
   }
 
-  function getFiltered(filter) {
-    if (filter === "todos") return DATA.videos;
-    return DATA.videos.filter(function (v) { return v.category === filter; });
+  function getFiltered(filter, query) {
+    var list = (filter === "todos")
+      ? DATA.videos
+      : DATA.videos.filter(function (v) { return v.category === filter; });
+
+    var q = normalize(query);
+    if (!q) return list;
+
+    return list.filter(function (video) {
+      var title = video.titleKey ? tr(video.titleKey, video.titleFallback) : video.titleFallback;
+      var desc = video.descKey ? tr(video.descKey, video.descFallback) : video.descFallback;
+      var haystack = normalize(title) + " " + normalize(desc) + " " + normalize(catLabel(video.category));
+      return haystack.indexOf(q) !== -1;
+    });
   }
 
   function revealCards() {
@@ -88,7 +112,7 @@
   function renderGrid(highlightId) {
     var grid = gridWrap();
     if (!grid) return;
-    var list = getFiltered(currentFilter);
+    var list = getFiltered(currentFilter, currentSearch);
 
     grid.innerHTML = "";
     list.forEach(function (video) {
@@ -115,7 +139,21 @@
     });
 
     var empty = emptyState();
-    if (empty) empty.classList.toggle("is-visible", list.length === 0);
+    if (empty) {
+      empty.classList.toggle("is-visible", list.length === 0);
+      var isSearching = currentSearch.trim().length > 0;
+      var titleEl = empty.querySelector("strong");
+      var descEl = empty.querySelector("span");
+      if (titleEl && descEl) {
+        if (isSearching) {
+          titleEl.textContent = tr("videos.search.empty.title", "No encontramos videos para \u201c{q}\u201d").replace("{q}", currentSearch.trim());
+          descEl.textContent = tr("videos.search.empty.desc", "Prueba con otra palabra o borra la búsqueda para ver toda la categoría.");
+        } else {
+          titleEl.textContent = tr("videos.empty.title", "No hay videos en esta categoría");
+          descEl.textContent = tr("videos.empty.desc", "Prueba con otra categoría o vuelve a \"Todos\" para ver la biblioteca completa.");
+        }
+      }
+    }
 
     var count = countLabel();
     if (count) count.textContent = tr("videos.results.count", "Mostrando {n} videos").replace("{n}", list.length);
@@ -154,8 +192,61 @@
     }
   }
 
+  function updateClearBtnVisibility() {
+    var clearBtn = searchClearBtn();
+    if (clearBtn) clearBtn.classList.toggle("is-visible", currentSearch.trim().length > 0);
+  }
+
+  function setSearch(query, opts) {
+    currentSearch = query || "";
+    var input = searchInput();
+    if (input && input.value !== currentSearch) input.value = currentSearch;
+    updateClearBtnVisibility();
+    renderGrid();
+
+    if (!(opts && opts.skipHistory) && window.history && window.history.replaceState) {
+      var url = new URL(window.location.href);
+      if (currentSearch.trim()) url.searchParams.set("buscar", currentSearch.trim());
+      else url.searchParams.delete("buscar");
+      url.searchParams.delete("v");
+      window.history.replaceState({}, "", url);
+    }
+  }
+
+  function wireSearch() {
+    var input = searchInput();
+    var clearBtn = searchClearBtn();
+    if (!input || input._recoWired) return;
+    input._recoWired = true;
+
+    var debounceTimer;
+    input.addEventListener("input", function () {
+      window.clearTimeout(debounceTimer);
+      var value = input.value;
+      debounceTimer = window.setTimeout(function () { setSearch(value); }, 200);
+    });
+
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        window.clearTimeout(debounceTimer);
+        setSearch("");
+        input.blur();
+      }
+    });
+
+    if (clearBtn) {
+      clearBtn.addEventListener("click", function () {
+        window.clearTimeout(debounceTimer);
+        setSearch("");
+        input.focus();
+      });
+    }
+  }
+
   function refreshOnLangChange() {
     buildChips();
+    var input = searchInput();
+    if (input) input.placeholder = tr("videos.search.placeholder", "Buscar videos…");
     renderGrid();
   }
   document.addEventListener("reco:langchange", refreshOnLangChange);
@@ -173,8 +264,17 @@
     var params = new URLSearchParams(window.location.search);
     var videoId = params.get("v");
     var catParam = params.get("cat");
+    var searchParam = params.get("buscar");
 
     buildChips();
+    wireSearch();
+
+    if (searchParam) {
+      currentSearch = searchParam;
+      var input = searchInput();
+      if (input) input.value = searchParam;
+      updateClearBtnVisibility();
+    }
 
     if (videoId) {
       var video = DATA.videos.filter(function (v) { return v.id === videoId; })[0];

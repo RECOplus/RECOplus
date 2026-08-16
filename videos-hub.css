@@ -81,6 +81,73 @@ html:not(.dark) .vh-hero {
 }
 
 /* ─────────────────────────────────────────────
+   BARRA DE BÚSQUEDA
+   ───────────────────────────────────────────── */
+.vh-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 420px;
+  margin-bottom: 16px;
+}
+.vh-search__icon {
+  position: absolute;
+  left: 14px;
+  color: var(--text-secondary, #4a6b52);
+  opacity: 0.7;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+.vh-search__input {
+  width: 100%;
+  font-family: 'DM Sans', 'Nunito', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-primary, #1a2e1e);
+  background: var(--bg-card, #fff);
+  border: 1.5px solid var(--border-card, #d4eeda);
+  border-radius: 999px;
+  padding: 11px 40px 11px 40px;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.vh-search__input::placeholder { color: var(--text-muted, #8aab90); font-weight: 500; }
+.vh-search__input:focus {
+  outline: none;
+  border-color: var(--accent, #2d8c4e);
+  box-shadow: 0 0 0 3px rgba(45,140,78,0.14);
+}
+/* Oculta el botón "x" nativo de type=search en WebKit; usamos el propio */
+.vh-search__input::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+
+.vh-search__clear {
+  position: absolute;
+  right: 8px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg-muted, #e8f5ec);
+  color: var(--text-secondary, #4a6b52);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.8);
+  transition: opacity 0.16s, transform 0.16s, background 0.16s, color 0.16s;
+}
+.vh-search__clear.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+.vh-search__clear:hover {
+  background: var(--accent, #2d8c4e);
+  color: #fff;
+}
+
+/* ─────────────────────────────────────────────
    FILTROS
    ───────────────────────────────────────────── */
 .vh-filters {
@@ -273,6 +340,7 @@ html.dark .vh-card:hover { box-shadow: 0 16px 36px rgba(0,0,0,0.4); }
 @media (max-width: 640px) {
   .vh-hero { padding: 124px 0 30px; }
   .vh-grid { grid-template-columns: 1fr; }
+  .vh-search { max-width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
