@@ -13,6 +13,7 @@
 .nav-user {
   position: relative;
   display: inline-flex;
+  min-width: 0;
 }
 
 .nav-user__btn {
@@ -33,6 +34,7 @@
   font-weight: 600;
   color: var(--nav-lang-color);
   isolation: isolate;
+  min-width: 0;
   transition: background 0.18s, border-color 0.25s, box-shadow 0.3s;
 }
 .nav-user__btn::before {
@@ -85,6 +87,7 @@
 }
 
 .nav-user__name {
+  min-width: 0;
   max-width: 110px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -215,6 +218,17 @@
 .nav-user__menu button.nav-user__logout:hover {
   background: rgba(220, 70, 70, 0.10);
   color: #d95c5c;
+}
+
+/* ── RESPONSIVE: en anchos intermedios (navbar completa aún visible
+   pero con menos espacio disponible) reducimos el máximo del nombre
+   para que el chip de usuario nunca empuje el resto del navbar fuera
+   del pill cuando el nombre o el email (fallback) son largos. ── */
+@media (max-width: 1180px) {
+  .nav-user__name { max-width: 90px; }
+}
+@media (max-width: 1000px) {
+  .nav-user__name { max-width: 60px; }
 }
 
 /* ── RESPONSIVE: en móvil, donde .bubble-nav__links ya se oculta,
