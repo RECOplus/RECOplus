@@ -6,10 +6,10 @@
    requiere tocar el HTML de cada página salvo el <link> + <script>.
 
    Diseño: pill vertical de vidrio (mismo lenguaje "liquid glass"
-   que el resto del sitio) con 3 círculos de ícono. En reposo ocupa
-   muy poco espacio (48px de ancho); al pasar el cursor sobre un
-   botón, aparece una etiqueta de texto a la izquierda sin empujar
-   el layout (position: absolute, no reserva espacio).
+   que el resto del sitio) con el botón de WhatsApp. En reposo ocupa
+   muy poco espacio; al pasar el cursor, aparece una etiqueta de
+   texto a la izquierda sin empujar el layout (position: absolute,
+   no reserva espacio).
 
    Requiere en cualquier página:
      <link rel="stylesheet" href="contact-fab.css">
@@ -81,15 +81,6 @@ html.dark {
 /* ── Colores por red ── */
 .reco-fab__btn--whatsapp { background: #25d366; box-shadow: 0 3px 10px rgba(37,211,102,0.38); }
 .reco-fab__btn--whatsapp:hover { box-shadow: 0 5px 16px rgba(37,211,102,0.50); }
-
-.reco-fab__btn--call { background: linear-gradient(135deg, #2d8c4e 0%, #1a5c2a 100%); box-shadow: 0 3px 10px rgba(45,140,78,0.38); }
-.reco-fab__btn--call:hover { box-shadow: 0 5px 16px rgba(45,140,78,0.50); }
-
-.reco-fab__btn--instagram {
-  background: radial-gradient(circle at 30% 110%, #ffdb73 0%, #fd5949 30%, #d6249f 60%, #285AEB 90%);
-  box-shadow: 0 3px 10px rgba(214,36,159,0.35);
-}
-.reco-fab__btn--instagram:hover { box-shadow: 0 5px 16px rgba(214,36,159,0.48); }
 
 /* ── Etiqueta flotante al hacer hover (no reserva espacio: absolute) ── */
 .reco-fab__btn::after {
