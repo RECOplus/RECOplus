@@ -16,6 +16,24 @@
   min-width: 0;
 }
 
+/* ── FIX: evita que el chip de usuario empuje el navbar fuera de su
+   borde redondeado. .bubble-nav__actions (en navbar.css) tiene
+   flex-shrink:0 — todo ese bloque nunca se encoge por sí solo. Con
+   ventanas angostas o nombres/cuentas que no llegan a activar el
+   ellipsis del nombre, el CHIP COMPLETO puede quedar parcialmente
+   fuera del pill. Cuando hay sesión activa dejamos que
+   .bubble-nav__actions sí se encoja, pero fijamos el tamaño de los
+   pills de tema/idioma para que sea el chip de cuenta —ya truncable
+   vía .nav-user__name— el que absorbe la falta de espacio. ── */
+.bubble-nav:has(.nav-user) .bubble-nav__actions {
+  flex-shrink: 1;
+  min-width: 0;
+}
+.bubble-nav:has(.nav-user) .dm-pill,
+.bubble-nav:has(.nav-user) .lang-pill {
+  flex-shrink: 0;
+}
+
 .nav-user__btn {
   --glow-color: rgba(94, 207, 130, 0.4);
   position: relative;
