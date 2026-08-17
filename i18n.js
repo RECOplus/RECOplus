@@ -524,8 +524,8 @@ const translations = {
     "subirvideo.statusArchivoDuplicado": "Este archivo ya fue subido antes. No puedes publicarlo de nuevo.",
     "subirvideo.statusVerificandoLink": "Comprobando si este video ya existe…",
     "subirvideo.statusVerificandoArchivo": "Comprobando si este archivo ya existe…",
-    "subirvideo.verificando": "Verificando tu cuenta y tu plan…",
-    "subirvideo.errorVerificacion": "No se pudo verificar tu plan. Revisa tu conexión e intenta de nuevo.",
+    "subirvideo.verificando": "Verificando tu cuenta…",
+    "subirvideo.errorVerificacion": "No se pudo verificar tu cuenta. Revisa tu conexión e intenta de nuevo.",
 
     /* ── DONAR (página donar.html) ── */
     "donar.hero.title":       "Donar /<br>Solicitar ayuda",
@@ -2610,8 +2610,8 @@ const translations = {
     "subirvideo.statusArchivoDuplicado": "This file has already been uploaded before. You can't publish it again.",
     "subirvideo.statusVerificandoLink": "Checking if this video already exists…",
     "subirvideo.statusVerificandoArchivo": "Checking if this file already exists…",
-    "subirvideo.verificando": "Verifying your account and plan…",
-    "subirvideo.errorVerificacion": "Couldn't verify your plan. Check your connection and try again.",
+    "subirvideo.verificando": "Verifying your account…",
+    "subirvideo.errorVerificacion": "Couldn't verify your account. Check your connection and try again.",
 
     /* ── DONAR (donar.html page) ── */
     "donar.hero.title":       "Donate /<br>Request help",

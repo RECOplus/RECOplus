@@ -129,11 +129,10 @@
   }
 
   /* ══════════════════════════════════════════
-     ESTADO: VERIFICANDO SESIÓN / PLAN
+     ESTADO: VERIFICANDO SESIÓN
      ────────────────────────
      Se muestra apenas se abre el modal, mientras se confirma la
-     sesión y (si aplica) se consulta si el plan es Premium. Antes
-     este hueco quedaba en blanco — el modal se cerraba y no
+     sesión. Antes este hueco quedaba en blanco — el modal se cerraba y no
      volvía a abrir hasta que la consulta a Supabase terminaba —
      lo que en conexiones lentas se sentía como que la página se
      había congelado.
@@ -142,7 +141,7 @@
     body.innerHTML =
       '<div class="sv-login-prompt">' +
         '<div class="sv-login-prompt__icon sv-spin">' + ICON_UPLOAD_SMALL + '</div>' +
-        '<p data-i18n="subirvideo.verificando">Verificando tu cuenta y tu plan…</p>' +
+        '<p data-i18n="subirvideo.verificando">Verificando tu cuenta…</p>' +
       '</div>';
   }
 
@@ -150,7 +149,7 @@
     body.innerHTML =
       '<div class="sv-login-prompt">' +
         '<div class="sv-login-prompt__icon">' + ICON_LOCK + '</div>' +
-        '<p data-i18n="subirvideo.errorVerificacion">No se pudo verificar tu plan. Revisa tu conexión e intenta de nuevo.</p>' +
+        '<p data-i18n="subirvideo.errorVerificacion">No se pudo verificar tu cuenta. Revisa tu conexión e intenta de nuevo.</p>' +
       '</div>';
   }
 
