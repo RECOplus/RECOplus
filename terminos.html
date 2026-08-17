@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <script src="darkmode.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Términos y Condiciones | RECO+</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="legal-pages.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Capa aditiva: el CTA "Únete" ahora es <a>, no <button> -->
+  <link rel="stylesheet" href="nav-cta-link-fix.css">
+  <!-- Capa aditiva: chip de usuario con foto/avatar + menú cuando hay sesión -->
+  <link rel="stylesheet" href="navbar-auth.css">
+  <!-- Capa aditiva: campana de notificaciones -->
+  <link rel="stylesheet" href="notificaciones.css">
+  <!-- Capa aditiva: modal de ajustes de cuenta -->
+  <link rel="stylesheet" href="ajustes-modal.css">
+  <!-- Capa aditiva: pestaña "Mi empresa" en Ajustes (solo si el usuario tiene empresa registrada) -->
+  <link rel="stylesheet" href="ajustes-empresa.css">
+  <!-- Capa aditiva: sistema de suscripción (planes Gratis/Básico/Premium) -->
+  <link rel="stylesheet" href="suscripcion-modal.css">
+  <!-- Capa aditiva: efecto liquid glass en el modal de ajustes -->
+  <link rel="stylesheet" href="ajustes-liquid-glass.css">
+  <!-- Capa aditiva: botón + modal de comentarios (footer, cualquier página) -->
+  <link rel="stylesheet" href="comentar-modal.css">
+  <link rel="stylesheet" href="contact-fab.css">
+</head>
+<body>
+
+  <!-- ── BUBBLE NAVBAR ── -->
+  <div class="bubble-nav-wrapper">
+    <header class="bubble-nav">
+      <div class="bubble-nav__logo">
+        <img src="img/logo png nombre.png" alt="RECO+">
+      </div>
+
+      <nav class="bubble-nav__links">
+        <a href="https://recoplus.github.io/rEcOPlus-Final/index.html" data-i18n-tooltip="nav.inicio.desc">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M3 9.5L10 3l7 6.5V17a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M7 18v-6h6v6"/></svg>
+          <span data-i18n="nav.inicio">Inicio</span>
+        </a>
+        <a href="https://r-ec-o-plus-final.vercel.app/reciclar.html" data-i18n-tooltip="nav.reciclar.desc">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M10 2a6 6 0 016 6c0 4-6 10-6 10S4 12 4 8a6 6 0 016-6z"/><circle cx="10" cy="8" r="2"/></svg>
+          <span data-i18n="nav.reciclar">Reciclar</span>
+        </a>
+        <a href="https://recoplus.github.io/rEcOPlus-Final/donar.html" data-i18n-tooltip="nav.donar.desc">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M3 11c0-2.5 2-4 4-3l3 1.5 5-1.5c1.2-.2 2.5.6 2.5 2 0 1.2-.8 2-2 2l-3.5.5"/><path d="M3 11l2 5h3l7-4"/></svg>
+          <span data-i18n="nav.donar">Donar</span>
+        </a>
+        <a href="https://r-ec-o-plus-final.vercel.app/guia.html" data-i18n-tooltip="nav.guia.desc">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><rect x="4" y="2" width="12" height="16" rx="1.5"/><path d="M4 5h12M7 2v16"/></svg>
+          <span data-i18n="nav.guia">Guía</span>
+        </a>
+        <a href="https://r-ec-o-plus-final.vercel.app/scanner-demo.html" data-i18n-tooltip="nav.scanner.desc">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.2l1.15 3.15L14.3 7.5l-3.15 1.15L10 11.8l-1.15-3.15L5.7 7.5l3.15-1.15z"/><path d="M15.8 12l.55 1.5 1.5.55-1.5.55-.55 1.5-.55-1.5-1.5-.55 1.5-.55z"/></svg>
+          <span data-i18n="nav.scanner">Escáner</span>
+        </a>
+        <a href="https://recoplus.github.io/rEcOPlus-Final/mapa.html" data-i18n-tooltip="nav.mapa.desc">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4L3 5.5v10.5l4-1.5 6 1.5 4-1.5V4l-4 1.5-6-1.5z"/><path d="M7 4v10.5M13 5.5V16"/></svg>
+          <span data-i18n="nav.mapa">Mapa</span>
+        </a>
+        <a href="https://recoplus.github.io/rEcOPlus-Final/alianzas.html" data-i18n-tooltip="nav.alianzas.desc">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><circle cx="7" cy="10" r="4"/><circle cx="13" cy="10" r="4"/></svg>
+          <span data-i18n="nav.alianzas">Alianzas</span>
+        </a>
+      </nav>
+
+      <div class="bubble-nav__actions navbar__spacer">
+        <div class="dm-pill" id="darkModeToggle" role="button" title="Cambiar modo claro/oscuro" aria-label="Cambiar modo claro/oscuro" data-i18n-title="nav.darkmode.toggle" data-i18n-aria="nav.darkmode.toggle">
+          <span class="dm-pill__btn dm-pill__sun dm-sun" id="dmSunBtn">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" width="16" height="16">
+              <circle cx="10" cy="10" r="3.5"/>
+              <line x1="10" y1="2" x2="10" y2="4.5"/><line x1="10" y1="15.5" x2="10" y2="18"/>
+              <line x1="2" y1="10" x2="4.5" y2="10"/><line x1="15.5" y1="10" x2="18" y2="10"/>
+              <line x1="4.4" y1="4.4" x2="6.2" y2="6.2"/><line x1="13.8" y1="13.8" x2="15.6" y2="15.6"/>
+              <line x1="15.6" y1="4.4" x2="13.8" y2="6.2"/><line x1="6.2" y1="13.8" x2="4.4" y2="15.6"/>
+            </svg>
+          </span>
+          <span class="dm-pill__btn dm-pill__moon dm-moon" id="dmMoonBtn">
+            <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15">
+              <path d="M17.3 13.3A8 8 0 016.7 2.7a7 7 0 100 14.6 7.9 7.9 0 0010.6-4z"/>
+            </svg>
+          </span>
+        </div>
+
+        <button class="lang-pill" onclick="toggleLang()" aria-label="Cambiar idioma" data-i18n-aria="nav.lang.toggle" data-current="es">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15">
+            <circle cx="10" cy="10" r="8"/>
+            <ellipse cx="10" cy="10" rx="3.5" ry="8"/>
+            <line x1="2" y1="10" x2="18" y2="10"/>
+          </svg>
+          <span class="lang-pill__label lang-label-es">ES</span>
+          <span class="lang-pill__label lang-label-en" style="display:none">EN</span>
+          <svg class="lang-pill__chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" width="11" height="11" stroke-linecap="round">
+            <path d="M5 7l5 5 5-5"/>
+          </svg>
+        </button>
+
+        <a href="https://recoplus.github.io/rEcOPlus-Final/login.html" class="bubble-nav__cta" data-i18n="nav.unete">
+          <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z"/></svg>
+          Únete
+        </a>
+      </div>
+    </header>
+  </div>
+
+  <!-- ========== HERO ========== -->
+  <section class="legal-hero">
+    <div class="eyebrow-legal">Legal</div>
+    <h1>Términos y Condiciones</h1>
+    <p class="legal-updated">Última actualización: 16 de agosto de 2026</p>
+    <p class="legal-intro">Estas condiciones regulan el uso de la plataforma RECO+ (sitio web, escáner de materiales, mapa, donaciones, alianzas empresariales y demás funciones). Al crear una cuenta o usar RECO+ aceptas estos términos.</p>
+  </section>
+
+  <div class="legal-wrap">
+
+    <!-- ========== TABLA DE CONTENIDOS ========== -->
+    <aside class="legal-toc">
+      <h4>Contenido</h4>
+      <ol>
+        <li><a href="#objeto">1. Aceptación de los términos</a></li>
+        <li><a href="#quienes-somos">2. Quiénes somos</a></li>
+        <li><a href="#descripcion">3. Descripción del servicio</a></li>
+        <li><a href="#registro">4. Registro y cuentas</a></li>
+        <li><a href="#empresas">5. Cuentas de empresa / aliado</a></li>
+        <li><a href="#escaner">6. Escáner de materiales con IA</a></li>
+        <li><a href="#contenido">7. Contenido generado por usuarios</a></li>
+        <li><a href="#propiedad">8. Propiedad intelectual</a></li>
+        <li><a href="#planes">9. Planes y suscripciones</a></li>
+        <li><a href="#conducta">10. Conductas prohibidas</a></li>
+        <li><a href="#responsabilidad">11. Limitación de responsabilidad</a></li>
+        <li><a href="#suspension">12. Suspensión y terminación</a></li>
+        <li><a href="#modificaciones">13. Modificaciones</a></li>
+        <li><a href="#ley">14. Ley aplicable</a></li>
+        <li><a href="#contacto">15. Contacto</a></li>
+      </ol>
+    </aside>
+
+    <!-- ========== CONTENIDO ========== -->
+    <main class="legal-content">
+
+      <div class="legal-callout legal-callout--notice">
+        <strong>Aviso:</strong> este documento es una versión base preparada para RECO+ y no constituye asesoría legal. Antes de publicarlo de forma definitiva, te recomendamos que un abogado en Panamá lo revise y lo adapte a la situación real de la empresa.
+      </div>
+
+      <section id="objeto">
+        <h2><span class="legal-num">1.</span> Aceptación de los términos</h2>
+        <p>Estos Términos y Condiciones ("Términos") constituyen un acuerdo legal entre la persona usuaria ("tú", "usuario") y RECO+ ("RECO+", "nosotros"), y regulan el acceso y uso del sitio web, aplicación y demás servicios ofrecidos bajo la marca RECO+ (en conjunto, la "Plataforma").</p>
+        <p>Al registrarte, acceder o usar la Plataforma, confirmas que has leído, entendido y aceptado estos Términos, así como nuestra <a href="privacidad.html">Política de Privacidad</a>. Si no estás de acuerdo con alguna parte de estos Términos, no debes usar la Plataforma.</p>
+      </section>
+
+      <section id="quienes-somos">
+        <h2><span class="legal-num">2.</span> Quiénes somos</h2>
+        <p>RECO+ es una plataforma comunitaria de reciclaje y donación que opera desde Panamá, con el objetivo de conectar a personas y empresas para facilitar el reciclaje, la donación de artículos y la educación ambiental.</p>
+        <p>Para cualquier consulta relacionada con estos Términos puedes escribirnos a <a href="mailto:soporte.recoplus@gmail.com">soporte.recoplus@gmail.com</a>.</p>
+      </section>
+
+      <section id="descripcion">
+        <h2><span class="legal-num">3.</span> Descripción del servicio</h2>
+        <p>RECO+ ofrece, entre otras, las siguientes funciones:</p>
+        <ul>
+          <li><strong>Mapa de puntos de reciclaje y donación:</strong> ubicaciones sugeridas por la propia comunidad y por aliados.</li>
+          <li><strong>Escáner de materiales con inteligencia artificial:</strong> identifica el tipo de material a partir de una foto y sugiere cómo reciclarlo.</li>
+          <li><strong>Donaciones y solicitudes de ayuda:</strong> publicación de artículos para donar y solicitudes de ayuda entre usuarios.</li>
+          <li><strong>Alianzas empresariales:</strong> registro de empresas y organizaciones aliadas que colaboran con la comunidad.</li>
+          <li><strong>Guía educativa y videos de la comunidad:</strong> contenido informativo sobre reciclaje y sostenibilidad, incluyendo videos que suben las propias personas usuarias.</li>
+          <li><strong>Planes de suscripción:</strong> niveles Gratis, Básico y Premium con distintas funciones (ver sección 9).</li>
+        </ul>
+        <p>RECO+ puede agregar, modificar o retirar funciones de la Plataforma en cualquier momento, sin que ello genere derecho a compensación alguna.</p>
+      </section>
+
+      <section id="registro">
+        <h2><span class="legal-num">4.</span> Registro y cuentas de usuario</h2>
+        <p>Para usar ciertas funciones de RECO+ debes crear una cuenta mediante correo y contraseña, o iniciando sesión con tu cuenta de Google o Apple.</p>
+        <ul>
+          <li>Debes proporcionar información veraz y mantenerla actualizada.</li>
+          <li>Eres responsable de la confidencialidad de tu contraseña y de toda actividad realizada desde tu cuenta.</li>
+          <li>El uso de la Plataforma está dirigido a personas mayores de 18 años. Si eres menor de edad, necesitas la supervisión y autorización de un padre, madre o tutor legal.</li>
+          <li>Debes notificarnos de inmediato si detectas un uso no autorizado de tu cuenta.</li>
+        </ul>
+      </section>
+
+      <section id="empresas">
+        <h2><span class="legal-num">5.</span> Cuentas de empresa / aliado</h2>
+        <p>Las empresas u organizaciones que deseen registrarse como aliadas deben completar el proceso de registro disponible en la sección de Alianzas, que incluye la creación de una cuenta, la carga de información y material gráfico (logo, fotos) y la aceptación de estos Términos en nombre de la empresa.</p>
+        <p>RECO+ puede verificar, aprobar, solicitar información adicional o rechazar el registro de una empresa a su criterio, especialmente cuando la información proporcionada sea incompleta, inexacta o contraria a estos Términos.</p>
+      </section>
+
+      <section id="escaner">
+        <h2><span class="legal-num">6.</span> Escáner de materiales con inteligencia artificial</h2>
+        <p>El escáner de materiales utiliza modelos de inteligencia artificial para analizar imágenes y sugerir el tipo de material y su forma de reciclaje o disposición.</p>
+        <div class="legal-callout">
+          Los resultados del escáner son <strong>orientativos</strong> y pueden contener errores. RECO+ no garantiza la exactitud de la clasificación y no se hace responsable por decisiones tomadas exclusivamente con base en el resultado del escáner. Ante dudas sobre materiales peligrosos, especiales o de manejo delicado, consulta siempre a la autoridad o centro de acopio correspondiente.
+        </div>
+      </section>
+
+      <section id="contenido">
+        <h2><span class="legal-num">7.</span> Contenido generado por usuarios</h2>
+        <p>RECO+ permite publicar contenido generado por la comunidad, incluyendo puntos de reciclaje sugeridos, publicaciones de donación, comentarios y videos.</p>
+        <ul>
+          <li>Eres responsable del contenido que publicas y garantizas que tienes derecho a compartirlo.</li>
+          <li>No está permitido publicar contenido falso, engañoso, ofensivo, discriminatorio, violento o que infrinja derechos de terceros.</li>
+          <li>Los videos subidos a la Plataforma pasan por un proceso de moderación, que puede incluir revisión automática mediante inteligencia artificial y, en los casos que lo requieran, revisión manual antes de su publicación definitiva.</li>
+          <li>RECO+ puede eliminar, ocultar o rechazar cualquier contenido que incumpla estos Términos, sin previo aviso.</li>
+        </ul>
+      </section>
+
+      <section id="propiedad">
+        <h2><span class="legal-num">8.</span> Propiedad intelectual</h2>
+        <p>La marca RECO+, el diseño, los textos, gráficos y el software de la Plataforma son propiedad de RECO+ o de sus licenciantes, y están protegidos por las leyes de propiedad intelectual aplicables.</p>
+        <p>El contenido que tú publicas sigue siendo tuyo; al subirlo a RECO+ nos otorgas una licencia no exclusiva, mundial y gratuita para almacenarlo, mostrarlo y distribuirlo dentro de la Plataforma con el fin de operar el servicio.</p>
+      </section>
+
+      <section id="planes">
+        <h2><span class="legal-num">9.</span> Planes y suscripciones</h2>
+        <p>RECO+ ofrece distintos niveles de plan (Gratis, Básico y Premium) con diferentes funciones y límites de uso.</p>
+        <div class="legal-callout legal-callout--notice">
+          <strong>Aviso:</strong> actualmente el proceso de pago de los planes de suscripción es una <strong>simulación (modo demo)</strong> y no procesa cobros reales. Cuando RECO+ habilite pagos reales, esta sección se actualizará para describir el proveedor de pagos, condiciones de facturación, renovación y cancelación.
+        </div>
+      </section>
+
+      <section id="conducta">
+        <h2><span class="legal-num">10.</span> Conductas prohibidas</h2>
+        <p>Al usar RECO+ te comprometes a no:</p>
+        <ul>
+          <li>Suplantar la identidad de otra persona o empresa.</li>
+          <li>Publicar contenido ilegal, fraudulento o que promueva actividades peligrosas.</li>
+          <li>Intentar vulnerar la seguridad de la Plataforma, sus cuentas o su infraestructura.</li>
+          <li>Usar la Plataforma para enviar spam, contenido malicioso o publicidad no autorizada.</li>
+          <li>Extraer datos de la Plataforma de forma automatizada (scraping) sin autorización expresa.</li>
+        </ul>
+      </section>
+
+      <section id="responsabilidad">
+        <h2><span class="legal-num">11.</span> Limitación de responsabilidad</h2>
+        <p>RECO+ actúa como intermediario que conecta a personas, comunidades y empresas en torno al reciclaje y la donación. No somos parte de las transacciones, entregas o acuerdos que se realicen entre usuarios, ni garantizamos la disponibilidad, calidad, seguridad o legalidad de los puntos de reciclaje, donaciones o publicaciones de terceros.</p>
+        <p>En la medida permitida por la ley, RECO+ no será responsable por daños indirectos, incidentales o derivados del uso de la Plataforma, incluyendo pérdidas resultantes de interacciones entre usuarios o de la información proporcionada por el escáner con IA.</p>
+      </section>
+
+      <section id="suspension">
+        <h2><span class="legal-num">12.</span> Suspensión y terminación de cuentas</h2>
+        <p>Podemos suspender o cancelar tu cuenta si incumples estos Términos, si detectamos actividad fraudulenta, o si es necesario para proteger a la comunidad o a la Plataforma.</p>
+        <p>Puedes solicitar la eliminación de tu cuenta en cualquier momento escribiéndonos a <a href="mailto:soporte.recoplus@gmail.com">soporte.recoplus@gmail.com</a>.</p>
+      </section>
+
+      <section id="modificaciones">
+        <h2><span class="legal-num">13.</span> Modificaciones a estos Términos</h2>
+        <p>Podemos actualizar estos Términos periódicamente. Publicaremos la versión vigente en esta página junto con la fecha de última actualización. El uso continuado de la Plataforma después de una modificación implica la aceptación de los nuevos Términos.</p>
+      </section>
+
+      <section id="ley">
+        <h2><span class="legal-num">14.</span> Ley aplicable y jurisdicción</h2>
+        <p>Estos Términos se rigen por las leyes de la República de Panamá. Cualquier controversia relacionada con estos Términos se someterá a los tribunales competentes de Panamá, salvo que la ley aplicable disponga algo distinto.</p>
+      </section>
+
+      <section id="contacto">
+        <h2><span class="legal-num">15.</span> Contacto</h2>
+        <p>Si tienes preguntas sobre estos Términos, escríbenos a:</p>
+        <ul>
+          <li>Correo: <a href="mailto:soporte.recoplus@gmail.com">soporte.recoplus@gmail.com</a></li>
+          <li>Teléfono / WhatsApp: +507 6399-1249</li>
+          <li>Ubicación: David, Panamá</li>
+        </ul>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo"><img src="img/hoja.png" alt="hoja"> <strong>RECO+</strong></div>
+        <p data-i18n="footer.tagline">El plus que el planeta necesita.</p>
+        <div class="redes">
+          <a href="#">f</a>
+          <a href="#">in</a>
+          <a href="#">tk</a>
+          <a href="#">▶</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="footer.nav">Navegación</h4>
+        <a href="https://recoplus.github.io/rEcOPlus-Final/mapa.html" data-i18n="nav.mapa">Mapa</a>
+        <a href="https://r-ec-o-plus-final.vercel.app/guia.html" data-i18n="nav.guia">Guía</a>
+        <a href="https://recoplus.github.io/rEcOPlus-Final/donar.html" data-i18n="nav.donar">Donar / Ayuda</a>
+        <a href="https://recoplus.github.io/rEcOPlus-Final/alianzas.html" data-i18n="nav.alianzas">Alianzas</a>
+        <a href="https://recoplus.github.io/rEcOPlus-Final/contacto.html" data-i18n="nav.contacto">Contacto</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="footer.recursos">Recursos</h4>
+        <a href="#" data-i18n="footer.ayuda">Centro de ayuda</a>
+        <a href="#" data-i18n="footer.faq">Preguntas frecuentes</a>
+        <a href="terminos.html" data-i18n="footer.terminos">Términos y condiciones</a>
+        <a href="privacidad.html" data-i18n="footer.privacidad">Política de privacidad</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="footer.contacto">Contacto</h4>
+        <p>soporte.recoplus@gmail.com</p>
+        <p>+507 6399-1249</p>
+        <p>David, Panama</p>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="footer.newsletter">Newsletter</h4>
+        <p data-i18n="footer.nl.desc">Recibe tips, noticias y oportunidades para ayudar.</p>
+        <div class="newsletter-form">
+          <input type="email" placeholder="Tu correo electrónico" data-i18n="footer.nl.ph">
+          <button data-i18n="footer.nl.btn">Suscribirme</button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p data-i18n="footer.copy">© 2026 RECO+. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+  (function () {
+    function syncLangPill(lang) {
+      var esLabel = document.querySelector('.lang-pill .lang-label-es');
+      var enLabel = document.querySelector('.lang-pill .lang-label-en');
+      var btn     = document.querySelector('.lang-pill');
+      if (!btn) return;
+      if (lang === 'en') {
+        if (esLabel) esLabel.style.display = 'none';
+        if (enLabel) enLabel.style.display = 'inline';
+        btn.setAttribute('data-current', 'en');
+      } else {
+        if (esLabel) esLabel.style.display = 'inline';
+        if (enLabel) enLabel.style.display = 'none';
+        btn.setAttribute('data-current', 'es');
+      }
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+      var saved = localStorage.getItem('reco-lang') || 'es';
+      syncLangPill(saved);
+      var origToggle = window.toggleLang;
+      if (origToggle) {
+        window.toggleLang = function () {
+          origToggle();
+          syncLangPill(localStorage.getItem('reco-lang') || 'es');
+        };
+      }
+    });
+  })();
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="auth.js"></script>
+  <script src="session-bridge.js"></script>
+  <script src="i18n.js?v=2"></script>
+  <script src="navbar-auth.js"></script>
+  <script src="notificaciones.js"></script>
+  <script src="ajustes-modal.js?v=2"></script>
+  <script src="ajustes-empresa.js"></script>
+  <script src="suscripcion-planes.js"></script>
+  <script src="suscripcion-modal.js"></script>
+  <script src="ajustes-suscripcion.js"></script>
+  <script src="comentar-modal.js"></script>
+  <script src="contact-fab.js"></script>
+</body>
+</html>
