@@ -213,6 +213,16 @@ html.dark .sv-overlay { background: rgba(0, 0, 0, 0.62); }
 }
 .sv-login-prompt a:hover { background: var(--accent-dark, #1a5c2a); }
 
+/* Ícono girando — estado "Verificando tu cuenta y tu plan…" */
+.sv-spin svg { animation: sv-spin-rotate 1s linear infinite; }
+@keyframes sv-spin-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sv-spin svg { animation: none; }
+}
+
 /* ── Formulario ── */
 .sv-form { display: flex; flex-direction: column; gap: 16px; }
 

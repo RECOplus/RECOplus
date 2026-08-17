@@ -128,6 +128,32 @@
       '</div>';
   }
 
+  /* ══════════════════════════════════════════
+     ESTADO: VERIFICANDO SESIÓN / PLAN
+     ────────────────────────
+     Se muestra apenas se abre el modal, mientras se confirma la
+     sesión y (si aplica) se consulta si el plan es Premium. Antes
+     este hueco quedaba en blanco — el modal se cerraba y no
+     volvía a abrir hasta que la consulta a Supabase terminaba —
+     lo que en conexiones lentas se sentía como que la página se
+     había congelado.
+     ══════════════════════════════════════════ */
+  function renderVerificando(body) {
+    body.innerHTML =
+      '<div class="sv-login-prompt">' +
+        '<div class="sv-login-prompt__icon sv-spin">' + ICON_UPLOAD_SMALL + '</div>' +
+        '<p data-i18n="subirvideo.verificando">Verificando tu cuenta y tu plan…</p>' +
+      '</div>';
+  }
+
+  function mostrarErrorVerificacion(body) {
+    body.innerHTML =
+      '<div class="sv-login-prompt">' +
+        '<div class="sv-login-prompt__icon">' + ICON_LOCK + '</div>' +
+        '<p data-i18n="subirvideo.errorVerificacion">No se pudo verificar tu plan. Revisa tu conexión e intenta de nuevo.</p>' +
+      '</div>';
+  }
+
   /* ══════════════════════════════════════════════
      ESTADO: CON SESIÓN — formulario
      ══════════════════════════════════════════════ */
@@ -672,6 +698,12 @@
       return;
     }
 
+    // Estado intermedio visible mientras se confirma la sesión: sin
+    // esto, el hueco entre el clic y la respuesta de Supabase (que
+    // puede tardar con conexiones lentas) se sentía como que la
+    // página se congelaba, porque no había ningún feedback en pantalla.
+    renderVerificando(body);
+
     var getSesion = window.recoAuth.getVerifiedSession || window.recoAuth.getSession;
     getSesion().then(function (session) {
       sesionActual = session;
@@ -681,12 +713,18 @@
         // antes de mostrar el formulario. Si no está cargado (página
         // sin esos scripts), se deja pasar para no romper el flujo.
         if (window.recoPagoSimulado) {
-          closeModal();
+          // El modal de subir-video NUNCA se cierra durante esta espera
+          // (antes sí se cerraba con closeModal() y volvía a abrirse
+          // después, lo que generaba el salto/congélamiento visible).
           window.recoPagoSimulado.requierePremium(function () {
-            overlayEl.setAttribute('data-open', 'true');
-            document.body.style.overflow = 'hidden';
             renderForm(body, session.user);
-          }, { motivo: 'Para subir videos a la comunidad necesitas el plan Premium.' });
+          }, { motivo: 'Para subir videos a la comunidad necesitas el plan Premium.' })
+            .catch(function () {
+              // Si la verificación del plan falla (red, Supabase caído,
+              // etc.) se avisa en vez de dejar el modal trabado en
+              // "Verificando tu cuenta y tu plan…" para siempre.
+              mostrarErrorVerificacion(body);
+            });
         } else {
           renderForm(body, session.user);
         }

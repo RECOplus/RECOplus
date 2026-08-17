@@ -246,9 +246,14 @@
       // no romper funcionalidad existente en páginas que aún no
       // integran el sistema de planes.
       callback();
-      return;
+      return Promise.resolve();
     }
-    window.recoSuscripcion.getPlanActual().then(function (planId) {
+    // Se devuelve la promesa (con su propio catch) para que quien
+    // llama pueda reaccionar si la verificación del plan falla (red,
+    // Supabase caído, etc.) en vez de quedarse esperando en silencio
+    // sin ningún feedback visual — eso es lo que antes se sentía
+    // como que la página se "congelaba" al chequear el plan.
+    return window.recoSuscripcion.getPlanActual().then(function (planId) {
       if (planId === 'premium') {
         callback();
       } else {
