@@ -708,26 +708,10 @@
     getSesion().then(function (session) {
       sesionActual = session;
       if (session && session.user) {
-        // Subir video es una función Premium: si el sistema de pago
-        // simulado está disponible en esta página, se chequea el plan
-        // antes de mostrar el formulario. Si no está cargado (página
-        // sin esos scripts), se deja pasar para no romper el flujo.
-        if (window.recoPagoSimulado) {
-          // El modal de subir-video NUNCA se cierra durante esta espera
-          // (antes sí se cerraba con closeModal() y volvía a abrirse
-          // después, lo que generaba el salto/congélamiento visible).
-          window.recoPagoSimulado.requierePremium(function () {
-            renderForm(body, session.user);
-          }, { motivo: 'Para subir videos a la comunidad necesitas el plan Premium.' })
-            .catch(function () {
-              // Si la verificación del plan falla (red, Supabase caído,
-              // etc.) se avisa en vez de dejar el modal trabado en
-              // "Verificando tu cuenta y tu plan…" para siempre.
-              mostrarErrorVerificacion(body);
-            });
-        } else {
-          renderForm(body, session.user);
-        }
+        // Subir video ya NO requiere plan Premium: cualquier usuario
+        // con sesión puede compartir un video con la comunidad. Se
+        // quitó el chequeo previo contra window.recoPagoSimulado.
+        renderForm(body, session.user);
       } else {
         renderLoginPrompt(body);
       }
