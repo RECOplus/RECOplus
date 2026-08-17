@@ -1034,42 +1034,62 @@ const translations = {
 
     /* ══════════════════════════════════════════
        TUTORIAL — recorrido interactivo (spotlight tour)
+       Claves compartidas: tutorial.btn.*, tutorial.step.*,
+       tutorial.fab.*, tutorial.done.*
+       Claves por página: tutorial.<prefijo>_stepN.*
+       (idx_ = index.html)
        ══════════════════════════════════════════ */
-    "tutorial.step0.title": "¡Bienvenido a RECO+! 👋",
-    "tutorial.step0.desc":  "En menos de un minuto te mostramos dónde está todo: el mapa de puntos de reciclaje, cómo donar y cómo pedir ayuda. Usa los botones de abajo para moverte, y Esc para salir cuando quieras.",
+    "tutorial.idx_step0.title": "¡Bienvenido a RECO+! 👋",
+    "tutorial.idx_step0.desc":  "En un par de minutos te mostramos dónde está todo: el mapa de puntos de reciclaje, cómo donar, pedir ayuda y mucho más. Usa los botones de abajo para moverte, y Esc para salir cuando quieras.",
 
-    "tutorial.step1.title": "Tu barra de navegación",
-    "tutorial.step1.desc":  "Desde aquí llegas a cualquier sección: Mapa, Guía, Donar y Alianzas. Se queda fija arriba mientras haces scroll, así siempre tienes todo a un clic de distancia.",
+    "tutorial.idx_step1.title": "Tu barra de navegación",
+    "tutorial.idx_step1.desc":  "Desde aquí llegas a cualquier sección: Reciclar, Donar, Guía, Escáner, Mapa y Alianzas. Se queda fija arriba mientras haces scroll, así siempre tienes todo a un clic de distancia.",
 
-    "tutorial.step2.title": "Modo claro / oscuro",
-    "tutorial.step2.desc":  "¿Prefieres una interfaz más suave para tus ojos de noche? Prueba tocar este interruptor ahora mismo — el tutorial se adapta al instante al nuevo tema.",
+    "tutorial.idx_step2.title": "Modo claro / oscuro",
+    "tutorial.idx_step2.desc":  "¿Prefieres una interfaz más suave para tus ojos de noche? Prueba tocar este interruptor ahora mismo — el tutorial se adapta al instante al nuevo tema.",
 
-    "tutorial.step3.title": "Cambia de idioma",
-    "tutorial.step3.desc":  "RECO+ habla español e inglés. Tócalo para alternar — toda la página, incluido este recorrido, se traduce en tiempo real sin recargar.",
+    "tutorial.idx_step3.title": "Cambia de idioma",
+    "tutorial.idx_step3.desc":  "RECO+ habla español e inglés. Tócalo para alternar — toda la página, incluido este recorrido, se traduce en tiempo real sin recargar.",
 
-    "tutorial.step4.title": "Únete a la comunidad",
-    "tutorial.step4.desc":  "Este botón te lleva a crear tu cuenta. Con tu perfil puedes guardar puntos favoritos, hacer seguimiento a tus donaciones y desbloquear más funciones.",
+    "tutorial.idx_step4.title": "Únete a la comunidad",
+    "tutorial.idx_step4.desc":  "Este botón te lleva a crear tu cuenta. Con tu perfil puedes guardar puntos favoritos, hacer seguimiento a tus donaciones y desbloquear más funciones.",
 
-    "tutorial.step5.title": "Acceso rápido",
-    "tutorial.step5.desc":  "Estos accesos directos te llevan al mapa, a donar, a pedir ayuda o a la tienda sin tener que buscar en el menú. Ideal cuando ya sabes exactamente qué necesitas hacer.",
+    "tutorial.idx_step5.title": "Acceso rápido",
+    "tutorial.idx_step5.desc":  "Estos accesos directos te llevan al mapa, al escáner con IA o a las alianzas sin tener que buscar en el menú. Ideal cuando ya sabes exactamente qué necesitas hacer.",
 
-    "tutorial.step6.title": "Busca lo que necesitas",
-    "tutorial.step6.desc":  "Escribe aquí qué quieres reciclar o donar — por ejemplo \"ropa\" o \"electrónicos\" — y te sugerimos las opciones más relevantes al instante.",
+    "tutorial.idx_step6.title": "Busca lo que necesitas",
+    "tutorial.idx_step6.desc":  "Escribe aquí qué quieres reciclar o donar — por ejemplo \"ropa\" o \"electrónicos\" — y te sugerimos las opciones más relevantes al instante.",
 
-    "tutorial.step7.title": "Reciclar y donar, un clic más cerca",
-    "tutorial.step7.desc":  "Estas dos tarjetas resumen las dos acciones más importantes de la plataforma. Tócalas para ver los puntos de reciclaje cercanos o para empezar a donar hoy mismo.",
+    "tutorial.idx_step7.title": "Datos que te van a sorprender",
+    "tutorial.idx_step7.desc":  "Descubre el impacto real del reciclaje: cuánto tarda en descomponerse un plástico, cuántos árboles salvas al reciclar papel y mucho más.",
 
-    "tutorial.step8.title": "Todo lo que puedes hacer",
-    "tutorial.step8.desc":  "Desliza esta tira de tarjetas para descubrir cada función: encontrar puntos, donar, pedir ayuda y más. Cada tarjeta te lleva directo a la sección correspondiente.",
+    "tutorial.idx_step8.title": "Reciclar y donar, un clic más cerca",
+    "tutorial.idx_step8.desc":  "Estas dos tarjetas resumen las dos acciones más importantes de la plataforma. Tócalas para ver los puntos de reciclaje cercanos o para empezar a donar hoy mismo.",
 
-    "tutorial.step9.title": "¡Listo, ya conoces RECO+! 🎉",
-    "tutorial.step9.desc":  "Explora a tu ritmo. Si en algún momento quieres repetir el recorrido completo, el botón verde flotante siempre estará aquí abajo para ayudarte.",
+    "tutorial.idx_step9.title": "Todo lo que puedes hacer",
+    "tutorial.idx_step9.desc":  "Desliza esta tira de tarjetas para descubrir cada función: encontrar puntos, donar, pedir ayuda, leer la guía, ver alianzas y más. Cada tarjeta te lleva directo a la sección correspondiente.",
+
+    "tutorial.idx_step10.title": "¿Cómo funciona RECO+?",
+    "tutorial.idx_step10.desc":  "Tres simples pasos: busca lo que necesitas, dona, recicla o solicita ayuda, y genera un impacto real. Así de fácil es sumarte al cambio.",
+
+    "tutorial.idx_step11.title": "Empresas que confían en nosotros",
+    "tutorial.idx_step11.desc":  "Conoce a las marcas y organizaciones aliadas que apoyan el movimiento RECO+ y hacen posible este impacto.",
+
+    "tutorial.idx_step12.title": "Lo que dice nuestra comunidad",
+    "tutorial.idx_step12.desc":  "Lee experiencias reales de personas que ya donaron, reciclaron o pidieron ayuda a través de la plataforma.",
+
+    "tutorial.idx_step13.title": "El impacto en números",
+    "tutorial.idx_step13.desc":  "Estas cifras crecen cada día gracias a personas como tú: usuarios activos, puntos de reciclaje, toneladas recicladas y comunidades unidas.",
+
+    "tutorial.idx_step14.title": "¡Listo, ya conoces RECO+! 🎉",
+    "tutorial.idx_step14.desc":  "Explora a tu ritmo. Si en algún momento quieres repetir el recorrido completo, el botón verde flotante siempre estará aquí abajo para ayudarte.",
 
     "tutorial.btn.next":    "Siguiente",
     "tutorial.btn.prev":    "Anterior",
     "tutorial.btn.finish":  "¡Empezar a explorar!",
     "tutorial.btn.close":   "Cerrar tutorial",
     "tutorial.btn.restart": "Reiniciar tutorial",
+    "tutorial.btn.skip":    "Saltar tutorial",
 
     "tutorial.step.counter":  "Paso {n} de {total}",
     "tutorial.step.progress": "{pct}% completado",
@@ -1078,6 +1098,43 @@ const translations = {
 
     "tutorial.done.title": "¡Bien hecho! 🎊",
     "tutorial.done.desc":  "Completaste el recorrido. Ya sabes moverte por RECO+ como un experto.",
+
+    /* ── TUTORIAL: página Reciclar (rec_) ── */
+    "tutorial.rec_step0.title": "¡Bienvenido a Reciclar! ♻️",
+    "tutorial.rec_step0.desc":  "Te mostramos cómo elegir qué reciclar, usar el escáner con IA y encontrar el centro más cercano. Usa los botones de abajo para moverte, y Esc para salir cuando quieras.",
+
+    "tutorial.rec_step1.title": "Tu barra de navegación",
+    "tutorial.rec_step1.desc":  "Desde aquí llegas a cualquier sección: Inicio, Donar, Guía, Escáner, Mapa y Alianzas. Se queda fija arriba mientras haces scroll.",
+
+    "tutorial.rec_step2.title": "Modo claro / oscuro",
+    "tutorial.rec_step2.desc":  "¿Prefieres una interfaz más suave para tus ojos de noche? Prueba tocar este interruptor ahora mismo.",
+
+    "tutorial.rec_step3.title": "Cambia de idioma",
+    "tutorial.rec_step3.desc":  "RECO+ habla español e inglés. Tócalo para alternar — toda la página se traduce en tiempo real sin recargar.",
+
+    "tutorial.rec_step4.title": "Únete a la comunidad",
+    "tutorial.rec_step4.desc":  "Este botón te lleva a crear tu cuenta para guardar puntos favoritos y hacer seguimiento a tu actividad.",
+
+    "tutorial.rec_step5.title": "Dos formas de empezar",
+    "tutorial.rec_step5.desc":  "Ve directo al mapa para encontrar el punto de reciclaje más cercano, o usa el escáner para identificar tu objeto con inteligencia artificial.",
+
+    "tutorial.rec_step6.title": "Elige tu material",
+    "tutorial.rec_step6.desc":  "Selecciona el tipo de objeto que quieres reciclar — electrónicos, plástico, vidrio, ropa y mucho más — y te explicamos cómo prepararlo y dónde llevarlo.",
+
+    "tutorial.rec_step7.title": "Escáner inteligente",
+    "tutorial.rec_step7.desc":  "Sube o toma una foto de tu objeto y la IA te dirá al instante si es reciclable, en qué categoría entra y cómo prepararlo.",
+
+    "tutorial.rec_step8.title": "Así viaja tu reciclaje",
+    "tutorial.rec_step8.desc":  "Desde que usas un objeto hasta que se convierte en materia prima para algo nuevo: conoce los 5 pasos del proceso completo.",
+
+    "tutorial.rec_step9.title": "Centros cerca de ti",
+    "tutorial.rec_step9.desc":  "Este mini-mapa te muestra los puntos de reciclaje más cercanos. Tócalo o ve al mapa completo para trazar tu ruta.",
+
+    "tutorial.rec_step10.title": "Cada objeto cuenta",
+    "tutorial.rec_step10.desc":  "Cuando quieras, este botón te lleva directo al mapa para empezar a reciclar hoy mismo.",
+
+    "tutorial.rec_step11.title": "¡Listo para reciclar! 🎉",
+    "tutorial.rec_step11.desc":  "Ya sabes cómo moverte por esta página. El botón verde flotante siempre estará aquí si quieres repetir el recorrido.",
 
     /* ── PÁGINA RECICLAR ── */
     "reciclar.hero.title1": "Recicla hoy,",
@@ -2930,41 +2987,57 @@ const translations = {
     /* ══════════════════════════════════════════
        TUTORIAL — interactive spotlight tour
        ══════════════════════════════════════════ */
-    "tutorial.step0.title": "Welcome to RECO+! 👋",
-    "tutorial.step0.desc":  "In under a minute we'll show you where everything is: the recycling map, how to donate, and how to ask for help. Use the buttons below to move around, and Esc to exit anytime.",
+    "tutorial.idx_step0.title": "Welcome to RECO+! 👋",
+    "tutorial.idx_step0.desc":  "In a couple of minutes we'll show you where everything is: the recycling map, how to donate, how to ask for help, and more. Use the buttons below to move around, and Esc to exit anytime.",
 
-    "tutorial.step1.title": "Your navigation bar",
-    "tutorial.step1.desc":  "From here you can reach any section: Map, Guide, Donate and Alliances. It stays fixed at the top as you scroll, so everything is always one click away.",
+    "tutorial.idx_step1.title": "Your navigation bar",
+    "tutorial.idx_step1.desc":  "From here you can reach any section: Recycle, Donate, Guide, Scanner, Map and Alliances. It stays fixed at the top as you scroll, so everything is always one click away.",
 
-    "tutorial.step2.title": "Light / dark mode",
-    "tutorial.step2.desc":  "Prefer a softer interface for your eyes at night? Try tapping this switch right now — the tutorial adapts instantly to the new theme.",
+    "tutorial.idx_step2.title": "Light / dark mode",
+    "tutorial.idx_step2.desc":  "Prefer a softer interface for your eyes at night? Try tapping this switch right now — the tutorial adapts instantly to the new theme.",
 
-    "tutorial.step3.title": "Switch language",
-    "tutorial.step3.desc":  "RECO+ speaks Spanish and English. Tap it to switch — the whole page, including this tour, translates in real time without reloading.",
+    "tutorial.idx_step3.title": "Switch language",
+    "tutorial.idx_step3.desc":  "RECO+ speaks Spanish and English. Tap it to switch — the whole page, including this tour, translates in real time without reloading.",
 
-    "tutorial.step4.title": "Join the community",
-    "tutorial.step4.desc":  "This button takes you to create your account. With your profile you can save favorite spots, track your donations, and unlock more features.",
+    "tutorial.idx_step4.title": "Join the community",
+    "tutorial.idx_step4.desc":  "This button takes you to create your account. With your profile you can save favorite spots, track your donations, and unlock more features.",
 
-    "tutorial.step5.title": "Quick access",
-    "tutorial.step5.desc":  "These shortcuts take you straight to the map, donating, asking for help, or the store without digging through the menu. Perfect when you already know exactly what you need to do.",
+    "tutorial.idx_step5.title": "Quick access",
+    "tutorial.idx_step5.desc":  "These shortcuts take you straight to the map, the AI scanner, or alliances without digging through the menu. Perfect when you already know exactly what you need to do.",
 
-    "tutorial.step6.title": "Search for what you need",
-    "tutorial.step6.desc":  "Type here what you'd like to recycle or donate — for example \"clothes\" or \"electronics\" — and we'll suggest the most relevant options instantly.",
+    "tutorial.idx_step6.title": "Search for what you need",
+    "tutorial.idx_step6.desc":  "Type here what you'd like to recycle or donate — for example \"clothes\" or \"electronics\" — and we'll suggest the most relevant options instantly.",
 
-    "tutorial.step7.title": "Recycle and donate, one click closer",
-    "tutorial.step7.desc":  "These two cards sum up the platform's two most important actions. Tap them to see nearby recycling points or to start donating today.",
+    "tutorial.idx_step7.title": "Facts that will surprise you",
+    "tutorial.idx_step7.desc":  "Discover the real impact of recycling: how long plastic takes to break down, how many trees you save by recycling paper, and more.",
 
-    "tutorial.step8.title": "Everything you can do",
-    "tutorial.step8.desc":  "Swipe through this strip of cards to discover every feature: finding points, donating, asking for help, and more. Each card takes you straight to that section.",
+    "tutorial.idx_step8.title": "Recycle and donate, one click closer",
+    "tutorial.idx_step8.desc":  "These two cards sum up the platform's two most important actions. Tap them to see nearby recycling points or to start donating today.",
 
-    "tutorial.step9.title": "All set, you know RECO+ now! 🎉",
-    "tutorial.step9.desc":  "Explore at your own pace. Whenever you want to repeat the full tour, the floating green button will always be here to help.",
+    "tutorial.idx_step9.title": "Everything you can do",
+    "tutorial.idx_step9.desc":  "Swipe through this strip of cards to discover every feature: finding points, donating, asking for help, reading the guide, viewing alliances, and more. Each card takes you straight to that section.",
+
+    "tutorial.idx_step10.title": "How does RECO+ work?",
+    "tutorial.idx_step10.desc":  "Three simple steps: search for what you need, donate, recycle or request help, and make a real impact. That's how easy it is to join the change.",
+
+    "tutorial.idx_step11.title": "Companies that trust us",
+    "tutorial.idx_step11.desc":  "Meet the partner brands and organizations that support the RECO+ movement and make this impact possible.",
+
+    "tutorial.idx_step12.title": "What our community says",
+    "tutorial.idx_step12.desc":  "Read real experiences from people who have already donated, recycled, or asked for help through the platform.",
+
+    "tutorial.idx_step13.title": "Our impact in numbers",
+    "tutorial.idx_step13.desc":  "These numbers grow every day thanks to people like you: active users, recycling points, tons recycled, and communities united.",
+
+    "tutorial.idx_step14.title": "All set, you know RECO+ now! 🎉",
+    "tutorial.idx_step14.desc":  "Explore at your own pace. Whenever you want to repeat the full tour, the floating green button will always be here to help.",
 
     "tutorial.btn.next":    "Next",
     "tutorial.btn.prev":    "Back",
     "tutorial.btn.finish":  "Start exploring!",
     "tutorial.btn.close":   "Close tutorial",
     "tutorial.btn.restart": "Restart tutorial",
+    "tutorial.btn.skip":    "Skip tutorial",
 
     "tutorial.step.counter":  "Step {n} of {total}",
     "tutorial.step.progress": "{pct}% complete",
@@ -2973,6 +3046,43 @@ const translations = {
 
     "tutorial.done.title": "Well done! 🎊",
     "tutorial.done.desc":  "You completed the tour. You now know your way around RECO+ like a pro.",
+
+    /* ── TUTORIAL: Recycle page (rec_) ── */
+    "tutorial.rec_step0.title": "Welcome to Recycle! ♻️",
+    "tutorial.rec_step0.desc":  "We'll show you how to pick what to recycle, use the AI scanner, and find the nearest center. Use the buttons below to move around, and Esc to exit anytime.",
+
+    "tutorial.rec_step1.title": "Your navigation bar",
+    "tutorial.rec_step1.desc":  "From here you can reach any section: Home, Donate, Guide, Scanner, Map and Alliances. It stays fixed at the top as you scroll.",
+
+    "tutorial.rec_step2.title": "Light / dark mode",
+    "tutorial.rec_step2.desc":  "Prefer a softer interface for your eyes at night? Try tapping this switch right now.",
+
+    "tutorial.rec_step3.title": "Switch language",
+    "tutorial.rec_step3.desc":  "RECO+ speaks Spanish and English. Tap it to switch — the whole page translates in real time without reloading.",
+
+    "tutorial.rec_step4.title": "Join the community",
+    "tutorial.rec_step4.desc":  "This button takes you to create your account to save favorite spots and track your activity.",
+
+    "tutorial.rec_step5.title": "Two ways to start",
+    "tutorial.rec_step5.desc":  "Go straight to the map to find the nearest recycling point, or use the scanner to identify your item with artificial intelligence.",
+
+    "tutorial.rec_step6.title": "Choose your material",
+    "tutorial.rec_step6.desc":  "Select the type of item you want to recycle — electronics, plastic, glass, clothing, and more — and we'll explain how to prepare it and where to take it.",
+
+    "tutorial.rec_step7.title": "Smart scanner",
+    "tutorial.rec_step7.desc":  "Upload or take a photo of your item and the AI will instantly tell you if it's recyclable, what category it falls into, and how to prepare it.",
+
+    "tutorial.rec_step8.title": "How your recycling travels",
+    "tutorial.rec_step8.desc":  "From the moment you use an item until it becomes raw material for something new — discover the 5 steps of the full process.",
+
+    "tutorial.rec_step9.title": "Centers near you",
+    "tutorial.rec_step9.desc":  "This mini-map shows the nearest recycling points. Tap it or go to the full map to trace your route.",
+
+    "tutorial.rec_step10.title": "Every item counts",
+    "tutorial.rec_step10.desc":  "Whenever you're ready, this button takes you straight to the map to start recycling today.",
+
+    "tutorial.rec_step11.title": "Ready to recycle! 🎉",
+    "tutorial.rec_step11.desc":  "You now know your way around this page. The floating green button will always be here if you want to repeat the tour.",
 
     /* ── RECYCLE PAGE ── */
     "reciclar.hero.title1": "Recycle today,",

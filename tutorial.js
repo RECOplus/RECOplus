@@ -15,30 +15,22 @@
   var SEEN_KEY = 'reco-tutorial-seen';
 
   /* ────────────────────────────────────────────
-     Definición de los pasos del recorrido
+     Pasos del recorrido — definidos por página.
+     Cada página carga su propio "tutorial-steps-<pagina>.js"
+     ANTES de este script, el cual define:
+       window.RECO_TUTORIAL_STEPS    (array de pasos, obligatorio)
+       window.RECO_TUTORIAL_SECTIONS (accesos directos, opcional)
+     Así este mismo motor (tutorial.js) se reutiliza sin
+     duplicar código en cada página de RECO+.
      selector: null   → paso centrado (bienvenida / cierre)
      radius:   border-radius aproximado del elemento real
      ──────────────────────────────────────────── */
-  var STEPS = [
-    { key: 'step0', selector: null, kind: 'welcome' },
-    { key: 'step1', selector: '.bubble-nav',          placement: 'bottom', radius: 999, pad: 8,  section: 'nav' },
-    { key: 'step2', selector: '#darkModeToggle',      placement: 'bottom', radius: 999, pad: 6,  section: 'nav' },
-    { key: 'step3', selector: '.lang-pill',           placement: 'bottom', radius: 999, pad: 6,  section: 'nav' },
-    { key: 'step4', selector: '.bubble-nav__cta',     placement: 'bottom', radius: 999, pad: 6,  section: 'nav' },
-    { key: 'step5', selector: '#heroMiniNav',         placement: 'bottom', radius: 20,  pad: 10, section: 'search' },
-    { key: 'step6', selector: '#heroSearchBar',       placement: 'bottom', radius: 999, pad: 8,  section: 'search' },
-    { key: 'step7', selector: '.rd-banners',          placement: 'top',    radius: 22,  pad: 10, section: 'actions' },
-    { key: 'step8', selector: '.acc-strip-wrapper',   placement: 'top',    radius: 26,  pad: 12, section: 'actions' },
-    { key: 'step9', selector: null, kind: 'finish' }
-  ];
+  var STEPS = (window.RECO_TUTORIAL_STEPS && window.RECO_TUTORIAL_STEPS.length)
+    ? window.RECO_TUTORIAL_STEPS
+    : [];
 
   /* Puntos de entrada del menú de secciones → índice de paso donde arrancar */
-  var SECTION_START = {
-    full:    0,
-    nav:     1,
-    search:  5,
-    actions: 7
-  };
+  var SECTION_START = window.RECO_TUTORIAL_SECTIONS || { full: 0 };
 
   var FALLBACK_ES = {
     'step0.title': '¡Bienvenido a RECO+!', 'step0.desc': 'Te mostramos en unos segundos cómo sacarle el máximo provecho a la plataforma.',
@@ -532,6 +524,10 @@
      Abrir / cerrar
      ──────────────────────────────────────────── */
   function openTutorial(startIndex) {
+    if (!STEPS.length) {
+      console.warn('RECO Tutorial: no hay pasos configurados para esta página.');
+      return;
+    }
     if (!dom.root) buildDOM();
     state.active = true;
     state.lastFocused = document.activeElement;
@@ -582,6 +578,10 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
+    if (!STEPS.length) {
+      console.warn('RECO Tutorial: no hay pasos configurados para esta página. Agrega un <script> con "tutorial-steps-<pagina>.js" ANTES de tutorial.js.');
+      return;
+    }
     buildFab();
     hookLanguageChange();
     initAutoStart();
