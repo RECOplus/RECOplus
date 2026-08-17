@@ -1103,18 +1103,6 @@ const translations = {
     "tutorial.rec_step0.title": "¡Bienvenido a Reciclar! ♻️",
     "tutorial.rec_step0.desc":  "Te mostramos cómo elegir qué reciclar, usar el escáner con IA y encontrar el centro más cercano. Usa los botones de abajo para moverte, y Esc para salir cuando quieras.",
 
-    "tutorial.rec_step1.title": "Tu barra de navegación",
-    "tutorial.rec_step1.desc":  "Desde aquí llegas a cualquier sección: Inicio, Donar, Guía, Escáner, Mapa y Alianzas. Se queda fija arriba mientras haces scroll.",
-
-    "tutorial.rec_step2.title": "Modo claro / oscuro",
-    "tutorial.rec_step2.desc":  "¿Prefieres una interfaz más suave para tus ojos de noche? Prueba tocar este interruptor ahora mismo.",
-
-    "tutorial.rec_step3.title": "Cambia de idioma",
-    "tutorial.rec_step3.desc":  "RECO+ habla español e inglés. Tócalo para alternar — toda la página se traduce en tiempo real sin recargar.",
-
-    "tutorial.rec_step4.title": "Únete a la comunidad",
-    "tutorial.rec_step4.desc":  "Este botón te lleva a crear tu cuenta para guardar puntos favoritos y hacer seguimiento a tu actividad.",
-
     "tutorial.rec_step5.title": "Dos formas de empezar",
     "tutorial.rec_step5.desc":  "Ve directo al mapa para encontrar el punto de reciclaje más cercano, o usa el escáner para identificar tu objeto con inteligencia artificial.",
 
@@ -1135,6 +1123,150 @@ const translations = {
 
     "tutorial.rec_step11.title": "¡Listo para reciclar! 🎉",
     "tutorial.rec_step11.desc":  "Ya sabes cómo moverte por esta página. El botón verde flotante siempre estará aquí si quieres repetir el recorrido.",
+
+    /* ── TUTORIAL: página Mapa (map_) ── */
+    "tutorial.map_step0.title": "¡Bienvenido al Mapa! 🗺️",
+    "tutorial.map_step0.desc":  "Te mostramos cómo buscar, filtrar y encontrar el punto de reciclaje o donación más cercano. Usa los botones de abajo para moverte, y Esc para salir cuando quieras.",
+
+    "tutorial.map_step1.title": "Busca una dirección",
+    "tutorial.map_step1.desc":  "Escribe una dirección o ubicación, o toca el botón de ubicación para centrar el mapa donde te encuentras.",
+
+    "tutorial.map_step2.title": "Filtra por material",
+    "tutorial.map_step2.desc":  "Toca cualquier chip para ver solo los puntos que reciben ese tipo de material — plástico, papel, vidrio, ropa y más.",
+
+    "tutorial.map_step3.title": "Más materiales",
+    "tutorial.map_step3.desc":  "¿No ves lo que buscas? Aquí hay más categorías: cartón, baterías, aceite de cocina y varias más.",
+
+    "tutorial.map_step4.title": "Explora el mapa",
+    "tutorial.map_step4.desc":  "Cada marcador es un punto de reciclaje, donación, acopio o evento. Tócalo para ver sus detalles, horarios y materiales que acepta.",
+
+    "tutorial.map_step5.title": "Lee la leyenda",
+    "tutorial.map_step5.desc":  "Estos íconos te ayudan a distinguir de un vistazo el tipo de cada punto en el mapa.",
+
+    "tutorial.map_step6.title": "Resultados cerca de ti",
+    "tutorial.map_step6.desc":  "Esta lista muestra los puntos más cercanos a tu ubicación, con calificaciones y detalles rápidos.",
+
+    "tutorial.map_step7.title": "Ordena los resultados",
+    "tutorial.map_step7.desc":  "Cambia el orden de la lista: más cercanos, mejor valorados o más recientes.",
+
+    "tutorial.map_step8.title": "Ver todos los resultados",
+    "tutorial.map_step8.desc":  "Toca aquí para expandir la lista completa de puntos disponibles, sin límite de resultados.",
+
+    "tutorial.map_step9.title": "¿Falta un punto?",
+    "tutorial.map_step9.desc":  "Si no encuentras un lugar que conoces, sugiérelo aquí y ayúdanos a hacer crecer el mapa de RECO+.",
+
+    "tutorial.map_step10.title": "¡Listo para explorar! 🎉",
+    "tutorial.map_step10.desc":  "Ya sabes cómo moverte por el mapa. El botón verde flotante siempre estará aquí si quieres repetir el recorrido.",
+
+    /* ── TUTORIAL: página Donar (don_) ── */
+    "tutorial.don_step0.title": "¡Bienvenido a Donar / Ayuda! 🌿",
+    "tutorial.don_step0.desc":  "Te mostramos cómo donar objetos, pedir ayuda y seguir el camino de tu donación. Usa los botones de abajo para moverte, y Esc para salir cuando quieras.",
+
+    "tutorial.don_step1.title": "Dos formas de empezar",
+    "tutorial.don_step1.desc":  "Dona un objeto que ya no uses, o solicita una donación si necesitas ayuda. Ambos botones abren el formulario correspondiente.",
+
+    "tutorial.don_step2.title": "¿Qué quieres hacer hoy?",
+    "tutorial.don_step2.desc":  "Elige entre publicar algo que quieras donar o pedir algo que necesites de la comunidad.",
+
+    "tutorial.don_step3.title": "El impacto en números",
+    "tutorial.don_step3.desc":  "Estas cifras crecen cada día: objetos donados, personas ayudadas, comunidades conectadas y objetos reutilizados.",
+
+    "tutorial.don_step4.title": "Donaciones y solicitudes",
+    "tutorial.don_step4.desc":  "Explora lo que la comunidad ya publicó: objetos disponibles para donar, y solicitudes de ayuda activas.",
+
+    "tutorial.don_step5.title": "Campañas de nuestros aliados",
+    "tutorial.don_step5.desc":  "Empresas y centros aliados de RECO+ publican aquí sus campañas de reciclaje y donación. Inscríbete si alguna te interesa.",
+
+    "tutorial.don_step6.title": "Sigue el camino de tu donación",
+    "tutorial.don_step6.desc":  "Desde que publicas hasta que genera impacto real: así puedes ver en qué etapa va tu donación.",
+
+    "tutorial.don_step7.title": "Una comunidad confiable",
+    "tutorial.don_step7.desc":  "Verificamos perfiles, tenemos políticas claras y miles de personas listas para ayudar o recibir ayuda.",
+
+    "tutorial.don_step8.title": "¡Listo para donar! 🎉",
+    "tutorial.don_step8.desc":  "Ya sabes cómo moverte por esta página. El botón verde flotante siempre estará aquí si quieres repetir el recorrido.",
+
+    /* ── TUTORIAL: página Guía (gui_) ── */
+    "tutorial.gui_step0.title": "¡Bienvenido a la Guía! 📚",
+    "tutorial.gui_step0.desc":  "Te mostramos dónde están los videos, las instrucciones paso a paso y los datos que necesitas para reciclar y donar mejor. Usa los botones de abajo para moverte, y Esc para salir cuando quieras.",
+
+    "tutorial.gui_step1.title": "Videos principales",
+    "tutorial.gui_step1.desc":  "Estos videos destacados te explican en poco tiempo cómo reciclar, donar y cuidar el planeta.",
+
+    "tutorial.gui_step2.title": "Más contenido y comunidad",
+    "tutorial.gui_step2.desc":  "Descubre más videos cortos, o sube el tuyo propio para compartirlo con la comunidad RECO+.",
+
+    "tutorial.gui_step3.title": "Reciclar o donar",
+    "tutorial.gui_step3.desc":  "Cambia entre las instrucciones de reciclaje y las de donación con este selector.",
+
+    "tutorial.gui_step4.title": "Elige una categoría",
+    "tutorial.gui_step4.desc":  "Toca el material que quieres reciclar o donar para ver instrucciones específicas.",
+
+    "tutorial.gui_step5.title": "Instrucciones paso a paso",
+    "tutorial.gui_step5.desc":  "Aquí encuentras cómo prepararlo y dónde llevarlo, además de las categorías más comunes para donar.",
+
+    "tutorial.gui_step6.title": "Datos y consejos",
+    "tutorial.gui_step6.desc":  "Descubre curiosidades sobre el reciclaje, el impacto real de la comunidad y consejos rápidos para el día a día.",
+
+    "tutorial.gui_step7.title": "Únete a la comunidad",
+    "tutorial.gui_step7.desc":  "Cuando estés listo, crea tu cuenta y empieza a ser parte del cambio junto a miles de personas.",
+
+    "tutorial.gui_step8.title": "¡Listo para aprender! 🎉",
+    "tutorial.gui_step8.desc":  "Ya sabes cómo moverte por la guía. El botón verde flotante siempre estará aquí si quieres repetir el recorrido.",
+
+    /* ── TUTORIAL: página Alianzas (ali_) ── */
+    "tutorial.ali_step0.title": "¡Bienvenido a Alianzas! 🤝",
+    "tutorial.ali_step0.desc":  "Te mostramos cómo registrar tu empresa, explorar iniciativas y conocer a nuestros aliados. Usa los botones de abajo para moverte, y Esc para salir cuando quieras.",
+
+    "tutorial.ali_step1.title": "Colabora y multiplica el impacto",
+    "tutorial.ali_step1.desc":  "Este espacio es para empresas, fundaciones o centros que quieren colaborar con RECO+ o ya forman parte de la comunidad.",
+
+    "tutorial.ali_step2.title": "Regístrate o explora iniciativas",
+    "tutorial.ali_step2.desc":  "Registra tu empresa como aliado, o descubre las campañas y proyectos conjuntos que ya están en marcha.",
+
+    "tutorial.ali_step3.title": "Aliados destacados",
+    "tutorial.ali_step3.desc":  "Conoce a las empresas con plan Premium que apoyan activamente el movimiento RECO+.",
+
+    "tutorial.ali_step4.title": "¿Tu empresa quiere sumarse?",
+    "tutorial.ali_step4.desc":  "Toca aquí para registrar tu empresa y unirte a la comunidad de aliados que construyen un futuro más sostenible.",
+
+    "tutorial.ali_step5.title": "¡Listo para colaborar! 🎉",
+    "tutorial.ali_step5.desc":  "Ya sabes cómo moverte por esta página. El botón verde flotante siempre estará aquí si quieres repetir el recorrido.",
+
+    /* ── TUTORIAL: página Videos (vid_) ── */
+    "tutorial.vid_step0.title": "¡Bienvenido a la Biblioteca de videos! 🎥",
+    "tutorial.vid_step0.desc":  "Te mostramos cómo buscar, filtrar y compartir videos sobre reciclaje y donación. Usa los botones de abajo para moverte, y Esc para salir cuando quieras.",
+
+    "tutorial.vid_step1.title": "Busca un video",
+    "tutorial.vid_step1.desc":  "Escribe una palabra clave para encontrar rápido el video que buscas.",
+
+    "tutorial.vid_step2.title": "Filtra por categoría",
+    "tutorial.vid_step2.desc":  "Elige una categoría para ver solo esos videos, o sube el tuyo propio para compartirlo con la comunidad.",
+
+    "tutorial.vid_step3.title": "Explora la biblioteca",
+    "tutorial.vid_step3.desc":  "Toca cualquier video para verlo directamente aquí, sin salir de RECO+.",
+
+    "tutorial.vid_step4.title": "¡Listo para aprender! 🎉",
+    "tutorial.vid_step4.desc":  "Ya sabes cómo moverte por la biblioteca de videos. El botón verde flotante siempre estará aquí si quieres repetir el recorrido.",
+
+    /* ── TUTORIAL: página Escáner (esc_) ── */
+    "tutorial.esc_step0.title": "¡Bienvenido al Escáner! ✨",
+    "tutorial.esc_step0.desc":  "Te mostramos cómo identificar cualquier objeto con inteligencia artificial en segundos. Usa los botones de abajo para moverte, y Esc para salir cuando quieras.",
+
+    "tutorial.esc_step1.title": "Apunta la cámara",
+    "tutorial.esc_step1.desc":  "Coloca el objeto dentro del visor. El escáner analiza en vivo lo que la cámara ve.",
+
+    "tutorial.esc_step2.title": "Inicia el escáner",
+    "tutorial.esc_step2.desc":  "Toca este botón para activar tu cámara y empezar a identificar materiales al instante.",
+
+    "tutorial.esc_step3.title": "Escáneo preciso con IA",
+    "tutorial.esc_step3.desc":  "Si el resultado en vivo no es suficiente, toca aquí para un análisis más exacto con inteligencia artificial.",
+
+    "tutorial.esc_step4.title": "Historial de esta sesión",
+    "tutorial.esc_step4.desc":  "Aquí verás todos los objetos que has identificado durante esta sesión de escáneo.",
+
+    "tutorial.esc_step5.title": "¡Listo para escanear! 🎉",
+    "tutorial.esc_step5.desc":  "Ya sabes cómo usar el escáner. El botón verde flotante siempre estará aquí si quieres repetir el recorrido.",
 
     /* ── PÁGINA RECICLAR ── */
     "reciclar.hero.title1": "Recicla hoy,",
@@ -3051,18 +3183,6 @@ const translations = {
     "tutorial.rec_step0.title": "Welcome to Recycle! ♻️",
     "tutorial.rec_step0.desc":  "We'll show you how to pick what to recycle, use the AI scanner, and find the nearest center. Use the buttons below to move around, and Esc to exit anytime.",
 
-    "tutorial.rec_step1.title": "Your navigation bar",
-    "tutorial.rec_step1.desc":  "From here you can reach any section: Home, Donate, Guide, Scanner, Map and Alliances. It stays fixed at the top as you scroll.",
-
-    "tutorial.rec_step2.title": "Light / dark mode",
-    "tutorial.rec_step2.desc":  "Prefer a softer interface for your eyes at night? Try tapping this switch right now.",
-
-    "tutorial.rec_step3.title": "Switch language",
-    "tutorial.rec_step3.desc":  "RECO+ speaks Spanish and English. Tap it to switch — the whole page translates in real time without reloading.",
-
-    "tutorial.rec_step4.title": "Join the community",
-    "tutorial.rec_step4.desc":  "This button takes you to create your account to save favorite spots and track your activity.",
-
     "tutorial.rec_step5.title": "Two ways to start",
     "tutorial.rec_step5.desc":  "Go straight to the map to find the nearest recycling point, or use the scanner to identify your item with artificial intelligence.",
 
@@ -3083,6 +3203,150 @@ const translations = {
 
     "tutorial.rec_step11.title": "Ready to recycle! 🎉",
     "tutorial.rec_step11.desc":  "You now know your way around this page. The floating green button will always be here if you want to repeat the tour.",
+
+    /* ── TUTORIAL: Map page (map_) ── */
+    "tutorial.map_step0.title": "Welcome to the Map! 🗺️",
+    "tutorial.map_step0.desc":  "We'll show you how to search, filter, and find the nearest recycling or donation point. Use the buttons below to move around, and Esc to exit anytime.",
+
+    "tutorial.map_step1.title": "Search an address",
+    "tutorial.map_step1.desc":  "Type an address or location, or tap the location button to center the map on where you are.",
+
+    "tutorial.map_step2.title": "Filter by material",
+    "tutorial.map_step2.desc":  "Tap any chip to see only the points that accept that type of material — plastic, paper, glass, clothing, and more.",
+
+    "tutorial.map_step3.title": "More materials",
+    "tutorial.map_step3.desc":  "Can't find what you're looking for? Here are more categories: cardboard, batteries, cooking oil, and several others.",
+
+    "tutorial.map_step4.title": "Explore the map",
+    "tutorial.map_step4.desc":  "Every marker is a recycling, donation, drop-off, or event point. Tap it to see its details, hours, and accepted materials.",
+
+    "tutorial.map_step5.title": "Check the legend",
+    "tutorial.map_step5.desc":  "These icons help you tell the type of each point on the map at a glance.",
+
+    "tutorial.map_step6.title": "Results near you",
+    "tutorial.map_step6.desc":  "This list shows the points closest to your location, with ratings and quick details.",
+
+    "tutorial.map_step7.title": "Sort the results",
+    "tutorial.map_step7.desc":  "Change how the list is sorted: closest, top rated, or most recent.",
+
+    "tutorial.map_step8.title": "See all results",
+    "tutorial.map_step8.desc":  "Tap here to expand the full list of available points, with no limit on results.",
+
+    "tutorial.map_step9.title": "Missing a point?",
+    "tutorial.map_step9.desc":  "If you can't find a place you know, suggest it here and help us grow the RECO+ map.",
+
+    "tutorial.map_step10.title": "Ready to explore! 🎉",
+    "tutorial.map_step10.desc":  "You now know your way around the map. The floating green button will always be here if you want to repeat the tour.",
+
+    /* ── TUTORIAL: Donate page (don_) ── */
+    "tutorial.don_step0.title": "Welcome to Donate / Help! 🌿",
+    "tutorial.don_step0.desc":  "We'll show you how to donate items, ask for help, and track your donation's journey. Use the buttons below to move around, and Esc to exit anytime.",
+
+    "tutorial.don_step1.title": "Two ways to start",
+    "tutorial.don_step1.desc":  "Donate an item you no longer use, or request a donation if you need help. Both buttons open the matching form.",
+
+    "tutorial.don_step2.title": "What do you want to do today?",
+    "tutorial.don_step2.desc":  "Choose between posting something you want to donate or asking for something you need from the community.",
+
+    "tutorial.don_step3.title": "Our impact in numbers",
+    "tutorial.don_step3.desc":  "These numbers grow every day: items donated, people helped, communities connected, and items reused.",
+
+    "tutorial.don_step4.title": "Donations and requests",
+    "tutorial.don_step4.desc":  "Explore what the community has already posted: available donations, and active help requests.",
+
+    "tutorial.don_step5.title": "Campaigns from our allies",
+    "tutorial.don_step5.desc":  "Allied companies and centers on RECO+ post their recycling and donation campaigns here. Join one if it interests you.",
+
+    "tutorial.don_step6.title": "Follow your donation's journey",
+    "tutorial.don_step6.desc":  "From the moment you post it until it creates real impact — this is how you can track where your donation stands.",
+
+    "tutorial.don_step7.title": "A trustworthy community",
+    "tutorial.don_step7.desc":  "We verify profiles, have clear policies, and thousands of people ready to help or receive help.",
+
+    "tutorial.don_step8.title": "Ready to donate! 🎉",
+    "tutorial.don_step8.desc":  "You now know your way around this page. The floating green button will always be here if you want to repeat the tour.",
+
+    /* ── TUTORIAL: Guide page (gui_) ── */
+    "tutorial.gui_step0.title": "Welcome to the Guide! 📚",
+    "tutorial.gui_step0.desc":  "We'll show you where to find the videos, step-by-step instructions, and the facts you need to recycle and donate better. Use the buttons below to move around, and Esc to exit anytime.",
+
+    "tutorial.gui_step1.title": "Featured videos",
+    "tutorial.gui_step1.desc":  "These featured videos quickly explain how to recycle, donate, and care for the planet.",
+
+    "tutorial.gui_step2.title": "More content and community",
+    "tutorial.gui_step2.desc":  "Discover more short videos, or upload your own to share with the RECO+ community.",
+
+    "tutorial.gui_step3.title": "Recycle or donate",
+    "tutorial.gui_step3.desc":  "Switch between recycling instructions and donation instructions with this toggle.",
+
+    "tutorial.gui_step4.title": "Choose a category",
+    "tutorial.gui_step4.desc":  "Tap the material you want to recycle or donate to see specific instructions.",
+
+    "tutorial.gui_step5.title": "Step-by-step instructions",
+    "tutorial.gui_step5.desc":  "Here you'll find how to prepare it and where to take it, plus the most common donation categories.",
+
+    "tutorial.gui_step6.title": "Facts and tips",
+    "tutorial.gui_step6.desc":  "Discover fun facts about recycling, the community's real impact, and quick everyday tips.",
+
+    "tutorial.gui_step7.title": "Join the community",
+    "tutorial.gui_step7.desc":  "When you're ready, create your account and become part of the change alongside thousands of people.",
+
+    "tutorial.gui_step8.title": "Ready to learn! 🎉",
+    "tutorial.gui_step8.desc":  "You now know your way around the guide. The floating green button will always be here if you want to repeat the tour.",
+
+    /* ── TUTORIAL: Alliances page (ali_) ── */
+    "tutorial.ali_step0.title": "Welcome to Alliances! 🤝",
+    "tutorial.ali_step0.desc":  "We'll show you how to register your company, explore initiatives, and meet our allies. Use the buttons below to move around, and Esc to exit anytime.",
+
+    "tutorial.ali_step1.title": "Collaborate and multiply the impact",
+    "tutorial.ali_step1.desc":  "This space is for companies, foundations, or centers that want to collaborate with RECO+ or are already part of the community.",
+
+    "tutorial.ali_step2.title": "Register or explore initiatives",
+    "tutorial.ali_step2.desc":  "Register your company as an ally, or discover the joint campaigns and projects already underway.",
+
+    "tutorial.ali_step3.title": "Featured allies",
+    "tutorial.ali_step3.desc":  "Meet the Premium-plan companies actively supporting the RECO+ movement.",
+
+    "tutorial.ali_step4.title": "Want your company to join?",
+    "tutorial.ali_step4.desc":  "Tap here to register your company and join the community of allies building a more sustainable future.",
+
+    "tutorial.ali_step5.title": "Ready to collaborate! 🎉",
+    "tutorial.ali_step5.desc":  "You now know your way around this page. The floating green button will always be here if you want to repeat the tour.",
+
+    /* ── TUTORIAL: Videos page (vid_) ── */
+    "tutorial.vid_step0.title": "Welcome to the Video Library! 🎥",
+    "tutorial.vid_step0.desc":  "We'll show you how to search, filter, and share videos about recycling and donating. Use the buttons below to move around, and Esc to exit anytime.",
+
+    "tutorial.vid_step1.title": "Search for a video",
+    "tutorial.vid_step1.desc":  "Type a keyword to quickly find the video you're looking for.",
+
+    "tutorial.vid_step2.title": "Filter by category",
+    "tutorial.vid_step2.desc":  "Pick a category to see only those videos, or upload your own to share with the community.",
+
+    "tutorial.vid_step3.title": "Explore the library",
+    "tutorial.vid_step3.desc":  "Tap any video to watch it right here, without leaving RECO+.",
+
+    "tutorial.vid_step4.title": "Ready to learn! 🎉",
+    "tutorial.vid_step4.desc":  "You now know your way around the video library. The floating green button will always be here if you want to repeat the tour.",
+
+    /* ── TUTORIAL: Scanner page (esc_) ── */
+    "tutorial.esc_step0.title": "Welcome to the Scanner! ✨",
+    "tutorial.esc_step0.desc":  "We'll show you how to identify any object with artificial intelligence in seconds. Use the buttons below to move around, and Esc to exit anytime.",
+
+    "tutorial.esc_step1.title": "Point the camera",
+    "tutorial.esc_step1.desc":  "Place the object inside the viewfinder. The scanner analyzes what the camera sees live.",
+
+    "tutorial.esc_step2.title": "Start the scanner",
+    "tutorial.esc_step2.desc":  "Tap this button to turn on your camera and start identifying materials instantly.",
+
+    "tutorial.esc_step3.title": "Precise AI scan",
+    "tutorial.esc_step3.desc":  "If the live result isn't enough, tap here for a more accurate analysis powered by artificial intelligence.",
+
+    "tutorial.esc_step4.title": "This session's history",
+    "tutorial.esc_step4.desc":  "Here you'll see every object you've identified during this scanning session.",
+
+    "tutorial.esc_step5.title": "Ready to scan! 🎉",
+    "tutorial.esc_step5.desc":  "You now know how to use the scanner. The floating green button will always be here if you want to repeat the tour.",
 
     /* ── RECYCLE PAGE ── */
     "reciclar.hero.title1": "Recycle today,",

@@ -11,11 +11,6 @@
   window.RECO_TUTORIAL_STEPS = [
     { key: 'rec_step0',  selector: null, kind: 'welcome' },
 
-    { key: 'rec_step1',  selector: '.bubble-nav',         placement: 'bottom', radius: 999, pad: 8,  section: 'nav' },
-    { key: 'rec_step2',  selector: '#darkModeToggle',     placement: 'bottom', radius: 999, pad: 6,  section: 'nav' },
-    { key: 'rec_step3',  selector: '.lang-pill',          placement: 'bottom', radius: 999, pad: 6,  section: 'nav' },
-    { key: 'rec_step4',  selector: '.bubble-nav__cta',    placement: 'bottom', radius: 999, pad: 6,  section: 'nav' },
-
     { key: 'rec_step5',  selector: '.rc-hero__actions',   placement: 'bottom', radius: 20,  pad: 10, section: 'hero' },
 
     { key: 'rec_step6',  selector: '#rcMaterials',        placement: 'top',    radius: 20,  pad: 12, section: 'tools' },
@@ -30,9 +25,8 @@
   /* Puntos de entrada del menú de secciones → índice de paso donde arrancar */
   window.RECO_TUTORIAL_SECTIONS = {
     full:  0,
-    nav:   1,
-    hero:  5,
-    tools: 6,
-    info:  8
+    hero:  1,
+    tools: 2,
+    info:  4
   };
 })();
