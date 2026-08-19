@@ -403,67 +403,12 @@ html.dark {
   box-shadow: var(--lg-shadow-sm) !important;
 }
 
-/* ── FOOTER: panel de vidrio grande conteniendo, dentro, tarjetas
-   de vidrio más pequeñas para marca / cada columna — mismo patrón
-   de "caja grande con cosas en cajas chicas" que ya usan los
-   rc-panel con sus rc-material / rc-result / rc-stat. ── */
-.footer {
-  background: var(--lg-bg-strong) !important;
-  backdrop-filter: blur(var(--lg-blur)) saturate(160%) !important;
-  -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(160%) !important;
-  border-top: 1px solid var(--lg-border) !important;
-  color: var(--lg-text-muted) !important;
-}
-
-.footer-brand,
-.footer-col {
-  background: var(--lg-bg) !important;
-  background-image: var(--lg-shine) !important;
-  background-blend-mode: overlay;
-  backdrop-filter: blur(calc(var(--lg-blur) - 8px)) saturate(150%) !important;
-  -webkit-backdrop-filter: blur(calc(var(--lg-blur) - 8px)) saturate(150%) !important;
-  border: 1px solid var(--lg-border) !important;
-  border-radius: 18px !important;
-  padding: 20px 18px !important;
-  box-shadow:
-    inset 0 1px 0 var(--lg-highlight),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.22),
-    var(--lg-shadow-sm) !important;
-  transition: box-shadow 0.35s ease, transform 0.3s cubic-bezier(.4,0,.2,1), background-color 0.3s ease;
-}
-.footer-brand:hover,
-.footer-col:hover {
-  background-color: var(--lg-bg-strong) !important;
-  transform: translateY(-3px);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.30),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.26),
-    var(--lg-shadow-hover) !important;
-}
-.footer-col h4 {
-  color: var(--lg-text) !important;
-}
-.footer-col a,
-.footer-col p,
-.footer-brand p {
-  color: var(--lg-text-muted) !important;
-}
-.footer-col a:hover {
-  color: #8fe0a8 !important;
-}
-
-/* Newsletter dentro de su footer-col ya de vidrio: que el input y
-   el botón no dupliquen fondo/blur, solo redondeo en píldora */
-.footer-col .newsletter-form {
-  background: transparent !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-.footer-col .newsletter-form input,
-.footer-col .newsletter-form button {
-  border-radius: 999px !important;
-}
+/* ── FOOTER: el estilo de "caja grande con cajas chicas adentro"
+   (marca + cada columna como tarjeta propia) ahora vive en
+   footer-unificado.css, para que se vea igual en TODAS las páginas,
+   no solo en reciclar.html. Ese archivo también corrige el bug por
+   el que el footer se desbordaba ("se sobresalía") del ancho de la
+   página. reciclar.html ya lo enlaza en el <head>. ── */
 
 /* ══════════════════════════════════════════════════════════════
    GUIRNALDA DE LUCES (string lights) — igual que mapa.html
@@ -510,7 +455,7 @@ html.dark .rc-string-lights {
 
 @media (prefers-reduced-motion: reduce) {
   .rc-panel, .rc-btn, .rc-material, .rc-scanner__drop, .rc-result, .rc-stat,
-  .rc-hero, .rc-process__step, .footer-brand, .footer-col {
+  .rc-hero, .rc-process__step {
     transition: none !important;
   }
   .rc-string-lights {

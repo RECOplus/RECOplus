@@ -48,6 +48,11 @@
         '<div class="vpm-modal__body" id="vpmBody" data-state="loading">' +
           '<div class="vpm-modal__state vpm-modal__state--loading"><div class="vpm-spinner"></div><span>' + tr("videos.player.cargando", "Cargando video…") + "</span></div>" +
           '<div class="vpm-modal__state vpm-modal__state--error"><span>' + tr("videos.player.error", "No se pudo cargar el video.") + '</span><a href="#" id="vpmFallbackLink" target="_blank" rel="noopener">' + tr("videos.player.abrirExterno", "Abrirlo en una pestaña nueva") + "</a></div>" +
+          '<div class="vpm-modal__state vpm-modal__state--external">' +
+            '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="30" height="30"><path d="M8 4H4.5A1.5 1.5 0 003 5.5v10A1.5 1.5 0 004.5 17h10a1.5 1.5 0 001.5-1.5V12"/><path d="M12 3h5v5M17 3l-8 8"/></svg>' +
+            '<span>' + tr("videos.player.externo", "Este video se reproduce en el sitio original.") + '</span>' +
+            '<a href="#" id="vpmExternalLink" target="_blank" rel="noopener">' + tr("videos.player.verOriginal", "Ver en el sitio original") + "</a>" +
+          "</div>" +
         "</div>" +
       "</div>";
 
@@ -79,6 +84,28 @@
     return /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(url);
   }
 
+  // Dominios que se sabe que exponen su video a través de un
+  // reproductor propio (no un archivo .mp4/.webm directo ni un
+  // embed de YouTube/Vimeo). Para estos casos no tiene caso
+  // intentar cargar la URL dentro de un <video>: nunca va a
+  // decodificar y solo se ve como un error confuso. Se muestra en
+  // su lugar un enlace directo al sitio original.
+  var DOMINIOS_REPRODUCTOR_PROPIO = [
+    'pbs.org',
+    'sesameworkshop.org'
+  ];
+
+  function esReproductorPropio(url) {
+    try {
+      var host = new URL(url).hostname.toLowerCase().replace(/^www\./, '');
+      return DOMINIOS_REPRODUCTOR_PROPIO.some(function (dominio) {
+        return host === dominio || host.endsWith('.' + dominio);
+      });
+    } catch (e) {
+      return false;
+    }
+  }
+
   function clearBody() {
     // Deja los dos estados (loading/error) intactos y remueve
     // cualquier iframe/video insertado en aperturas anteriores.
@@ -88,6 +115,18 @@
 
   function renderVideo(url) {
     clearBody();
+
+    // Sitios con reproductor propio (PBS, Sesame Workshop, etc.): no
+    // se puede embeber, así que se muestra el enlace directo de una
+    // vez, sin pasar por el spinner de carga ni por el intento
+    // fallido de <video>.
+    if (esReproductorPropio(url)) {
+      modalBody.setAttribute("data-state", "external");
+      var extLink = overlay.querySelector("#vpmExternalLink");
+      if (extLink) extLink.href = url;
+      return;
+    }
+
     modalBody.setAttribute("data-state", "loading");
 
     var ytId = getYouTubeId(url);
