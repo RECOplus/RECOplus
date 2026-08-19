@@ -34,7 +34,18 @@
   font-size: 0.82rem;
   font-weight: 700;
   cursor: pointer;
-  white-space: nowrap;
+  /* Antes: white-space: nowrap. Eso impedía que el texto se
+     achicara o envolviera dentro de la columna "Recursos" del
+     footer, así que cuando esa columna se angostaba (footer con
+     varias columnas, responsive, textos largos por i18n, etc.)
+     el texto del botón se salía del contenedor. Con normal +
+     max-width:100% el botón se ajusta al ancho disponible de su
+     columna y el texto envuelve en vez de desbordarse. */
+  white-space: normal;
+  max-width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  line-height: 1.3;
   backdrop-filter: blur(10px) saturate(160%);
   -webkit-backdrop-filter: blur(10px) saturate(160%);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.10), 0 4px 14px rgba(0,0,0,0.18);
