@@ -79,6 +79,15 @@
     if (typeof window.recoVideosHubRefresh === 'function') {
       window.recoVideosHubRefresh();
     }
+
+    // Si la página se abrió con un deep-link a un video de comunidad
+    // (videos.html?v=uN) que aún no existía en RECO_VIDEOS_DATA cuando
+    // videos-hub.js proceso la URL por primera vez (esta consulta a
+    // Supabase es asíncrona), se reintenta una vez que el video ya
+    // está disponible, para que el resaltado/scroll sí funcione.
+    if (typeof window.recoVideosHubAplicarDeepLink === 'function') {
+      window.recoVideosHubAplicarDeepLink();
+    }
   }
 
   function cargarVideosComunidad() {

@@ -258,6 +258,23 @@
     renderGrid();
   };
 
+  // Reintenta aplicar el deep-link ?v=<id> de la URL actual. Necesario
+  // porque los videos de comunidad (id "uN") llegan de forma asíncrona
+  // vía videos-supabase.js: si alguien abre videos.html?v=u3 y esa
+  // consulta a Supabase todavía no había terminado cuando este script
+  // leyó la URL la primera vez, el video no existía aún en DATA.videos
+  // y no se resaltaba. videos-supabase.js llama a esta función apenas
+  // termina de fusionar los videos nuevos.
+  window.recoVideosHubAplicarDeepLink = function () {
+    var params = new URLSearchParams(window.location.search);
+    var videoId = params.get("v");
+    if (!videoId) return;
+    var video = DATA.videos.filter(function (v) { return v.id === videoId; })[0];
+    if (video) {
+      setFilter(video.category, { skipHistory: true, highlightId: video.id });
+    }
+  };
+
   ready(function () {
     if (!gridWrap()) return;
 
@@ -281,6 +298,9 @@
       if (video) {
         setFilter(video.category, { skipHistory: true, highlightId: video.id });
       } else {
+        // Todavía no está (puede ser un video de comunidad que aún no
+        // termina de cargar de Supabase): se muestra "todos" por ahora;
+        // recoVideosHubAplicarDeepLink() lo resaltará en cuanto llegue.
         setFilter("todos", { skipHistory: true });
       }
     } else if (catParam && DATA.categories.some(function (c) { return c.key === catParam; })) {

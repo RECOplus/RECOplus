@@ -25,71 +25,12 @@
       icon: '<circle cx="6.5" cy="7" r="2.2"/><circle cx="13.5" cy="7" r="2.2"/><path d="M2 17c0-2.8 2-4.8 4.5-4.8s4.5 2 4.5 4.8M9 17c0-2.5 1.8-4.3 4.5-4.3s4.5 1.8 4.5 4.3"/>' }
   ];
 
-  // Biblioteca de videos. Los primeros 7 (v1–v7) son los mismos que ya
-  // se muestran en el hero de guia.html, para que el flujo "ver video
-  // desde Guía" lleve al usuario exactamente a ese video en la biblioteca.
-  var VIDEOS = [
-    {
-      id: "v1", category: "reciclaje", duration: "02:45", variant: 1,
-      titleKey: "guia.video1.title", titleFallback: "El poder de reciclar",
-      descKey: "guia.video1.desc", descFallback: "Pequeñas acciones que generan grandes cambios al planeta."
-    },
-    {
-      id: "v2", category: "donacion", duration: "03:10", variant: 2,
-      titleKey: "guia.video2.title", titleFallback: "Donar es transformar",
-      descKey: "guia.video2.desc", descFallback: "Tus donaciones pueden mejorar la vida de muchas personas."
-    },
-    {
-      id: "v3", category: "sostenibilidad", duration: "02:20", variant: 3,
-      titleKey: "guia.video3.title", titleFallback: "Nuestro planeta, nuestro hogar",
-      descKey: "guia.video3.desc", descFallback: "Acciones simples que protegen nuestro planeta cada día."
-    },
-    {
-      id: "v4", category: "reciclaje", duration: "01:58", variant: 2,
-      titleKey: "guia.mini1.title", titleFallback: "Cómo separar correctamente",
-      descKey: "videos.v4.desc", descFallback: "Aprende a clasificar cada material antes de llevarlo a un punto de reciclaje."
-    },
-    {
-      id: "v5", category: "reciclaje", duration: "02:05", variant: 3,
-      titleKey: "guia.mini2.title", titleFallback: "Qué pasa con tus residuos",
-      descKey: "videos.v5.desc", descFallback: "Sigue el viaje de tus residuos desde el contenedor hasta su transformación."
-    },
-    {
-      id: "v6", category: "sostenibilidad", duration: "01:45", variant: 1,
-      titleKey: "guia.mini3.title", titleFallback: "Reutilizar para vivir mejor",
-      descKey: "videos.v6.desc", descFallback: "Dale una segunda vida a los objetos que ya no usas."
-    },
-    {
-      id: "v7", category: "sostenibilidad", duration: "02:30", variant: 2,
-      titleKey: "guia.mini4.title", titleFallback: "Economía circular explicada fácil",
-      descKey: "videos.v7.desc", descFallback: "Entiende el ciclo que convierte residuos en nuevos recursos."
-    },
-    {
-      id: "v8", category: "donacion", duration: "02:12", variant: 3,
-      titleKey: "videos.v8.title", titleFallback: "Cómo donar de forma segura",
-      descKey: "videos.v8.desc", descFallback: "Consejos prácticos para coordinar una donación sin contratiempos."
-    },
-    {
-      id: "v9", category: "donacion", duration: "03:02", variant: 1,
-      titleKey: "videos.v9.title", titleFallback: "El impacto de tu donación",
-      descKey: "videos.v9.desc", descFallback: "Conoce a dónde llega lo que compartes y cómo cambia vidas."
-    },
-    {
-      id: "v10", category: "comunidad", duration: "02:38", variant: 2,
-      titleKey: "videos.v10.title", titleFallback: "Historias que transforman vidas",
-      descKey: "videos.v10.desc", descFallback: "Testimonios reales de personas que reciclan y donan con RECO+."
-    },
-    {
-      id: "v11", category: "comunidad", duration: "01:52", variant: 3,
-      titleKey: "videos.v11.title", titleFallback: "Comunidades que reciclan juntas",
-      descKey: "videos.v11.desc", descFallback: "Cómo un barrio organizado puede multiplicar su impacto ambiental."
-    },
-    {
-      id: "v12", category: "sostenibilidad", duration: "02:15", variant: 1,
-      titleKey: "videos.v12.title", titleFallback: "Reduce, reutiliza, recicla",
-      descKey: "videos.v12.desc", descFallback: "Los tres pilares que sostienen un estilo de vida sostenible."
-    }
-  ];
+  // Biblioteca de videos. Antes contenía videos de demostración
+  // estáticos (v1–v12); ahora la biblioteca se llena 100% con
+  // videos reales de la comunidad, agregados dinámicamente por
+  // videos-supabase.js desde la tabla `videos_usuario` (estado
+  // 'aprobado'). Este array empieza vacío a propósito.
+  var VIDEOS = [];
 
   global.RECO_VIDEOS_DATA = { categories: CATEGORIES, videos: VIDEOS };
 })(window);
