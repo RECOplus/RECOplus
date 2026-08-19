@@ -230,13 +230,14 @@
         --preview-card-bg: rgba(255,255,255,0.97);
         --preview-card-border: #c8e6c9;
 
-        --footer-bg:      #1a1a1a;
-        --footer-text:    #ccc;
-        --footer-text-dim:#aaa;
-        --footer-border:  #333;
-        --footer-redes:   #333;
-        --footer-bottom:  #666;
-        --newsletter-input:#333;
+        --footer-bg:      #eef7f1;
+        --footer-heading: #1a5c2a;
+        --footer-text:    #3a5a42;
+        --footer-text-dim:#5a7a62;
+        --footer-border:  #cfe6d6;
+        --footer-redes:   #ffffff;
+        --footer-bottom:  #6a8a72;
+        --newsletter-input:#ffffff;
 
         --feat-card-bg:   #aef8c1;
         --aliado-bg:      #ffffff;
@@ -294,6 +295,7 @@
         --preview-card-border: #2a4832;
 
         --footer-bg:      #080e09;
+        --footer-heading: #d4ead8;
         --footer-text:    #7a9a80;
         --footer-text-dim:#5a7a62;
         --footer-border:  #1a2a1e;
@@ -600,7 +602,7 @@
         color: var(--footer-text);
       }
 
-      html.dark .footer-logo { color: #d4ead8; }
+      html.dark .footer-logo { color: var(--footer-heading); }
       html.dark .footer-brand p { color: var(--footer-text-dim); }
 
       html.dark .redes a {
@@ -608,7 +610,7 @@
         color: var(--footer-text);
       }
 
-      html.dark .footer-col h4 { color: #d4ead8; }
+      html.dark .footer-col h4 { color: var(--footer-heading); }
 
       html.dark .footer-col a,
       html.dark .footer-col p { color: var(--footer-text-dim); }
@@ -617,7 +619,7 @@
 
       html.dark .newsletter-form input {
         background: var(--newsletter-input);
-        color: #d4ead8;
+        color: var(--footer-heading);
       }
 
       html.dark .newsletter-form input::placeholder { color: #4a6a52; }

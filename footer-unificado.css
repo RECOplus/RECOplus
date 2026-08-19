@@ -7,11 +7,12 @@
    ========================================================================== */
 
 .footer {
-    background: #1a1a1a;
-    color: #ccc;
+    background: var(--footer-bg, #1a1a1a);
+    color: var(--footer-text, #ccc);
     padding: 50px 40px 20px;
     position: relative;
     box-shadow: inset 0 1px 0 rgba(76, 175, 80, 0.12);
+    transition: background-color 0.28s, color 0.28s;
 }
 
 /* Línea de brillo superior (decoración) */
@@ -91,8 +92,9 @@ html.dark .footer::before {
 
 .footer-logo {
     font-size: 20px;
-    color: #fff;
+    color: var(--footer-heading, #fff);
     margin-bottom: 10px;
+    transition: color 0.28s;
 }
 
 .footer-logo img {
@@ -102,8 +104,9 @@ html.dark .footer::before {
 
 .footer-brand p {
     font-size: 13px;
-    color: #aaa;
+    color: var(--footer-text-dim, #aaa);
     margin-bottom: 16px;
+    transition: color 0.28s;
 }
 
 .redes {
@@ -116,7 +119,7 @@ html.dark .footer::before {
     height: 32px;
     background: rgba(76, 175, 80, 0.14);
     border: 1px solid rgba(76, 175, 80, 0.22);
-    color: #fff;
+    color: var(--footer-heading, #fff);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -139,20 +142,21 @@ html.dark .footer::before {
 }
 
 .footer-col h4 {
-    color: #fff;
+    color: var(--footer-heading, #fff);
     font-size: 14px;
     margin-bottom: 14px;
+    transition: color 0.28s;
 }
 
 .footer-col a,
 .footer-col p {
     display: block;
-    color: #aaa;
+    color: var(--footer-text-dim, #aaa);
     text-decoration: none;
     font-size: 13px;
     margin-bottom: 8px;
     overflow-wrap: anywhere;
-    transition: 0.2s;
+    transition: color 0.28s;
 }
 
 .footer-col a:hover {
@@ -171,7 +175,7 @@ html.dark .footer::before {
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.12);
     background: rgba(255, 255, 255, 0.06);
-    color: #fff;
+    color: var(--footer-heading, #fff);
     font-size: 13px;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -215,11 +219,12 @@ html.dark .newsletter-form input:focus {
 }
 
 .footer-bottom {
-    border-top: 1px solid #333;
+    border-top: 1px solid var(--footer-border, #333);
     padding-top: 20px;
     text-align: center;
     font-size: 13px;
-    color: #666;
+    color: var(--footer-bottom, #666);
+    transition: border-color 0.28s, color 0.28s;
 }
 
 @media (max-width: 900px) {
