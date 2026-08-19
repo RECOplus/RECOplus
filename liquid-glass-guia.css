@@ -349,25 +349,28 @@ html.dark {
 }
 
 /* ── FOOTER: mismo patrón "caja grande de vidrio + cajas chicas de
-   vidrio" que reciclar.html/index.html. Valores fijos (no --lgg-*)
-   porque el footer base del sitio (styles.css) es oscuro fijo,
-   igual en claro y oscuro. ── */
+   vidrio" que reciclar.html/index.html. Usa las variables de tema
+   --footer-* (definidas en darkmode.js) como base de color, con
+   blur/transparencia/reflejo de vidrio encima — así el footer
+   sigue el tema claro/oscuro del sitio en vez de quedar fijo en
+   oscuro (el footer YA NO es oscuro fijo: footer-unificado.css y
+   style.css lo resolvieron para que responda a --footer-bg). ── */
 .footer {
-  background: rgba(10, 16, 12, 0.82) !important;
+  background: color-mix(in srgb, var(--footer-bg, #1a1a1a) 82%, transparent) !important;
   backdrop-filter: blur(22px) saturate(160%) !important;
   -webkit-backdrop-filter: blur(22px) saturate(160%) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-top: 1px solid var(--footer-border, rgba(255, 255, 255, 0.10)) !important;
   position: relative;
 }
 
 .footer-brand,
 .footer-col {
-  background: rgba(14, 20, 16, 0.62) !important;
+  background: color-mix(in srgb, var(--footer-bg, #1a1a1a) 62%, transparent) !important;
   background-image: var(--lgg-shine) !important;
   background-blend-mode: overlay;
   backdrop-filter: blur(14px) saturate(150%) !important;
   -webkit-backdrop-filter: blur(14px) saturate(150%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border: 1px solid var(--footer-border, rgba(255, 255, 255, 0.10)) !important;
   border-radius: 18px !important;
   padding: 20px 18px !important;
   box-shadow:
@@ -379,7 +382,7 @@ html.dark {
 }
 .footer-brand:hover,
 .footer-col:hover {
-  background-color: rgba(8, 13, 10, 0.75) !important;
+  background-color: color-mix(in srgb, var(--footer-bg, #1a1a1a) 75%, transparent) !important;
   transform: translateY(-3px);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.30),
