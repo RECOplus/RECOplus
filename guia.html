@@ -294,6 +294,8 @@ html.dark .dm-pill__sun { opacity: 0.38; }
   <link rel="stylesheet" href="ajustes-liquid-glass.css">
   <link rel="stylesheet" href="contact-fab.css">
   <link rel="stylesheet" href="footer-unificado.css">
+  <!-- Capa aditiva: unifica el banner de esta página con el estilo del hero de reciclar.html -->
+  <link rel="stylesheet" href="banner-unificado.css">
 </head>
 <body>
 
@@ -384,12 +386,28 @@ html.dark .dm-pill__sun { opacity: 0.38; }
        GH HERO — Centro de aprendizaje: título + videos principales + "Más videos"
        ════════════════════════════════════════════ -->
   <section class="gh gh-hero">
-    <div class="gh-wrap gh-hero__inner">
-      <h1 class="gh-hero__title gh-reveal" data-i18n="guia.hero.title">
-        Aprende, explora y actúa<br>
-        por un <span class="gh-accent">planeta</span> más sostenible.
-      </h1>
+    <div class="gh-wrap">
+      <!-- Capa aditiva: banner unificado con el estilo del hero de reciclar.html -->
+      <div class="bn-hero bn-reveal">
+        <div class="bn-hero__bg"><img src="img/banner guia.png" alt=""></div>
+        <div class="bn-hero__content">
+          <h1 data-i18n="guia.hero.title">
+            Aprende, explora y actúa<span>por un planeta más sostenible.</span>
+          </h1>
+          <div class="bn-hero__actions">
+            <a href="#ghVideoRow" class="bn-btn bn-btn--solid">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg>
+              <span data-i18n="guia.hero.eyebrow">Ver videos principales</span>
+            </a>
+            <a href="videos.html" class="bn-btn bn-btn--outline">
+              <span data-i18n="guia.hero.verTodos">Ver todos los videos</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <div class="gh-wrap gh-hero__inner">
       <div class="gh-learn__grid">
         <div>
           <div class="gh-learn__eyebrow gh-reveal">
