@@ -20,32 +20,25 @@
    de ayuda / FAQ / Términos / Privacidad), pero conserva su propio
    diseño tipo "pill" con ícono en vez de ser un link de texto plano,
    para que siga destacándose como llamada a la acción. */
+/* Solo ícono, circular — mismo tamaño/patrón que .redes a (los
+   íconos sociales de la marca), para que no dependa del ancho de
+   texto y nunca se desborde de la columna "Recursos", sin importar
+   cuán angosta quede en responsive o con textos largos de otros
+   idiomas. El texto accesible vive en title/aria-label (ver JS). */
 .comentar-footer-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
   margin-top: 10px;
-  padding: 9px 18px;
-  border-radius: 999px;
+  padding: 0;
+  border-radius: 50%;
   border: 1.5px solid rgba(126,232,154,0.30);
   background: rgba(45,140,78,0.16);
   color: #eafff1 !important;
-  font-family: 'DM Sans', Arial, sans-serif;
-  font-size: 0.82rem;
-  font-weight: 700;
   cursor: pointer;
-  /* Antes: white-space: nowrap. Eso impedía que el texto se
-     achicara o envolviera dentro de la columna "Recursos" del
-     footer, así que cuando esa columna se angostaba (footer con
-     varias columnas, responsive, textos largos por i18n, etc.)
-     el texto del botón se salía del contenedor. Con normal +
-     max-width:100% el botón se ajusta al ancho disponible de su
-     columna y el texto envuelve en vez de desbordarse. */
-  white-space: normal;
-  max-width: 100%;
-  box-sizing: border-box;
-  text-align: center;
-  line-height: 1.3;
   backdrop-filter: blur(10px) saturate(160%);
   -webkit-backdrop-filter: blur(10px) saturate(160%);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.10), 0 4px 14px rgba(0,0,0,0.18);
@@ -60,7 +53,7 @@
 .comentar-footer-btn:active {
   transform: translateY(0) scale(0.98);
 }
-.comentar-footer-btn svg { flex-shrink: 0; }
+.comentar-footer-btn svg { flex-shrink: 0; width: 15px; height: 15px; }
 
 /* ── Overlay + modal (mismo patrón que ajustes-overlay/ajustes-modal) ── */
 .comentar-overlay {
