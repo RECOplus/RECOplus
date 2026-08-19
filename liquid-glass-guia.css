@@ -201,6 +201,97 @@ html.dark {
     0 22px 50px rgba(0, 0, 0, 0.60) !important;
 }
 
+/* ── BANNER REAL (.bn-hero, inyectado por banner-unificado.css):
+   es la tarjeta con la foto de fondo que ve la persona. Se enmarca
+   en vidrio (borde + highlight superior + sombra flotante + reflejo
+   diagonal sutil) sin tapar la imagen de fondo ni el degradado que
+   ya trae banner-unificado.css — mismo tratamiento que .rc-hero en
+   reciclar.html (también tiene foto de fondo propia). Usa las
+   variables --lgg-* (con su ajuste de modo claro ya resuelto por
+   liquid-glass-guia-light-fix.css) para que combine con el resto
+   de "vidrios" de esta página en vez de quedar fijo en oscuro. ── */
+.gh-hero .bn-hero {
+  border: 1px solid var(--lgg-border-strong) !important;
+  box-shadow:
+    inset 0 1px 0 var(--lgg-highlight),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.24),
+    var(--lgg-shadow) !important;
+  position: relative;
+  overflow: hidden;
+}
+.gh-hero .bn-hero:hover {
+  border-color: var(--lgg-border-strong) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.36),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.30),
+    var(--lgg-shadow-hover) !important;
+}
+/* Reflejo diagonal de vidrio (banda fija). .bn-hero__bg (la foto)
+   va en z-index 0 y .bn-hero__content (texto/botones) en z-index 1
+   — ambos definidos en banner-unificado.css — así que el reflejo
+   se ancla justo en medio, encima de la foto y debajo del texto. */
+.gh-hero .bn-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--lgg-shine);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 1;
+}
+/* Gota de vidrio: línea de brillo en el borde superior */
+.gh-hero .bn-hero::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 8%; right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--lgg-highlight), transparent);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Botones del banner: mismo vidrio que el resto de botones sólidos
+   de marca de esta página (.gh-donate-panel__cta / .gh-learn__side-btn) */
+.bn-hero .bn-btn--solid {
+  background-color: rgba(45, 140, 78, 0.72) !important;
+  background-image: linear-gradient(180deg, rgba(45,140,78,0.45), rgba(26,92,42,0.40)), var(--lgg-shine) !important;
+  backdrop-filter: blur(calc(var(--lgg-blur) - 8px)) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(calc(var(--lgg-blur) - 8px)) saturate(160%) !important;
+  border: 1px solid rgba(94, 207, 130, 0.45) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.24),
+    inset 0 -1px 0 rgba(0,0,0,0.24),
+    0 4px 10px rgba(0,0,0,0.22),
+    0 14px 30px rgba(45,140,78,0.32) !important;
+  position: relative;
+  z-index: 2;
+}
+.bn-hero .bn-btn--solid:hover {
+  background-color: rgba(45, 140, 78, 0.88) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.30),
+    inset 0 -1px 0 rgba(0,0,0,0.26),
+    0 6px 14px rgba(0,0,0,0.28),
+    0 20px 42px rgba(45,140,78,0.42) !important;
+}
+.bn-hero .bn-btn--outline {
+  background-color: var(--lgg-bg) !important;
+  background-image: var(--lgg-shine) !important;
+  backdrop-filter: blur(var(--lgg-blur)) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(var(--lgg-blur)) saturate(160%) !important;
+  border-color: var(--lgg-border) !important;
+  box-shadow:
+    inset 0 1px 0 var(--lgg-highlight),
+    inset 0 -1px 0 rgba(0,0,0,0.20),
+    var(--lgg-shadow-sm) !important;
+  position: relative;
+  z-index: 2;
+}
+.bn-hero .bn-btn--outline:hover {
+  background-color: var(--lgg-bg-strong) !important;
+  border-color: rgba(94, 207, 130, 0.45) !important;
+}
+
 /* ── Video cards + sidebar "Más videos": ya traían un glass ligero
    en guia-hub.css, aquí se refuerza blur/saturación/sombra para
    igualar la intensidad de reciclar.html ── */
