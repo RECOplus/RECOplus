@@ -199,6 +199,20 @@
 }
 .donar-hero__subtitle {
   max-width: 460px !important;
+  margin-bottom: 0 !important; /* reciclar solo usa margin-top (via
+    .bn-hero__content p); donar.css le agregaba 22px extra abajo que
+    hacía crecer la caja más que la de reciclar. margin-top se deja
+    intacto (lo pone .bn-hero__content p más arriba en este mismo
+    archivo). */
+}
+/* reciclar.html no tiene divisor ni badge en su hero (solo título +
+   párrafo + botones). Esos dos bloques son los que hacían que el
+   banner de Donar quedara más alto que el de Reciclar: se ocultan
+   para que el contenido —y por lo tanto el tamaño de la caja— sea
+   idéntico. */
+.donar-hero .hero__divider,
+.donar-hero .hero__badge {
+  display: none !important;
 }
 @media (max-width: 900px) {
   .donar-hero { margin-top: 96px !important; }
