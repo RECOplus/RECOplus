@@ -355,11 +355,14 @@
 
   window.recoComentar = { open: openModal, close: closeModal };
 
-  document.addEventListener('reco:langchange', function () {
-    if (overlayEl && typeof window.applyLang === 'function' && typeof window.currentLang === 'function') {
-      window.applyLang(window.currentLang());
-    }
-  });
+  /* NOTA: antes había aquí un listener de 'reco:langchange' que
+     volvía a llamar a window.applyLang(...). Se quitó porque
+     causaba un loop infinito: applyLang() ya dispara ese mismo
+     evento 'reco:langchange' al terminar, así que ese listener se
+     retriggereaba a sí mismo sin parar (esto era lo que congelaba
+     la pestaña al abrir el modal de comentarios). applyLang() ya
+     re-traduce TODO el documento —incluido este modal, una vez
+     está en el DOM— así que no hace falta escuchar el evento aquí. */
 
   ready(injectFooterButton);
 })();
