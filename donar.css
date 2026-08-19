@@ -99,6 +99,9 @@ html.dark {
   gap: 40px;
   overflow: visible;
   isolation: isolate;
+  /* mismo alto que el banner de reciclar (.rc-hero min-height: 420px),
+     así la foto ocupa el mismo tamaño visual en ambas páginas */
+  min-height: 420px;
 }
 
 /* Glow orbs de fondo, mismo lenguaje que .rc-hero::before/::after */
@@ -174,6 +177,11 @@ html.dark .donar-hero::after {
 .donar-hero__image {
   position: relative;
   z-index: 1;
+  /* alto fijo = mismo tamaño que el banner de reciclar (.rc-hero
+     min-height: 420px). Antes no tenía alto propio, así que el
+     height:100% del <img> se resolvía como auto y el banner quedaba
+     con el alto natural de la foto en vez de un tamaño consistente. */
+  height: 420px;
   border-radius: 24px;
   overflow: hidden;
   border: 1px solid var(--border-muted, var(--lg-border));
