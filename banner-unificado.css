@@ -164,6 +164,26 @@
   display: flex !important;
   grid-template-columns: none !important;
   margin: 108px auto 40px !important;
+
+  /* Fix: donar.css (mixin de vidrio) y donar-liquid-glass-boost.css
+     (con !important) le siguen metiendo a .donar-hero el brillo
+     diagonal, la línea superior y la sombra de las tarjetas de
+     vidrio, por encima de las reglas de arriba. reciclar.html no
+     tiene nada de eso en su .rc-hero: es solo foto + degradado +
+     texto. Se anula aquí (este archivo carga al final) para que el
+     hero de Donar quede exactamente igual de "limpio". */
+  background: var(--bg-card) !important;
+  background-image: none !important;
+  background-blend-mode: normal !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+/* Línea de brillo superior ('gota de vidrio') que
+   donar-liquid-glass-boost.css añade solo a .donar-hero: reciclar no
+   la tiene, se quita para igualar. */
+.donar-hero::after {
+  content: none !important;
 }
 .donar-hero__image,
 .donar-hero__card-float {
