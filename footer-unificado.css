@@ -42,13 +42,51 @@ html.dark .footer::before {
 
 .footer-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr 2fr;
-    gap: 40px;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 2fr);
+    gap: 28px 32px;
     margin-bottom: 40px;
+}
+
+/* Cada celda del grid (marca + cada columna) debe poder encogerse
+   por debajo del ancho de su contenido -- si no, textos largos (el
+   correo, el teléfono, el input del newsletter) empujan la pista
+   más allá del contenedor y el footer completo se desborda hacia
+   la derecha ("se sale" del borde de la página, con scroll
+   horizontal). Este es el bug que hacía que el footer se sobresaliera. */
+.footer-grid > * {
+    min-width: 0;
 }
 
 .footer-brand {
     max-width: 200px;
+}
+
+/* Misma "caja grande con cajas chicas adentro" que usa reciclar.html:
+   cada bloque del footer (marca + cada columna) es su propia tarjeta
+   de vidrio flotando sobre el fondo oscuro del footer, en vez de
+   texto suelto directamente sobre #1a1a1a. */
+.footer-brand,
+.footer-col {
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    padding: 20px 18px;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.18),
+        0 4px 16px rgba(0, 0, 0, 0.22);
+    transition: background-color 0.28s, border-color 0.28s, box-shadow 0.35s ease, transform 0.3s cubic-bezier(.4,0,.2,1);
+}
+
+.footer-brand:hover,
+.footer-col:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(76, 175, 80, 0.30);
+    transform: translateY(-3px);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.10),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.20),
+        0 10px 24px rgba(0, 0, 0, 0.28);
 }
 
 .footer-logo {
@@ -113,6 +151,7 @@ html.dark .footer::before {
     text-decoration: none;
     font-size: 13px;
     margin-bottom: 8px;
+    overflow-wrap: anywhere;
     transition: 0.2s;
 }
 
@@ -198,5 +237,9 @@ html.dark .newsletter-form input:focus {
 @media (prefers-reduced-motion: reduce) {
     .footer::before {
         display: none;
+    }
+    .footer-brand,
+    .footer-col {
+        transition: none;
     }
 }

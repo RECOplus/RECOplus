@@ -20,6 +20,11 @@
    de ayuda / FAQ / Términos / Privacidad), pero conserva su propio
    diseño tipo "pill" con ícono en vez de ser un link de texto plano,
    para que siga destacándose como llamada a la acción. */
+/* Solo ícono, circular — mismo tamaño/patrón que .redes a (los
+   íconos sociales de la marca), para que no dependa del ancho de
+   texto y nunca se desborde de la columna "Recursos", sin importar
+   cuán angosta quede en responsive o con textos largos de otros
+   idiomas. El texto accesible vive en title/aria-label (ver JS). */
 .comentar-footer-btn {
   /* !important en display/width: .footer-col a (más específica) forzaba
      display:block y estiraba el botón a todo el ancho de la columna,
@@ -28,20 +33,18 @@
   width: fit-content !important;
   max-width: 100%;
   align-items: center;
-  justify-content: center;
   gap: 8px;
-  margin: 14px 0 4px;
-  padding: 11px 22px;
+  margin-top: 10px;
+  padding: 9px 18px;
   border-radius: 999px;
-  border: 1.5px solid rgba(126,232,154,0.55);
-  background: linear-gradient(135deg, rgba(56,168,96,0.85), rgba(26,92,42,0.90));
+  border: 1.5px solid rgba(126,232,154,0.30);
+  background: rgba(45,140,78,0.16);
   color: #eafff1 !important;
   font-family: 'DM Sans', Arial, sans-serif;
-  font-size: 0.84rem;
+  font-size: 0.82rem;
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
-  text-decoration: none !important;
   backdrop-filter: blur(10px) saturate(160%);
   -webkit-backdrop-filter: blur(10px) saturate(160%);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), 0 4px 14px rgba(0,0,0,0.28);
@@ -57,10 +60,6 @@
   transform: translateY(0) scale(0.98);
 }
 .comentar-footer-btn svg { flex-shrink: 0; }
-
-@media (max-width: 480px) {
-  .comentar-footer-btn { white-space: normal; text-align: center; }
-}
 
 /* ── Overlay + modal (mismo patrón que ajustes-overlay/ajustes-modal) ── */
 .comentar-overlay {

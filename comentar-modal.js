@@ -93,7 +93,15 @@
     link.href = '#';
     link.className = 'comentar-footer-btn';
     link.id = 'comentarFooterBtn';
-    link.innerHTML = ICON_CHAT + '<span data-i18n="comentar.boton">Dejar un comentario</span>';
+    // Solo ícono (sin texto visible): el botón de texto completo
+    // se salía del ancho de la columna "Recursos" en varias
+    // páginas. Se conserva accesible vía title/aria-label
+    // traducibles (i18n.js los actualiza igual que data-i18n).
+    link.innerHTML = ICON_CHAT;
+    link.title = tr('comentar.boton', 'Dejar un comentario');
+    link.setAttribute('aria-label', tr('comentar.boton', 'Dejar un comentario'));
+    link.setAttribute('data-i18n-title', 'comentar.boton');
+    link.setAttribute('data-i18n-aria', 'comentar.boton');
 
     link.addEventListener('click', function (e) {
       e.preventDefault();

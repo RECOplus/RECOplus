@@ -488,6 +488,15 @@ const translations = {
 
     "videos.badge.comunidad": "Comunidad",
 
+    /* ── REPRODUCTOR DE VIDEO (video-player-modal.js) ── */
+    "videos.player.cerrar": "Cerrar",
+    "videos.player.cargando": "Cargando video…",
+    "videos.player.error": "No se pudo cargar el video.",
+    "videos.player.abrirExterno": "Abrirlo en una pestaña nueva",
+    "videos.player.externo": "Este video se reproduce en el sitio original.",
+    "videos.player.verOriginal": "Ver en el sitio original",
+    "videos.player.titulo": "Reproduciendo video",
+
     /* ── SUBIR VIDEO (subir-video-modal.js) ── */
     "subirvideo.boton":        "Subir video",
     "subirvideo.titulo":       "Comparte un video",
@@ -2573,6 +2582,15 @@ const translations = {
     "videos.v12.desc":  "The three pillars that support a sustainable lifestyle.",
 
     "videos.badge.comunidad": "Community",
+
+    /* ── VIDEO PLAYER (video-player-modal.js) ── */
+    "videos.player.cerrar": "Close",
+    "videos.player.cargando": "Loading video…",
+    "videos.player.error": "Couldn't load the video.",
+    "videos.player.abrirExterno": "Open in a new tab",
+    "videos.player.externo": "This video plays on the original site.",
+    "videos.player.verOriginal": "View on the original site",
+    "videos.player.titulo": "Playing video",
 
     /* ── UPLOAD VIDEO (subir-video-modal.js) ── */
     "subirvideo.boton":        "Upload video",

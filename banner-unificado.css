@@ -1,0 +1,272 @@
+/* ═══════════════════════════════════════════════════════════════
+   BANNER-UNIFICADO.CSS
+   Capa aditiva: unifica el estilo visual del banner/hero de
+   guia.html, donar.html y alianzas.html con el de reciclar.html
+   (imagen de fondo a pantalla completa dentro de una tarjeta con
+   border-radius, degradado desde --bg-primary, título Fraunces
+   900, párrafo y botones rc-btn superpuestos a la izquierda).
+
+   No modifica reciclar.html/.css (es la referencia). No borra
+   ninguna regla de guia-hub.css / donar.css / alianzas.css: las
+   sobreescribe con especificidad/orden de carga (se enlaza AL
+   FINAL del <head>, después de esas hojas).
+
+   Cárgalo en guia.html, donar.html y alianzas.html:
+   <link rel="stylesheet" href="banner-unificado.css">
+═══════════════════════════════════════════════════════════════ */
+
+/* ──────────────────────────────────────────────────────────────
+   MIXIN COMPARTIDO — mismo esqueleto que .rc-hero de reciclar.css
+   ────────────────────────────────────────────────────────────── */
+.bn-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px;
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 56px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-muted);
+}
+
+.bn-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.bn-hero__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center right;
+  display: block;
+}
+.bn-hero__bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right,
+    var(--bg-primary) 0%,
+    color-mix(in srgb, var(--bg-primary) 88%, transparent) 34%,
+    color-mix(in srgb, var(--bg-primary) 40%, transparent) 58%,
+    transparent 80%);
+}
+
+.bn-hero__content {
+  position: relative;
+  z-index: 1;
+  max-width: 540px;
+}
+.bn-hero__content h1 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 900;
+  font-size: clamp(2.1rem, 4vw, 3.1rem);
+  line-height: 1.12;
+  color: var(--text-heading);
+  letter-spacing: -0.02em;
+}
+.bn-hero__content h1 span {
+  display: block;
+  color: var(--accent);
+}
+.bn-hero__content p {
+  margin-top: 16px;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.65;
+  max-width: 460px;
+}
+.bn-hero__actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+.bn-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 22px;
+  border-radius: 999px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+  text-decoration: none;
+  transition: transform 0.2s cubic-bezier(.4,0,.2,1), box-shadow 0.2s, background 0.2s, border-color 0.2s;
+}
+.bn-btn:hover { transform: translateY(-2px); }
+.bn-btn--solid {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 8px 22px rgba(45, 140, 78, 0.30);
+}
+.bn-btn--solid:hover { background: #1a5c2a; box-shadow: 0 10px 26px rgba(45, 140, 78, 0.38); }
+.bn-btn--outline {
+  background: var(--bg-muted);
+  color: var(--text-heading);
+  border-color: var(--border-light);
+  backdrop-filter: blur(var(--map-glass-blur, 14px));
+  -webkit-backdrop-filter: blur(var(--map-glass-blur, 14px));
+}
+.bn-btn--outline:hover { border-color: var(--accent); color: var(--accent); }
+.bn-btn svg { flex-shrink: 0; }
+
+@media (max-width: 720px) {
+  .bn-hero { padding: 40px 28px; min-height: 380px; }
+}
+
+/* Fade-in genérico igual a .rc-reveal/.gh-reveal, para no depender
+   de que el JS de una página concreta añada la clase is-visible a
+   .bn-hero. */
+.bn-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  animation: bnRevealIn 0.7s cubic-bezier(.22,1,.36,1) 0.1s forwards;
+}
+@keyframes bnRevealIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bn-reveal { animation: none; opacity: 1; transform: none; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   GUÍA — .gh-hero
+   Se conserva la franja verde original como "banda debajo del
+   banner" (donde vive el bloque de videos), y se antepone un
+   .bn-hero con la foto de guía justo encima, mismo patrón que
+   reciclar.
+   ══════════════════════════════════════════════════════════════ */
+.gh-hero {
+  padding-top: 24px;
+}
+.gh-hero .bn-hero {
+  margin-top: 108px; /* deja espacio para el navbar flotante */
+  margin-bottom: 44px;
+}
+@media (max-width: 640px) {
+  .gh-hero .bn-hero { margin-top: 96px; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DONAR — .donar-hero
+   Pasa de grid 2 columnas (texto + imagen) a una sola columna de
+   imagen de fondo full-bleed, igual que reciclar. La tarjeta
+   flotante (donar-hero__card-float) se retira: ya no hay columna
+   de imagen separada donde anclarla.
+   ══════════════════════════════════════════════════════════════ */
+.donar-hero {
+  display: flex !important;
+  grid-template-columns: none !important;
+  margin: 108px auto 40px !important;
+
+  /* Fix: donar.css (mixin de vidrio) y donar-liquid-glass-boost.css
+     (con !important) le siguen metiendo a .donar-hero el brillo
+     diagonal, la línea superior y la sombra de las tarjetas de
+     vidrio, por encima de las reglas de arriba. reciclar.html no
+     tiene nada de eso en su .rc-hero: es solo foto + degradado +
+     texto. Se anula aquí (este archivo carga al final) para que el
+     hero de Donar quede exactamente igual de "limpio". */
+  background: var(--bg-card) !important;
+  background-image: none !important;
+  background-blend-mode: normal !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+/* Línea de brillo superior ('gota de vidrio') que
+   donar-liquid-glass-boost.css añade solo a .donar-hero: reciclar no
+   la tiene, se quita para igualar. */
+.donar-hero::after {
+  content: none !important;
+}
+.donar-hero__image,
+.donar-hero__card-float {
+  display: none !important;
+}
+.donar-hero__content {
+  max-width: 540px;
+  position: relative;
+  z-index: 1;
+}
+.donar-hero__title {
+  font-size: clamp(2.1rem, 4vw, 3.1rem) !important;
+}
+.donar-hero__subtitle {
+  max-width: 460px !important;
+  margin-bottom: 0 !important; /* reciclar solo usa margin-top (via
+    .bn-hero__content p); donar.css le agregaba 22px extra abajo que
+    hacía crecer la caja más que la de reciclar. margin-top se deja
+    intacto (lo pone .bn-hero__content p más arriba en este mismo
+    archivo). */
+}
+/* reciclar.html no tiene divisor ni badge en su hero (solo título +
+   párrafo + botones). Esos dos bloques son los que hacían que el
+   banner de Donar quedara más alto que el de Reciclar: se ocultan
+   para que el contenido —y por lo tanto el tamaño de la caja— sea
+   idéntico. */
+.donar-hero .hero__divider,
+.donar-hero .hero__badge {
+  display: none !important;
+}
+@media (max-width: 900px) {
+  .donar-hero { margin-top: 96px !important; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ALIANZAS — .alianzas-hero
+   Ya comparte estructura (imagen de fondo + gradiente + texto a
+   la izquierda); solo se ajusta a tarjeta contenida con
+   border-radius/sombra + tokens de tema (antes usaba colores
+   fijos que no respetaban dark mode).
+   ══════════════════════════════════════════════════════════════ */
+.alianzas-hero {
+  max-width: 1200px;
+  margin: 108px auto 44px;
+  border-radius: 28px;
+  border: 1px solid var(--border-muted);
+  background: var(--bg-card);
+  height: auto;
+  min-height: 420px;
+  padding: 60px 56px;
+}
+.alianzas-hero__image::after {
+  background: linear-gradient(to right,
+    var(--bg-primary) 0%,
+    color-mix(in srgb, var(--bg-primary) 88%, transparent) 34%,
+    color-mix(in srgb, var(--bg-primary) 40%, transparent) 58%,
+    transparent 80%);
+}
+.alianzas-hero__content {
+  margin-top: 0;
+  max-width: 540px;
+}
+.alianzas-hero__title {
+  color: var(--text-heading);
+}
+.alianzas-hero__subtitle {
+  color: var(--text-secondary);
+}
+.hero__divider {
+  background: var(--accent);
+}
+.hero__badge {
+  background: var(--accent-light);
+  border-color: var(--border-light);
+  color: var(--accent);
+}
+.hero__badge:hover {
+  background: var(--accent);
+  color: #fff;
+}
+@media (max-width: 860px) {
+  .alianzas-hero {
+    padding: 40px 28px;
+    margin-top: 96px;
+  }
+}

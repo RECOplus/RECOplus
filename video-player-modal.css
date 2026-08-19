@@ -127,7 +127,8 @@ html.dark .vpm-overlay {
   padding: 20px;
 }
 .vpm-modal__body[data-state="loading"] .vpm-modal__state--loading,
-.vpm-modal__body[data-state="error"] .vpm-modal__state--error {
+.vpm-modal__body[data-state="error"] .vpm-modal__state--error,
+.vpm-modal__body[data-state="external"] .vpm-modal__state--external {
   display: flex;
 }
 
@@ -141,10 +142,16 @@ html.dark .vpm-overlay {
 }
 @keyframes vpmSpin { to { transform: rotate(360deg); } }
 
-.vpm-modal__state--error a {
+.vpm-modal__state--error a,
+.vpm-modal__state--external a {
   color: #7ee89a;
   font-weight: 700;
   text-decoration: underline;
+}
+
+.vpm-modal__state--external svg {
+  color: #7ee89a;
+  opacity: 0.9;
 }
 
 @media (max-width: 640px) {

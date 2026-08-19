@@ -294,6 +294,8 @@ html.dark .dm-pill__sun { opacity: 0.38; }
   <link rel="stylesheet" href="ajustes-liquid-glass.css">
   <link rel="stylesheet" href="contact-fab.css">
   <link rel="stylesheet" href="footer-unificado.css">
+  <!-- Capa aditiva: unifica el banner de esta página con el estilo del hero de reciclar.html -->
+  <link rel="stylesheet" href="banner-unificado.css">
 </head>
 <body>
 
@@ -384,12 +386,28 @@ html.dark .dm-pill__sun { opacity: 0.38; }
        GH HERO — Centro de aprendizaje: título + videos principales + "Más videos"
        ════════════════════════════════════════════ -->
   <section class="gh gh-hero">
-    <div class="gh-wrap gh-hero__inner">
-      <h1 class="gh-hero__title gh-reveal" data-i18n="guia.hero.title">
-        Aprende, explora y actúa<br>
-        por un <span class="gh-accent">planeta</span> más sostenible.
-      </h1>
+    <div class="gh-wrap">
+      <!-- Capa aditiva: banner unificado con el estilo del hero de reciclar.html -->
+      <div class="bn-hero bn-reveal">
+        <div class="bn-hero__bg"><img src="img/banner guia.png" alt=""></div>
+        <div class="bn-hero__content">
+          <h1 data-i18n="guia.hero.title">
+            Aprende, explora y actúa<span>por un planeta más sostenible.</span>
+          </h1>
+          <div class="bn-hero__actions">
+            <a href="#ghVideoRow" class="bn-btn bn-btn--solid">
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg>
+              <span data-i18n="guia.hero.eyebrow">Ver videos principales</span>
+            </a>
+            <a href="videos.html" class="bn-btn bn-btn--outline">
+              <span data-i18n="guia.hero.verTodos">Ver todos los videos</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <div class="gh-wrap gh-hero__inner">
       <div class="gh-learn__grid">
         <div>
           <div class="gh-learn__eyebrow gh-reveal">
@@ -397,82 +415,15 @@ html.dark .dm-pill__sun { opacity: 0.38; }
             <span data-i18n="guia.hero.eyebrow">Videos principales</span>
           </div>
 
-          <div class="gh-video-row">
-            <a href="videos.html?v=v1" class="gh-video-card gh-reveal">
-              <div class="gh-video-card__thumb">
-                <span class="gh-video-card__art"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 3h6v3l1.5 2v12a1 1 0 01-1 1h-7a1 1 0 01-1-1V8L9 6V3z"/></svg></span>
-                <span class="gh-video-card__icon"><svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg></span>
-                <span class="gh-video-card__badge">02:45</span>
-              </div>
-              <div class="gh-video-card__body">
-                <h3 class="gh-video-card__title" data-i18n="guia.video1.title">El poder de reciclar</h3>
-                <p class="gh-video-card__desc" data-i18n="guia.video1.desc">Pequeñas acciones que generan grandes cambios al planeta.</p>
-              </div>
-            </a>
-
-            <a href="videos.html?v=v2" class="gh-video-card gh-reveal">
-              <div class="gh-video-card__thumb">
-                <span class="gh-video-card__art"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9.3C.5 8 2 4 6 4c2 0 3.5 1.2 4 2.5C10.5 5.2 12 4 14 4c4 0 5.5 4 4 7.7C19.5 16.4 12 21 12 21z"/></svg></span>
-                <span class="gh-video-card__icon"><svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg></span>
-                <span class="gh-video-card__badge">03:10</span>
-              </div>
-              <div class="gh-video-card__body">
-                <h3 class="gh-video-card__title" data-i18n="guia.video2.title">Donar es transformar</h3>
-                <p class="gh-video-card__desc" data-i18n="guia.video2.desc">Tus donaciones pueden mejorar la vida de muchas personas.</p>
-              </div>
-            </a>
-
-            <a href="videos.html?v=v3" class="gh-video-card gh-reveal">
-              <div class="gh-video-card__thumb">
-                <span class="gh-video-card__art"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 3c-3 3-3 15 0 18M12 3c3 3 3 15 0 18" fill="none" stroke="#0d2014" stroke-width="1"/><path d="M3.5 9h17M3.5 15h17" stroke="#0d2014" stroke-width="1" fill="none"/></svg></span>
-                <span class="gh-video-card__icon"><svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg></span>
-                <span class="gh-video-card__badge">02:20</span>
-              </div>
-              <div class="gh-video-card__body">
-                <h3 class="gh-video-card__title" data-i18n="guia.video3.title">Nuestro planeta, nuestro hogar</h3>
-                <p class="gh-video-card__desc" data-i18n="guia.video3.desc">Acciones simples que protegen nuestro planeta cada día.</p>
-              </div>
-            </a>
-          </div>
+          <div class="gh-video-row" id="ghVideoRow"></div>
         </div>
 
         <aside class="gh-learn__side gh-reveal">
           <div class="gh-learn__side-head">
             <span data-i18n="guia.hero.masVideos">Más videos</span>
-            <button type="button" class="subir-video-btn" data-subir-video-btn>
-              <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13V4M6.5 7.5L10 4l3.5 3.5"/><path d="M4 13v1.5A1.5 1.5 0 005.5 16h9a1.5 1.5 0 001.5-1.5V13"/></svg>
-              <span data-i18n="subirvideo.boton">Subir video</span>
-            </button>
           </div>
 
-          <a href="videos.html?v=v4" class="gh-mini">
-            <span class="gh-mini__thumb"><svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg></span>
-            <span class="gh-mini__text">
-              <span class="gh-mini__title" data-i18n="guia.mini1.title">Cómo separar correctamente</span>
-              <span class="gh-mini__desc" data-i18n="guia.mini1.desc">01:58 · Aprende a clasificar tus residuos</span>
-            </span>
-          </a>
-          <a href="videos.html?v=v5" class="gh-mini">
-            <span class="gh-mini__thumb"><svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg></span>
-            <span class="gh-mini__text">
-              <span class="gh-mini__title" data-i18n="guia.mini2.title">Qué pasa con tus residuos</span>
-              <span class="gh-mini__desc" data-i18n="guia.mini2.desc">02:05 · El viaje hasta su transformación</span>
-            </span>
-          </a>
-          <a href="videos.html?v=v6" class="gh-mini">
-            <span class="gh-mini__thumb"><svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg></span>
-            <span class="gh-mini__text">
-              <span class="gh-mini__title" data-i18n="guia.mini3.title">Reutilizar para vivir mejor</span>
-              <span class="gh-mini__desc" data-i18n="guia.mini3.desc">01:45 · Dale una segunda vida a lo que ya no usas</span>
-            </span>
-          </a>
-          <a href="videos.html?v=v7" class="gh-mini">
-            <span class="gh-mini__thumb"><svg viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg></span>
-            <span class="gh-mini__text">
-              <span class="gh-mini__title" data-i18n="guia.mini4.title">Economía circular explicada fácil</span>
-              <span class="gh-mini__desc" data-i18n="guia.mini4.desc">02:30 · El ciclo que crea un futuro sostenible</span>
-            </span>
-          </a>
+          <div id="ghVideoMinis"></div>
 
           <a href="videos.html" class="gh-learn__side-btn" data-i18n="guia.hero.verTodos">Ver todos los videos</a>
         </aside>
@@ -718,6 +669,8 @@ html.dark .dm-pill__sun { opacity: 0.38; }
   <script src="script.js"></script>
   <!-- Capa aditiva: lógica del nuevo hub de Guía (switch, chips, panel de pasos, reveal on scroll) -->
   <script src="guia-hub.js"></script>
+  <!-- Capa aditiva: llena el hero (videos principales + minis) con videos reales de la comunidad desde Supabase -->
+  <script src="guia-hero-videos.js"></script>
   <!-- Capa aditiva: rotación automática de ¿Sabías qué? y Consejos rápidos -->
   <script src="guia-tips-rotate.js"></script>
   <!-- Capa aditiva: luces, partículas y barra de progreso (mismo patrón que reciclar-effects.js) -->

@@ -311,6 +311,8 @@ html.dark .dm-pill__sun { opacity: 0.38; }
     <link rel="stylesheet" href="ajustes-liquid-glass.css">
   <link rel="stylesheet" href="contact-fab.css">
   <link rel="stylesheet" href="footer-unificado.css">
+  <!-- Capa aditiva: unifica el banner de esta página con el estilo del hero de reciclar.html -->
+  <link rel="stylesheet" href="banner-unificado.css">
 </head>
 <body>
 
@@ -410,13 +412,19 @@ html.dark .dm-pill__sun { opacity: 0.38; }
   </header>
 </div>
 
-  <!-- ========== HERO ========== -->
-  <section class="donar-hero">
-    <div class="donar-hero__content">
+  <!-- ========== HERO ==========
+       Capa aditiva: banner unificado con el estilo del hero de
+       reciclar.html (imagen de fondo + degradado + contenido a la
+       izquierda). La imagen lateral y la tarjeta flotante quedan
+       ocultas por banner-unificado.css; sus nodos se conservan por
+       si se quieren restaurar más adelante. -->
+  <section class="donar-hero bn-hero bn-reveal">
+    <div class="bn-hero__bg"><img src="img/banner donar.png" alt=""></div>
+    <div class="donar-hero__content bn-hero__content">
       <h1 class="donar-hero__title" data-i18n="donar.hero.title">Donar /<br>Solicitar ayuda</h1>
       <p class="donar-hero__subtitle" data-i18n="donar.hero.subtitle">
-        Comparte lo que ya no necesitas o pide apoyo a<br>
-        quienes pueden ayudarte. Juntos construimos<br>
+        Comparte lo que ya no necesitas o pide apoyo a
+        quienes pueden ayudarte. Juntos construimos
         una comunidad más sólida y sostenible.
       </p>
       <div class="hero__divider"></div>
@@ -424,12 +432,12 @@ html.dark .dm-pill__sun { opacity: 0.38; }
         <span class="badge-leaf"><img src="img/hoja.png" alt="hoja"></span>
         <span data-i18n="donar.hero.badge">Pequeñas acciones, gran impacto.</span>
       </div>
-      <div class="dh-hero-ctas">
-        <button class="dh-btn dh-btn--primary" onclick="dhGoToTab('donar')" data-i18n="donar.hero.cta1">
+      <div class="dh-hero-ctas bn-hero__actions">
+        <button class="dh-btn dh-btn--primary bn-btn bn-btn--solid" onclick="dhGoToTab('donar')" data-i18n="donar.hero.cta1">
           <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16"><path d="M3 11c0-2.5 2-4 4-3l3 1.5 5-1.5c1.2-.2 2.5.6 2.5 2 0 1.2-.8 2-2 2l-3.5.5"/><path d="M3 11l2 5h3l7-4"/></svg>
           Donar un objeto
         </button>
-        <button class="dh-btn dh-btn--ghost" onclick="dhGoToTab('solicitar')" data-i18n="donar.hero.cta2">
+        <button class="dh-btn dh-btn--ghost bn-btn bn-btn--outline" onclick="dhGoToTab('solicitar')" data-i18n="donar.hero.cta2">
           <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16"><path d="M6 4h2l1 2h5a1 1 0 011 1v7a1 1 0 01-1 1H6a1 1 0 01-1-1V5a1 1 0 011-1z"/></svg>
           Solicitar una donación
         </button>
