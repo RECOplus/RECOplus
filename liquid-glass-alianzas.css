@@ -271,23 +271,35 @@ html.dark .feat-card__icon-wrap {
 
 /* footer: panel de vidrio oscuro grande, con columnas internas en
    su propio vidrio más claro (mismo patrón "caja grande + cajas
-   chicas" que liquid-glass-reciclar.css) */
+   chicas" que liquid-glass-reciclar.css/liquid-glass-guia.css).
+
+   Opacidad y color SUBIDOS a los mismos valores que usa guia.html
+   (antes: fondo del footer al 62% y columnas con un tinte BLANCO
+   casi invisible al 6%). Con blur + poca opacidad, en modo claro
+   el backdrop-filter capta el blanco de la página detrás y todo el
+   footer se "lava" a un gris verdoso, con muy poco contraste para
+   el texto — el bug que se seguía viendo tras el primer fix (ese
+   solo corregia borde/sombra/brillo, no el color de fondo real).
+   Ahora el footer usa un fondo casi opaco (82%) y las columnas su
+   propio verde oscuro sólido (62%, no blanco), igual en cualquier
+   tema porque ninguno de los dos depende ya de --lga-*. */
 .footer {
-  background-color: rgba(10, 16, 12, 0.62) !important;
+  background-color: rgba(10, 16, 12, 0.82) !important;
   backdrop-filter: blur(var(--lga-blur)) saturate(160%) !important;
   -webkit-backdrop-filter: blur(var(--lga-blur)) saturate(160%) !important;
   border: none !important;
-  border-top: 1px solid var(--lga-border) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.10) !important;
   box-shadow: none !important;
 }
 .footer-brand,
 .footer-col {
-  background-color: rgba(255, 255, 255, 0.06) !important;
+  background-color: rgba(14, 20, 16, 0.62) !important;
   backdrop-filter: blur(calc(var(--lga-blur) - 8px)) saturate(150%) !important;
   -webkit-backdrop-filter: blur(calc(var(--lga-blur) - 8px)) saturate(150%) !important;
 }
 .footer-brand:hover,
 .footer-col:hover {
+  background-color: rgba(8, 13, 10, 0.75) !important;
   transform: translateY(-3px);
 }
 

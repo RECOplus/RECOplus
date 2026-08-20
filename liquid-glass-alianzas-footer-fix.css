@@ -1,0 +1,95 @@
+/* ══════════════════════════════════════════════════════════════
+   LIQUID-GLASS-ALIANZAS-FOOTER-FIX.CSS
+   Capa ADITIVA (no toca liquid-glass-alianzas.css, footer-unificado.css
+   ni alianzas.html excepto el <link>).
+
+   POR QUÉ EXISTE:
+   En reciclar.html y guia.html el footer se ve blanco/claro en modo
+   claro porque esas páginas cargan flat-glass.css (pensado para
+   index.html), que entre otras cosas convierte TODAS las secciones
+   de la página —incluido .footer— en una "caja" de vidrio con fondo
+   casi blanco y texto oscuro en modo claro (ver bloques 0, 1 y 2 de
+   flat-glass.css: fondo de página plano blanco, .footer con
+   background-image casi transparente sobre body blanco, y textos del
+   footer forzados a #14231a).
+
+   alianzas.html NO carga flat-glass.css (usa su propio sistema de
+   vidrio verde vía liquid-glass-alianzas.css), así que su footer se
+   quedó con el vidrio oscuro fijo definido al final de ese archivo
+   (sección 8: "FOOTER — SIEMPRE oscuro"). Este archivo replica en
+   alianzas.html el mismo tratamiento "footer claro" que ya tienen
+   reciclar.html y guia.html, sin tocar esos archivos ni el resto de
+   la página de alianzas (hero, feature cards, CTA, etc. conservan su
+   vidrio verde de liquid-glass-alianzas.css sin cambios).
+
+   Cárgalo AL FINAL del <head>, después de liquid-glass-alianzas.css
+   y footer-unificado.css:
+   <link rel="stylesheet" href="liquid-glass-alianzas-footer-fix.css">
+═══════════════════════════════════════════════════════════════ */
+
+/* ── FONDO: mismo tratamiento de "caja de vidrio casi blanca" que
+   flat-glass.css aplica a .footer en reciclar.html/guia.html.
+   Se sobreescriben aquí las variables --lga-* que
+   liquid-glass-alianzas.css redeclara localmente en .footer (sección
+   8, "SIEMPRE oscuro"), así el vidrio pasa a claro en vez de oscuro. ── */
+html:not(.dark) .footer {
+  background-color: transparent !important;
+  background-image:
+    linear-gradient(180deg, rgba(20, 35, 26, 0.035) 0%, transparent 45%) !important;
+  border: none !important;
+  border-top: 1px solid rgba(20, 35, 26, 0.10) !important;
+  box-shadow:
+    0 2px 4px rgba(20, 35, 26, 0.05),
+    0 10px 24px rgba(20, 35, 26, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65) !important;
+}
+
+html:not(.dark) .footer-brand,
+html:not(.dark) .footer-col {
+  background-color: rgba(255, 255, 255, 0.55) !important;
+  border-color: rgba(20, 35, 26, 0.10) !important;
+}
+
+html:not(.dark) .footer-brand:hover,
+html:not(.dark) .footer-col:hover {
+  background-color: rgba(255, 255, 255, 0.75) !important;
+}
+
+/* ── TEXTO: el footer siempre fue oscuro con texto claro; con el
+   fondo ahora claro, el texto pasa a oscuro (idéntico a la sección 2
+   de flat-glass.css). ── */
+html:not(.dark) .footer,
+html:not(.dark) .footer-logo,
+html:not(.dark) .footer-col h4 {
+  color: #14231a !important;
+}
+
+html:not(.dark) .footer-brand p,
+html:not(.dark) .footer-col a,
+html:not(.dark) .footer-col p {
+  color: #4a5c50 !important;
+}
+
+html:not(.dark) .footer-col a:hover {
+  color: #1b7a3d !important;
+}
+
+/* ── REDES (íconos sociales): círculos oscuros sobre el vidrio claro. ── */
+html:not(.dark) .redes a {
+  color: #14231a !important;
+}
+
+/* ── NEWSLETTER: input/botón legibles sobre el vidrio claro. ── */
+html:not(.dark) .newsletter-form input {
+  background-color: rgba(20, 35, 26, 0.06) !important;
+  border: 1px solid rgba(20, 35, 26, 0.14) !important;
+  color: #14231a !important;
+}
+
+html:not(.dark) .newsletter-form input::placeholder {
+  color: rgba(20, 35, 26, 0.45) !important;
+}
+
+/* Modo oscuro: sin cambios, conserva el vidrio oscuro fijo que ya
+   define liquid-glass-alianzas.css (sección 8) — footer idéntico en
+   ambos temas dentro de modo oscuro. */
