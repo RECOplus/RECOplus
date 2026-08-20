@@ -1,0 +1,42 @@
+/* ══════════════════════════════════════════════════════════════
+   NAV-OVERFLOW-FIX.CSS
+   Capa ADITIVA sobre navbar.css. Cuando el ancho de la ventana no
+   alcanza para los links + las acciones (dark pill, lang pill, CTA
+   "Únete", y en donar.html también el botón ♻️ "mis publicaciones"),
+   el navbar no tenía forma de encoger: los <a> de .bubble-nav__links
+   usan white-space:nowrap y por defecto un flex item no encoge por
+   debajo del tamaño de su contenido, así que TODO el flex row
+   (.bubble-nav) se desbordaba hacia la derecha y el CTA "Únete"
+   terminaba saliéndose del pill redondeado (se veía flotando fuera
+   de la caja, sin fondo ni borde, a partir de cierto ancho — pasa
+   en cualquier página con este navbar, pero es más notorio en
+   donar.html porque el botón ♻️ extra deja aún menos espacio).
+
+   Fix: permitir que SOLO el bloque de links pueda encogerse y, si
+   aun así no entra todo, que haga scroll horizontal interno (con la
+   scrollbar oculta) en vez de empujar el resto del navbar fuera del
+   pill. min-width:0 + overflow-x distinto de "visible" es lo que
+   habilita que un flex item pueda encoger por debajo del ancho de
+   su contenido (truco estándar de Flexbox).
+
+   Cárgalo DESPUÉS de navbar.css y liquid-glass-fx.css:
+   <link rel="stylesheet" href="nav-overflow-fix.css">
+═══════════════════════════════════════════════════════════════ */
+
+.bubble-nav__links {
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.bubble-nav__links::-webkit-scrollbar {
+  display: none;
+}
+
+/* El wrapper principal tampoco debe permitir que nada se salga del
+   pill redondeado si, en un caso extremo, ni siquiera el bloque de
+   acciones (dark pill + lang pill + CTA) entra completo. */
+.bubble-nav {
+  max-width: 100%;
+}

@@ -11,6 +11,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <!-- Capa aditiva: el CTA "Únete" ahora es <a>, no <button> -->
   <link rel="stylesheet" href="nav-cta-link-fix.css">
+  <!-- Capa aditiva: evita que el CTA "Únete" se salga del pill del
+       navbar cuando no cabe todo el contenido (links + acciones). -->
+  <link rel="stylesheet" href="nav-overflow-fix.css">
   <!-- Capa aditiva: chip de usuario con foto/avatar + menú cuando hay sesión -->
   <link rel="stylesheet" href="navbar-auth.css">
   <!-- Capa aditiva: campana de notificaciones -->
@@ -28,6 +31,11 @@
   <link rel="stylesheet" href="contact-fab.css">
   <!-- Capa aditiva: footer idéntico en todas las páginas -->
   <link rel="stylesheet" href="footer-unificado.css">
+  <!-- Capa aditiva: activa el crossfade correcto del logo claro/oscuro
+       (.logo-light / .logo-dark) — esta página no incluye navbar.css ni
+       style.css, así que sin este archivo los dos <img> del logo se
+       muestran apilados en vez de alternarse según el tema. -->
+  <link rel="stylesheet" href="nav-logo-crossfade-fix.css">
 </head>
 <body>
 
