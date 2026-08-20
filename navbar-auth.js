@@ -101,7 +101,7 @@
     wrap.setAttribute('data-open', 'false');
 
     wrap.innerHTML =
-      '<button class="nav-user__btn" type="button" aria-haspopup="true" aria-expanded="false">' +
+      '<button class="nav-user__btn" type="button" aria-haspopup="true" aria-expanded="false" title="' + name.replace(/"/g, '&quot;') + '">' +
         buildAvatarMarkup(user, name) +
         '<span class="nav-user__name">' + name + '</span>' +
         '<svg class="nav-user__chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" width="11" height="11" stroke-linecap="round"><path d="M5 7l5 5 5-5"/></svg>' +

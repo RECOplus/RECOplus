@@ -43,7 +43,12 @@
   background: var(--nav-lang-bg);
   border: 1px solid var(--nav-lang-border);
   border-radius: 999px;
-  padding: 4px 14px 4px 4px;
+  /* Botón compacto (solo avatar): padding uniforme en vez de dejar
+     espacio extra a la derecha para el nombre + chevron, que ahora
+     están ocultos (ver .nav-user__name / .nav-user__chevron más
+     abajo). Esto libera espacio horizontal en el navbar para que
+     los links no se corten en anchos intermedios. */
+  padding: 4px;
   min-height: 34px;
   box-sizing: border-box;
   cursor: pointer;
@@ -53,6 +58,7 @@
   color: var(--nav-lang-color);
   isolation: isolate;
   min-width: 0;
+  flex-shrink: 0;
   transition: background 0.18s, border-color 0.25s, box-shadow 0.3s;
 }
 .nav-user__btn::before {
@@ -105,20 +111,19 @@
 }
 
 .nav-user__name {
-  min-width: 0;
-  max-width: 110px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  /* Siempre oculto: el chip de usuario ahora es compacto (solo
+     avatar/foto) para no competir por espacio con los links del
+     navbar. El nombre completo queda disponible como tooltip nativo
+     (title="...") en .nav-user__btn, inyectado desde navbar-auth.js. */
+  display: none;
 }
 
 .nav-user__chevron {
-  opacity: 0.6;
-  transition: transform 0.2s ease;
-  flex-shrink: 0;
-}
-.nav-user[data-open="true"] .nav-user__chevron {
-  transform: rotate(180deg);
+  /* Siempre oculto junto con .nav-user__name (ver arriba): el chip
+     compacto no deja espacio para la flechita del dropdown, pero el
+     botón sigue siendo clicable/tappable en toda su área para abrir
+     el menú. */
+  display: none;
 }
 
 /* ── MENÚ DESPLEGABLE — liquid glass completo, mismo lenguaje
@@ -238,21 +243,9 @@
   color: #d95c5c;
 }
 
-/* ── RESPONSIVE: en anchos intermedios (navbar completa aún visible
-   pero con menos espacio disponible) reducimos el máximo del nombre
-   para que el chip de usuario nunca empuje el resto del navbar fuera
-   del pill cuando el nombre o el email (fallback) son largos. ── */
-@media (max-width: 1180px) {
-  .nav-user__name { max-width: 90px; }
-}
-@media (max-width: 1000px) {
-  .nav-user__name { max-width: 60px; }
-}
-
 /* ── RESPONSIVE: en móvil, donde .bubble-nav__links ya se oculta,
    el chip de usuario se mantiene visible junto al resto de acciones. ── */
 @media (max-width: 860px) {
-  .nav-user__name { display: none; }
   .nav-user__btn { padding: 4px; }
 }
 
