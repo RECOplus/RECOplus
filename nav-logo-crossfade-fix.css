@@ -1,0 +1,45 @@
+/* ═══════════════════════════════════════════════════════════════
+   Capa aditiva: activa el crossfade del logo claro/oscuro
+   (.logo-light / .logo-dark) en las páginas cuyo navbar no incluye
+   navbar.css ni style.css (alianzas, contacto, donaciones, donar,
+   guía, privacidad, términos, videos).
+
+   Sin este archivo, los dos <img> del logo (agregados para igualar
+   el navbar de reciclar.html) se mostraban apilados uno debajo del
+   otro en vez de alternarse según el tema, porque la única regla
+   local (".bubble-nav__logo img { height:34px; ... }") no los
+   posiciona ni los cruza con opacidad.
+
+   Mismo criterio "zoom + crop" que usa navbar.css/style.css: el
+   contenedor recorta con overflow:hidden y cada <img> se centra
+   con position:absolute + transform, alternando opacidad según
+   html.dark. Se carga al final del <head> para ganarle en cascada
+   a la regla ".bubble-nav__logo img" ya existente en cada página
+   (misma especificidad, pero cargada después).
+═══════════════════════════════════════════════════════════════ */
+
+.bubble-nav__logo {
+  position: relative;
+  height: 40px;
+  width: 140px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.bubble-nav__logo img {
+  height: 126px;
+  width: auto;
+  display: block;
+  flex-shrink: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+/* Modo claro: se ve el logo "dark"; modo oscuro: se ve el logo "light" */
+html:not(.dark) .logo-dark  { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; }
+html:not(.dark) .logo-light { opacity: 0; transform: translate(-50%, -50%) scale(0.92); pointer-events: none; }
+html.dark .logo-light { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; }
+html.dark .logo-dark  { opacity: 0; transform: translate(-50%, -50%) scale(0.92); pointer-events: none; }
