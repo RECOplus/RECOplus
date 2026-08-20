@@ -48,16 +48,25 @@ html.dark body {
    reciclar.css (1200px / 60px 56px), en vez de los 1160px / 56px 48px
    que sigue heredando de donar.css. ── */
 .donar-hero {
+  width: 100% !important;
   max-width: 1200px !important;
   padding: 60px 56px !important;
+  justify-content: flex-start !important;
 }
 
-/* .donar-hero__content ya no comparte el hero con ninguna columna
-   de imagen (banner-unificado.css la oculta), así que puede ocupar
-   todo el ancho disponible en vez de quedar en un bloque angosto
-   rodeado de espacio vacío — igual que .rc-hero__content, que sí
-   ocupa el hero completo al no competir con otra columna. */
+/* CAUSA REAL del banner angosto: banner-unificado.css pone
+   ".bn-hero__content { max-width: 540px; }", y .donar-hero__content
+   tiene ambas clases (donar-hero__content bn-hero__content), así
+   que ese límite de 540px se hereda. Como .donar-hero es
+   display:flex sin justify-content propio (el navegador usa el
+   default flex-start, pero el bloque de 540px dentro de un hero de
+   1200px deja mucho espacio vacío a la derecha que se ve negro),
+   el resultado visual es un bloque de texto angosto que no llena
+   el hero. Se sube el tope a un valor más generoso mantiendo buena
+   lectura, y se fuerza flex-start para que quede pegado a la
+   izquierda igual que en reciclar. */
 .donar-hero__content {
+  max-width: 640px !important;
   width: 100%;
 }
 
