@@ -1,0 +1,68 @@
+/* ══════════════════════════════════════════════════════════════
+   DONAR-RECICLAR-PARITY-FIX.CSS
+   Capa ADITIVA (no toca donar.css, banner-unificado.css,
+   liquid-glass-donar.css ni donar.html excepto el <link>).
+
+   PROBLEMA 1 — FONDO DE PÁGINA EN MODO OSCURO:
+   reciclar.html carga flat-glass.css, que fuerza
+   "html.dark body { background: #000000 !important }" (fondo
+   plano negro puro). donar.html NO carga flat-glass.css (no lo
+   necesita: no tiene el sistema de "cajas" que ese archivo aplica
+   a .acciones/.curiosidades/etc.), así que su body se queda con
+   var(--bg-primary) de styles.css, que en modo oscuro es #0c1610
+   (un verde muy oscuro, no negro). Resultado: mismo layout, dos
+   tonos de fondo distintos entre ambas páginas.
+
+   PROBLEMA 2 — TAMAÑO DEL BANNER/HERO:
+   banner-unificado.css iguala la mayoría de reglas de .donar-hero
+   con .rc-hero de reciclar.css, pero deja sin sobreescribir
+   max-width (donar.css: 1160px vs reciclar.css vía .reciclar-main:
+   1200px) y padding (56px 48px vs 60px 56px), y .donar-hero__content
+   no tiene ancho explícito, así que en el nuevo layout de una sola
+   columna (display:flex, sin la imagen lateral que ocultó
+   banner-unificado.css) el contenido no se expande y dentro del
+   hero queda un bloque de texto angosto rodeado de espacio vacío
+   en vez de ocupar el hero completo, como sí hace .rc-hero__content
+   en reciclar (max-width:540px pero dentro de un padre que ya no
+   compite por espacio con una columna de imagen).
+
+   SOLUCIÓN:
+   1) Fondo negro puro fijo en modo oscuro, solo para donar.html
+      (no se toca flat-glass.css ni ninguna otra página).
+   2) Mismo max-width/padding que .rc-hero, y .donar-hero__content
+      pasa a ocupar el ancho disponible del hero (igual que
+      .rc-hero__content, que no compite con ninguna otra columna
+      ya que la imagen lateral de donar-hero está oculta).
+
+   Cárgalo AL FINAL del <head>, después de banner-unificado.css:
+   <link rel="stylesheet" href="donar-reciclar-parity-fix.css">
+═══════════════════════════════════════════════════════════════ */
+
+/* ── 1. FONDO DE PÁGINA: negro puro fijo en modo oscuro, igual
+   que flat-glass.css hace en reciclar.html/index.html. ── */
+html.dark body {
+  background: #000000 !important;
+}
+
+/* ── 2. TAMAÑO DEL HERO: mismo max-width/padding que .rc-hero de
+   reciclar.css (1200px / 60px 56px), en vez de los 1160px / 56px 48px
+   que sigue heredando de donar.css. ── */
+.donar-hero {
+  max-width: 1200px !important;
+  padding: 60px 56px !important;
+}
+
+/* .donar-hero__content ya no comparte el hero con ninguna columna
+   de imagen (banner-unificado.css la oculta), así que puede ocupar
+   todo el ancho disponible en vez de quedar en un bloque angosto
+   rodeado de espacio vacío — igual que .rc-hero__content, que sí
+   ocupa el hero completo al no competir con otra columna. */
+.donar-hero__content {
+  width: 100%;
+}
+
+@media (max-width: 720px) {
+  .donar-hero {
+    padding: 40px 28px !important;
+  }
+}
