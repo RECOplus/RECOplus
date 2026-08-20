@@ -376,11 +376,16 @@
     });
   });
 
-  document.addEventListener('reco:langchange', function () {
-    if (bellWrapEl && typeof window.applyLang === 'function' && typeof window.currentLang === 'function') {
-      window.applyLang(window.currentLang());
-    }
-  });
+  /* NOTA: antes había aquí un listener de 'reco:langchange' que
+     volvía a llamar a window.applyLang(...) para re-traducir la
+     campanita si el idioma cambiaba. Se quitó porque causaba un
+     loop infinito: applyLang() ya dispara ese mismo evento
+     'reco:langchange' al terminar, así que este listener se
+     retriggereaba a sí mismo sin parar (congelaba la pestaña),
+     igual que ocurría en ajustes-modal.js, comentar-modal.js y
+     subir-video-modal.js. applyLang() ya re-traduce TODO el
+     documento, incluida la campanita una vez que está en el DOM,
+     así que no hacía falta. */
 
   // API pública mínima, por si otro módulo necesita forzar un
   // refresco (ej. tras una acción que dispare una notificación

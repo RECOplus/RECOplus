@@ -149,15 +149,14 @@
 
   window.recoAjustes = { open: openModal, close: closeModal };
 
-  /* Si el idioma cambia (desde el toggle de la navbar, o desde el
-     propio selector ES/EN de este modal) mientras el modal ya fue
-     construido, se re-traduce por completo aunque esté cerrado, para
-     que la próxima vez que se abra ya esté al día. */
-  document.addEventListener('reco:langchange', function () {
-    if (overlayEl && typeof window.applyLang === 'function' && typeof window.currentLang === 'function') {
-      window.applyLang(window.currentLang());
-    }
-  });
+  /* NOTA: antes había aquí un listener de 'reco:langchange' que
+     volvía a llamar a window.applyLang(...) para re-traducir el
+     modal si el idioma cambiaba mientras estaba cerrado. Se quitó
+     porque causaba un loop infinito: applyLang() ya dispara ese
+     mismo evento 'reco:langchange' al terminar, así que este
+     listener se retriggereaba a sí mismo sin parar (congelaba la
+     pestaña). applyLang() ya re-traduce TODO el documento, incluido
+     este modal una vez que está en el DOM, así que no hacía falta. */
 
   /* ══════════════════════════════════════════════
      ENGANCHE: escucha clics en el botón "Ajustes"
