@@ -1,0 +1,90 @@
+/* ══════════════════════════════════════════════════════════════
+   FLAT-GLASS-RD-BANNERS-LIGHT-FIX.CSS
+   Capa ADITIVA sobre flat-glass.css e index.css. No los modifica.
+
+   PROBLEMA QUE RESUELVE:
+   flat-glass.css (sección 7) fuerza el fondo de .rd-banners
+   (contenedor de las tarjetas "Reciclar" / "Donar" en index.html) a
+   un verde oscuro sólido (#182618) fijo en AMBOS modos —mismo trato
+   que .cta-banner, pensado para que ese bloque quede oscuro siempre.
+   Además, .rd-banner--recycle/--donate (index.css, sección 22) usan
+   degradados translúcidos (verde/rojo sobre oscuro) pensados para
+   leerse encima de ese fondo oscuro.
+
+   El resultado en modo claro: un bloque casi negro incrustado entre
+   secciones claras, que no combina con el resto de la página (a
+   diferencia del .cta-banner, que si está pensado para quedar oscuro
+   como acento).
+
+   SOLUCIÓN:
+   Solo en modo claro, .rd-banners pasa a un fondo claro consistente
+   con el resto de secciones (mismo tratamiento que .acciones,
+   .curiosidades, etc. en flat-glass.css sección 1), y cada tarjeta
+   .rd-banner recibe un degradado suave verde/rojo claro en vez del
+   oscuro. El texto ya se corrige a oscuro en flat-glass.css sección
+   7b (rd-banner__text h3/p/cta) — no se toca aquí, sigue funcionando
+   igual sobre el nuevo fondo claro.
+
+   Cárgalo AL FINAL, después de flat-glass.css e index.css:
+   <link rel="stylesheet" href="flat-glass-rd-banners-light-fix.css">
+═══════════════════════════════════════════════════════════════ */
+
+/* ── CONTENEDOR: mismo tratamiento "caja de vidrio clara" que el
+   resto de secciones del index en modo claro (flat-glass.css
+   sección 1), en vez del verde oscuro sólido fijo. ── */
+html:not(.dark) .rd-banners {
+  background-color: transparent !important;
+  background-image:
+    linear-gradient(180deg, rgba(20, 35, 26, 0.035) 0%, transparent 45%) !important;
+  border: 1px solid rgba(20, 35, 26, 0.10) !important;
+  box-shadow:
+    0 2px 4px rgba(20, 35, 26, 0.05),
+    0 10px 24px rgba(20, 35, 26, 0.09),
+    0 28px 56px rgba(20, 35, 26, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65) !important;
+}
+
+/* ── TARJETAS: degradado claro por tipo, en vez del translúcido
+   oscuro pensado para el fondo #182618. Mismo espíritu de color
+   (verde para reciclar, rojo para donar) pero en tono pastel, igual
+   que las variantes claras de .acc-card en flat-glass.css (sección
+   3b: --acc-card--map, --donate, etc). ── */
+html:not(.dark) .rd-banner--recycle {
+  background: linear-gradient(160deg, #eafbf0 0%, #dcf3e4 55%, #d0edd9 100%) !important;
+  border-color: rgba(45, 140, 78, 0.25) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65), 0 8px 22px rgba(20, 35, 26, 0.08) !important;
+}
+html:not(.dark) .rd-banner--donate {
+  background: linear-gradient(160deg, #fdecec 0%, #fbdcdc 55%, #f8cfcf 100%) !important;
+  border-color: rgba(239, 68, 68, 0.22) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65), 0 8px 22px rgba(20, 35, 26, 0.08) !important;
+}
+
+html:not(.dark) .rd-banner--recycle:hover {
+  border-color: rgba(45, 140, 78, 0.42) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.70), 0 14px 32px rgba(45, 140, 78, 0.18) !important;
+}
+html:not(.dark) .rd-banner--donate:hover {
+  border-color: rgba(239, 68, 68, 0.38) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.70), 0 14px 32px rgba(239, 68, 68, 0.16) !important;
+}
+
+/* ── ÍCONO: fondo/​color propio, ajustado para contrastar sobre el
+   nuevo fondo pastel en vez del translúcido oscuro original. ── */
+html:not(.dark) .rd-banner--recycle .rd-banner__icon {
+  background: rgba(45, 140, 78, 0.16) !important;
+  color: #1b7a3d !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55) !important;
+}
+html:not(.dark) .rd-banner--donate .rd-banner__icon {
+  background: rgba(239, 68, 68, 0.14) !important;
+  color: #b23a3a !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55) !important;
+}
+
+/* ── SHINE SWEEP (::after): banda blanca pensada para vidrio oscuro;
+   en modo claro se atenúa para no verse como una mancha blanca extra
+   encima del pastel. ── */
+html:not(.dark) .rd-banner::after {
+  background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%) !important;
+}
