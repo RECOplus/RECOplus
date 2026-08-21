@@ -1,0 +1,507 @@
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE-SITE.CSS — RECO+
+   Capa ADITIVA para que TODAS las páginas se vean bien en celular.
+   Cárgalo AL FINAL del <head>, después de nav-mobile-menu.css.
+
+   No reescribe los CSS de cada página: solo corrige overflow,
+   padding, grids y el navbar en viewports angostos. En móvil se
+   ocultan piezas que ya están cubiertas por otra (descripciones
+   de chips, flechas de proceso, CTA “Únete” en login, WhatsApp
+   duplicado en contacto).
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Base: nada se sale del viewport ── */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+body {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
+img,
+video,
+iframe,
+canvas {
+  max-width: 100%;
+}
+/* El logo del navbar usa recorte + scale grande: no limitar a 100% */
+.bubble-nav__logo img {
+  max-width: none;
+}
+
+input,
+select,
+textarea,
+button {
+  max-width: 100%;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NAVBAR — compacto en teléfono
+   En ≤860px los links ya van al hamburguesa. Aquí se evita que
+   logo + tema + idioma + Únete + campana se salgan del pill.
+═══════════════════════════════════════════════════════════════ */
+@media (max-width: 860px) {
+  .bubble-nav-wrapper {
+    width: calc(100% - 16px);
+    top: 8px;
+    max-width: none;
+  }
+  .bubble-nav {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+  .bubble-nav__actions {
+    gap: 6px;
+  }
+  .bubble-nav__cta {
+    padding: 8px 12px;
+  }
+  .bubble-nav__cta .btn-sparkle {
+    display: none;
+  }
+  .lang-pill__chevron {
+    display: none;
+  }
+  .lang-pill {
+    padding: 5px 10px;
+    min-height: 32px;
+  }
+  .nav-user__menu {
+    right: 0;
+    left: auto;
+    max-width: calc(100vw - 32px);
+  }
+}
+
+@media (max-width: 520px) {
+  .bubble-nav__logo {
+    width: 108px;
+    height: 34px;
+  }
+  .bubble-nav__cta span[data-i18n],
+  .bubble-nav__cta > span:not(.btn-sparkle):not(.nav-user__name) {
+    display: none;
+  }
+  .bubble-nav__cta {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    justify-content: center;
+    gap: 0;
+  }
+  .dm-pill__btn {
+    width: 26px;
+    height: 26px;
+  }
+  .nav-burger {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 380px) {
+  .lang-pill__label {
+    display: none !important;
+  }
+  .lang-pill {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    min-height: 0;
+  }
+  .bubble-nav__logo {
+    width: 92px;
+    height: 30px;
+  }
+}
+
+/* Login / registro / reset: el CTA “Únete” es la misma página */
+@media (max-width: 860px) {
+  body:has(.login-card) .bubble-nav__cta {
+    display: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   INDEX
+═══════════════════════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .hero {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+    padding-bottom: 36px !important;
+    min-height: 0;
+  }
+  .hero-content h1,
+  .hero h1 {
+    font-size: clamp(1.85rem, 8vw, 2.4rem);
+    line-height: 1.12;
+  }
+  .hero-content p,
+  .hero p {
+    font-size: 0.95rem;
+  }
+  .search-glass {
+    width: 100%;
+    max-width: 100%;
+  }
+  .mini-nav {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: 10px;
+  }
+  .mini-nav__label {
+    display: none;
+  }
+  .mini-nav__chips {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+  }
+  .mini-nav__chip {
+    width: 100%;
+    white-space: normal !important;
+    justify-content: flex-start;
+    padding: 10px 12px 10px 10px !important;
+  }
+  .mini-nav__chip-desc {
+    display: none !important;
+  }
+  .hero-video-bg {
+    object-position: center;
+  }
+  .rd-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .rd-banner__cta {
+    width: auto;
+    padding-left: 0 !important;
+  }
+  .aliados-marquee-wrapper::before,
+  .aliados-marquee-wrapper::after,
+  .testimonios-marquee-wrapper::before,
+  .testimonios-marquee-wrapper::after {
+    width: 36px;
+  }
+}
+
+@media (max-width: 400px) {
+  .mini-nav__chips {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HEROES compartidos (reciclar / donar / guía / alianzas)
+═══════════════════════════════════════════════════════════════ */
+@media (max-width: 720px) {
+  .reciclar-main {
+    padding: 0 14px 56px;
+  }
+  .rc-hero,
+  .bn-hero,
+  .alianzas-hero,
+  .donar-hero {
+    min-height: 0 !important;
+    padding: 28px 18px !important;
+    border-radius: 20px !important;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .rc-hero__content h1,
+  .bn-hero__content h1,
+  .alianzas-hero__title,
+  .donar-hero__title {
+    font-size: clamp(1.7rem, 7.5vw, 2.2rem) !important;
+  }
+  .rc-hero__actions,
+  .bn-hero__actions,
+  .dh-hero-ctas,
+  .alianzas-hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .rc-btn,
+  .bn-btn,
+  .dh-btn {
+    justify-content: center;
+    width: 100%;
+    white-space: normal;
+  }
+  .rc-hero__bg img,
+  .bn-hero__bg img {
+    object-position: center;
+  }
+  /* Orbes decorativos que se salen del radio en móvil */
+  .donar-hero::before,
+  .donar-hero::after,
+  .rc-hero::before,
+  .rc-hero::after {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .rc-panel {
+    padding: 20px 16px;
+    border-radius: 18px;
+  }
+  .rc-materials {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .rc-process {
+    grid-template-columns: 1fr 1fr;
+  }
+  .rc-calc__inputs {
+    grid-template-columns: 1fr !important;
+  }
+  .rc-calc__results {
+    grid-template-columns: 1fr 1fr;
+  }
+  .rc-scanner__controles,
+  .reco-scanner__controles {
+    flex-direction: column;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DONAR / DONACIONES
+═══════════════════════════════════════════════════════════════ */
+@media (max-width: 720px) {
+  .dh-section {
+    padding: 0 14px;
+    margin-bottom: 40px;
+  }
+  .dh-choice-grid {
+    grid-template-columns: 1fr;
+  }
+  .dh-stats-grid {
+    flex-wrap: wrap;
+    padding: 22px 16px;
+    justify-content: center;
+  }
+  .dh-stat {
+    flex: 1 1 42%;
+  }
+  .dh-step-arrow {
+    display: none;
+  }
+  .dh-steps-row {
+    padding: 18px 14px;
+  }
+  .dh-car-btn {
+    display: none;
+  }
+  .dh-carousel,
+  .acc-strip {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .donar-tabs {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .donar-tab {
+    flex: 1 1 46%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 560px) {
+  .dh-choice-card {
+    padding: 22px 18px;
+  }
+  .dl-hero {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MAPA
+═══════════════════════════════════════════════════════════════ */
+@media (max-width: 860px) {
+  .map-wrapper,
+  #map {
+    min-height: 52vh;
+  }
+  .sidebar {
+    max-height: none;
+  }
+  .controls {
+    padding: 0.6rem 0.9rem 0.9rem;
+  }
+  .search-bar {
+    max-width: 100%;
+  }
+  .filter-bar {
+    flex-wrap: wrap;
+  }
+  .leaflet-routing-container {
+    max-width: calc(100vw - 24px) !important;
+    max-height: 38vh;
+    overflow: auto;
+  }
+  .leaflet-control-container .leaflet-top.leaflet-right {
+    max-width: calc(100vw - 16px);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GUÍA / VIDEOS / ALIANZAS
+═══════════════════════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .gh-wrap,
+  .vh-wrap {
+    padding: 0 16px !important;
+  }
+  .gh-hero {
+    padding-top: 96px !important;
+  }
+  .gh-stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .gh-donate-panel__cats {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .alianzas-features,
+  .alianzas-aliados {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+  .alianzas-cta {
+    padding: 28px 16px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LOGIN / REGISTRO / LEGAL / CONTACTO / ESCÁNER
+═══════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .login-card {
+    margin-left: 12px;
+    margin-right: 12px;
+    padding: 28px 18px !important;
+  }
+  .login-social {
+    grid-template-columns: 1fr !important;
+  }
+  .legal-wrap {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .legal-article {
+    padding: 20px 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .contact-grid,
+  .hero-grid,
+  .map-card,
+  .perks,
+  .help-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .form-row {
+    grid-template-columns: 1fr !important;
+  }
+  /* WhatsApp flotante propio de contacto.html: el FAB unificado ya
+     cubre el mismo enlace. */
+  .whatsapp-float {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .contenedor {
+    padding: 0 2px;
+  }
+  .encabezado h1 {
+    font-size: 1.45rem;
+  }
+  .reco-scanner__stage {
+    aspect-ratio: 3 / 4;
+    border-radius: 16px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FOOTER / MODALES / FABs
+═══════════════════════════════════════════════════════════════ */
+@media (max-width: 600px) {
+  .footer {
+    padding: 36px 16px 20px;
+  }
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 28px;
+  }
+  .newsletter-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .newsletter-form input,
+  .newsletter-form button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .ajustes-modal,
+  .suscripcion-modal,
+  .donar-modal,
+  .dh-form-modal,
+  .alianzas-registro-modal,
+  .campanas-modal,
+  .video-player-modal,
+  .subir-video-modal,
+  .comentar-modal {
+    width: calc(100% - 20px);
+    max-width: none;
+    margin: 10px auto;
+  }
+  .dh-form-modal-overlay {
+    padding: 12px 8px;
+    align-items: stretch;
+  }
+  .dh-form-modal-close {
+    top: 8px;
+    right: 8px;
+  }
+  .notif-panel {
+    right: -8px !important;
+    width: min(340px, calc(100vw - 20px)) !important;
+  }
+  .mis-pubs-dropdown {
+    right: -40px;
+    width: min(320px, calc(100vw - 24px));
+  }
+}
+
+/* Evitar que dos FABs se pisen el contenido inferior */
+@media (max-width: 640px) {
+  .reco-fab {
+    right: max(12px, env(safe-area-inset-right));
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  }
+  .reco-tut-fab {
+    right: max(16px, env(safe-area-inset-right));
+    bottom: calc(86px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Tablas / listados que a veces empujan el ancho */
+@media (max-width: 640px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    max-width: 100%;
+  }
+}
