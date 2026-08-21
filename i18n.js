@@ -2106,6 +2106,199 @@ const translations = {
     "alid.vacio.desc": "Las empresas con plan Premium aparecen aquí, destacadas ante toda la comunidad de RECO+.",
     "alid.vacio.btn": "Conocer el plan Premium →",
     "alid.cerrar": "Cerrar",
+
+    /* ════════════════════════════════════════════════════
+       LEGAL: Términos y Condiciones (terminos.html)
+       ════════════════════════════════════════════════════ */
+    "legal.eyebrow": "Legal",
+    "legal.terminos.h1": "Términos y Condiciones",
+    "legal.terminos.updated": "Última actualización: 16 de agosto de 2026",
+    "legal.terminos.intro": "Estas condiciones regulan el uso de la plataforma RECO+ (sitio web, escáner de materiales, mapa, donaciones, alianzas empresariales y demás funciones). Al crear una cuenta o usar RECO+ aceptas estos términos.",
+
+    "legal.terminos.toc.titulo": "Contenido",
+    "legal.terminos.toc.1": "1. Aceptación de los términos",
+    "legal.terminos.toc.2": "2. Quiénes somos",
+    "legal.terminos.toc.3": "3. Descripción del servicio",
+    "legal.terminos.toc.4": "4. Registro y cuentas",
+    "legal.terminos.toc.5": "5. Cuentas de empresa / aliado",
+    "legal.terminos.toc.6": "6. Escáner de materiales con IA",
+    "legal.terminos.toc.7": "7. Contenido generado por usuarios",
+    "legal.terminos.toc.8": "8. Propiedad intelectual",
+    "legal.terminos.toc.9": "9. Planes y suscripciones",
+    "legal.terminos.toc.10": "10. Conductas prohibidas",
+    "legal.terminos.toc.11": "11. Limitación de responsabilidad",
+    "legal.terminos.toc.12": "12. Suspensión y terminación",
+    "legal.terminos.toc.13": "13. Modificaciones",
+    "legal.terminos.toc.14": "14. Ley aplicable",
+    "legal.terminos.toc.15": "15. Contacto",
+
+    "legal.terminos.aviso": "<strong>Aviso:</strong> este documento es una versión base preparada para RECO+ y no constituye asesoría legal. Antes de publicarlo de forma definitiva, te recomendamos que un abogado en Panamá lo revise y lo adapte a la situación real de la empresa.",
+
+    "legal.terminos.s1.h2": "Aceptación de los términos",
+    "legal.terminos.s1.p1": "Estos Términos y Condiciones (\"Términos\") constituyen un acuerdo legal entre la persona usuaria (\"tú\", \"usuario\") y RECO+ (\"RECO+\", \"nosotros\"), y regulan el acceso y uso del sitio web, aplicación y demás servicios ofrecidos bajo la marca RECO+ (en conjunto, la \"Plataforma\").",
+    "legal.terminos.s1.p2": "Al registrarte, acceder o usar la Plataforma, confirmas que has leído, entendido y aceptado estos Términos, así como nuestra <a href=\"privacidad.html\">Política de Privacidad</a>. Si no estás de acuerdo con alguna parte de estos Términos, no debes usar la Plataforma.",
+
+    "legal.terminos.s2.h2": "Quiénes somos",
+    "legal.terminos.s2.p1": "RECO+ es una plataforma comunitaria de reciclaje y donación que opera desde Panamá, con el objetivo de conectar a personas y empresas para facilitar el reciclaje, la donación de artículos y la educación ambiental.",
+    "legal.terminos.s2.p2": "Para cualquier consulta relacionada con estos Términos puedes escribirnos a <a href=\"mailto:soporte.recoplus@gmail.com\">soporte.recoplus@gmail.com</a>.",
+
+    "legal.terminos.s3.h2": "Descripción del servicio",
+    "legal.terminos.s3.p1": "RECO+ ofrece, entre otras, las siguientes funciones:",
+    "legal.terminos.s3.li1": "<strong>Mapa de puntos de reciclaje y donación:</strong> ubicaciones sugeridas por la propia comunidad y por aliados.",
+    "legal.terminos.s3.li2": "<strong>Escáner de materiales con inteligencia artificial:</strong> identifica el tipo de material a partir de una foto y sugiere cómo reciclarlo.",
+    "legal.terminos.s3.li3": "<strong>Donaciones y solicitudes de ayuda:</strong> publicación de artículos para donar y solicitudes de ayuda entre usuarios.",
+    "legal.terminos.s3.li4": "<strong>Alianzas empresariales:</strong> registro de empresas y organizaciones aliadas que colaboran con la comunidad.",
+    "legal.terminos.s3.li5": "<strong>Guía educativa y videos de la comunidad:</strong> contenido informativo sobre reciclaje y sostenibilidad, incluyendo videos que suben las propias personas usuarias.",
+    "legal.terminos.s3.li6": "<strong>Planes de suscripción:</strong> niveles Gratis, Básico y Premium con distintas funciones (ver sección 9).",
+    "legal.terminos.s3.p2": "RECO+ puede agregar, modificar o retirar funciones de la Plataforma en cualquier momento, sin que ello genere derecho a compensación alguna.",
+
+    "legal.terminos.s4.h2": "Registro y cuentas de usuario",
+    "legal.terminos.s4.p1": "Para usar ciertas funciones de RECO+ debes crear una cuenta mediante correo y contraseña, o iniciando sesión con tu cuenta de Google o Apple.",
+    "legal.terminos.s4.li1": "Debes proporcionar información veraz y mantenerla actualizada.",
+    "legal.terminos.s4.li2": "Eres responsable de la confidencialidad de tu contraseña y de toda actividad realizada desde tu cuenta.",
+    "legal.terminos.s4.li3": "El uso de la Plataforma está dirigido a personas mayores de 18 años. Si eres menor de edad, necesitas la supervisión y autorización de un padre, madre o tutor legal.",
+    "legal.terminos.s4.li4": "Debes notificarnos de inmediato si detectas un uso no autorizado de tu cuenta.",
+
+    "legal.terminos.s5.h2": "Cuentas de empresa / aliado",
+    "legal.terminos.s5.p1": "Las empresas u organizaciones que deseen registrarse como aliadas deben completar el proceso de registro disponible en la sección de Alianzas, que incluye la creación de una cuenta, la carga de información y material gráfico (logo, fotos) y la aceptación de estos Términos en nombre de la empresa.",
+    "legal.terminos.s5.p2": "RECO+ puede verificar, aprobar, solicitar información adicional o rechazar el registro de una empresa a su criterio, especialmente cuando la información proporcionada sea incompleta, inexacta o contraria a estos Términos.",
+
+    "legal.terminos.s6.h2": "Escáner de materiales con inteligencia artificial",
+    "legal.terminos.s6.p1": "El escáner de materiales utiliza modelos de inteligencia artificial para analizar imágenes y sugerir el tipo de material y su forma de reciclaje o disposición.",
+    "legal.terminos.s6.callout": "Los resultados del escáner son <strong>orientativos</strong> y pueden contener errores. RECO+ no garantiza la exactitud de la clasificación y no se hace responsable por decisiones tomadas exclusivamente con base en el resultado del escáner. Ante dudas sobre materiales peligrosos, especiales o de manejo delicado, consulta siempre a la autoridad o centro de acopio correspondiente.",
+
+    "legal.terminos.s7.h2": "Contenido generado por usuarios",
+    "legal.terminos.s7.p1": "RECO+ permite publicar contenido generado por la comunidad, incluyendo puntos de reciclaje sugeridos, publicaciones de donación, comentarios y videos.",
+    "legal.terminos.s7.li1": "Eres responsable del contenido que publicas y garantizas que tienes derecho a compartirlo.",
+    "legal.terminos.s7.li2": "No está permitido publicar contenido falso, engañoso, ofensivo, discriminatorio, violento o que infrinja derechos de terceros.",
+    "legal.terminos.s7.li3": "Los videos subidos a la Plataforma pasan por un proceso de moderación, que puede incluir revisión automática mediante inteligencia artificial y, en los casos que lo requieran, revisión manual antes de su publicación definitiva.",
+    "legal.terminos.s7.li4": "RECO+ puede eliminar, ocultar o rechazar cualquier contenido que incumpla estos Términos, sin previo aviso.",
+
+    "legal.terminos.s8.h2": "Propiedad intelectual",
+    "legal.terminos.s8.p1": "La marca RECO+, el diseño, los textos, gráficos y el software de la Plataforma son propiedad de RECO+ o de sus licenciantes, y están protegidos por las leyes de propiedad intelectual aplicables.",
+    "legal.terminos.s8.p2": "El contenido que tú publicas sigue siendo tuyo; al subirlo a RECO+ nos otorgas una licencia no exclusiva, mundial y gratuita para almacenarlo, mostrarlo y distribuirlo dentro de la Plataforma con el fin de operar el servicio.",
+
+    "legal.terminos.s9.h2": "Planes y suscripciones",
+    "legal.terminos.s9.p1": "RECO+ ofrece distintos niveles de plan (Gratis, Básico y Premium) con diferentes funciones y límites de uso.",
+    "legal.terminos.s9.callout": "<strong>Aviso:</strong> actualmente el proceso de pago de los planes de suscripción es una <strong>simulación (modo demo)</strong> y no procesa cobros reales. Cuando RECO+ habilite pagos reales, esta sección se actualizará para describir el proveedor de pagos, condiciones de facturación, renovación y cancelación.",
+
+    "legal.terminos.s10.h2": "Conductas prohibidas",
+    "legal.terminos.s10.p1": "Al usar RECO+ te comprometes a no:",
+    "legal.terminos.s10.li1": "Suplantar la identidad de otra persona o empresa.",
+    "legal.terminos.s10.li2": "Publicar contenido ilegal, fraudulento o que promueva actividades peligrosas.",
+    "legal.terminos.s10.li3": "Intentar vulnerar la seguridad de la Plataforma, sus cuentas o su infraestructura.",
+    "legal.terminos.s10.li4": "Usar la Plataforma para enviar spam, contenido malicioso o publicidad no autorizada.",
+    "legal.terminos.s10.li5": "Extraer datos de la Plataforma de forma automatizada (scraping) sin autorización expresa.",
+
+    "legal.terminos.s11.h2": "Limitación de responsabilidad",
+    "legal.terminos.s11.p1": "RECO+ actúa como intermediario que conecta a personas, comunidades y empresas en torno al reciclaje y la donación. No somos parte de las transacciones, entregas o acuerdos que se realicen entre usuarios, ni garantizamos la disponibilidad, calidad, seguridad o legalidad de los puntos de reciclaje, donaciones o publicaciones de terceros.",
+    "legal.terminos.s11.p2": "En la medida permitida por la ley, RECO+ no será responsable por daños indirectos, incidentales o derivados del uso de la Plataforma, incluyendo pérdidas resultantes de interacciones entre usuarios o de la información proporcionada por el escáner con IA.",
+
+    "legal.terminos.s12.h2": "Suspensión y terminación de cuentas",
+    "legal.terminos.s12.p1": "Podemos suspender o cancelar tu cuenta si incumples estos Términos, si detectamos actividad fraudulenta, o si es necesario para proteger a la comunidad o a la Plataforma.",
+    "legal.terminos.s12.p2": "Puedes solicitar la eliminación de tu cuenta en cualquier momento escribiéndonos a <a href=\"mailto:soporte.recoplus@gmail.com\">soporte.recoplus@gmail.com</a>.",
+
+    "legal.terminos.s13.h2": "Modificaciones a estos Términos",
+    "legal.terminos.s13.p1": "Podemos actualizar estos Términos periódicamente. Publicaremos la versión vigente en esta página junto con la fecha de última actualización. El uso continuado de la Plataforma después de una modificación implica la aceptación de los nuevos Términos.",
+
+    "legal.terminos.s14.h2": "Ley aplicable y jurisdicción",
+    "legal.terminos.s14.p1": "Estos Términos se rigen por las leyes de la República de Panamá. Cualquier controversia relacionada con estos Términos se someterá a los tribunales competentes de Panamá, salvo que la ley aplicable disponga algo distinto.",
+
+    "legal.terminos.s15.h2": "Contacto",
+    "legal.terminos.s15.p1": "Si tienes preguntas sobre estos Términos, escríbenos a:",
+    "legal.terminos.s15.li1": "Correo: <a href=\"mailto:soporte.recoplus@gmail.com\">soporte.recoplus@gmail.com</a>",
+    "legal.terminos.s15.li2": "Teléfono / WhatsApp: +507 6399-1249",
+    "legal.terminos.s15.li3": "Ubicación: David, Panamá",
+
+    /* ════════════════════════════════════════════════════
+       LEGAL: Política de Privacidad (privacidad.html)
+       ════════════════════════════════════════════════════ */
+    "legal.privacidad.h1": "Política de Privacidad",
+    "legal.privacidad.updated": "Última actualización: 16 de agosto de 2026",
+    "legal.privacidad.intro": "Esta política explica qué datos personales recopila RECO+, para qué los usamos, con quién los compartimos y qué derechos tienes sobre ellos.",
+
+    "legal.privacidad.toc.titulo": "Contenido",
+    "legal.privacidad.toc.1": "1. Responsable del tratamiento",
+    "legal.privacidad.toc.2": "2. Alcance y estándares que seguimos",
+    "legal.privacidad.toc.3": "3. Datos que recopilamos",
+    "legal.privacidad.toc.4": "4. Cómo usamos tus datos",
+    "legal.privacidad.toc.5": "5. Con quién compartimos datos",
+    "legal.privacidad.toc.6": "6. Almacenamiento y seguridad",
+    "legal.privacidad.toc.7": "7. Tus derechos",
+    "legal.privacidad.toc.8": "8. Cookies y almacenamiento local",
+    "legal.privacidad.toc.9": "9. Menores de edad",
+    "legal.privacidad.toc.10": "10. Transferencias internacionales",
+    "legal.privacidad.toc.11": "11. Cambios a esta política",
+    "legal.privacidad.toc.12": "12. Contacto",
+
+    "legal.privacidad.aviso": "<strong>Aviso:</strong> este documento es una versión base preparada para RECO+ y no constituye asesoría legal. Antes de publicarlo de forma definitiva, te recomendamos que un abogado revise su contenido y lo adapte a la operación real de la plataforma.",
+
+    "legal.privacidad.s1.h2": "Responsable del tratamiento",
+    "legal.privacidad.s1.p1": "El responsable del tratamiento de los datos personales recopilados a través de la Plataforma es RECO+, con operación en Panamá.",
+    "legal.privacidad.s1.p2": "Para cualquier consulta sobre esta política o el tratamiento de tus datos, puedes escribir a <a href=\"mailto:soporte.recoplus@gmail.com\">soporte.recoplus@gmail.com</a>.",
+
+    "legal.privacidad.s2.h2": "Alcance y estándares que seguimos",
+    "legal.privacidad.s2.p1": "RECO+ opera principalmente en Panamá. Como estándar de protección de datos, aplicamos los principios del <strong>Reglamento General de Protección de Datos (RGPD)</strong> de la Unión Europea —licitud, minimización de datos, limitación de la finalidad, transparencia y respeto a los derechos de las personas usuarias— además de las disposiciones de protección de datos personales vigentes en Panamá.",
+    "legal.privacidad.s2.p2": "Esto significa que, sin importar desde dónde accedas a RECO+, procuramos tratar tus datos personales bajo estos mismos estándares de protección.",
+
+    "legal.privacidad.s3.h2": "Datos que recopilamos",
+    "legal.privacidad.s3.li1": "<strong>Datos de registro:</strong> nombre, correo electrónico y contraseña (cifrada), o los datos básicos de perfil que compartes al iniciar sesión con Google o Apple.",
+    "legal.privacidad.s3.li2": "<strong>Datos de perfil:</strong> foto o avatar, y, si registras una empresa aliada, el nombre, logo, fotos y demás información de la empresa.",
+    "legal.privacidad.s3.li3": "<strong>Contenido que publicas:</strong> puntos de reciclaje sugeridos, publicaciones de donación, comentarios y videos que subas a la Plataforma.",
+    "legal.privacidad.s3.li4": "<strong>Imágenes del escáner:</strong> fotos que tomas para identificar materiales con el escáner de IA.",
+    "legal.privacidad.s3.li5": "<strong>Datos de ubicación:</strong> si lo autorizas, tu ubicación aproximada para mostrarte puntos de reciclaje o donación cercanos en el mapa.",
+    "legal.privacidad.s3.li6": "<strong>Datos de uso:</strong> información técnica básica sobre cómo usas la Plataforma (por ejemplo, páginas visitadas), con fines de funcionamiento y mejora del servicio.",
+
+    "legal.privacidad.s4.h2": "Cómo usamos tus datos",
+    "legal.privacidad.s4.p1": "Usamos tus datos personales para:",
+    "legal.privacidad.s4.li1": "Crear y administrar tu cuenta, y permitirte iniciar sesión.",
+    "legal.privacidad.s4.li2": "Mostrarte el mapa de puntos de reciclaje/donación y resultados personalizados.",
+    "legal.privacidad.s4.li3": "Procesar las imágenes del escáner y clasificar el material mediante inteligencia artificial.",
+    "legal.privacidad.s4.li4": "Moderar el contenido publicado (incluida la moderación automática de videos) para mantener la Plataforma segura.",
+    "legal.privacidad.s4.li5": "Gestionar el registro y la verificación de empresas aliadas.",
+    "legal.privacidad.s4.li6": "Enviarte notificaciones relacionadas con tu actividad en la Plataforma.",
+    "legal.privacidad.s4.li7": "Responder tus consultas de soporte o contacto.",
+    "legal.privacidad.s4.li8": "Cumplir obligaciones legales cuando corresponda.",
+
+    "legal.privacidad.s5.h2": "Con quién compartimos datos",
+    "legal.privacidad.s5.p1": "RECO+ se apoya en proveedores externos para operar la Plataforma. Estos proveedores procesan datos en nuestro nombre y bajo nuestras instrucciones:",
+    "legal.privacidad.s5.li1": "<strong>Supabase:</strong> almacenamiento de la base de datos, autenticación y archivos (imágenes, logos, videos).",
+    "legal.privacidad.s5.li2": "<strong>Google y Apple:</strong> proveedores de inicio de sesión (OAuth), si eliges registrarte con estas cuentas.",
+    "legal.privacidad.s5.li3": "<strong>Proveedores de inteligencia artificial (Gemini):</strong> procesamiento de imágenes para el escáner de materiales y para la moderación automática de videos.",
+    "legal.privacidad.s5.li4": "<strong>Vercel:</strong> alojamiento de las funciones del servidor (por ejemplo, el escáner y la moderación de videos).",
+    "legal.privacidad.s5.p2": "No vendemos tus datos personales a terceros. Solo compartimos datos con estos proveedores en la medida necesaria para operar la Plataforma, o cuando la ley nos lo exija.",
+
+    "legal.privacidad.s6.h2": "Almacenamiento y seguridad",
+    "legal.privacidad.s6.p1": "Tus datos se almacenan en la base de datos e infraestructura de almacenamiento de Supabase, con reglas de acceso (Row Level Security) que limitan qué información puede leerse o modificarse según el tipo de usuario.",
+    "legal.privacidad.s6.p2": "Aunque aplicamos medidas razonables de seguridad, ningún sistema es 100% infalible. Si detectamos un incidente de seguridad que afecte tus datos, te lo notificaremos conforme a la normativa aplicable.",
+
+    "legal.privacidad.s7.h2": "Tus derechos",
+    "legal.privacidad.s7.p1": "Sobre tus datos personales, puedes ejercer los siguientes derechos, alineados con los principios del RGPD:",
+    "legal.privacidad.s7.li1": "<strong>Acceso:</strong> saber qué datos tenemos sobre ti.",
+    "legal.privacidad.s7.li2": "<strong>Rectificación:</strong> corregir datos inexactos o incompletos.",
+    "legal.privacidad.s7.li3": "<strong>Supresión:</strong> solicitar la eliminación de tu cuenta y tus datos.",
+    "legal.privacidad.s7.li4": "<strong>Oposición y limitación:</strong> oponerte a ciertos usos de tus datos o solicitar que limitemos su tratamiento.",
+    "legal.privacidad.s7.li5": "<strong>Portabilidad:</strong> solicitar una copia de tus datos en un formato estructurado.",
+    "legal.privacidad.s7.p2": "Para ejercer cualquiera de estos derechos, escríbenos a <a href=\"mailto:soporte.recoplus@gmail.com\">soporte.recoplus@gmail.com</a>. Responderemos en un plazo razonable.",
+
+    "legal.privacidad.s8.h2": "Cookies y almacenamiento local",
+    "legal.privacidad.s8.p1": "RECO+ utiliza almacenamiento local del navegador (localStorage) para recordar preferencias como el idioma o el modo claro/oscuro, y para mantener tu sesión iniciada.",
+    "legal.privacidad.s8.p2": "Como la Plataforma se sirve desde dos dominios distintos (GitHub Pages y Vercel), usamos un mecanismo de \"puente de sesión\" que transfiere de forma segura los datos de tu sesión al cambiar de dominio, ya que el almacenamiento local no se comparte automáticamente entre dominios diferentes.",
+
+    "legal.privacidad.s9.h2": "Menores de edad",
+    "legal.privacidad.s9.p1": "RECO+ está dirigido a personas mayores de 18 años. No recopilamos intencionalmente datos de menores de edad sin el consentimiento de un padre, madre o tutor legal. Si tienes conocimiento de que un menor nos ha proporcionado datos personales sin dicho consentimiento, contáctanos para eliminarlos.",
+
+    "legal.privacidad.s10.h2": "Transferencias internacionales de datos",
+    "legal.privacidad.s10.p1": "Algunos de nuestros proveedores (Supabase, Google, Apple, Vercel y los servicios de inteligencia artificial que usamos) pueden procesar datos en servidores ubicados fuera de Panamá. En esos casos, procuramos que dichos proveedores mantengan estándares de protección de datos adecuados, en línea con los principios descritos en la sección 2.",
+
+    "legal.privacidad.s11.h2": "Cambios a esta política",
+    "legal.privacidad.s11.p1": "Podemos actualizar esta Política de Privacidad periódicamente. Publicaremos la versión vigente en esta página junto con la fecha de última actualización.",
+
+    "legal.privacidad.s12.h2": "Contacto",
+    "legal.privacidad.s12.p1": "Si tienes preguntas sobre esta Política de Privacidad o el tratamiento de tus datos, escríbenos a:",
+    "legal.privacidad.s12.li1": "Correo: <a href=\"mailto:soporte.recoplus@gmail.com\">soporte.recoplus@gmail.com</a>",
+    "legal.privacidad.s12.li2": "Teléfono / WhatsApp: +507 6399-1249",
+    "legal.privacidad.s12.li3": "Ubicación: David, Panamá",
   },
 
   en: {
@@ -4197,6 +4390,199 @@ const translations = {
     "alid.vacio.desc": "Companies with a Premium plan appear here, featured to the whole RECO+ community.",
     "alid.vacio.btn": "Learn about the Premium plan →",
     "alid.cerrar": "Close",
+
+    /* ════════════════════════════════════════════════════
+       LEGAL: Terms and Conditions (terminos.html)
+       ════════════════════════════════════════════════════ */
+    "legal.eyebrow": "Legal",
+    "legal.terminos.h1": "Terms and Conditions",
+    "legal.terminos.updated": "Last updated: August 16, 2026",
+    "legal.terminos.intro": "These terms govern the use of the RECO+ platform (website, material scanner, map, donations, business alliances, and other features). By creating an account or using RECO+ you agree to these terms.",
+
+    "legal.terminos.toc.titulo": "Contents",
+    "legal.terminos.toc.1": "1. Acceptance of the terms",
+    "legal.terminos.toc.2": "2. Who we are",
+    "legal.terminos.toc.3": "3. Service description",
+    "legal.terminos.toc.4": "4. Registration and accounts",
+    "legal.terminos.toc.5": "5. Business / ally accounts",
+    "legal.terminos.toc.6": "6. AI material scanner",
+    "legal.terminos.toc.7": "7. User-generated content",
+    "legal.terminos.toc.8": "8. Intellectual property",
+    "legal.terminos.toc.9": "9. Plans and subscriptions",
+    "legal.terminos.toc.10": "10. Prohibited conduct",
+    "legal.terminos.toc.11": "11. Limitation of liability",
+    "legal.terminos.toc.12": "12. Suspension and termination",
+    "legal.terminos.toc.13": "13. Modifications",
+    "legal.terminos.toc.14": "14. Governing law",
+    "legal.terminos.toc.15": "15. Contact",
+
+    "legal.terminos.aviso": "<strong>Notice:</strong> this document is a base version prepared for RECO+ and does not constitute legal advice. Before publishing it as final, we recommend having a lawyer in Panama review it and adapt it to the company's actual situation.",
+
+    "legal.terminos.s1.h2": "Acceptance of the terms",
+    "legal.terminos.s1.p1": "These Terms and Conditions (\"Terms\") constitute a legal agreement between the user (\"you\", \"user\") and RECO+ (\"RECO+\", \"we\"), and govern access to and use of the website, application, and other services offered under the RECO+ brand (collectively, the \"Platform\").",
+    "legal.terminos.s1.p2": "By registering, accessing, or using the Platform, you confirm that you have read, understood, and accepted these Terms, as well as our <a href=\"privacidad.html\">Privacy Policy</a>. If you do not agree with any part of these Terms, you must not use the Platform.",
+
+    "legal.terminos.s2.h2": "Who we are",
+    "legal.terminos.s2.p1": "RECO+ is a community recycling and donation platform operating from Panama, aimed at connecting people and businesses to facilitate recycling, item donation, and environmental education.",
+    "legal.terminos.s2.p2": "For any inquiries related to these Terms, you can write to us at <a href=\"mailto:soporte.recoplus@gmail.com\">soporte.recoplus@gmail.com</a>.",
+
+    "legal.terminos.s3.h2": "Service description",
+    "legal.terminos.s3.p1": "RECO+ offers, among others, the following features:",
+    "legal.terminos.s3.li1": "<strong>Map of recycling and donation points:</strong> locations suggested by the community itself and by allies.",
+    "legal.terminos.s3.li2": "<strong>AI material scanner:</strong> identifies the type of material from a photo and suggests how to recycle it.",
+    "legal.terminos.s3.li3": "<strong>Donations and help requests:</strong> posting items for donation and requests for help between users.",
+    "legal.terminos.s3.li4": "<strong>Business alliances:</strong> registration of allied companies and organizations that collaborate with the community.",
+    "legal.terminos.s3.li5": "<strong>Educational guide and community videos:</strong> informational content about recycling and sustainability, including videos uploaded by users themselves.",
+    "legal.terminos.s3.li6": "<strong>Subscription plans:</strong> Free, Basic, and Premium tiers with different features (see section 9).",
+    "legal.terminos.s3.p2": "RECO+ may add, modify, or remove Platform features at any time, without this giving rise to any right to compensation.",
+
+    "legal.terminos.s4.h2": "Registration and user accounts",
+    "legal.terminos.s4.p1": "To use certain RECO+ features you must create an account using email and password, or by signing in with your Google or Apple account.",
+    "legal.terminos.s4.li1": "You must provide truthful information and keep it up to date.",
+    "legal.terminos.s4.li2": "You are responsible for the confidentiality of your password and for all activity carried out from your account.",
+    "legal.terminos.s4.li3": "Use of the Platform is intended for people over 18 years of age. If you are a minor, you need the supervision and authorization of a parent or legal guardian.",
+    "legal.terminos.s4.li4": "You must notify us immediately if you detect unauthorized use of your account.",
+
+    "legal.terminos.s5.h2": "Business / ally accounts",
+    "legal.terminos.s5.p1": "Companies or organizations wishing to register as allies must complete the registration process available in the Alliances section, which includes creating an account, uploading information and graphic material (logo, photos), and accepting these Terms on behalf of the company.",
+    "legal.terminos.s5.p2": "RECO+ may verify, approve, request additional information, or reject a company's registration at its discretion, especially when the information provided is incomplete, inaccurate, or contrary to these Terms.",
+
+    "legal.terminos.s6.h2": "AI material scanner",
+    "legal.terminos.s6.p1": "The material scanner uses artificial intelligence models to analyze images and suggest the type of material and how to recycle or dispose of it.",
+    "legal.terminos.s6.callout": "Scanner results are <strong>indicative only</strong> and may contain errors. RECO+ does not guarantee the accuracy of the classification and is not responsible for decisions made solely based on the scanner's result. If in doubt about hazardous, special, or delicate materials, always consult the relevant authority or collection center.",
+
+    "legal.terminos.s7.h2": "User-generated content",
+    "legal.terminos.s7.p1": "RECO+ allows publishing community-generated content, including suggested recycling points, donation posts, comments, and videos.",
+    "legal.terminos.s7.li1": "You are responsible for the content you post and guarantee that you have the right to share it.",
+    "legal.terminos.s7.li2": "It is not allowed to post false, misleading, offensive, discriminatory, violent content, or content that infringes third-party rights.",
+    "legal.terminos.s7.li3": "Videos uploaded to the Platform go through a moderation process, which may include automatic review via artificial intelligence and, when required, manual review before final publication.",
+    "legal.terminos.s7.li4": "RECO+ may remove, hide, or reject any content that violates these Terms, without prior notice.",
+
+    "legal.terminos.s8.h2": "Intellectual property",
+    "legal.terminos.s8.p1": "The RECO+ brand, design, text, graphics, and Platform software are owned by RECO+ or its licensors, and are protected by applicable intellectual property laws.",
+    "legal.terminos.s8.p2": "Content you post remains yours; by uploading it to RECO+ you grant us a non-exclusive, worldwide, royalty-free license to store, display, and distribute it within the Platform for the purpose of operating the service.",
+
+    "legal.terminos.s9.h2": "Plans and subscriptions",
+    "legal.terminos.s9.p1": "RECO+ offers different plan tiers (Free, Basic, and Premium) with different features and usage limits.",
+    "legal.terminos.s9.callout": "<strong>Notice:</strong> the payment process for subscription plans is currently a <strong>simulation (demo mode)</strong> and does not process real charges. When RECO+ enables real payments, this section will be updated to describe the payment provider, billing terms, renewal, and cancellation.",
+
+    "legal.terminos.s10.h2": "Prohibited conduct",
+    "legal.terminos.s10.p1": "By using RECO+ you agree not to:",
+    "legal.terminos.s10.li1": "Impersonate another person or company.",
+    "legal.terminos.s10.li2": "Post illegal, fraudulent content, or content that promotes dangerous activities.",
+    "legal.terminos.s10.li3": "Attempt to compromise the security of the Platform, its accounts, or its infrastructure.",
+    "legal.terminos.s10.li4": "Use the Platform to send spam, malicious content, or unauthorized advertising.",
+    "legal.terminos.s10.li5": "Extract data from the Platform through automated means (scraping) without express authorization.",
+
+    "legal.terminos.s11.h2": "Limitation of liability",
+    "legal.terminos.s11.p1": "RECO+ acts as an intermediary connecting people, communities, and businesses around recycling and donation. We are not party to transactions, deliveries, or agreements made between users, nor do we guarantee the availability, quality, safety, or legality of recycling points, donations, or third-party posts.",
+    "legal.terminos.s11.p2": "To the extent permitted by law, RECO+ will not be liable for indirect, incidental, or consequential damages arising from use of the Platform, including losses resulting from interactions between users or from information provided by the AI scanner.",
+
+    "legal.terminos.s12.h2": "Account suspension and termination",
+    "legal.terminos.s12.p1": "We may suspend or cancel your account if you violate these Terms, if we detect fraudulent activity, or if necessary to protect the community or the Platform.",
+    "legal.terminos.s12.p2": "You can request deletion of your account at any time by writing to us at <a href=\"mailto:soporte.recoplus@gmail.com\">soporte.recoplus@gmail.com</a>.",
+
+    "legal.terminos.s13.h2": "Modifications to these Terms",
+    "legal.terminos.s13.p1": "We may update these Terms periodically. We will post the current version on this page along with the last updated date. Continued use of the Platform after a modification implies acceptance of the new Terms.",
+
+    "legal.terminos.s14.h2": "Governing law and jurisdiction",
+    "legal.terminos.s14.p1": "These Terms are governed by the laws of the Republic of Panama. Any dispute related to these Terms will be submitted to the competent courts of Panama, unless applicable law provides otherwise.",
+
+    "legal.terminos.s15.h2": "Contact",
+    "legal.terminos.s15.p1": "If you have questions about these Terms, write to us at:",
+    "legal.terminos.s15.li1": "Email: <a href=\"mailto:soporte.recoplus@gmail.com\">soporte.recoplus@gmail.com</a>",
+    "legal.terminos.s15.li2": "Phone / WhatsApp: +507 6399-1249",
+    "legal.terminos.s15.li3": "Location: David, Panama",
+
+    /* ════════════════════════════════════════════════════
+       LEGAL: Privacy Policy (privacidad.html)
+       ════════════════════════════════════════════════════ */
+    "legal.privacidad.h1": "Privacy Policy",
+    "legal.privacidad.updated": "Last updated: August 16, 2026",
+    "legal.privacidad.intro": "This policy explains what personal data RECO+ collects, what we use it for, who we share it with, and what rights you have over it.",
+
+    "legal.privacidad.toc.titulo": "Contents",
+    "legal.privacidad.toc.1": "1. Data controller",
+    "legal.privacidad.toc.2": "2. Scope and standards we follow",
+    "legal.privacidad.toc.3": "3. Data we collect",
+    "legal.privacidad.toc.4": "4. How we use your data",
+    "legal.privacidad.toc.5": "5. Who we share data with",
+    "legal.privacidad.toc.6": "6. Storage and security",
+    "legal.privacidad.toc.7": "7. Your rights",
+    "legal.privacidad.toc.8": "8. Cookies and local storage",
+    "legal.privacidad.toc.9": "9. Minors",
+    "legal.privacidad.toc.10": "10. International data transfers",
+    "legal.privacidad.toc.11": "11. Changes to this policy",
+    "legal.privacidad.toc.12": "12. Contact",
+
+    "legal.privacidad.aviso": "<strong>Notice:</strong> this document is a base version prepared for RECO+ and does not constitute legal advice. Before publishing it as final, we recommend having a lawyer review its content and adapt it to the platform's actual operations.",
+
+    "legal.privacidad.s1.h2": "Data controller",
+    "legal.privacidad.s1.p1": "The controller responsible for processing personal data collected through the Platform is RECO+, operating in Panama.",
+    "legal.privacidad.s1.p2": "For any questions about this policy or the processing of your data, you can write to <a href=\"mailto:soporte.recoplus@gmail.com\">soporte.recoplus@gmail.com</a>.",
+
+    "legal.privacidad.s2.h2": "Scope and standards we follow",
+    "legal.privacidad.s2.p1": "RECO+ operates primarily in Panama. As a data protection standard, we apply the principles of the European Union's <strong>General Data Protection Regulation (GDPR)</strong> — lawfulness, data minimization, purpose limitation, transparency, and respect for users' rights — in addition to the data protection provisions in force in Panama.",
+    "legal.privacidad.s2.p2": "This means that, no matter where you access RECO+ from, we strive to handle your personal data under these same protection standards.",
+
+    "legal.privacidad.s3.h2": "Data we collect",
+    "legal.privacidad.s3.li1": "<strong>Registration data:</strong> name, email, and password (encrypted), or the basic profile data you share when signing in with Google or Apple.",
+    "legal.privacidad.s3.li2": "<strong>Profile data:</strong> photo or avatar, and, if you register an allied company, the name, logo, photos, and other company information.",
+    "legal.privacidad.s3.li3": "<strong>Content you post:</strong> suggested recycling points, donation posts, comments, and videos you upload to the Platform.",
+    "legal.privacidad.s3.li4": "<strong>Scanner images:</strong> photos you take to identify materials with the AI scanner.",
+    "legal.privacidad.s3.li5": "<strong>Location data:</strong> if you authorize it, your approximate location to show you nearby recycling or donation points on the map.",
+    "legal.privacidad.s3.li6": "<strong>Usage data:</strong> basic technical information about how you use the Platform (for example, pages visited), for the purpose of operating and improving the service.",
+
+    "legal.privacidad.s4.h2": "How we use your data",
+    "legal.privacidad.s4.p1": "We use your personal data to:",
+    "legal.privacidad.s4.li1": "Create and manage your account, and let you sign in.",
+    "legal.privacidad.s4.li2": "Show you the map of recycling/donation points and personalized results.",
+    "legal.privacidad.s4.li3": "Process scanner images and classify the material using artificial intelligence.",
+    "legal.privacidad.s4.li4": "Moderate posted content (including automatic video moderation) to keep the Platform safe.",
+    "legal.privacidad.s4.li5": "Manage the registration and verification of allied companies.",
+    "legal.privacidad.s4.li6": "Send you notifications related to your activity on the Platform.",
+    "legal.privacidad.s4.li7": "Respond to your support or contact inquiries.",
+    "legal.privacidad.s4.li8": "Comply with legal obligations when applicable.",
+
+    "legal.privacidad.s5.h2": "Who we share data with",
+    "legal.privacidad.s5.p1": "RECO+ relies on external providers to operate the Platform. These providers process data on our behalf and under our instructions:",
+    "legal.privacidad.s5.li1": "<strong>Supabase:</strong> database storage, authentication, and files (images, logos, videos).",
+    "legal.privacidad.s5.li2": "<strong>Google and Apple:</strong> sign-in providers (OAuth), if you choose to register with these accounts.",
+    "legal.privacidad.s5.li3": "<strong>Artificial intelligence providers (Gemini):</strong> image processing for the material scanner and for automatic video moderation.",
+    "legal.privacidad.s5.li4": "<strong>Vercel:</strong> hosting for server-side functions (for example, the scanner and video moderation).",
+    "legal.privacidad.s5.p2": "We do not sell your personal data to third parties. We only share data with these providers to the extent necessary to operate the Platform, or when required by law.",
+
+    "legal.privacidad.s6.h2": "Storage and security",
+    "legal.privacidad.s6.p1": "Your data is stored in Supabase's database and storage infrastructure, with access rules (Row Level Security) that limit what information can be read or modified depending on the user type.",
+    "legal.privacidad.s6.p2": "Although we apply reasonable security measures, no system is 100% foolproof. If we detect a security incident affecting your data, we will notify you in accordance with applicable regulations.",
+
+    "legal.privacidad.s7.h2": "Your rights",
+    "legal.privacidad.s7.p1": "Regarding your personal data, you can exercise the following rights, aligned with GDPR principles:",
+    "legal.privacidad.s7.li1": "<strong>Access:</strong> know what data we have about you.",
+    "legal.privacidad.s7.li2": "<strong>Rectification:</strong> correct inaccurate or incomplete data.",
+    "legal.privacidad.s7.li3": "<strong>Erasure:</strong> request deletion of your account and your data.",
+    "legal.privacidad.s7.li4": "<strong>Objection and restriction:</strong> object to certain uses of your data or request that we restrict its processing.",
+    "legal.privacidad.s7.li5": "<strong>Portability:</strong> request a copy of your data in a structured format.",
+    "legal.privacidad.s7.p2": "To exercise any of these rights, write to us at <a href=\"mailto:soporte.recoplus@gmail.com\">soporte.recoplus@gmail.com</a>. We will respond within a reasonable time.",
+
+    "legal.privacidad.s8.h2": "Cookies and local storage",
+    "legal.privacidad.s8.p1": "RECO+ uses browser local storage (localStorage) to remember preferences such as language or light/dark mode, and to keep you signed in.",
+    "legal.privacidad.s8.p2": "Since the Platform is served from two different domains (GitHub Pages and Vercel), we use a \"session bridge\" mechanism that securely transfers your session data when switching domains, since local storage is not automatically shared across different domains.",
+
+    "legal.privacidad.s9.h2": "Minors",
+    "legal.privacidad.s9.p1": "RECO+ is intended for people over 18 years of age. We do not knowingly collect data from minors without the consent of a parent or legal guardian. If you become aware that a minor has provided us with personal data without such consent, please contact us to have it removed.",
+
+    "legal.privacidad.s10.h2": "International data transfers",
+    "legal.privacidad.s10.p1": "Some of our providers (Supabase, Google, Apple, Vercel, and the artificial intelligence services we use) may process data on servers located outside Panama. In such cases, we strive to ensure that these providers maintain adequate data protection standards, in line with the principles described in section 2.",
+
+    "legal.privacidad.s11.h2": "Changes to this policy",
+    "legal.privacidad.s11.p1": "We may update this Privacy Policy periodically. We will post the current version on this page along with the last updated date.",
+
+    "legal.privacidad.s12.h2": "Contact",
+    "legal.privacidad.s12.p1": "If you have questions about this Privacy Policy or the processing of your data, write to us at:",
+    "legal.privacidad.s12.li1": "Email: <a href=\"mailto:soporte.recoplus@gmail.com\">soporte.recoplus@gmail.com</a>",
+    "legal.privacidad.s12.li2": "Phone / WhatsApp: +507 6399-1249",
+    "legal.privacidad.s12.li3": "Location: David, Panama",
   }
 };
 
@@ -4287,7 +4673,16 @@ function applyLang(lang) {
   // Atributos "data-tooltip" traducibles (tooltip custom del bubble-nav)
   document.querySelectorAll("[data-i18n-tooltip]").forEach(el => {
     const key = el.getAttribute("data-i18n-tooltip");
-    if (dict[key]) el.setAttribute("data-tooltip", dict[key]);
+    if (dict[key]) {
+      el.setAttribute("data-tooltip", dict[key]);
+      // Mini-descripción del nav: nav-preview.js quedó obsoleto (apunta
+      // a ".navbar__links a", una clase que ya no existe — el bubble-nav
+      // actual usa ".bubble-nav__links a"), así que el hover-card nunca
+      // se conecta. Usamos el tooltip nativo del navegador (title) en su
+      // lugar: simple, accesible y funciona en las 15 páginas sin
+      // depender de esa clase.
+      el.setAttribute("title", dict[key]);
+    }
   });
 
   // Atributos "placeholder" traducibles (inputs de búsqueda, formularios)

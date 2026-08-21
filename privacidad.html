@@ -9,6 +9,228 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="legal-pages.css" />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+/* ── BUBBLE NAV — CSS variables for light/dark ──
+   Esta página no incluye navbar.css ni style.css (usa styles.css +
+   legal-pages.css, que solo cubren el contenido legal), así que sin
+   este bloque el .dm-pill/.lang-pill/.bubble-nav no tenían ningún
+   estilo base: por eso se veían "rotos" y sin la lógica de opacidad
+   sol/luna. Copiado tal cual del mismo bloque que ya usan
+   donaciones.html / alianzas.html / contacto.html / videos.html. */
+
+/* MODO CLARO */
+:root {
+  --nav-bg:               rgba(242, 250, 244, 0.55);
+  --nav-border:           rgba(168, 218, 181, 0.55);
+  --nav-shadow:           0 8px 32px rgba(30, 80, 40, 0.14), 0 2px 8px rgba(30, 80, 40, 0.08);
+  --nav-link-color:       #2a4a34;
+  --nav-link-hover-bg:    rgba(45, 140, 78, 0.10);
+  --nav-link-hover-color: #1a5c2a;
+  --nav-link-active-bg:   rgba(45, 140, 78, 0.14);
+  --nav-lang-bg:          rgba(45, 140, 78, 0.08);
+  --nav-lang-border:      rgba(45, 140, 78, 0.22);
+  --nav-lang-color:       #2a4a34;
+  --nav-dm-bg:            rgba(45, 140, 78, 0.08);
+  --nav-dm-border:        rgba(45, 140, 78, 0.22);
+  --nav-cta-bg:           #2d8c4e;
+  --nav-cta-color:        #fff;
+  --nav-cta-hover:        #1a5c2a;
+}
+
+/* MODO OSCURO */
+html.dark {
+  --nav-bg:               rgba(12, 22, 14, 0.55);
+  --nav-border:           rgba(61, 170, 96, 0.20);
+  --nav-shadow:           0 8px 32px rgba(0, 0, 0, 0.40), 0 2px 8px rgba(0, 0, 0, 0.28);
+  --nav-link-color:       rgba(212, 234, 216, 0.80);
+  --nav-link-hover-bg:    rgba(255, 255, 255, 0.08);
+  --nav-link-hover-color: #d4ead8;
+  --nav-link-active-bg:   rgba(255, 255, 255, 0.11);
+  --nav-lang-bg:          rgba(255, 255, 255, 0.07);
+  --nav-lang-border:      rgba(255, 255, 255, 0.15);
+  --nav-lang-color:       rgba(212, 234, 216, 0.80);
+  --nav-dm-bg:            rgba(255, 255, 255, 0.07);
+  --nav-dm-border:        rgba(255, 255, 255, 0.15);
+  --nav-cta-bg:           #fff;
+  --nav-cta-color:        #111;
+  --nav-cta-hover:        #e8f5ec;
+}
+
+/* ── WRAPPER ── */
+.bubble-nav-wrapper {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: calc(100% - 48px);
+  max-width: 1160px;
+}
+
+/* ── PILL ── */
+.bubble-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--nav-bg);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid var(--nav-border);
+  border-radius: 999px;
+  padding: 10px 14px 10px 20px;
+  box-shadow: var(--nav-shadow);
+  gap: 16px;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+/* ── LOGO ── */
+.bubble-nav__logo img {
+  height: 34px;
+  width: auto;
+  display: block;
+  flex-shrink: 0;
+  transition: filter 0.3s;
+}
+
+/* ── LINKS ── */
+.bubble-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  justify-content: center;
+}
+
+.bubble-nav__links a {
+  font-family: 'DM Sans', 'Arial', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--nav-link-color);
+  text-decoration: none;
+  padding: 6px 11px;
+  border-radius: 999px;
+  white-space: nowrap;
+  transition: color 0.18s, background 0.18s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.bubble-nav__links a svg {
+  opacity: 0.75;
+  flex-shrink: 0;
+  transition: opacity 0.18s;
+}
+
+.bubble-nav__links a:hover {
+  color: var(--nav-link-hover-color);
+  background: var(--nav-link-hover-bg);
+}
+
+.bubble-nav__links a:hover svg { opacity: 1; }
+
+.bubble-nav__links a.active {
+  color: var(--nav-link-hover-color);
+  background: var(--nav-link-active-bg);
+  font-weight: 600;
+}
+
+.bubble-nav__links a.active svg { opacity: 1; }
+
+/* ── RIGHT ACTIONS ── */
+.bubble-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ── DARK MODE PILL ── */
+.dm-pill {
+  display: inline-flex;
+  align-items: center;
+  background: var(--nav-dm-bg);
+  border: 1px solid var(--nav-dm-border);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s;
+}
+
+.dm-pill__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  transition: background 0.2s, color 0.2s, opacity 0.2s;
+  color: var(--nav-link-color);
+  opacity: 0.45;
+}
+
+html:not(.dark) .dm-pill__sun { opacity: 1; background: rgba(45,140,78,0.15); color: #d4a017; }
+html:not(.dark) .dm-pill__moon { opacity: 0.38; }
+html.dark .dm-pill__moon { opacity: 1; background: rgba(61,170,96,0.18); color: #c8d8ff; }
+html.dark .dm-pill__sun { opacity: 0.38; }
+
+/* ── LANG PILL ── */
+.lang-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 34px;
+  box-sizing: border-box;
+  background: var(--nav-lang-bg);
+  border: 1px solid var(--nav-lang-border);
+  border-radius: 999px;
+  padding: 5px 14px;
+  cursor: pointer;
+  font-family: 'DM Sans', 'Arial', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--nav-lang-color);
+  transition: background 0.18s;
+  letter-spacing: 0.02em;
+}
+
+.lang-pill:hover { background: var(--nav-link-hover-bg); }
+.lang-pill svg { opacity: 0.8; flex-shrink: 0; }
+.lang-pill__chevron { opacity: 0.6; }
+.lang-pill__label { color: var(--nav-lang-color); }
+
+/* ── CTA BUTTON ── */
+.bubble-nav__cta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--nav-cta-bg);
+  color: var(--nav-cta-color);
+  border: none;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-family: 'DM Sans', 'Arial', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s, transform 0.15s;
+}
+
+.bubble-nav__cta:hover {
+  background: var(--nav-cta-hover);
+  transform: translateY(-1px);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 860px) {
+  .bubble-nav-wrapper { width: calc(100% - 24px); top: 10px; }
+  .bubble-nav__links { display: none; }
+  .bubble-nav { padding: 10px 14px; }
+}
+</style>
   <!-- Capa aditiva: el CTA "Únete" ahora es <a>, no <button> -->
   <link rel="stylesheet" href="nav-cta-link-fix.css">
   <!-- Capa aditiva: evita que el CTA "Únete" se salga del pill del
@@ -120,138 +342,138 @@
 
   <!-- ========== HERO ========== -->
   <section class="legal-hero">
-    <div class="eyebrow-legal">Legal</div>
-    <h1>Política de Privacidad</h1>
-    <p class="legal-updated">Última actualización: 16 de agosto de 2026</p>
-    <p class="legal-intro">Esta política explica qué datos personales recopila RECO+, para qué los usamos, con quién los compartimos y qué derechos tienes sobre ellos.</p>
+    <div class="eyebrow-legal" data-i18n="legal.eyebrow">Legal</div>
+    <h1 data-i18n="legal.privacidad.h1">Política de Privacidad</h1>
+    <p class="legal-updated" data-i18n="legal.privacidad.updated">Última actualización: 16 de agosto de 2026</p>
+    <p class="legal-intro" data-i18n="legal.privacidad.intro">Esta política explica qué datos personales recopila RECO+, para qué los usamos, con quién los compartimos y qué derechos tienes sobre ellos.</p>
   </section>
 
   <div class="legal-wrap">
 
     <!-- ========== TABLA DE CONTENIDOS ========== -->
     <aside class="legal-toc">
-      <h4>Contenido</h4>
+      <h4 data-i18n="legal.privacidad.toc.titulo">Contenido</h4>
       <ol>
-        <li><a href="#responsable">1. Responsable del tratamiento</a></li>
-        <li><a href="#alcance">2. Alcance y estándares que seguimos</a></li>
-        <li><a href="#datos">3. Datos que recopilamos</a></li>
-        <li><a href="#uso">4. Cómo usamos tus datos</a></li>
-        <li><a href="#terceros">5. Con quién compartimos datos</a></li>
-        <li><a href="#seguridad">6. Almacenamiento y seguridad</a></li>
-        <li><a href="#derechos">7. Tus derechos</a></li>
-        <li><a href="#cookies">8. Cookies y almacenamiento local</a></li>
-        <li><a href="#menores">9. Menores de edad</a></li>
-        <li><a href="#transferencias">10. Transferencias internacionales</a></li>
-        <li><a href="#cambios">11. Cambios a esta política</a></li>
-        <li><a href="#contacto">12. Contacto</a></li>
+        <li><a href="#responsable" data-i18n="legal.privacidad.toc.1">1. Responsable del tratamiento</a></li>
+        <li><a href="#alcance" data-i18n="legal.privacidad.toc.2">2. Alcance y estándares que seguimos</a></li>
+        <li><a href="#datos" data-i18n="legal.privacidad.toc.3">3. Datos que recopilamos</a></li>
+        <li><a href="#uso" data-i18n="legal.privacidad.toc.4">4. Cómo usamos tus datos</a></li>
+        <li><a href="#terceros" data-i18n="legal.privacidad.toc.5">5. Con quién compartimos datos</a></li>
+        <li><a href="#seguridad" data-i18n="legal.privacidad.toc.6">6. Almacenamiento y seguridad</a></li>
+        <li><a href="#derechos" data-i18n="legal.privacidad.toc.7">7. Tus derechos</a></li>
+        <li><a href="#cookies" data-i18n="legal.privacidad.toc.8">8. Cookies y almacenamiento local</a></li>
+        <li><a href="#menores" data-i18n="legal.privacidad.toc.9">9. Menores de edad</a></li>
+        <li><a href="#transferencias" data-i18n="legal.privacidad.toc.10">10. Transferencias internacionales</a></li>
+        <li><a href="#cambios" data-i18n="legal.privacidad.toc.11">11. Cambios a esta política</a></li>
+        <li><a href="#contacto" data-i18n="legal.privacidad.toc.12">12. Contacto</a></li>
       </ol>
     </aside>
 
     <!-- ========== CONTENIDO ========== -->
     <main class="legal-content">
 
-      <div class="legal-callout legal-callout--notice">
+      <div class="legal-callout legal-callout--notice" data-i18n="legal.privacidad.aviso">
         <strong>Aviso:</strong> este documento es una versión base preparada para RECO+ y no constituye asesoría legal. Antes de publicarlo de forma definitiva, te recomendamos que un abogado revise su contenido y lo adapte a la operación real de la plataforma.
       </div>
 
       <section id="responsable">
-        <h2><span class="legal-num">1.</span> Responsable del tratamiento</h2>
-        <p>El responsable del tratamiento de los datos personales recopilados a través de la Plataforma es RECO+, con operación en Panamá.</p>
-        <p>Para cualquier consulta sobre esta política o el tratamiento de tus datos, puedes escribir a <a href="mailto:soporte.recoplus@gmail.com">soporte.recoplus@gmail.com</a>.</p>
+        <h2><span class="legal-num">1.</span> <span data-i18n="legal.privacidad.s1.h2">Responsable del tratamiento</span></h2>
+        <p data-i18n="legal.privacidad.s1.p1">El responsable del tratamiento de los datos personales recopilados a través de la Plataforma es RECO+, con operación en Panamá.</p>
+        <p data-i18n="legal.privacidad.s1.p2">Para cualquier consulta sobre esta política o el tratamiento de tus datos, puedes escribir a <a href="mailto:soporte.recoplus@gmail.com">soporte.recoplus@gmail.com</a>.</p>
       </section>
 
       <section id="alcance">
-        <h2><span class="legal-num">2.</span> Alcance y estándares que seguimos</h2>
-        <p>RECO+ opera principalmente en Panamá. Como estándar de protección de datos, aplicamos los principios del <strong>Reglamento General de Protección de Datos (RGPD)</strong> de la Unión Europea —licitud, minimización de datos, limitación de la finalidad, transparencia y respeto a los derechos de las personas usuarias— además de las disposiciones de protección de datos personales vigentes en Panamá.</p>
-        <p>Esto significa que, sin importar desde dónde accedas a RECO+, procuramos tratar tus datos personales bajo estos mismos estándares de protección.</p>
+        <h2><span class="legal-num">2.</span> <span data-i18n="legal.privacidad.s2.h2">Alcance y estándares que seguimos</span></h2>
+        <p data-i18n="legal.privacidad.s2.p1">RECO+ opera principalmente en Panamá. Como estándar de protección de datos, aplicamos los principios del <strong>Reglamento General de Protección de Datos (RGPD)</strong> de la Unión Europea —licitud, minimización de datos, limitación de la finalidad, transparencia y respeto a los derechos de las personas usuarias— además de las disposiciones de protección de datos personales vigentes en Panamá.</p>
+        <p data-i18n="legal.privacidad.s2.p2">Esto significa que, sin importar desde dónde accedas a RECO+, procuramos tratar tus datos personales bajo estos mismos estándares de protección.</p>
       </section>
 
       <section id="datos">
-        <h2><span class="legal-num">3.</span> Datos que recopilamos</h2>
+        <h2><span class="legal-num">3.</span> <span data-i18n="legal.privacidad.s3.h2">Datos que recopilamos</span></h2>
         <ul>
-          <li><strong>Datos de registro:</strong> nombre, correo electrónico y contraseña (cifrada), o los datos básicos de perfil que compartes al iniciar sesión con Google o Apple.</li>
-          <li><strong>Datos de perfil:</strong> foto o avatar, y, si registras una empresa aliada, el nombre, logo, fotos y demás información de la empresa.</li>
-          <li><strong>Contenido que publicas:</strong> puntos de reciclaje sugeridos, publicaciones de donación, comentarios y videos que subas a la Plataforma.</li>
-          <li><strong>Imágenes del escáner:</strong> fotos que tomas para identificar materiales con el escáner de IA.</li>
-          <li><strong>Datos de ubicación:</strong> si lo autorizas, tu ubicación aproximada para mostrarte puntos de reciclaje o donación cercanos en el mapa.</li>
-          <li><strong>Datos de uso:</strong> información técnica básica sobre cómo usas la Plataforma (por ejemplo, páginas visitadas), con fines de funcionamiento y mejora del servicio.</li>
+          <li data-i18n="legal.privacidad.s3.li1"><strong>Datos de registro:</strong> nombre, correo electrónico y contraseña (cifrada), o los datos básicos de perfil que compartes al iniciar sesión con Google o Apple.</li>
+          <li data-i18n="legal.privacidad.s3.li2"><strong>Datos de perfil:</strong> foto o avatar, y, si registras una empresa aliada, el nombre, logo, fotos y demás información de la empresa.</li>
+          <li data-i18n="legal.privacidad.s3.li3"><strong>Contenido que publicas:</strong> puntos de reciclaje sugeridos, publicaciones de donación, comentarios y videos que subas a la Plataforma.</li>
+          <li data-i18n="legal.privacidad.s3.li4"><strong>Imágenes del escáner:</strong> fotos que tomas para identificar materiales con el escáner de IA.</li>
+          <li data-i18n="legal.privacidad.s3.li5"><strong>Datos de ubicación:</strong> si lo autorizas, tu ubicación aproximada para mostrarte puntos de reciclaje o donación cercanos en el mapa.</li>
+          <li data-i18n="legal.privacidad.s3.li6"><strong>Datos de uso:</strong> información técnica básica sobre cómo usas la Plataforma (por ejemplo, páginas visitadas), con fines de funcionamiento y mejora del servicio.</li>
         </ul>
       </section>
 
       <section id="uso">
-        <h2><span class="legal-num">4.</span> Cómo usamos tus datos</h2>
-        <p>Usamos tus datos personales para:</p>
+        <h2><span class="legal-num">4.</span> <span data-i18n="legal.privacidad.s4.h2">Cómo usamos tus datos</span></h2>
+        <p data-i18n="legal.privacidad.s4.p1">Usamos tus datos personales para:</p>
         <ul>
-          <li>Crear y administrar tu cuenta, y permitirte iniciar sesión.</li>
-          <li>Mostrarte el mapa de puntos de reciclaje/donación y resultados personalizados.</li>
-          <li>Procesar las imágenes del escáner y clasificar el material mediante inteligencia artificial.</li>
-          <li>Moderar el contenido publicado (incluida la moderación automática de videos) para mantener la Plataforma segura.</li>
-          <li>Gestionar el registro y la verificación de empresas aliadas.</li>
-          <li>Enviarte notificaciones relacionadas con tu actividad en la Plataforma.</li>
-          <li>Responder tus consultas de soporte o contacto.</li>
-          <li>Cumplir obligaciones legales cuando corresponda.</li>
+          <li data-i18n="legal.privacidad.s4.li1">Crear y administrar tu cuenta, y permitirte iniciar sesión.</li>
+          <li data-i18n="legal.privacidad.s4.li2">Mostrarte el mapa de puntos de reciclaje/donación y resultados personalizados.</li>
+          <li data-i18n="legal.privacidad.s4.li3">Procesar las imágenes del escáner y clasificar el material mediante inteligencia artificial.</li>
+          <li data-i18n="legal.privacidad.s4.li4">Moderar el contenido publicado (incluida la moderación automática de videos) para mantener la Plataforma segura.</li>
+          <li data-i18n="legal.privacidad.s4.li5">Gestionar el registro y la verificación de empresas aliadas.</li>
+          <li data-i18n="legal.privacidad.s4.li6">Enviarte notificaciones relacionadas con tu actividad en la Plataforma.</li>
+          <li data-i18n="legal.privacidad.s4.li7">Responder tus consultas de soporte o contacto.</li>
+          <li data-i18n="legal.privacidad.s4.li8">Cumplir obligaciones legales cuando corresponda.</li>
         </ul>
       </section>
 
       <section id="terceros">
-        <h2><span class="legal-num">5.</span> Con quién compartimos datos</h2>
-        <p>RECO+ se apoya en proveedores externos para operar la Plataforma. Estos proveedores procesan datos en nuestro nombre y bajo nuestras instrucciones:</p>
+        <h2><span class="legal-num">5.</span> <span data-i18n="legal.privacidad.s5.h2">Con quién compartimos datos</span></h2>
+        <p data-i18n="legal.privacidad.s5.p1">RECO+ se apoya en proveedores externos para operar la Plataforma. Estos proveedores procesan datos en nuestro nombre y bajo nuestras instrucciones:</p>
         <ul>
-          <li><strong>Supabase:</strong> almacenamiento de la base de datos, autenticación y archivos (imágenes, logos, videos).</li>
-          <li><strong>Google y Apple:</strong> proveedores de inicio de sesión (OAuth), si eliges registrarte con estas cuentas.</li>
-          <li><strong>Proveedores de inteligencia artificial (Gemini):</strong> procesamiento de imágenes para el escáner de materiales y para la moderación automática de videos.</li>
-          <li><strong>Vercel:</strong> alojamiento de las funciones del servidor (por ejemplo, el escáner y la moderación de videos).</li>
+          <li data-i18n="legal.privacidad.s5.li1"><strong>Supabase:</strong> almacenamiento de la base de datos, autenticación y archivos (imágenes, logos, videos).</li>
+          <li data-i18n="legal.privacidad.s5.li2"><strong>Google y Apple:</strong> proveedores de inicio de sesión (OAuth), si eliges registrarte con estas cuentas.</li>
+          <li data-i18n="legal.privacidad.s5.li3"><strong>Proveedores de inteligencia artificial (Gemini):</strong> procesamiento de imágenes para el escáner de materiales y para la moderación automática de videos.</li>
+          <li data-i18n="legal.privacidad.s5.li4"><strong>Vercel:</strong> alojamiento de las funciones del servidor (por ejemplo, el escáner y la moderación de videos).</li>
         </ul>
-        <p>No vendemos tus datos personales a terceros. Solo compartimos datos con estos proveedores en la medida necesaria para operar la Plataforma, o cuando la ley nos lo exija.</p>
+        <p data-i18n="legal.privacidad.s5.p2">No vendemos tus datos personales a terceros. Solo compartimos datos con estos proveedores en la medida necesaria para operar la Plataforma, o cuando la ley nos lo exija.</p>
       </section>
 
       <section id="seguridad">
-        <h2><span class="legal-num">6.</span> Almacenamiento y seguridad</h2>
-        <p>Tus datos se almacenan en la base de datos e infraestructura de almacenamiento de Supabase, con reglas de acceso (Row Level Security) que limitan qué información puede leerse o modificarse según el tipo de usuario.</p>
-        <p>Aunque aplicamos medidas razonables de seguridad, ningún sistema es 100% infalible. Si detectamos un incidente de seguridad que afecte tus datos, te lo notificaremos conforme a la normativa aplicable.</p>
+        <h2><span class="legal-num">6.</span> <span data-i18n="legal.privacidad.s6.h2">Almacenamiento y seguridad</span></h2>
+        <p data-i18n="legal.privacidad.s6.p1">Tus datos se almacenan en la base de datos e infraestructura de almacenamiento de Supabase, con reglas de acceso (Row Level Security) que limitan qué información puede leerse o modificarse según el tipo de usuario.</p>
+        <p data-i18n="legal.privacidad.s6.p2">Aunque aplicamos medidas razonables de seguridad, ningún sistema es 100% infalible. Si detectamos un incidente de seguridad que afecte tus datos, te lo notificaremos conforme a la normativa aplicable.</p>
       </section>
 
       <section id="derechos">
-        <h2><span class="legal-num">7.</span> Tus derechos</h2>
-        <p>Sobre tus datos personales, puedes ejercer los siguientes derechos, alineados con los principios del RGPD:</p>
+        <h2><span class="legal-num">7.</span> <span data-i18n="legal.privacidad.s7.h2">Tus derechos</span></h2>
+        <p data-i18n="legal.privacidad.s7.p1">Sobre tus datos personales, puedes ejercer los siguientes derechos, alineados con los principios del RGPD:</p>
         <ul>
-          <li><strong>Acceso:</strong> saber qué datos tenemos sobre ti.</li>
-          <li><strong>Rectificación:</strong> corregir datos inexactos o incompletos.</li>
-          <li><strong>Supresión:</strong> solicitar la eliminación de tu cuenta y tus datos.</li>
-          <li><strong>Oposición y limitación:</strong> oponerte a ciertos usos de tus datos o solicitar que limitemos su tratamiento.</li>
-          <li><strong>Portabilidad:</strong> solicitar una copia de tus datos en un formato estructurado.</li>
+          <li data-i18n="legal.privacidad.s7.li1"><strong>Acceso:</strong> saber qué datos tenemos sobre ti.</li>
+          <li data-i18n="legal.privacidad.s7.li2"><strong>Rectificación:</strong> corregir datos inexactos o incompletos.</li>
+          <li data-i18n="legal.privacidad.s7.li3"><strong>Supresión:</strong> solicitar la eliminación de tu cuenta y tus datos.</li>
+          <li data-i18n="legal.privacidad.s7.li4"><strong>Oposición y limitación:</strong> oponerte a ciertos usos de tus datos o solicitar que limitemos su tratamiento.</li>
+          <li data-i18n="legal.privacidad.s7.li5"><strong>Portabilidad:</strong> solicitar una copia de tus datos en un formato estructurado.</li>
         </ul>
-        <p>Para ejercer cualquiera de estos derechos, escríbenos a <a href="mailto:soporte.recoplus@gmail.com">soporte.recoplus@gmail.com</a>. Responderemos en un plazo razonable.</p>
+        <p data-i18n="legal.privacidad.s7.p2">Para ejercer cualquiera de estos derechos, escríbenos a <a href="mailto:soporte.recoplus@gmail.com">soporte.recoplus@gmail.com</a>. Responderemos en un plazo razonable.</p>
       </section>
 
       <section id="cookies">
-        <h2><span class="legal-num">8.</span> Cookies y almacenamiento local</h2>
-        <p>RECO+ utiliza almacenamiento local del navegador (localStorage) para recordar preferencias como el idioma o el modo claro/oscuro, y para mantener tu sesión iniciada.</p>
-        <p>Como la Plataforma se sirve desde dos dominios distintos (GitHub Pages y Vercel), usamos un mecanismo de "puente de sesión" que transfiere de forma segura los datos de tu sesión al cambiar de dominio, ya que el almacenamiento local no se comparte automáticamente entre dominios diferentes.</p>
+        <h2><span class="legal-num">8.</span> <span data-i18n="legal.privacidad.s8.h2">Cookies y almacenamiento local</span></h2>
+        <p data-i18n="legal.privacidad.s8.p1">RECO+ utiliza almacenamiento local del navegador (localStorage) para recordar preferencias como el idioma o el modo claro/oscuro, y para mantener tu sesión iniciada.</p>
+        <p data-i18n="legal.privacidad.s8.p2">Como la Plataforma se sirve desde dos dominios distintos (GitHub Pages y Vercel), usamos un mecanismo de "puente de sesión" que transfiere de forma segura los datos de tu sesión al cambiar de dominio, ya que el almacenamiento local no se comparte automáticamente entre dominios diferentes.</p>
       </section>
 
       <section id="menores">
-        <h2><span class="legal-num">9.</span> Menores de edad</h2>
-        <p>RECO+ está dirigido a personas mayores de 18 años. No recopilamos intencionalmente datos de menores de edad sin el consentimiento de un padre, madre o tutor legal. Si tienes conocimiento de que un menor nos ha proporcionado datos personales sin dicho consentimiento, contáctanos para eliminarlos.</p>
+        <h2><span class="legal-num">9.</span> <span data-i18n="legal.privacidad.s9.h2">Menores de edad</span></h2>
+        <p data-i18n="legal.privacidad.s9.p1">RECO+ está dirigido a personas mayores de 18 años. No recopilamos intencionalmente datos de menores de edad sin el consentimiento de un padre, madre o tutor legal. Si tienes conocimiento de que un menor nos ha proporcionado datos personales sin dicho consentimiento, contáctanos para eliminarlos.</p>
       </section>
 
       <section id="transferencias">
-        <h2><span class="legal-num">10.</span> Transferencias internacionales de datos</h2>
-        <p>Algunos de nuestros proveedores (Supabase, Google, Apple, Vercel y los servicios de inteligencia artificial que usamos) pueden procesar datos en servidores ubicados fuera de Panamá. En esos casos, procuramos que dichos proveedores mantengan estándares de protección de datos adecuados, en línea con los principios descritos en la sección 2.</p>
+        <h2><span class="legal-num">10.</span> <span data-i18n="legal.privacidad.s10.h2">Transferencias internacionales de datos</span></h2>
+        <p data-i18n="legal.privacidad.s10.p1">Algunos de nuestros proveedores (Supabase, Google, Apple, Vercel y los servicios de inteligencia artificial que usamos) pueden procesar datos en servidores ubicados fuera de Panamá. En esos casos, procuramos que dichos proveedores mantengan estándares de protección de datos adecuados, en línea con los principios descritos en la sección 2.</p>
       </section>
 
       <section id="cambios">
-        <h2><span class="legal-num">11.</span> Cambios a esta política</h2>
-        <p>Podemos actualizar esta Política de Privacidad periódicamente. Publicaremos la versión vigente en esta página junto con la fecha de última actualización.</p>
+        <h2><span class="legal-num">11.</span> <span data-i18n="legal.privacidad.s11.h2">Cambios a esta política</span></h2>
+        <p data-i18n="legal.privacidad.s11.p1">Podemos actualizar esta Política de Privacidad periódicamente. Publicaremos la versión vigente en esta página junto con la fecha de última actualización.</p>
       </section>
 
       <section id="contacto">
-        <h2><span class="legal-num">12.</span> Contacto</h2>
-        <p>Si tienes preguntas sobre esta Política de Privacidad o el tratamiento de tus datos, escríbenos a:</p>
+        <h2><span class="legal-num">12.</span> <span data-i18n="legal.privacidad.s12.h2">Contacto</span></h2>
+        <p data-i18n="legal.privacidad.s12.p1">Si tienes preguntas sobre esta Política de Privacidad o el tratamiento de tus datos, escríbenos a:</p>
         <ul>
-          <li>Correo: <a href="mailto:soporte.recoplus@gmail.com">soporte.recoplus@gmail.com</a></li>
-          <li>Teléfono / WhatsApp: +507 6399-1249</li>
-          <li>Ubicación: David, Panamá</li>
+          <li data-i18n="legal.privacidad.s12.li1">Correo: <a href="mailto:soporte.recoplus@gmail.com">soporte.recoplus@gmail.com</a></li>
+          <li data-i18n="legal.privacidad.s12.li2">Teléfono / WhatsApp: +507 6399-1249</li>
+          <li data-i18n="legal.privacidad.s12.li3">Ubicación: David, Panamá</li>
         </ul>
       </section>
 

@@ -9,6 +9,228 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="legal-pages.css" />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+/* ── BUBBLE NAV — CSS variables for light/dark ──
+   Esta página no incluye navbar.css ni style.css (usa styles.css +
+   legal-pages.css, que solo cubren el contenido legal), así que sin
+   este bloque el .dm-pill/.lang-pill/.bubble-nav no tenían ningún
+   estilo base: por eso se veían "rotos" y sin la lógica de opacidad
+   sol/luna. Copiado tal cual del mismo bloque que ya usan
+   donaciones.html / alianzas.html / contacto.html / videos.html. */
+
+/* MODO CLARO */
+:root {
+  --nav-bg:               rgba(242, 250, 244, 0.55);
+  --nav-border:           rgba(168, 218, 181, 0.55);
+  --nav-shadow:           0 8px 32px rgba(30, 80, 40, 0.14), 0 2px 8px rgba(30, 80, 40, 0.08);
+  --nav-link-color:       #2a4a34;
+  --nav-link-hover-bg:    rgba(45, 140, 78, 0.10);
+  --nav-link-hover-color: #1a5c2a;
+  --nav-link-active-bg:   rgba(45, 140, 78, 0.14);
+  --nav-lang-bg:          rgba(45, 140, 78, 0.08);
+  --nav-lang-border:      rgba(45, 140, 78, 0.22);
+  --nav-lang-color:       #2a4a34;
+  --nav-dm-bg:            rgba(45, 140, 78, 0.08);
+  --nav-dm-border:        rgba(45, 140, 78, 0.22);
+  --nav-cta-bg:           #2d8c4e;
+  --nav-cta-color:        #fff;
+  --nav-cta-hover:        #1a5c2a;
+}
+
+/* MODO OSCURO */
+html.dark {
+  --nav-bg:               rgba(12, 22, 14, 0.55);
+  --nav-border:           rgba(61, 170, 96, 0.20);
+  --nav-shadow:           0 8px 32px rgba(0, 0, 0, 0.40), 0 2px 8px rgba(0, 0, 0, 0.28);
+  --nav-link-color:       rgba(212, 234, 216, 0.80);
+  --nav-link-hover-bg:    rgba(255, 255, 255, 0.08);
+  --nav-link-hover-color: #d4ead8;
+  --nav-link-active-bg:   rgba(255, 255, 255, 0.11);
+  --nav-lang-bg:          rgba(255, 255, 255, 0.07);
+  --nav-lang-border:      rgba(255, 255, 255, 0.15);
+  --nav-lang-color:       rgba(212, 234, 216, 0.80);
+  --nav-dm-bg:            rgba(255, 255, 255, 0.07);
+  --nav-dm-border:        rgba(255, 255, 255, 0.15);
+  --nav-cta-bg:           #fff;
+  --nav-cta-color:        #111;
+  --nav-cta-hover:        #e8f5ec;
+}
+
+/* ── WRAPPER ── */
+.bubble-nav-wrapper {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: calc(100% - 48px);
+  max-width: 1160px;
+}
+
+/* ── PILL ── */
+.bubble-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--nav-bg);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid var(--nav-border);
+  border-radius: 999px;
+  padding: 10px 14px 10px 20px;
+  box-shadow: var(--nav-shadow);
+  gap: 16px;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+
+/* ── LOGO ── */
+.bubble-nav__logo img {
+  height: 34px;
+  width: auto;
+  display: block;
+  flex-shrink: 0;
+  transition: filter 0.3s;
+}
+
+/* ── LINKS ── */
+.bubble-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  justify-content: center;
+}
+
+.bubble-nav__links a {
+  font-family: 'DM Sans', 'Arial', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--nav-link-color);
+  text-decoration: none;
+  padding: 6px 11px;
+  border-radius: 999px;
+  white-space: nowrap;
+  transition: color 0.18s, background 0.18s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.bubble-nav__links a svg {
+  opacity: 0.75;
+  flex-shrink: 0;
+  transition: opacity 0.18s;
+}
+
+.bubble-nav__links a:hover {
+  color: var(--nav-link-hover-color);
+  background: var(--nav-link-hover-bg);
+}
+
+.bubble-nav__links a:hover svg { opacity: 1; }
+
+.bubble-nav__links a.active {
+  color: var(--nav-link-hover-color);
+  background: var(--nav-link-active-bg);
+  font-weight: 600;
+}
+
+.bubble-nav__links a.active svg { opacity: 1; }
+
+/* ── RIGHT ACTIONS ── */
+.bubble-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ── DARK MODE PILL ── */
+.dm-pill {
+  display: inline-flex;
+  align-items: center;
+  background: var(--nav-dm-bg);
+  border: 1px solid var(--nav-dm-border);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s;
+}
+
+.dm-pill__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  transition: background 0.2s, color 0.2s, opacity 0.2s;
+  color: var(--nav-link-color);
+  opacity: 0.45;
+}
+
+html:not(.dark) .dm-pill__sun { opacity: 1; background: rgba(45,140,78,0.15); color: #d4a017; }
+html:not(.dark) .dm-pill__moon { opacity: 0.38; }
+html.dark .dm-pill__moon { opacity: 1; background: rgba(61,170,96,0.18); color: #c8d8ff; }
+html.dark .dm-pill__sun { opacity: 0.38; }
+
+/* ── LANG PILL ── */
+.lang-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 34px;
+  box-sizing: border-box;
+  background: var(--nav-lang-bg);
+  border: 1px solid var(--nav-lang-border);
+  border-radius: 999px;
+  padding: 5px 14px;
+  cursor: pointer;
+  font-family: 'DM Sans', 'Arial', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--nav-lang-color);
+  transition: background 0.18s;
+  letter-spacing: 0.02em;
+}
+
+.lang-pill:hover { background: var(--nav-link-hover-bg); }
+.lang-pill svg { opacity: 0.8; flex-shrink: 0; }
+.lang-pill__chevron { opacity: 0.6; }
+.lang-pill__label { color: var(--nav-lang-color); }
+
+/* ── CTA BUTTON ── */
+.bubble-nav__cta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--nav-cta-bg);
+  color: var(--nav-cta-color);
+  border: none;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-family: 'DM Sans', 'Arial', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s, transform 0.15s;
+}
+
+.bubble-nav__cta:hover {
+  background: var(--nav-cta-hover);
+  transform: translateY(-1px);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 860px) {
+  .bubble-nav-wrapper { width: calc(100% - 24px); top: 10px; }
+  .bubble-nav__links { display: none; }
+  .bubble-nav { padding: 10px 14px; }
+}
+</style>
   <!-- Capa aditiva: el CTA "Únete" ahora es <a>, no <button> -->
   <link rel="stylesheet" href="nav-cta-link-fix.css">
   <!-- Capa aditiva: evita que el CTA "Únete" se salga del pill del
@@ -120,160 +342,160 @@
 
   <!-- ========== HERO ========== -->
   <section class="legal-hero">
-    <div class="eyebrow-legal">Legal</div>
-    <h1>Términos y Condiciones</h1>
-    <p class="legal-updated">Última actualización: 16 de agosto de 2026</p>
-    <p class="legal-intro">Estas condiciones regulan el uso de la plataforma RECO+ (sitio web, escáner de materiales, mapa, donaciones, alianzas empresariales y demás funciones). Al crear una cuenta o usar RECO+ aceptas estos términos.</p>
+    <div class="eyebrow-legal" data-i18n="legal.eyebrow">Legal</div>
+    <h1 data-i18n="legal.terminos.h1">Términos y Condiciones</h1>
+    <p class="legal-updated" data-i18n="legal.terminos.updated">Última actualización: 16 de agosto de 2026</p>
+    <p class="legal-intro" data-i18n="legal.terminos.intro">Estas condiciones regulan el uso de la plataforma RECO+ (sitio web, escáner de materiales, mapa, donaciones, alianzas empresariales y demás funciones). Al crear una cuenta o usar RECO+ aceptas estos términos.</p>
   </section>
 
   <div class="legal-wrap">
 
     <!-- ========== TABLA DE CONTENIDOS ========== -->
     <aside class="legal-toc">
-      <h4>Contenido</h4>
+      <h4 data-i18n="legal.terminos.toc.titulo">Contenido</h4>
       <ol>
-        <li><a href="#objeto">1. Aceptación de los términos</a></li>
-        <li><a href="#quienes-somos">2. Quiénes somos</a></li>
-        <li><a href="#descripcion">3. Descripción del servicio</a></li>
-        <li><a href="#registro">4. Registro y cuentas</a></li>
-        <li><a href="#empresas">5. Cuentas de empresa / aliado</a></li>
-        <li><a href="#escaner">6. Escáner de materiales con IA</a></li>
-        <li><a href="#contenido">7. Contenido generado por usuarios</a></li>
-        <li><a href="#propiedad">8. Propiedad intelectual</a></li>
-        <li><a href="#planes">9. Planes y suscripciones</a></li>
-        <li><a href="#conducta">10. Conductas prohibidas</a></li>
-        <li><a href="#responsabilidad">11. Limitación de responsabilidad</a></li>
-        <li><a href="#suspension">12. Suspensión y terminación</a></li>
-        <li><a href="#modificaciones">13. Modificaciones</a></li>
-        <li><a href="#ley">14. Ley aplicable</a></li>
-        <li><a href="#contacto">15. Contacto</a></li>
+        <li><a href="#objeto" data-i18n="legal.terminos.toc.1">1. Aceptación de los términos</a></li>
+        <li><a href="#quienes-somos" data-i18n="legal.terminos.toc.2">2. Quiénes somos</a></li>
+        <li><a href="#descripcion" data-i18n="legal.terminos.toc.3">3. Descripción del servicio</a></li>
+        <li><a href="#registro" data-i18n="legal.terminos.toc.4">4. Registro y cuentas</a></li>
+        <li><a href="#empresas" data-i18n="legal.terminos.toc.5">5. Cuentas de empresa / aliado</a></li>
+        <li><a href="#escaner" data-i18n="legal.terminos.toc.6">6. Escáner de materiales con IA</a></li>
+        <li><a href="#contenido" data-i18n="legal.terminos.toc.7">7. Contenido generado por usuarios</a></li>
+        <li><a href="#propiedad" data-i18n="legal.terminos.toc.8">8. Propiedad intelectual</a></li>
+        <li><a href="#planes" data-i18n="legal.terminos.toc.9">9. Planes y suscripciones</a></li>
+        <li><a href="#conducta" data-i18n="legal.terminos.toc.10">10. Conductas prohibidas</a></li>
+        <li><a href="#responsabilidad" data-i18n="legal.terminos.toc.11">11. Limitación de responsabilidad</a></li>
+        <li><a href="#suspension" data-i18n="legal.terminos.toc.12">12. Suspensión y terminación</a></li>
+        <li><a href="#modificaciones" data-i18n="legal.terminos.toc.13">13. Modificaciones</a></li>
+        <li><a href="#ley" data-i18n="legal.terminos.toc.14">14. Ley aplicable</a></li>
+        <li><a href="#contacto" data-i18n="legal.terminos.toc.15">15. Contacto</a></li>
       </ol>
     </aside>
 
     <!-- ========== CONTENIDO ========== -->
     <main class="legal-content">
 
-      <div class="legal-callout legal-callout--notice">
+      <div class="legal-callout legal-callout--notice" data-i18n="legal.terminos.aviso">
         <strong>Aviso:</strong> este documento es una versión base preparada para RECO+ y no constituye asesoría legal. Antes de publicarlo de forma definitiva, te recomendamos que un abogado en Panamá lo revise y lo adapte a la situación real de la empresa.
       </div>
 
       <section id="objeto">
-        <h2><span class="legal-num">1.</span> Aceptación de los términos</h2>
-        <p>Estos Términos y Condiciones ("Términos") constituyen un acuerdo legal entre la persona usuaria ("tú", "usuario") y RECO+ ("RECO+", "nosotros"), y regulan el acceso y uso del sitio web, aplicación y demás servicios ofrecidos bajo la marca RECO+ (en conjunto, la "Plataforma").</p>
-        <p>Al registrarte, acceder o usar la Plataforma, confirmas que has leído, entendido y aceptado estos Términos, así como nuestra <a href="privacidad.html">Política de Privacidad</a>. Si no estás de acuerdo con alguna parte de estos Términos, no debes usar la Plataforma.</p>
+        <h2><span class="legal-num">1.</span> <span data-i18n="legal.terminos.s1.h2">Aceptación de los términos</span></h2>
+        <p data-i18n="legal.terminos.s1.p1">Estos Términos y Condiciones ("Términos") constituyen un acuerdo legal entre la persona usuaria ("tú", "usuario") y RECO+ ("RECO+", "nosotros"), y regulan el acceso y uso del sitio web, aplicación y demás servicios ofrecidos bajo la marca RECO+ (en conjunto, la "Plataforma").</p>
+        <p data-i18n="legal.terminos.s1.p2">Al registrarte, acceder o usar la Plataforma, confirmas que has leído, entendido y aceptado estos Términos, así como nuestra <a href="privacidad.html">Política de Privacidad</a>. Si no estás de acuerdo con alguna parte de estos Términos, no debes usar la Plataforma.</p>
       </section>
 
       <section id="quienes-somos">
-        <h2><span class="legal-num">2.</span> Quiénes somos</h2>
-        <p>RECO+ es una plataforma comunitaria de reciclaje y donación que opera desde Panamá, con el objetivo de conectar a personas y empresas para facilitar el reciclaje, la donación de artículos y la educación ambiental.</p>
-        <p>Para cualquier consulta relacionada con estos Términos puedes escribirnos a <a href="mailto:soporte.recoplus@gmail.com">soporte.recoplus@gmail.com</a>.</p>
+        <h2><span class="legal-num">2.</span> <span data-i18n="legal.terminos.s2.h2">Quiénes somos</span></h2>
+        <p data-i18n="legal.terminos.s2.p1">RECO+ es una plataforma comunitaria de reciclaje y donación que opera desde Panamá, con el objetivo de conectar a personas y empresas para facilitar el reciclaje, la donación de artículos y la educación ambiental.</p>
+        <p data-i18n="legal.terminos.s2.p2">Para cualquier consulta relacionada con estos Términos puedes escribirnos a <a href="mailto:soporte.recoplus@gmail.com">soporte.recoplus@gmail.com</a>.</p>
       </section>
 
       <section id="descripcion">
-        <h2><span class="legal-num">3.</span> Descripción del servicio</h2>
-        <p>RECO+ ofrece, entre otras, las siguientes funciones:</p>
+        <h2><span class="legal-num">3.</span> <span data-i18n="legal.terminos.s3.h2">Descripción del servicio</span></h2>
+        <p data-i18n="legal.terminos.s3.p1">RECO+ ofrece, entre otras, las siguientes funciones:</p>
         <ul>
-          <li><strong>Mapa de puntos de reciclaje y donación:</strong> ubicaciones sugeridas por la propia comunidad y por aliados.</li>
-          <li><strong>Escáner de materiales con inteligencia artificial:</strong> identifica el tipo de material a partir de una foto y sugiere cómo reciclarlo.</li>
-          <li><strong>Donaciones y solicitudes de ayuda:</strong> publicación de artículos para donar y solicitudes de ayuda entre usuarios.</li>
-          <li><strong>Alianzas empresariales:</strong> registro de empresas y organizaciones aliadas que colaboran con la comunidad.</li>
-          <li><strong>Guía educativa y videos de la comunidad:</strong> contenido informativo sobre reciclaje y sostenibilidad, incluyendo videos que suben las propias personas usuarias.</li>
-          <li><strong>Planes de suscripción:</strong> niveles Gratis, Básico y Premium con distintas funciones (ver sección 9).</li>
+          <li data-i18n="legal.terminos.s3.li1"><strong>Mapa de puntos de reciclaje y donación:</strong> ubicaciones sugeridas por la propia comunidad y por aliados.</li>
+          <li data-i18n="legal.terminos.s3.li2"><strong>Escáner de materiales con inteligencia artificial:</strong> identifica el tipo de material a partir de una foto y sugiere cómo reciclarlo.</li>
+          <li data-i18n="legal.terminos.s3.li3"><strong>Donaciones y solicitudes de ayuda:</strong> publicación de artículos para donar y solicitudes de ayuda entre usuarios.</li>
+          <li data-i18n="legal.terminos.s3.li4"><strong>Alianzas empresariales:</strong> registro de empresas y organizaciones aliadas que colaboran con la comunidad.</li>
+          <li data-i18n="legal.terminos.s3.li5"><strong>Guía educativa y videos de la comunidad:</strong> contenido informativo sobre reciclaje y sostenibilidad, incluyendo videos que suben las propias personas usuarias.</li>
+          <li data-i18n="legal.terminos.s3.li6"><strong>Planes de suscripción:</strong> niveles Gratis, Básico y Premium con distintas funciones (ver sección 9).</li>
         </ul>
-        <p>RECO+ puede agregar, modificar o retirar funciones de la Plataforma en cualquier momento, sin que ello genere derecho a compensación alguna.</p>
+        <p data-i18n="legal.terminos.s3.p2">RECO+ puede agregar, modificar o retirar funciones de la Plataforma en cualquier momento, sin que ello genere derecho a compensación alguna.</p>
       </section>
 
       <section id="registro">
-        <h2><span class="legal-num">4.</span> Registro y cuentas de usuario</h2>
-        <p>Para usar ciertas funciones de RECO+ debes crear una cuenta mediante correo y contraseña, o iniciando sesión con tu cuenta de Google o Apple.</p>
+        <h2><span class="legal-num">4.</span> <span data-i18n="legal.terminos.s4.h2">Registro y cuentas de usuario</span></h2>
+        <p data-i18n="legal.terminos.s4.p1">Para usar ciertas funciones de RECO+ debes crear una cuenta mediante correo y contraseña, o iniciando sesión con tu cuenta de Google o Apple.</p>
         <ul>
-          <li>Debes proporcionar información veraz y mantenerla actualizada.</li>
-          <li>Eres responsable de la confidencialidad de tu contraseña y de toda actividad realizada desde tu cuenta.</li>
-          <li>El uso de la Plataforma está dirigido a personas mayores de 18 años. Si eres menor de edad, necesitas la supervisión y autorización de un padre, madre o tutor legal.</li>
-          <li>Debes notificarnos de inmediato si detectas un uso no autorizado de tu cuenta.</li>
+          <li data-i18n="legal.terminos.s4.li1">Debes proporcionar información veraz y mantenerla actualizada.</li>
+          <li data-i18n="legal.terminos.s4.li2">Eres responsable de la confidencialidad de tu contraseña y de toda actividad realizada desde tu cuenta.</li>
+          <li data-i18n="legal.terminos.s4.li3">El uso de la Plataforma está dirigido a personas mayores de 18 años. Si eres menor de edad, necesitas la supervisión y autorización de un padre, madre o tutor legal.</li>
+          <li data-i18n="legal.terminos.s4.li4">Debes notificarnos de inmediato si detectas un uso no autorizado de tu cuenta.</li>
         </ul>
       </section>
 
       <section id="empresas">
-        <h2><span class="legal-num">5.</span> Cuentas de empresa / aliado</h2>
-        <p>Las empresas u organizaciones que deseen registrarse como aliadas deben completar el proceso de registro disponible en la sección de Alianzas, que incluye la creación de una cuenta, la carga de información y material gráfico (logo, fotos) y la aceptación de estos Términos en nombre de la empresa.</p>
-        <p>RECO+ puede verificar, aprobar, solicitar información adicional o rechazar el registro de una empresa a su criterio, especialmente cuando la información proporcionada sea incompleta, inexacta o contraria a estos Términos.</p>
+        <h2><span class="legal-num">5.</span> <span data-i18n="legal.terminos.s5.h2">Cuentas de empresa / aliado</span></h2>
+        <p data-i18n="legal.terminos.s5.p1">Las empresas u organizaciones que deseen registrarse como aliadas deben completar el proceso de registro disponible en la sección de Alianzas, que incluye la creación de una cuenta, la carga de información y material gráfico (logo, fotos) y la aceptación de estos Términos en nombre de la empresa.</p>
+        <p data-i18n="legal.terminos.s5.p2">RECO+ puede verificar, aprobar, solicitar información adicional o rechazar el registro de una empresa a su criterio, especialmente cuando la información proporcionada sea incompleta, inexacta o contraria a estos Términos.</p>
       </section>
 
       <section id="escaner">
-        <h2><span class="legal-num">6.</span> Escáner de materiales con inteligencia artificial</h2>
-        <p>El escáner de materiales utiliza modelos de inteligencia artificial para analizar imágenes y sugerir el tipo de material y su forma de reciclaje o disposición.</p>
-        <div class="legal-callout">
+        <h2><span class="legal-num">6.</span> <span data-i18n="legal.terminos.s6.h2">Escáner de materiales con inteligencia artificial</span></h2>
+        <p data-i18n="legal.terminos.s6.p1">El escáner de materiales utiliza modelos de inteligencia artificial para analizar imágenes y sugerir el tipo de material y su forma de reciclaje o disposición.</p>
+        <div class="legal-callout" data-i18n="legal.terminos.s6.callout">
           Los resultados del escáner son <strong>orientativos</strong> y pueden contener errores. RECO+ no garantiza la exactitud de la clasificación y no se hace responsable por decisiones tomadas exclusivamente con base en el resultado del escáner. Ante dudas sobre materiales peligrosos, especiales o de manejo delicado, consulta siempre a la autoridad o centro de acopio correspondiente.
         </div>
       </section>
 
       <section id="contenido">
-        <h2><span class="legal-num">7.</span> Contenido generado por usuarios</h2>
-        <p>RECO+ permite publicar contenido generado por la comunidad, incluyendo puntos de reciclaje sugeridos, publicaciones de donación, comentarios y videos.</p>
+        <h2><span class="legal-num">7.</span> <span data-i18n="legal.terminos.s7.h2">Contenido generado por usuarios</span></h2>
+        <p data-i18n="legal.terminos.s7.p1">RECO+ permite publicar contenido generado por la comunidad, incluyendo puntos de reciclaje sugeridos, publicaciones de donación, comentarios y videos.</p>
         <ul>
-          <li>Eres responsable del contenido que publicas y garantizas que tienes derecho a compartirlo.</li>
-          <li>No está permitido publicar contenido falso, engañoso, ofensivo, discriminatorio, violento o que infrinja derechos de terceros.</li>
-          <li>Los videos subidos a la Plataforma pasan por un proceso de moderación, que puede incluir revisión automática mediante inteligencia artificial y, en los casos que lo requieran, revisión manual antes de su publicación definitiva.</li>
-          <li>RECO+ puede eliminar, ocultar o rechazar cualquier contenido que incumpla estos Términos, sin previo aviso.</li>
+          <li data-i18n="legal.terminos.s7.li1">Eres responsable del contenido que publicas y garantizas que tienes derecho a compartirlo.</li>
+          <li data-i18n="legal.terminos.s7.li2">No está permitido publicar contenido falso, engañoso, ofensivo, discriminatorio, violento o que infrinja derechos de terceros.</li>
+          <li data-i18n="legal.terminos.s7.li3">Los videos subidos a la Plataforma pasan por un proceso de moderación, que puede incluir revisión automática mediante inteligencia artificial y, en los casos que lo requieran, revisión manual antes de su publicación definitiva.</li>
+          <li data-i18n="legal.terminos.s7.li4">RECO+ puede eliminar, ocultar o rechazar cualquier contenido que incumpla estos Términos, sin previo aviso.</li>
         </ul>
       </section>
 
       <section id="propiedad">
-        <h2><span class="legal-num">8.</span> Propiedad intelectual</h2>
-        <p>La marca RECO+, el diseño, los textos, gráficos y el software de la Plataforma son propiedad de RECO+ o de sus licenciantes, y están protegidos por las leyes de propiedad intelectual aplicables.</p>
-        <p>El contenido que tú publicas sigue siendo tuyo; al subirlo a RECO+ nos otorgas una licencia no exclusiva, mundial y gratuita para almacenarlo, mostrarlo y distribuirlo dentro de la Plataforma con el fin de operar el servicio.</p>
+        <h2><span class="legal-num">8.</span> <span data-i18n="legal.terminos.s8.h2">Propiedad intelectual</span></h2>
+        <p data-i18n="legal.terminos.s8.p1">La marca RECO+, el diseño, los textos, gráficos y el software de la Plataforma son propiedad de RECO+ o de sus licenciantes, y están protegidos por las leyes de propiedad intelectual aplicables.</p>
+        <p data-i18n="legal.terminos.s8.p2">El contenido que tú publicas sigue siendo tuyo; al subirlo a RECO+ nos otorgas una licencia no exclusiva, mundial y gratuita para almacenarlo, mostrarlo y distribuirlo dentro de la Plataforma con el fin de operar el servicio.</p>
       </section>
 
       <section id="planes">
-        <h2><span class="legal-num">9.</span> Planes y suscripciones</h2>
-        <p>RECO+ ofrece distintos niveles de plan (Gratis, Básico y Premium) con diferentes funciones y límites de uso.</p>
-        <div class="legal-callout legal-callout--notice">
+        <h2><span class="legal-num">9.</span> <span data-i18n="legal.terminos.s9.h2">Planes y suscripciones</span></h2>
+        <p data-i18n="legal.terminos.s9.p1">RECO+ ofrece distintos niveles de plan (Gratis, Básico y Premium) con diferentes funciones y límites de uso.</p>
+        <div class="legal-callout legal-callout--notice" data-i18n="legal.terminos.s9.callout">
           <strong>Aviso:</strong> actualmente el proceso de pago de los planes de suscripción es una <strong>simulación (modo demo)</strong> y no procesa cobros reales. Cuando RECO+ habilite pagos reales, esta sección se actualizará para describir el proveedor de pagos, condiciones de facturación, renovación y cancelación.
         </div>
       </section>
 
       <section id="conducta">
-        <h2><span class="legal-num">10.</span> Conductas prohibidas</h2>
-        <p>Al usar RECO+ te comprometes a no:</p>
+        <h2><span class="legal-num">10.</span> <span data-i18n="legal.terminos.s10.h2">Conductas prohibidas</span></h2>
+        <p data-i18n="legal.terminos.s10.p1">Al usar RECO+ te comprometes a no:</p>
         <ul>
-          <li>Suplantar la identidad de otra persona o empresa.</li>
-          <li>Publicar contenido ilegal, fraudulento o que promueva actividades peligrosas.</li>
-          <li>Intentar vulnerar la seguridad de la Plataforma, sus cuentas o su infraestructura.</li>
-          <li>Usar la Plataforma para enviar spam, contenido malicioso o publicidad no autorizada.</li>
-          <li>Extraer datos de la Plataforma de forma automatizada (scraping) sin autorización expresa.</li>
+          <li data-i18n="legal.terminos.s10.li1">Suplantar la identidad de otra persona o empresa.</li>
+          <li data-i18n="legal.terminos.s10.li2">Publicar contenido ilegal, fraudulento o que promueva actividades peligrosas.</li>
+          <li data-i18n="legal.terminos.s10.li3">Intentar vulnerar la seguridad de la Plataforma, sus cuentas o su infraestructura.</li>
+          <li data-i18n="legal.terminos.s10.li4">Usar la Plataforma para enviar spam, contenido malicioso o publicidad no autorizada.</li>
+          <li data-i18n="legal.terminos.s10.li5">Extraer datos de la Plataforma de forma automatizada (scraping) sin autorización expresa.</li>
         </ul>
       </section>
 
       <section id="responsabilidad">
-        <h2><span class="legal-num">11.</span> Limitación de responsabilidad</h2>
-        <p>RECO+ actúa como intermediario que conecta a personas, comunidades y empresas en torno al reciclaje y la donación. No somos parte de las transacciones, entregas o acuerdos que se realicen entre usuarios, ni garantizamos la disponibilidad, calidad, seguridad o legalidad de los puntos de reciclaje, donaciones o publicaciones de terceros.</p>
-        <p>En la medida permitida por la ley, RECO+ no será responsable por daños indirectos, incidentales o derivados del uso de la Plataforma, incluyendo pérdidas resultantes de interacciones entre usuarios o de la información proporcionada por el escáner con IA.</p>
+        <h2><span class="legal-num">11.</span> <span data-i18n="legal.terminos.s11.h2">Limitación de responsabilidad</span></h2>
+        <p data-i18n="legal.terminos.s11.p1">RECO+ actúa como intermediario que conecta a personas, comunidades y empresas en torno al reciclaje y la donación. No somos parte de las transacciones, entregas o acuerdos que se realicen entre usuarios, ni garantizamos la disponibilidad, calidad, seguridad o legalidad de los puntos de reciclaje, donaciones o publicaciones de terceros.</p>
+        <p data-i18n="legal.terminos.s11.p2">En la medida permitida por la ley, RECO+ no será responsable por daños indirectos, incidentales o derivados del uso de la Plataforma, incluyendo pérdidas resultantes de interacciones entre usuarios o de la información proporcionada por el escáner con IA.</p>
       </section>
 
       <section id="suspension">
-        <h2><span class="legal-num">12.</span> Suspensión y terminación de cuentas</h2>
-        <p>Podemos suspender o cancelar tu cuenta si incumples estos Términos, si detectamos actividad fraudulenta, o si es necesario para proteger a la comunidad o a la Plataforma.</p>
-        <p>Puedes solicitar la eliminación de tu cuenta en cualquier momento escribiéndonos a <a href="mailto:soporte.recoplus@gmail.com">soporte.recoplus@gmail.com</a>.</p>
+        <h2><span class="legal-num">12.</span> <span data-i18n="legal.terminos.s12.h2">Suspensión y terminación de cuentas</span></h2>
+        <p data-i18n="legal.terminos.s12.p1">Podemos suspender o cancelar tu cuenta si incumples estos Términos, si detectamos actividad fraudulenta, o si es necesario para proteger a la comunidad o a la Plataforma.</p>
+        <p data-i18n="legal.terminos.s12.p2">Puedes solicitar la eliminación de tu cuenta en cualquier momento escribiéndonos a <a href="mailto:soporte.recoplus@gmail.com">soporte.recoplus@gmail.com</a>.</p>
       </section>
 
       <section id="modificaciones">
-        <h2><span class="legal-num">13.</span> Modificaciones a estos Términos</h2>
-        <p>Podemos actualizar estos Términos periódicamente. Publicaremos la versión vigente en esta página junto con la fecha de última actualización. El uso continuado de la Plataforma después de una modificación implica la aceptación de los nuevos Términos.</p>
+        <h2><span class="legal-num">13.</span> <span data-i18n="legal.terminos.s13.h2">Modificaciones a estos Términos</span></h2>
+        <p data-i18n="legal.terminos.s13.p1">Podemos actualizar estos Términos periódicamente. Publicaremos la versión vigente en esta página junto con la fecha de última actualización. El uso continuado de la Plataforma después de una modificación implica la aceptación de los nuevos Términos.</p>
       </section>
 
       <section id="ley">
-        <h2><span class="legal-num">14.</span> Ley aplicable y jurisdicción</h2>
-        <p>Estos Términos se rigen por las leyes de la República de Panamá. Cualquier controversia relacionada con estos Términos se someterá a los tribunales competentes de Panamá, salvo que la ley aplicable disponga algo distinto.</p>
+        <h2><span class="legal-num">14.</span> <span data-i18n="legal.terminos.s14.h2">Ley aplicable y jurisdicción</span></h2>
+        <p data-i18n="legal.terminos.s14.p1">Estos Términos se rigen por las leyes de la República de Panamá. Cualquier controversia relacionada con estos Términos se someterá a los tribunales competentes de Panamá, salvo que la ley aplicable disponga algo distinto.</p>
       </section>
 
       <section id="contacto">
-        <h2><span class="legal-num">15.</span> Contacto</h2>
-        <p>Si tienes preguntas sobre estos Términos, escríbenos a:</p>
+        <h2><span class="legal-num">15.</span> <span data-i18n="legal.terminos.s15.h2">Contacto</span></h2>
+        <p data-i18n="legal.terminos.s15.p1">Si tienes preguntas sobre estos Términos, escríbenos a:</p>
         <ul>
-          <li>Correo: <a href="mailto:soporte.recoplus@gmail.com">soporte.recoplus@gmail.com</a></li>
-          <li>Teléfono / WhatsApp: +507 6399-1249</li>
-          <li>Ubicación: David, Panamá</li>
+          <li data-i18n="legal.terminos.s15.li1">Correo: <a href="mailto:soporte.recoplus@gmail.com">soporte.recoplus@gmail.com</a></li>
+          <li data-i18n="legal.terminos.s15.li2">Teléfono / WhatsApp: +507 6399-1249</li>
+          <li data-i18n="legal.terminos.s15.li3">Ubicación: David, Panamá</li>
         </ul>
       </section>
 
