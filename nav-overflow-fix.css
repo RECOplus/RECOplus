@@ -34,6 +34,19 @@
   display: none;
 }
 
+/* El mismo problema existe en el bloque de la derecha (dm-pill +
+   lang-pill + burger + CTA/chip de usuario): navbar-auth.css ya
+   soluciona esto pero SOLO cuando hay sesión activa (selector
+   `.bubble-nav:has(.nav-user)`). Sin sesión, .bubble-nav__actions
+   se queda con flex-shrink:0 (style.css/navbar.css) y en pantallas
+   angostas empuja fuera del pill redondeado — se ve literalmente
+   cortado fuera de la pantalla en móvil. Se habilita el encogimiento
+   aquí de forma incondicional, para que aplique con o sin sesión. */
+.bubble-nav__actions {
+  flex-shrink: 1;
+  min-width: 0;
+}
+
 /* El wrapper principal tampoco debe permitir que nada se salga del
    pill redondeado si, en un caso extremo, ni siquiera el bloque de
    acciones (dark pill + lang pill + CTA) entra completo. */

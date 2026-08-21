@@ -45,8 +45,8 @@
   to   { opacity: 1; transform: scale(1); }
 }
 @keyframes navSlideDown {
-  from { opacity: 0; transform: translate(-50%, -18px); }
-  to   { opacity: 1; transform: translate(-50%, 0); }
+  from { opacity: 0; transform: translateY(-18px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 @keyframes heroTextGlow {
   0%, 100% { text-shadow: 0 2px 20px rgba(255,255,255,0.18), 0 0 40px rgba(45,200,100,0.10); }
@@ -67,8 +67,18 @@
   100% { background-position: 200% 50%; }
 }
 
-/* ── 2. NAV ENTRY ANIMATION ── */
-.bubble-nav-wrapper {
+/* ── 2. NAV ENTRY ANIMATION ──
+   Aplicada al pill interno (.bubble-nav), NO al wrapper. El wrapper
+   es position:fixed y depende de `left:50% + transform:translateX(-50%)`
+   (definido en style.css) para quedar centrado — si una @keyframes
+   toma control de esa misma propiedad `transform` en el wrapper, la
+   pisa por completo mientras la animación está activa/held (fill-mode
+   both), y en anchos de viewport donde el layout se recalcula
+   (breakpoint 860px, resize, modo responsive de DevTools) el nav
+   pierde el centrado y se ve "salir" de la pantalla. .bubble-nav es
+   un elemento de flujo normal dentro del wrapper: no necesita ningún
+   -50%, así que animar su transform aquí es seguro y no interfiere. */
+.bubble-nav-wrapper .bubble-nav {
   animation: navSlideDown 0.55s cubic-bezier(0.34,1.56,0.64,1) both;
   animation-delay: 0.1s;
 }

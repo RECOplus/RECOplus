@@ -2694,14 +2694,19 @@ html.dark {
   max-width: 1160px;
 }
 
-/* ── PILL ── */
+/* ── PILL (navbar principal) ──
+   Blur elevado (28px) para que el nav se note claramente esfumado
+   incluso sobre fondos con poco detalle (p.ej. el hero cuando el
+   video de fondo aun no ha cargado y solo se ve el poster estatico).
+   flat-glass.css sube esto aun mas (+16px) via variable, asi que
+   este valor es el piso, no el tope. */
 .bubble-nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
   background: var(--nav-bg);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
   border: 1px solid var(--nav-border);
   border-radius: 999px;
   padding: 10px 14px 10px 20px;
