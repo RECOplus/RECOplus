@@ -590,12 +590,23 @@ html.dark .donar-input--error {
 }
 
 .donar-trust-item {
-  border-radius: 20px;
+  border-radius: 26px;
   padding: 22px 18px;
   display: flex;
   align-items: flex-start;
   gap: 14px;
   isolation: isolate;
+  overflow: hidden;
+  /* Bug conocido de Chromium/Brave: cuando un elemento combina
+     backdrop-filter (blur) + border-radius, el navegador a veces
+     pinta el blur como un rectángulo recto, ignorando el recorte
+     redondeado de las esquinas (aunque el border-radius SÍ esté
+     aplicado, como confirmaste en DevTools). Forzar un mask-image
+     (un degradado blanco->blanco, sin efecto visual propio) obliga
+     al navegador a componer el elemento en una capa que sí respeta
+     el recorte redondeado sobre el backdrop-filter. */
+  -webkit-mask-image: -webkit-radial-gradient(white, white);
+  mask-image: radial-gradient(white, white);
 }
 
 .donar-trust-item:hover {

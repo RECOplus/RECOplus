@@ -1,0 +1,174 @@
+/* ═══════════════════════════════════════════════════════════════
+   NAV-MOBILE-MENU.CSS — RECO+
+   Capa aditiva: agrega un botón de menú hamburguesa + panel
+   desplegable a la navbar burbuja cuando los links se ocultan en
+   viewports angostos (≤860px, mismo breakpoint que navbar.css /
+   styles.css / el <style> inline de alianzas.html y mapa.html).
+
+   No modifica navbar.css ni los <style> inline de cada página: se
+   enlaza AL FINAL del <head> en las 13 páginas y gana por orden de
+   carga + especificidad donde hace falta.
+
+   Estructura que inyecta nav-mobile-menu.js dentro de
+   .bubble-nav__actions (antes del CTA "Únete"):
+
+     <button class="nav-burger" id="navBurger" aria-label="Abrir menú" aria-expanded="false">
+       <span></span><span></span><span></span>
+     </button>
+
+   Y al final de <body>:
+
+     <div class="nav-mobile-overlay" id="navMobileOverlay"></div>
+     <nav class="nav-mobile-panel" id="navMobilePanel">
+       ...links clonados de .bubble-nav__links...
+     </nav>
+═══════════════════════════════════════════════════════════════ */
+
+/* El botón solo existe visualmente en el breakpoint donde
+   .bubble-nav__links ya se oculta (ver navbar.css / styles.css /
+   estilos inline de alianzas.html y mapa.html: @media max-width:860px). */
+.nav-burger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--nav-dm-border, rgba(45,140,78,0.22));
+  background: var(--nav-dm-bg, rgba(45,140,78,0.08));
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 0;
+  gap: 4px;
+  flex-direction: column;
+  transition: background 0.18s, border-color 0.18s;
+}
+
+.nav-burger:hover {
+  background: var(--nav-link-hover-bg, rgba(45,140,78,0.10));
+}
+
+.nav-burger span {
+  display: block;
+  width: 16px;
+  height: 1.6px;
+  border-radius: 2px;
+  background: var(--nav-link-color, #2a4a34);
+  transition: transform 0.28s cubic-bezier(.4,0,.2,1), opacity 0.2s, background-color 0.28s;
+}
+
+/* Estado abierto: hamburguesa -> X */
+.nav-burger[aria-expanded="true"] span:nth-child(1) {
+  transform: translateY(5.6px) rotate(45deg);
+}
+.nav-burger[aria-expanded="true"] span:nth-child(2) {
+  opacity: 0;
+}
+.nav-burger[aria-expanded="true"] span:nth-child(3) {
+  transform: translateY(-5.6px) rotate(-45deg);
+}
+
+@media (max-width: 860px) {
+  .nav-burger { display: inline-flex; }
+}
+
+/* ── OVERLAY ── */
+.nav-mobile-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 20, 12, 0.42);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: 998;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.24s cubic-bezier(.4,0,.2,1);
+}
+
+.nav-mobile-overlay.is-open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ── PANEL DESPLEGABLE ──
+   Cae justo debajo del pill del navbar, mismo ancho que el wrapper,
+   con el mismo lenguaje visual (glass + blur) que el resto del sitio. */
+.nav-mobile-panel {
+  position: fixed;
+  top: 72px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-12px);
+  width: calc(100% - 24px);
+  max-width: 420px;
+  max-height: calc(100vh - 96px);
+  overflow-y: auto;
+  z-index: 999;
+  background: var(--nav-bg, rgba(242, 250, 244, 0.92));
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border: 1px solid var(--nav-border, rgba(168, 218, 181, 0.55));
+  border-radius: 22px;
+  box-shadow: var(--nav-shadow, 0 8px 32px rgba(30, 80, 40, 0.18));
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s cubic-bezier(.4,0,.2,1), transform 0.22s cubic-bezier(.4,0,.2,1);
+}
+
+.nav-mobile-panel.is-open {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateX(-50%) translateY(0);
+}
+
+.nav-mobile-panel a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-family: 'DM Sans', 'Arial', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--nav-link-color, #2a4a34);
+  text-decoration: none;
+  transition: background 0.16s, color 0.16s;
+}
+
+.nav-mobile-panel a svg {
+  opacity: 0.75;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+}
+
+.nav-mobile-panel a:hover,
+.nav-mobile-panel a:active {
+  background: var(--nav-link-hover-bg, rgba(45, 140, 78, 0.10));
+  color: var(--nav-link-hover-color, #1a5c2a);
+}
+
+.nav-mobile-panel a.active {
+  background: var(--nav-link-active-bg, rgba(45, 140, 78, 0.14));
+  color: var(--nav-link-hover-color, #1a5c2a);
+}
+
+.nav-mobile-panel a.active svg { opacity: 1; }
+
+@media (min-width: 861px) {
+  .nav-mobile-overlay,
+  .nav-mobile-panel {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-burger span,
+  .nav-mobile-overlay,
+  .nav-mobile-panel {
+    transition: none;
+  }
+}

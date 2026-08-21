@@ -70,6 +70,8 @@
   <link rel="stylesheet" href="banner-unificado.css">
   <!-- Capa aditiva: mismo fondo negro puro en modo oscuro y mismo tamaño de banner que reciclar.html -->
   <link rel="stylesheet" href="donar-reciclar-parity-fix.css?v=3">
+  <!-- Capa aditiva: menú hamburguesa móvil (los links del navbar se ocultan en ≤860px sin esto) -->
+  <link rel="stylesheet" href="nav-mobile-menu.css">
 </head>
 <body>
 
@@ -637,7 +639,7 @@
   <!-- ========== FIN VENTANA FLOTANTE ========== -->
 
   <!-- ========== TRUST BADGES ========== -->
-  <section class="donar-trust">
+  <!-- <section class="donar-trust">
     <div class="donar-trust-grid">
       <div class="donar-trust-item">
         <span class="donar-trust-icon"><img src="img/escudo.png" alt="escudo"></span>
@@ -668,7 +670,7 @@
         </div>
       </div>
     </div>
-  </section>
+  </section> -->
 
   <!-- ========== MODAL ÉXITO ========== -->
   <div class="donar-modal-overlay" id="donarModal">
@@ -773,6 +775,8 @@
   <script src="i18n.js?v=2"></script>
   <script src="nav-preview.js"></script>
   <script src="navbar.js"></script>
+  <!-- Capa aditiva: menú hamburguesa móvil -->
+  <script src="nav-mobile-menu.js"></script>
   <script src="donar.js"></script>
   <!-- Fuente única de los puntos oficiales del mapa (recicladoras,
        acopios, ONGs) + selector de empresa en los formularios -->

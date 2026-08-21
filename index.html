@@ -7,6 +7,8 @@
     <title>RECO+</title>
     <link rel="icon" type="image/png" href="img/favicon.png">
     <link rel="stylesheet" href="style.css">
+    <!-- Capa aditiva: video de fondo en el hero (reemplaza visualmente el banner estático) -->
+    <link rel="stylesheet" href="index-hero-video.css">
     <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="interactive.css">
     <link rel="stylesheet" href="glow-boost.css">
@@ -37,6 +39,10 @@
 
   <link rel="stylesheet" href="contact-fab.css">
   <link rel="stylesheet" href="footer-unificado.css">
+  <!-- Capa aditiva: menú hamburguesa móvil (los links del navbar se ocultan en ≤860px sin esto) -->
+  <link rel="stylesheet" href="nav-mobile-menu.css">
+    <!-- Capa aditiva: cierra los huecos de responsive en móvil (hero, stats, secciones grandes, cta banner) -->
+    <link rel="stylesheet" href="responsive-index-polish.css">
 </head>
 <body>
 
@@ -127,6 +133,11 @@
 
 <!-- ── HERO ── -->
 <section class="hero">
+    <!-- Capa aditiva: video de fondo en loop (ver index-hero-video.css/js). El
+         background-image de .hero en style.css queda como respaldo visual. -->
+    <video class="hero-video-bg" autoplay muted loop playsinline poster="img/bannerdelinicio.png">
+        <source src="video/INDEX%20VIDEO.mp4" type="video/mp4">
+    </video>
     <div class="hero-content">
         <h1 data-i18n="hero.title">Conecta, Recicla<br>y Transforma</h1>
         <p data-i18n="hero.subtitle">Encuentra puntos de reciclaje, dona lo que ya no usas y ayuda a construir un mundo mejor.</p>
@@ -681,6 +692,8 @@
 <script src="script.js"></script>
 <script src="i18n.js?v=2"></script>
   <script src="nav-preview.js"></script>
+  <!-- Capa aditiva: menú hamburguesa móvil -->
+  <script src="nav-mobile-menu.js"></script>
 <script src="search.js"></script>
 <script src="acc-cards.js"></script>
 <script src="aliados-marquee.js"></script>
@@ -695,6 +708,8 @@
 ═══════════════════════════════════════════════ -->
 
 <script src="index.js"></script>
+<!-- Capa aditiva: pausa el video de fondo del hero si el usuario pidió movimiento reducido -->
+<script src="index-hero-video.js"></script>
 <script src="interactive.js"></script>
 <script src="tutorial-steps-index.js"></script>
 <script src="tutorial.js"></script>

@@ -253,7 +253,7 @@
   gap: 18px;
   border-radius: 28px;
   padding: 34px 40px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .dh-stats-leaf {
@@ -264,16 +264,18 @@
 
 .dh-stat {
   text-align: center;
-  flex: 1 1 140px;
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .dh-stat-num {
   display: block;
   font-family: 'Fraunces', serif;
   font-weight: 900;
-  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  font-size: clamp(1.1rem, 2.4vw, 2.1rem);
   color: var(--accent, #2d8c4e);
   line-height: 1.1;
+  white-space: nowrap;
 }
 
 .dh-stat p {
@@ -655,7 +657,8 @@ body.dh-modal-lock {
 @media (max-width: 560px) {
   .dh-section { padding: 0 16px; margin-bottom: 48px; }
   .dh-steps-row { padding: 22px 16px; }
-  .dh-stats-grid { padding: 26px 20px; }
+  .dh-stats-grid { padding: 26px 14px; gap: 8px; }
+  .dh-stats-leaf { display: none; }
   .dh-cta-banner { padding: 24px 22px; text-align: center; justify-content: center; }
   .dh-hero-ctas { justify-content: flex-start; }
 }

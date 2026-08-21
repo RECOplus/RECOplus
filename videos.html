@@ -309,6 +309,8 @@ html.dark .dm-pill__sun { opacity: 0.38; }
        style.css, así que sin este archivo los dos <img> del logo se
        muestran apilados en vez de alternarse según el tema. -->
   <link rel="stylesheet" href="nav-logo-crossfade-fix.css">
+  <!-- Capa aditiva: menú hamburguesa móvil (los links del navbar se ocultan en ≤860px sin esto) -->
+  <link rel="stylesheet" href="nav-mobile-menu.css">
 </head>
 <body>
 
@@ -498,6 +500,8 @@ html.dark .dm-pill__sun { opacity: 0.38; }
   <script src="session-bridge.js"></script>
   <script src="i18n.js?v=2"></script>
   <script src="nav-preview.js"></script>
+  <!-- Capa aditiva: menú hamburguesa móvil -->
+  <script src="nav-mobile-menu.js"></script>
   <script src="search.js"></script>
   <script src="script.js"></script>
   <!-- Capa aditiva: datos + lógica de la biblioteca de videos (filtro por categoría, deep-link ?v=/?cat=) -->
