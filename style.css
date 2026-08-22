@@ -66,6 +66,11 @@ nav a:hover::after {
 
 .hero {
     height: 100vh;
+    height: 100dvh; /* unidad de viewport dinamica: evita el salto de layout
+                       en movil cuando la barra de direcciones del navegador
+                       se muestra/oculta con el scroll (100vh no compensa eso
+                       y hace que el navbar fixed parezca saltar). Fallback
+                       a 100vh arriba para navegadores sin soporte de dvh. */
     background: linear-gradient(rgba(0,0,0,0.10), rgba(0,0,0,0.10)),
                 url(img/bannerdelinicio.png) center/cover;
     display: flex;

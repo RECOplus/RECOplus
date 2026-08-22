@@ -169,12 +169,30 @@
     return wrap;
   }
 
+  // Recuerda el último user.id ya pintado para no reconstruir el
+  // chip (y remover/insertar nodos en .bubble-nav__actions) cada vez
+  // que recoAuth revalida la sesión (cambio de pestaña, refresh de
+  // token, reconexión, etc.). Antes cada revalidación disparaba un
+  // replaceWith() aunque el usuario fuera el mismo: eso reflowaba
+  // .bubble-nav__actions (que tiene overflow-x:auto + contenido al
+  // límite del espacio en pantallas angostas) en pleno vivo, lo que
+  // en algunos navegadores móviles hacía "saltar" momentáneamente el
+  // navbar fixed. Con este guard, applySession solo reconstruye el
+  // chip si el usuario realmente cambió (login distinto) o si aún
+  // no existe un chip pintado.
+  var lastRenderedUserId = null;
+
   function applySession(session) {
     var slot = findLoginSlot();
     var existingChip = document.querySelector('.nav-user');
 
     if (session && session.user) {
+      if (existingChip && lastRenderedUserId === session.user.id) {
+        // Mismo usuario que ya está pintado: no tocar el DOM.
+        return;
+      }
       var chip = buildUserChip(session.user);
+      lastRenderedUserId = session.user.id;
       if (slot) {
         slot.replaceWith(chip);
       } else if (!existingChip) {
@@ -187,6 +205,7 @@
         existingChip.replaceWith(chip);
       }
     } else if (existingChip) {
+      lastRenderedUserId = null;
       // Se cerró sesión: si ya reemplazamos el chip antes en esta
       // carga de página, lo simple y confiable es recargar para que
       // navbar.js reconstruya el link de login original desde el HTML.

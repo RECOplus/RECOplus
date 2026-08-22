@@ -10,10 +10,26 @@
    duplicado en contacto).
 ═══════════════════════════════════════════════════════════════ */
 
-/* ── Base: nada se sale del viewport ── */
+/* ── Base: nada se sale del viewport ──
+   OJO: overflow-x:clip debe ir en AMBOS, html y body, no solo body.
+   El scrollWidth que se mide en JS (document.documentElement.scrollWidth)
+   es el ancho de <html>, no el de <body>. Si solo <body> tiene el
+   clip, el navegador puede seguir "viendo" contenido más ancho que
+   el viewport dentro de <html> (p.ej. el track de un marquee con
+   width:max-content en .aliados-marquee / .test-row, aunque su
+   wrapper tenga overflow:hidden) y scrollWidth queda inestable /
+   creciente mientras el marquee anima con requestAnimationFrame,
+   aun sin que se note scroll visual. Esto es lo que causaba que el
+   nav, el FAB de WhatsApp y el botón de tutorial (todos position:
+   fixed, calculados en base al viewport) parecieran "saltar" cada
+   cierto tiempo: no se movían ellos, sino que el navegador recalcu-
+   laba el ancho de referencia del viewport en cada frame. Con el
+   clip en ambos niveles (html Y body) queda contenido de verdad y
+   se corta ese crecimiento fantasma. */
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  overflow-x: clip;
 }
 body {
   overflow-x: clip;

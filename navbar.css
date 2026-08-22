@@ -276,3 +276,47 @@ html.dark .dm-pill__sun { opacity: 0.38; }
   .bubble-nav__links { display: none; }
   .bubble-nav { padding: 10px 14px; }
 }
+
+/* ── NAV LOCK (responsive) ──
+   CAUSA RAÍZ REAL del salto "cada 5 segundos": Chrome/Safari en
+   Android/iOS colapsan y expanden la barra de direcciones sola tras
+   un momento de inactividad de scroll. Eso cambia el VISUAL VIEWPORT
+   (documentado oficialmente por Chrome: developer.chrome.com/blog/
+   url-bar-resizing) y dispara un evento resize real. Como
+   .bubble-nav-wrapper usaba `width: calc(100% - 24px)`, ese % se
+   recalculaba contra el visual viewport cambiante — confirmado en
+   DevTools: el wrapper medía 375px con la barra visible y 457px con
+   la barra oculta. Ese cambio de ancho en vivo es lo que se ve como
+   el navbar "saltando".
+
+   FIX: `100vw` en vez de `100%`. A diferencia de %, `vw` en Chrome/
+   Safari se ancla al LAYOUT viewport (el "smallest possible
+   viewport", como si la barra de direcciones siempre estuviera
+   visible) para elementos position:fixed — no se recalcula cuando
+   la barra colapsa/expande. Se usa `calc(100vw - 24px)` en vez de
+   `calc(100% - 24px)`, con el mismo comportamiento visual pero sin
+   depender del visual viewport inestable.
+
+   Se mantienen además las salvaguardas de la versión anterior
+   (!important, contain, capa GPU) por si acaso, pero el fix real es
+   el cambio de unidad. */
+@media (max-width: 860px) {
+  .bubble-nav-wrapper {
+    position: fixed !important;
+    top: 10px !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: calc(100vw - 24px) !important;
+    transform: translateX(-50%) translateZ(0) !important;
+    -webkit-transform: translateX(-50%) translateZ(0) !important;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    will-change: transform;
+    contain: layout style;
+  }
+
+  .bubble-nav {
+    contain: layout style;
+  }
+}
