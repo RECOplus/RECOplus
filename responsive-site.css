@@ -97,6 +97,19 @@ button {
     width: 108px;
     height: 34px;
   }
+  /* La imagen interna (.bubble-nav__logo img en style.css) usa
+     height:126px fijo, pensado para el contenedor de escritorio de
+     40px de alto (proporcion ~3.15:1 imagen/contenedor, por el aire
+     interno del PNG). Sin este ajuste, al achicar el contenedor a
+     34px aqui abajo, la imagen se seguia mostrando a 126px de alto
+     centrada y solo se veia un pedazo ampliado y descuadrado del
+     logo ("RECO" cortado + una franja verde del "+"). Se escala la
+     imagen algo por debajo de la proporcion exacta (ratio ~2.85 en
+     vez de 3.15) para dejar un pequeno margen de aire dentro del
+     contenedor recortado y que no se sienta al ras del borde. */
+  .bubble-nav__logo img {
+    height: 97px;
+  }
   .bubble-nav__cta span[data-i18n],
   .bubble-nav__cta > span:not(.btn-sparkle):not(.nav-user__name) {
     display: none;
@@ -131,6 +144,9 @@ button {
   .bubble-nav__logo {
     width: 92px;
     height: 30px;
+  }
+  .bubble-nav__logo img {
+    height: 85px;
   }
 }
 
