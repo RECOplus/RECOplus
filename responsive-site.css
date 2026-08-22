@@ -146,6 +146,15 @@ button {
 ═══════════════════════════════════════════════════════════════ */
 @media (max-width: 640px) {
   .hero {
+    /* padding-top base es 100px (style.css, fijo sin media query),
+       calibrado para el nav de escritorio. En movil el nav-wrapper
+       ya se compacta (top:8-10px, ver bloque NAVBAR arriba en este
+       mismo archivo) pero el hero nunca bajaba su propio padding-top
+       para pantallas angostas, asi que en telefonos chicos (~360-390px)
+       el h1 quedaba pegado justo debajo del pill del nav, a veces
+       tapado por él. Se sube el aire superior para dejar el nav y el
+       titulo claramente separados. */
+    padding-top: 128px !important;
     padding-left: 18px !important;
     padding-right: 18px !important;
     padding-bottom: 36px !important;
@@ -165,24 +174,71 @@ button {
     max-width: 100%;
   }
   .mini-nav {
-    flex-direction: column;
+    display: flex !important;
+    flex-direction: column !important;
     align-items: stretch !important;
-    gap: 10px;
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: 10px !important;
   }
   .mini-nav__label {
-    display: none;
+    display: none !important;
   }
+  /* Los 3 chips (Mapa / Escaner / Alianzas) se mantenían en grid
+     vertical de tarjetas grandes (min-height:130px de flat-glass.css)
+     heredado de la variante desktop "card". En movil eso los deja
+     enormes y apilados uno debajo del otro. Aquí se fuerza de vuelta
+     al formato compacto tipo pill en una sola fila horizontal, igual
+     de chico en cualquier ancho de teléfono (no se vuelve a apilar
+     en el breakpoint de 400px de abajo).
+     TODAS las propiedades de layout van con !important: el bloque
+     "MINI-NAV v3" de style.css (mas abajo en cascada) ya declara
+     display/flex-wrap sin !important pero CON la misma especificidad
+     de selector simple, y al no llevar !important de nuestro lado en
+     flex-wrap/justify-content, ese bloque base (flex-wrap: wrap) podia
+     ganar y dejar los chips envolviendo/corridos hacia un lado. */
   .mini-nav__chips {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    width: 100%;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: stretch !important;
+    gap: 6px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
   }
   .mini-nav__chip {
-    width: 100%;
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 3px !important;
+    padding: 8px 4px !important;
+    overflow: hidden !important;
+    text-align: center !important;
+  }
+  .mini-nav__chip-icon {
+    width: 20px !important;
+    height: 20px !important;
+    margin-bottom: 0 !important;
+  }
+  .mini-nav__chip-icon svg {
+    width: 13px;
+    height: 13px;
+  }
+  /* Antes truncaba con ellipsis ("Ver allianc..."): con el icono ya
+     arriba y el chip en columna, el texto tiene todo el ancho del
+     chip para si solo y le alcanza en 1-2 lineas sin cortarse. */
+  .mini-nav__chip-title {
+    font-size: 0.66rem !important;
+    min-height: 0 !important;
+    line-height: 1.2;
     white-space: normal !important;
-    justify-content: flex-start;
-    padding: 10px 12px 10px 10px !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    word-break: break-word;
   }
   .mini-nav__chip-desc {
     display: none !important;
@@ -208,8 +264,11 @@ button {
 }
 
 @media (max-width: 400px) {
-  .mini-nav__chips {
-    grid-template-columns: 1fr;
+  .mini-nav__chip-title {
+    font-size: 0.62rem !important;
+  }
+  .mini-nav__chip {
+    padding: 8px 4px !important;
   }
 }
 
