@@ -53,3 +53,27 @@
 .bubble-nav {
   max-width: 100%;
 }
+
+/* ── ACCIONES (dark pill + lang pill + hamburguesa + CTA) ──
+   Mismo problema que .bubble-nav__links pero nunca se le aplicó el
+   mismo fix: sus hijos (dm-pill, lang-pill, nav-burger, CTA) usan
+   white-space:nowrap y anchos fijos, así que no pueden encogerse.
+   En anchos donde el contenido no entra (zona entre el breakpoint
+   de 860px, donde ya se ocultan los links, y los breakpoints de
+   520px/380px que recién ahí compactan estos elementos), el bloque
+   se salía del pill redondeado en vez de recortarse — visualmente
+   parecía que el navbar completo se iba hacia un lado y se salía
+   de la pantalla. Igual que en .bubble-nav__links: min-width:0
+   habilita que el flex item encoja por debajo de su contenido, y
+   overflow-x:auto (con scrollbar oculta) contiene cualquier exceso
+   dentro del pill en vez de dejarlo desbordar hacia afuera. */
+.bubble-nav__actions {
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.bubble-nav__actions::-webkit-scrollbar {
+  display: none;
+}
