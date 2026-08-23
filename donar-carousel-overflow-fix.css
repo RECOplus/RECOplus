@@ -1,0 +1,59 @@
+/* ═══════════════════════════════════════════════════════════════
+   DONAR-CAROUSEL-OVERFLOW-FIX.CSS — RECO+
+   Capa ADITIVA: corrige que los carruseles de "Donaciones
+   disponibles" y "Solicitudes de donación" (y también el de
+   "Campañas de nuestros aliados", que reutiliza las mismas clases)
+   se salgan del viewport en pantallas angostas.
+
+   Causa: .dh-carousel es un flex container cuyos hijos (.dh-card /
+   .camp-card) tienen ancho fijo (flex: 0 0 200px / 240px). Un flex
+   item por defecto tiene min-width:auto, así que el navegador deja
+   que el carrusel crezca más allá del ancho de .dh-section en vez
+   de recortarlo con el overflow-x:auto que ya tenía definido. Esto
+   sólo se nota en móvil porque en desktop el contenido nunca llega
+   a superar el ancho del contenedor.
+
+   Fix: forzar min-width:0 en toda la cadena de contenedores padres
+   (.dh-listing-col → .dh-carousel-wrap → .dh-carousel) para que el
+   flexbox respete el ancho del padre y el scroll horizontal interno
+   (que ya existe) sea el que se encargue de mostrar las tarjetas.
+
+   Cargar DESPUÉS de DonarHome.css y donar-campanas.css:
+   <link rel="stylesheet" href="donar-carousel-overflow-fix.css" />
+═══════════════════════════════════════════════════════════════ */
+
+.dh-listings-grid,
+.dh-listing-col,
+.dh-carousel-wrap {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.dh-carousel {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Las tarjetas no deben encogerse (perderían su layout interno),
+   pero sí deben dejar de forzar el ancho del carrusel completo:
+   eso ya lo resuelve el overflow-x:auto de .dh-carousel una vez que
+   sus padres tienen min-width:0. */
+.dh-card,
+.camp-card,
+.camp-card--empty {
+  flex-shrink: 0;
+}
+
+@media (max-width: 560px) {
+  /* En pantallas muy angostas, .dh-section-heading centra hasta
+     640px de max-width; con el fix de arriba ya no desborda, pero
+     reducimos un poco la tarjeta para que se vean 1.5 tarjetas y
+     quede claro que hay scroll horizontal. */
+  .dh-card {
+    flex-basis: 168px;
+  }
+  .camp-card,
+  .camp-card--empty {
+    flex-basis: 200px;
+  }
+}
