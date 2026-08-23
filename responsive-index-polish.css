@@ -90,3 +90,135 @@
    ya bastan y no había evidencia real de scroll horizontal.
    Si hiciera falta en el futuro, la alternativa segura es:
    body { overflow-x: clip; }   (no afecta a los elementos fixed) */
+
+/* ── 6. BOTONES E ÍCONOS GRANDES: ajuste general en móvil ──
+   Varios botones e íconos del index mantienen el mismo tamaño de
+   escritorio en cualquier ancho (nunca tuvieron su propio breakpoint):
+   el globo de la comunidad en el CTA banner (110px), el botón "Únete
+   a la comunidad", el botón "Buscar" del hero, los íconos de las
+   stats, los círculos numerados de "Cómo funciona", los íconos de
+   los banners Reciclar/Donar y de las tarjetas de Datos curiosos /
+   Materiales. En un teléfono (≤640px) se sienten desproporcionada-
+   mente grandes frente al resto del contenido, que las secciones 1-5
+   de este archivo ya compactaron. */
+@media (max-width: 640px) {
+  /* CTA banner: ícono de comunidad de 110px a un tamaño acorde al
+     resto de textos ya reducidos de esta sección (ver sección 4). */
+  .cta-globo img {
+    width: 64px;
+    height: 64px;
+  }
+  .cta-globo {
+    font-size: 44px;
+  }
+  .cta-btn {
+    padding: 10px 18px;
+    font-size: 0.85rem;
+  }
+
+  /* Botón "Buscar" del hero: menos padding y texto, acorde a la
+     barra de búsqueda ya angosta en móvil. */
+  .search-glass__btn {
+    padding: 8px 14px;
+    font-size: 0.82rem;
+  }
+
+  /* Stats: íconos más chicos para que quepan cómodos en la
+     cuadrícula 2×2 que ya arma la sección 3 de este archivo. */
+  .stat-item img {
+    width: 34px;
+    height: 34px;
+  }
+
+  /* Cómo funciona: círculo numerado + ícono de cada paso. */
+  .cf-step__num {
+    width: 42px;
+    height: 42px;
+    font-size: 1.05rem;
+  }
+  .cf-step__icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  /* Banners Reciclar / Donar: ícono cuadrado. El padding-left del
+     CTA (definido en index.css para ≤720px) se ajusta al nuevo
+     ancho del ícono + gap, en vez de dejar un hueco de más. */
+  .rd-banner__icon {
+    width: 48px;
+    height: 48px;
+  }
+  .rd-banner__icon-img {
+    width: 26px;
+    height: 26px;
+  }
+  .rd-banner__cta {
+    padding-left: 66px;
+  }
+
+  /* Datos curiosos / Materiales: íconos redondos de cada tarjeta. */
+  .curiosidad-card__icon {
+    width: 36px;
+    height: 36px;
+  }
+  .curiosidad-card__icon-img {
+    width: 24px;
+    height: 24px;
+  }
+  .material-chip__icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  /* Newsletter: botón e input un poco más compactos. */
+  .newsletter-form input,
+  .newsletter-form button {
+    padding: 9px 12px;
+    font-size: 0.82rem;
+  }
+}
+
+/* ── 7. TESTIMONIOS ("comentarios" de la comunidad): más chico en
+   móvil para que se vea más de una tarjeta a la vez ──
+   .test-card tenía el mismo ancho fijo (280px) y padding de
+   escritorio en cualquier viewport: en un teléfono de 360-390px
+   ocupaba casi toda la pantalla y apenas se alcanzaba a asomar la
+   siguiente tarjeta del carril. Se achica tarjeta, avatar, texto y
+   el fade lateral (que en desktop es 140px y en móvil se comía más
+   de un tercio del ancho útil) para que quepa más contenido visible
+   a la vez sin cortar el efecto marquee. */
+@media (max-width: 640px) {
+  .test-marquee-wrapper::before,
+  .test-marquee-wrapper::after {
+    width: 36px;
+  }
+  .test-track {
+    gap: 10px;
+  }
+  .test-card {
+    width: 210px;
+    padding: 14px 14px 12px;
+    gap: 8px;
+  }
+  .test-card--tall {
+    padding-bottom: 16px;
+  }
+  .test-card__avatar img,
+  .test-card__avatar--initials {
+    width: 32px;
+    height: 32px;
+  }
+  .test-card__handle {
+    font-size: 12px;
+  }
+  .test-card__x {
+    font-size: 13px;
+  }
+  .test-card__text {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .test-card .estrellas {
+    font-size: 12px;
+  }
+}
