@@ -108,7 +108,7 @@ body {
 }
 
 .locate-btn {
-  width: 34px; height: 34px;
+  width: 40px; height: 40px;
   border-radius: 50%;
   border: 1.5px solid var(--border-light, #a8dab5);
   background: var(--chip-bg, rgba(255,255,255,.85));
@@ -122,9 +122,23 @@ body {
   transform: scale(1.08);
 }
 
+/* FIX: la imagen del pin (ubicacion_barra_de_busqueda.png) ya es
+   un botón circular completo en sí mismo (círculo verde + pin
+   blanco + anillo) con su propio margen transparente alrededor —
+   no un glifo simple pensado para ir DENTRO de otro botón circular
+   con su propio fondo/borde. Por eso, aunque el tamaño ya estaba
+   bien, seguía viéndose como un punto verde sin detalle: eran dos
+   círculos anidados (el de liquid-glass-mapa.css + el del PNG) y el
+   segundo quedaba diminuto. Aquí se agranda a ocupar todo el botón;
+   el fondo/borde propio del botón se quita en responsive-site.css
+   (al final de la cascada, para ganarle a los !important de
+   liquid-glass-mapa.css) para que no queden los dos círculos
+   encima uno del otro. */
 .locate-btn img {
-  width: 60px;
-  height: 60px;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 }
 
 .filter-bar {

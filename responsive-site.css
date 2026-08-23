@@ -54,6 +54,26 @@ button {
   max-width: 100%;
 }
 
+/* LOCATE BUTTON (buscador del mapa, mapa.html) — fix de ícono.
+   ubicacion_barra_de_busqueda.png YA es un botón circular completo
+   en sí mismo (círculo verde + pin blanco + anillo), no un glifo
+   simple pensado para ir DENTRO de otro botón circular con su
+   propio fondo/borde (liquid-glass-mapa.css le pone fondo oscuro +
+   borde a .locate-btn con !important). Anidar los dos círculos
+   dejaba el ícono reducido a un puntito verde sin detalle visible.
+   Se quita aquí el círculo propio del botón (fondo/borde/sombra) —
+   no es un fix solo de móvil, por eso va sin media query, y en
+   este archivo (el último en cargar) para ganarle en cascada a los
+   !important de liquid-glass-mapa.css. */
+.locate-btn {
+  background: transparent !important;
+  background-image: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
 /* ═══════════════════════════════════════════════════════════════
    NAVBAR — compacto en teléfono
    En ≤860px los links ya van al hamburguesa. Aquí se evita que
@@ -431,8 +451,44 @@ button {
   .search-bar {
     max-width: 100%;
   }
+  /* Filtros de material: en vez de dejar que "Filtrar por material:",
+     los 7 chips y "+ Más filtros" se envuelvan en varias filas
+     descuadradas (chips centrados, botón saltando de línea), se
+     apila todo en columna y los chips pasan a ser una tira con
+     scroll horizontal — mismo patrón que usan los mapas tipo
+     Google Maps para sus filtros en móvil. */
   .filter-bar {
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    gap: .5rem;
+  }
+  .filter-label {
+    white-space: normal;
+  }
+  .filter-chips,
+  .more-filters-dropdown {
+    flex: none;
+    width: 100%;
+    min-width: 0;
+  }
+  .filter-chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 2px 2px 4px;
+    margin: 0 -2px;
+  }
+  .filter-chips::-webkit-scrollbar {
+    display: none;
+  }
+  .filter-chips .chip {
+    flex-shrink: 0;
+  }
+  .more-filters-btn {
+    align-self: flex-end;
+    width: fit-content;
   }
   .leaflet-routing-container {
     max-width: calc(100vw - 24px) !important;
@@ -586,6 +642,21 @@ button {
     right: max(16px, env(safe-area-inset-right));
     bottom: calc(86px + env(safe-area-inset-bottom, 0px));
   }
+}
+
+/* El FAB del tutorial (.reco-tut-fab, position:fixed, z-index muy
+   alto para flotar sobre todo) se sobreponía al botón "Siguiente"
+   de la ventana de info de material en reciclar.html (rc-minfo__nav,
+   abajo a la derecha del modal) — el modal puede llegar casi hasta
+   el borde derecho en pantallas angostas (92vw) justo donde vive el
+   FAB. reciclar-material-info.js ya le agrega la clase
+   "rc-modal-open" a <body> mientras ese modal (o cualquier otro que
+   la reutilice) está abierto; se aprovecha esa marca para ocultar el
+   FAB del tutorial (y su tooltip) mientras tanto, en vez de mover el
+   modal o el botón. */
+body.rc-modal-open .reco-tut-fab,
+body.rc-modal-open .reco-tut-fab-hint {
+  display: none !important;
 }
 
 /* Tablas / listados que a veces empujan el ancho */
