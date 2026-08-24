@@ -11,6 +11,13 @@
 .notif-bell {
   position: relative;
   display: inline-flex;
+  /* FIX: sin esto, cuando .bubble-nav__actions se queda corto de
+     espacio en móvil, el flexbox comprime la campana (es el único
+     hijo sin flex-shrink:0 — dm-pill, lang-pill, nav-burger y
+     nav-user__btn ya lo tienen). Eso reduce el botón por debajo de
+     sus 34px reales y el ícono SVG de adentro (ancho/alto fijos)
+     queda sobresaliendo del círculo, viéndose "achicado"/recortado. */
+  flex-shrink: 0;
 }
 
 .notif-bell__btn {
@@ -21,6 +28,7 @@
   justify-content: center;
   width: 34px;
   height: 34px;
+  flex-shrink: 0;
   box-sizing: border-box;
   background: var(--nav-dm-bg);
   border: 1px solid var(--nav-dm-border);
