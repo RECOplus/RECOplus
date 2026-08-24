@@ -34,6 +34,16 @@
 (function () {
   'use strict';
 
+  // Campana de notificaciones DESACTIVADA a pedido: en vez de dejarla
+  // parcheada (se aplastaba en el navbar responsive), se apaga la
+  // inyección completa desde este único archivo — como se carga en
+  // TODAS las páginas con navbar, no hace falta tocar cada .html.
+  // Los datos en Supabase (tabla `notificaciones`, triggers de
+  // empresa/video, etc.) siguen intactos por si se reactiva después;
+  // esto solo apaga el pintado, la carga y el Realtime del lado del
+  // cliente. Para reactivarla: volver esta constante a false.
+  var CAMPANA_DESACTIVADA = true;
+
   var MAX_VISIBLES = 30;
   var bellWrapEl = null;
   var listaEl = null;
@@ -361,6 +371,8 @@
   }
 
   ready(function () {
+    if (CAMPANA_DESACTIVADA) return;
+
     if (!window.recoAuth) {
       console.error('[RECO+] recoAuth no está disponible. Revisa que auth.js se cargó antes que notificaciones.js.');
       return;

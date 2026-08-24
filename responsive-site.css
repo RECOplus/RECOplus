@@ -10,10 +10,26 @@
    duplicado en contacto).
 ═══════════════════════════════════════════════════════════════ */
 
-/* ── Base: nada se sale del viewport ── */
+/* ── Base: nada se sale del viewport ──
+   OJO: overflow-x:clip debe ir en AMBOS, html y body, no solo body.
+   El scrollWidth que se mide en JS (document.documentElement.scrollWidth)
+   es el ancho de <html>, no el de <body>. Si solo <body> tiene el
+   clip, el navegador puede seguir "viendo" contenido más ancho que
+   el viewport dentro de <html> (p.ej. el track de un marquee con
+   width:max-content en .aliados-marquee / .test-row, aunque su
+   wrapper tenga overflow:hidden) y scrollWidth queda inestable /
+   creciente mientras el marquee anima con requestAnimationFrame,
+   aun sin que se note scroll visual. Esto es lo que causaba que el
+   nav, el FAB de WhatsApp y el botón de tutorial (todos position:
+   fixed, calculados en base al viewport) parecieran "saltar" cada
+   cierto tiempo: no se movían ellos, sino que el navegador recalcu-
+   laba el ancho de referencia del viewport en cada frame. Con el
+   clip en ambos niveles (html Y body) queda contenido de verdad y
+   se corta ese crecimiento fantasma. */
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  overflow-x: clip;
 }
 body {
   overflow-x: clip;
@@ -36,6 +52,26 @@ select,
 textarea,
 button {
   max-width: 100%;
+}
+
+/* LOCATE BUTTON (buscador del mapa, mapa.html) — fix de ícono.
+   ubicacion_barra_de_busqueda.png YA es un botón circular completo
+   en sí mismo (círculo verde + pin blanco + anillo), no un glifo
+   simple pensado para ir DENTRO de otro botón circular con su
+   propio fondo/borde (liquid-glass-mapa.css le pone fondo oscuro +
+   borde a .locate-btn con !important). Anidar los dos círculos
+   dejaba el ícono reducido a un puntito verde sin detalle visible.
+   Se quita aquí el círculo propio del botón (fondo/borde/sombra) —
+   no es un fix solo de móvil, por eso va sin media query, y en
+   este archivo (el último en cargar) para ganarle en cascada a los
+   !important de liquid-glass-mapa.css. */
+.locate-btn {
+  background: transparent !important;
+  background-image: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -81,6 +117,19 @@ button {
     width: 108px;
     height: 34px;
   }
+  /* La imagen interna (.bubble-nav__logo img en style.css) usa
+     height:126px fijo, pensado para el contenedor de escritorio de
+     40px de alto (proporcion ~3.15:1 imagen/contenedor, por el aire
+     interno del PNG). Sin este ajuste, al achicar el contenedor a
+     34px aqui abajo, la imagen se seguia mostrando a 126px de alto
+     centrada y solo se veia un pedazo ampliado y descuadrado del
+     logo ("RECO" cortado + una franja verde del "+"). Se escala la
+     imagen algo por debajo de la proporcion exacta (ratio ~2.85 en
+     vez de 3.15) para dejar un pequeno margen de aire dentro del
+     contenedor recortado y que no se sienta al ras del borde. */
+  .bubble-nav__logo img {
+    height: 97px;
+  }
   .bubble-nav__cta span[data-i18n],
   .bubble-nav__cta > span:not(.btn-sparkle):not(.nav-user__name) {
     display: none;
@@ -100,6 +149,31 @@ button {
     width: 36px;
     height: 36px;
   }
+  /* La campana de notificaciones (notif-bell__btn, notificaciones.css)
+     y el chip de cuenta (nav-user__btn, navbar-auth.css) se agregaron
+     DESPUÉS de que este breakpoint ya comprimía dm-pill/nav-burger/CTA
+     a un tamaño que alcanzaba justo para caber en el pill en celular.
+     Sin reducirlos también, la fila de acciones (dm-pill + lang-pill +
+     nav-burger + campana + chip de cuenta, con sesión activa) no
+     entraba completa en el ancho disponible; como .bubble-nav__actions
+     tiene overflow-x:auto (nav-overflow-fix.css) para no romper el
+     pill redondeado, el sobrante quedaba oculto fuera del área visible
+     del scroll — y como el chip de cuenta es el ÚLTIMO elemento de la
+     fila, era el que se veía cortado a la mitad (solo una tira vertical
+     del avatar) en vez de mostrarse completo. */
+  .notif-bell__btn {
+    width: 30px;
+    height: 30px;
+  }
+  .nav-user__btn {
+    padding: 3px;
+    min-height: 30px;
+  }
+  .nav-user__avatar {
+    width: 22px;
+    height: 22px;
+    font-size: 0.66rem;
+  }
 }
 
 @media (max-width: 380px) {
@@ -116,6 +190,46 @@ button {
     width: 92px;
     height: 30px;
   }
+  .bubble-nav__logo img {
+    height: 85px;
+  }
+  /* Mismo motivo que el bloque ≤520px de arriba: en pantallas aún más
+     angostas hace falta comprimir un poco más dm-pill, campana y chip
+     de cuenta (además de achicar gaps/padding del pill completo) para
+     que la fila de acciones quepa sin que el chip de cuenta quede
+     cortado por el overflow-x:auto de .bubble-nav__actions. */
+  .dm-pill {
+    padding: 2px;
+    gap: 1px;
+  }
+  .dm-pill__btn {
+    width: 22px;
+    height: 22px;
+  }
+  .nav-burger {
+    width: 32px;
+    height: 32px;
+  }
+  .notif-bell__btn {
+    width: 28px;
+    height: 28px;
+  }
+  .nav-user__btn {
+    padding: 2px;
+    min-height: 28px;
+  }
+  .nav-user__avatar {
+    width: 20px;
+    height: 20px;
+    font-size: 0.62rem;
+  }
+  .bubble-nav {
+    gap: 6px;
+    padding: 6px 8px;
+  }
+  .bubble-nav__actions {
+    gap: 4px;
+  }
 }
 
 /* Login / registro / reset: el CTA “Únete” es la misma página */
@@ -130,6 +244,15 @@ button {
 ═══════════════════════════════════════════════════════════════ */
 @media (max-width: 640px) {
   .hero {
+    /* padding-top base es 100px (style.css, fijo sin media query),
+       calibrado para el nav de escritorio. En movil el nav-wrapper
+       ya se compacta (top:8-10px, ver bloque NAVBAR arriba en este
+       mismo archivo) pero el hero nunca bajaba su propio padding-top
+       para pantallas angostas, asi que en telefonos chicos (~360-390px)
+       el h1 quedaba pegado justo debajo del pill del nav, a veces
+       tapado por él. Se sube el aire superior para dejar el nav y el
+       titulo claramente separados. */
+    padding-top: 128px !important;
     padding-left: 18px !important;
     padding-right: 18px !important;
     padding-bottom: 36px !important;
@@ -149,24 +272,71 @@ button {
     max-width: 100%;
   }
   .mini-nav {
-    flex-direction: column;
+    display: flex !important;
+    flex-direction: column !important;
     align-items: stretch !important;
-    gap: 10px;
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: 10px !important;
   }
   .mini-nav__label {
-    display: none;
+    display: none !important;
   }
+  /* Los 3 chips (Mapa / Escaner / Alianzas) se mantenían en grid
+     vertical de tarjetas grandes (min-height:130px de flat-glass.css)
+     heredado de la variante desktop "card". En movil eso los deja
+     enormes y apilados uno debajo del otro. Aquí se fuerza de vuelta
+     al formato compacto tipo pill en una sola fila horizontal, igual
+     de chico en cualquier ancho de teléfono (no se vuelve a apilar
+     en el breakpoint de 400px de abajo).
+     TODAS las propiedades de layout van con !important: el bloque
+     "MINI-NAV v3" de style.css (mas abajo en cascada) ya declara
+     display/flex-wrap sin !important pero CON la misma especificidad
+     de selector simple, y al no llevar !important de nuestro lado en
+     flex-wrap/justify-content, ese bloque base (flex-wrap: wrap) podia
+     ganar y dejar los chips envolviendo/corridos hacia un lado. */
   .mini-nav__chips {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    width: 100%;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: stretch !important;
+    gap: 6px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
   }
   .mini-nav__chip {
-    width: 100%;
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 3px !important;
+    padding: 8px 4px !important;
+    overflow: hidden !important;
+    text-align: center !important;
+  }
+  .mini-nav__chip-icon {
+    width: 20px !important;
+    height: 20px !important;
+    margin-bottom: 0 !important;
+  }
+  .mini-nav__chip-icon svg {
+    width: 13px;
+    height: 13px;
+  }
+  /* Antes truncaba con ellipsis ("Ver allianc..."): con el icono ya
+     arriba y el chip en columna, el texto tiene todo el ancho del
+     chip para si solo y le alcanza en 1-2 lineas sin cortarse. */
+  .mini-nav__chip-title {
+    font-size: 0.66rem !important;
+    min-height: 0 !important;
+    line-height: 1.2;
     white-space: normal !important;
-    justify-content: flex-start;
-    padding: 10px 12px 10px 10px !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    word-break: break-word;
   }
   .mini-nav__chip-desc {
     display: none !important;
@@ -192,8 +362,11 @@ button {
 }
 
 @media (max-width: 400px) {
-  .mini-nav__chips {
-    grid-template-columns: 1fr;
+  .mini-nav__chip-title {
+    font-size: 0.62rem !important;
+  }
+  .mini-nav__chip {
+    padding: 8px 4px !important;
   }
 }
 
@@ -340,8 +513,44 @@ button {
   .search-bar {
     max-width: 100%;
   }
+  /* Filtros de material: en vez de dejar que "Filtrar por material:",
+     los 7 chips y "+ Más filtros" se envuelvan en varias filas
+     descuadradas (chips centrados, botón saltando de línea), se
+     apila todo en columna y los chips pasan a ser una tira con
+     scroll horizontal — mismo patrón que usan los mapas tipo
+     Google Maps para sus filtros en móvil. */
   .filter-bar {
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    gap: .5rem;
+  }
+  .filter-label {
+    white-space: normal;
+  }
+  .filter-chips,
+  .more-filters-dropdown {
+    flex: none;
+    width: 100%;
+    min-width: 0;
+  }
+  .filter-chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 2px 2px 4px;
+    margin: 0 -2px;
+  }
+  .filter-chips::-webkit-scrollbar {
+    display: none;
+  }
+  .filter-chips .chip {
+    flex-shrink: 0;
+  }
+  .more-filters-btn {
+    align-self: flex-end;
+    width: fit-content;
   }
   .leaflet-routing-container {
     max-width: calc(100vw - 24px) !important;
@@ -495,6 +704,21 @@ button {
     right: max(16px, env(safe-area-inset-right));
     bottom: calc(86px + env(safe-area-inset-bottom, 0px));
   }
+}
+
+/* El FAB del tutorial (.reco-tut-fab, position:fixed, z-index muy
+   alto para flotar sobre todo) se sobreponía al botón "Siguiente"
+   de la ventana de info de material en reciclar.html (rc-minfo__nav,
+   abajo a la derecha del modal) — el modal puede llegar casi hasta
+   el borde derecho en pantallas angostas (92vw) justo donde vive el
+   FAB. reciclar-material-info.js ya le agrega la clase
+   "rc-modal-open" a <body> mientras ese modal (o cualquier otro que
+   la reutilice) está abierto; se aprovecha esa marca para ocultar el
+   FAB del tutorial (y su tooltip) mientras tanto, en vez de mover el
+   modal o el botón. */
+body.rc-modal-open .reco-tut-fab,
+body.rc-modal-open .reco-tut-fab-hint {
+  display: none !important;
 }
 
 /* Tablas / listados que a veces empujan el ancho */

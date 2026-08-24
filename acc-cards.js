@@ -84,40 +84,83 @@
     }
     updateArrows();
 
-    // ── 4. Drag-to-scroll ────────────────────────────────────────────
-    var isDragging  = false;
-    var startX      = 0;
-    var scrollStart = 0;
-    var dragMoved   = false;
-    var resumeTimer = null;
+    // ── 4. Drag-to-scroll (mouse + dedo, con bloqueo de dirección) ──
+    // El bloqueo de dirección evita que arrastrar el carril horizontal-
+    // mente choque con el scroll vertical normal de la página en
+    // móvil: en el primer movimiento se decide si el gesto es más
+    // horizontal (arrastre del carril) o más vertical (scroll de la
+    // página), y a partir de ahí se respeta esa decisión.
+    var isDragging     = false;
+    var dragDecided    = false;
+    var startX         = 0;
+    var startY         = 0;
+    var scrollStart    = 0;
+    var dragMoved      = false;
+    var resumeTimer    = null;
+    var DIR_THRESHOLD  = 6;
 
-    strip.addEventListener('mousedown', function (e) {
+    strip.style.cursor = 'grab';
+    strip.style.touchAction = 'pan-y';
+
+    function pointX (e) { return e.touches ? e.touches[0].clientX : e.clientX; }
+    function pointY (e) { return e.touches ? e.touches[0].clientY : e.clientY; }
+
+    function dragStart (e) {
       if (e.target.closest('.acc-card__cta') || e.target.closest('.acc-arrow')) return;
       isDragging  = true;
+      dragDecided = e.type === 'mousedown';
       dragMoved   = false;
       autoPaused  = true;
-      startX      = e.clientX;
+      startX      = pointX(e);
+      startY      = pointY(e);
       scrollStart = strip.scrollLeft;
-      strip.style.cursor = 'grabbing';
-      strip.style.userSelect = 'none';
-    });
+      if (e.type === 'mousedown') {
+        strip.style.cursor = 'grabbing';
+        strip.style.userSelect = 'none';
+      }
+    }
 
-    window.addEventListener('mousemove', function (e) {
+    function dragMove (e) {
       if (!isDragging) return;
-      var delta = startX - e.clientX;
-      if (Math.abs(delta) > 4) dragMoved = true;
-      strip.scrollLeft = scrollStart + delta;
-      normalizeLoopScroll();
-    });
+      var x = pointX(e);
+      var y = pointY(e);
+      var deltaX = startX - x;
+      var deltaY = startY - y;
 
-    window.addEventListener('mouseup', function () {
+      if (e.type === 'touchmove' && !dragDecided) {
+        if (Math.abs(deltaX) < DIR_THRESHOLD && Math.abs(deltaY) < DIR_THRESHOLD) return;
+        dragDecided = true;
+        if (Math.abs(deltaY) > Math.abs(deltaX)) {
+          // El dedo se mueve más vertical que horizontal: es scroll
+          // de la página, no arrastre del carril. Se suelta el drag.
+          isDragging = false;
+          return;
+        }
+      }
+
+      if (Math.abs(deltaX) > 4) dragMoved = true;
+      strip.scrollLeft = scrollStart + deltaX;
+      normalizeLoopScroll();
+      if (e.cancelable) e.preventDefault();
+    }
+
+    function dragEnd () {
       if (!isDragging) return;
       isDragging = false;
-      strip.style.cursor = '';
+      strip.style.cursor = 'grab';
       strip.style.userSelect = '';
       clearTimeout(resumeTimer);
       resumeTimer = setTimeout(function () { autoPaused = false; }, 1200);
-    });
+    }
+
+    strip.addEventListener('mousedown', dragStart);
+    window.addEventListener('mousemove', dragMove);
+    window.addEventListener('mouseup', dragEnd);
+
+    strip.addEventListener('touchstart', dragStart, { passive: true });
+    strip.addEventListener('touchmove', dragMove, { passive: false });
+    strip.addEventListener('touchend', dragEnd, { passive: true });
+    strip.addEventListener('touchcancel', dragEnd, { passive: true });
 
     // ── 3b. Auto-scroll carousel (loop infinito, estilo aliados-marquee) ──
     var AUTO_SPEED = 0.5; // px por frame
@@ -153,11 +196,8 @@
     strip.addEventListener('mouseleave', function () {
       if (!isDragging) autoPaused = false;
     });
-    strip.addEventListener('touchstart', function () { autoPaused = true; }, { passive: true });
-    strip.addEventListener('touchend', function () {
-      clearTimeout(resumeTimer);
-      resumeTimer = setTimeout(function () { autoPaused = false; }, 1200);
-    }, { passive: true });
+    // (el pausado/reanudado por toque ahora lo maneja el drag unificado
+    // de la sección 4 — dragStart/dragEnd ya tocan `autoPaused`)
 
     // ── 5. Card click (whole card is clickable unless dragging) ──────
     cards.forEach(function (card) {

@@ -27,7 +27,12 @@
   outline-offset: 2px;
 }
 
-/* ── Estado vacío: "todavía no hay aliados Premium" ── */
+/* ── Estado vacío: "todavía no hay aliados Premium" ──
+   Usa las mismas variables --lga-* que .aliado-card (definidas en
+   liquid-glass-alianzas.css, cambian entre :root y html.dark), en
+   vez de colores fijos: antes tenía fondo blanco (#fff) y texto
+   verde fijo, así que en modo oscuro quedaba como una tarjeta
+   blanca desentonando con el resto de la página. */
 .alid-vacio {
   flex: 1;
   display: flex;
@@ -36,9 +41,25 @@
   text-align: center;
   gap: 6px;
   padding: 28px 20px;
-  border: 1.5px dashed #c8e6c9;
+  border: 1.5px dashed var(--lga-border, #c8e6c9);
   border-radius: 16px;
-  background: #fff;
+  background: var(--lga-bg, #fff);
+  backdrop-filter: blur(var(--lga-blur, 20px)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--lga-blur, 20px)) saturate(180%);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+/* FIX: #aliasCarousel se queda vacío en el DOM (alianzas-destacados.js
+   solo lo limpia con innerHTML=''), pero sigue siendo flex:1 dentro de
+   .alianzas-carousel-wrapper junto a .alid-vacio (también flex:1). Sin
+   esta regla, ambos se repartían el ancho a la mitad aunque uno no
+   tuviera nada dentro — la tarjeta de estado vacío quedaba comprimida
+   a ~50% de ancho, el texto envolvía muchísimo más de lo necesario y
+   la tarjeta se veía enorme en alto, sobre todo en móvil. El JS ya
+   agrega esta clase al wrapper cuando no hay aliados; solo faltaba
+   esta declaración. */
+.alianzas-carousel-wrapper--vacio .alianzas-carousel {
+  display: none;
 }
 .alid-vacio__icon {
   font-size: 1.8rem;
@@ -51,11 +72,17 @@
   font-size: 1rem;
   color: #1a5c2a;
 }
+html.dark .alid-vacio__titulo {
+  color: #d4ead8;
+}
 .alid-vacio__desc {
   font-size: 0.82rem;
   color: #4a6b52;
   max-width: 380px;
   line-height: 1.5;
+}
+html.dark .alid-vacio__desc {
+  color: rgba(212, 234, 216, 0.75);
 }
 .alid-vacio__btn {
   margin-top: 10px;

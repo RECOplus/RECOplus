@@ -5,14 +5,53 @@
  */
 
 (function() {
-  /* ── SCROLL PROGRESS BAR ── */
+  /* ── SCROLL PROGRESS BAR ──
+     `total` (altura total de scroll disponible) se mide UNA VEZ al
+     cargar y se vuelve a medir solo en resize "reales" (cambios de
+     ANCHO — rotación de pantalla, teclado virtual no cuenta porque
+     no cambia el ancho). No se recalcula en cada evento de scroll.
+
+     Antes se recalculaba `window.innerHeight` en cada scroll: en
+     Chrome/Safari móvil, la barra de direcciones se colapsa/expande
+     sola tras un momento sin hacer scroll, y eso cambia
+     window.innerHeight sin que el usuario se haya movido — lo que
+     hacía que el ancho de la barra de progreso "saltara" solo,
+     igual que le pasaba al navbar (ver navbar.css, bloque "NAV LOCK").
+     Documentado por Chrome: developer.chrome.com/blog/url-bar-resizing */
   var bar = document.createElement('div');
   bar.id = 'reco-progress';
   document.body.prepend(bar);
-  window.addEventListener('scroll', function() {
+
+  var progressTotal = 0;
+  var progressViewportW = 0;
+
+  function measureProgressTotal() {
+    // clientHeight del <html> es la altura del LAYOUT viewport (la
+    // misma que usan las unidades vw/vh estándar para fixed), y no
+    // fluctuúa con la barra de direcciones como sí lo hace
+    // window.innerHeight.
+    var viewportH = document.documentElement.clientHeight;
+    progressTotal = document.documentElement.scrollHeight - viewportH;
+    progressViewportW = window.innerWidth;
+  }
+  measureProgressTotal();
+
+  function updateProgressBar() {
     var scrolled = window.scrollY;
-    var total = document.documentElement.scrollHeight - window.innerHeight;
-    bar.style.width = (total > 0 ? (scrolled / total) * 100 : 0) + '%';
+    bar.style.width = (progressTotal > 0 ? (scrolled / progressTotal) * 100 : 0) + '%';
+  }
+  updateProgressBar();
+
+  window.addEventListener('scroll', updateProgressBar, { passive: true });
+
+  window.addEventListener('resize', function () {
+    // Solo remedir si cambió el ANCHO (rotación, cambio real de
+    // viewport). Un resize disparado solo por la barra de
+    // direcciones colapsando/expandiéndose no cambia el ancho.
+    if (window.innerWidth !== progressViewportW) {
+      measureProgressTotal();
+      updateProgressBar();
+    }
   }, { passive: true });
 
   /* ── INTERSECTION OBSERVER: reveal animations ── */

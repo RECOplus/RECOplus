@@ -1,7 +1,25 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <script src="darkmode.js"></script>
+  <script>
+  /* RECO+ — aplica el tema ANTES del primer pintado (evita flash).
+     Versión mínima e inline de la Sección 1 de darkmode.js; el resto
+     (botón toggle, inyección de CSS, listeners) sigue en darkmode.js,
+     cargado con defer al final del body para no bloquear el parseo. */
+  (function () {
+    "use strict";
+    var urlParams = new URLSearchParams(window.location.search);
+    var urlTheme = urlParams.get("theme");
+    var saved;
+    if (urlTheme === "dark" || urlTheme === "light") {
+      saved = urlTheme;
+      localStorage.setItem("reco-theme", saved);
+    } else {
+      saved = localStorage.getItem("reco-theme") || "dark";
+    }
+    if (saved === "dark") document.documentElement.classList.add("dark");
+  })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RECO+ | Reciclar</title>
@@ -20,6 +38,8 @@
   <!-- Capa aditiva: evita que el CTA "Únete" se salga del pill del
        navbar cuando no cabe todo el contenido (links + acciones). -->
   <link rel="stylesheet" href="nav-overflow-fix.css">
+  <!-- Capa aditiva: compacta el CTA "Únete" a solo ícono en móvil (sin sesión), en vez de dejarlo cortado por el overflow oculto de arriba -->
+  <link rel="stylesheet" href="nav-cta-mobile-fix.css">
   <link rel="stylesheet" href="reciclar-shimmer.css">
   <link rel="stylesheet" href="reciclar-material-info.css">
   <link rel="stylesheet" href="reciclar-scanner.css">
@@ -459,5 +479,10 @@
 <!-- Capa aditiva: botón + modal de comentarios en el footer -->
 <script src="comentar-modal.js"></script>
   <script src="contact-fab.js"></script>
+  <!-- darkmode.js completo (botón toggle + inyección de estilos):
+       el tema ya se aplicó sin flash desde el <script> inline en
+       <head>; esto puede ir al final con defer sin bloquear el
+       primer render. -->
+  <script defer src="darkmode.js"></script>
 </body>
 </html>
