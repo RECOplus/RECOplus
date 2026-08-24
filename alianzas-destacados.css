@@ -40,6 +40,19 @@
   border-radius: 16px;
   background: #fff;
 }
+
+/* FIX: #aliasCarousel se queda vacío en el DOM (alianzas-destacados.js
+   solo lo limpia con innerHTML=''), pero sigue siendo flex:1 dentro de
+   .alianzas-carousel-wrapper junto a .alid-vacio (también flex:1). Sin
+   esta regla, ambos se repartían el ancho a la mitad aunque uno no
+   tuviera nada dentro — la tarjeta de estado vacío quedaba comprimida
+   a ~50% de ancho, el texto envolvía muchísimo más de lo necesario y
+   la tarjeta se veía enorme en alto, sobre todo en móvil. El JS ya
+   agrega esta clase al wrapper cuando no hay aliados; solo faltaba
+   esta declaración. */
+.alianzas-carousel-wrapper--vacio .alianzas-carousel {
+  display: none;
+}
 .alid-vacio__icon {
   font-size: 1.8rem;
   line-height: 1;
