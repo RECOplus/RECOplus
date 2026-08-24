@@ -482,11 +482,13 @@ html:not(.dark) .search-glass__btn {
 
 /* Acceso rápido (mini-nav__chip): color base y estado hover.
    Sin esto, el texto quedaba claro sobre el chip claro, y al
-   pasar el mouse encima se forzaba a #fff (texto en blanco). */
-html:not(.dark) .mini-nav__label {
-  color: rgba(20, 35, 26, 0.45) !important;
-}
-
+   pasar el mouse encima se forzaba a #fff (texto en blanco).
+   OJO: .mini-nav__label ("Acceso rápido") queda FUERA de este
+   fix a propósito — vive dentro de .hero, que siempre tiene fondo
+   oscuro (video + overlay) sin importar el modo claro/oscuro del
+   sitio. Forzarlo a un color oscuro aquí lo dejaba invisible
+   (oscuro sobre oscuro). El color claro por defecto de index.css
+   ya es el correcto para este contexto en ambos modos. */
 html:not(.dark) .mini-nav__chip {
   color: #14231a !important;
 }
