@@ -43,8 +43,19 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scaleX(-1); /* espejo, sensación natural frente a cámara */
   display: block;
+}
+
+/* Espejo SOLO si la cámara activa es la frontal ('user'). Antes se
+   aplicaba siempre, pero el escáner pide la trasera por defecto
+   (facingMode:'environment' en scanner-core.js) — la cámara que usan
+   casi todos los celulares. Con esa cámara, espejar hace que el
+   mundo real se vea invertido de lado a lado, que es lo contrario de
+   "natural". scanner-core.js agrega esta clase solo cuando detecta
+   que la pista de video es realmente frontal (ej. webcams de
+   escritorio, que casi siempre son frontales). */
+.reco-scanner__video--espejo {
+  transform: scaleX(-1);
 }
 
 /* Marco tipo "visor" superpuesto sobre el video */

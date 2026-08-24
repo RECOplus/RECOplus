@@ -257,6 +257,19 @@ export class RecoScanner {
     this.videoEl.setAttribute('playsinline', ''); // iOS
     this.videoEl.muted = true;
     await this.videoEl.play();
+
+    // Espejo SOLO si la cámara activa es realmente la frontal.
+    // config.video pide 'environment' (trasera) por defecto -- la que
+    // usan casi todos los celulares -- y ahí espejar hace que el
+    // mundo real se vea invertido de lado a lado. Las webcams de
+    // escritorio casi siempre son frontales y normalmente NO declaran
+    // facingMode en getSettings(): por eso, si el navegador no lo
+    // reporta, se asume frontal (mismo comportamiento visual que había
+    // antes de este fix, que sólo cambia el caso confirmado de trasera).
+    const pista = this.stream.getVideoTracks()[0];
+    const facingMode = pista && pista.getSettings ? pista.getSettings().facingMode : null;
+    const esTrasera = facingMode === 'environment';
+    this.videoEl.classList.toggle('reco-scanner__video--espejo', !esTrasera);
   }
 
   _esperarVideoListo() {
