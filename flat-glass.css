@@ -239,7 +239,6 @@ html.dark {
 .acc-card,
 .cta-btn,
 .mini-nav,
-.mini-nav__chip,
 .newsletter-form,
 .rd-banner,
 .rd-banner__cta,
@@ -352,6 +351,40 @@ html:not(.dark) .bubble-nav {
 .mini-nav {
   border-radius: 20px !important;
   padding: 10px 16px !important;
+}
+
+/* ── Chips de "Acceso rápido": el mixin de vidrio genérico de la
+   sección 3 (arriba) igualaba TODOS los botones/tarjetas al mismo
+   tinte blanco translúcido — eso incluía a .mini-nav__chip y
+   borraba el color distintivo de cada chip (verde mapa, morado
+   escáner, violeta alianzas, etc.) definido en style.css, dejando
+   las tres tarjetas con el mismo degradado gris parejo e ilegible.
+   liquid-glass.css hace lo mismo por su cuenta (sin !important),
+   así que no basta con quitar .mini-nav__chip del mixin de arriba:
+   se restaura aquí, con !important, el fondo y borde de color
+   propio de cada variante. ── */
+.mini-nav__chip {
+  background-image: none !important;
+}
+.mini-nav__chip--map {
+  background-color: rgba(45,140,78,0.18) !important;
+  border-color: rgba(45,140,78,0.32) !important;
+}
+.mini-nav__chip--donate {
+  background-color: rgba(239,68,68,0.14) !important;
+  border-color: rgba(239,68,68,0.26) !important;
+}
+.mini-nav__chip--allies {
+  background-color: rgba(167,139,250,0.16) !important;
+  border-color: rgba(167,139,250,0.30) !important;
+}
+.mini-nav__chip--help {
+  background-color: rgba(96,165,250,0.14) !important;
+  border-color: rgba(96,165,250,0.26) !important;
+}
+.mini-nav__chip--scanner {
+  background-color: rgba(123,77,224,0.16) !important;
+  border-color: rgba(123,77,224,0.30) !important;
 }
 
 /* ── CTA banner: su botón usaba blanco-sobre-verde; con el nuevo
@@ -480,42 +513,15 @@ html:not(.dark) .search-glass__btn {
   color: #14231a !important;
 }
 
-/* Acceso rápido (mini-nav__chip): color base y estado hover.
-   Sin esto, el texto quedaba claro sobre el chip claro, y al
-   pasar el mouse encima se forzaba a #fff (texto en blanco).
-   OJO: .mini-nav__label ("Acceso rápido") queda FUERA de este
-   fix a propósito — vive dentro de .hero, que siempre tiene fondo
-   oscuro (video + overlay) sin importar el modo claro/oscuro del
-   sitio. Forzarlo a un color oscuro aquí lo dejaba invisible
-   (oscuro sobre oscuro). El color claro por defecto de index.css
-   ya es el correcto para este contexto en ambos modos. */
-html:not(.dark) .mini-nav__chip {
-  color: #14231a !important;
-}
-
-html:not(.dark) .mini-nav__chip:hover {
-  color: #0c1a10 !important;
-}
-
-html:not(.dark) .mini-nav__chip--map {
-  color: #1a5c2a !important;
-}
-
-html:not(.dark) .mini-nav__chip--donate {
-  color: #a13030 !important;
-}
-
-html:not(.dark) .mini-nav__chip--store {
-  color: #9a6206 !important;
-}
-
-html:not(.dark) .mini-nav__chip--help {
-  color: #1d5fc4 !important;
-}
-
-html:not(.dark) .mini-nav__chip--scanner {
-  color: #5b3aa8 !important;
-}
+/* Acceso rápido (mini-nav__label y mini-nav__chip*): al igual que
+   el label, estos chips viven dentro de .hero, que siempre tiene
+   fondo oscuro (video + overlay) sin importar el modo claro/oscuro
+   del sitio. El fix original forzaba texto oscuro asumiendo un
+   fondo claro que nunca existió ahí — quedaba de bajo contraste u
+   oscuro-sobre-oscuro encima del color propio de cada chip (ver
+   bloque "Chips de Acceso rápido" más arriba). Se quita el forzado:
+   los tonos claros por variante ya definidos en style.css (verde,
+   rosa, violeta, azul, morado) son los correctos en ambos modos. */
 
 /* Tarjetas rd-banner (reciclar / donar): título, descripción y CTA
    estaban en blanco/casi blanco fijo (pensados para fondo verde
