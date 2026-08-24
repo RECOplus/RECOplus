@@ -56,13 +56,28 @@
       .replace(/"/g, '&quot;');
   }
 
+  // Traducido vía t() (i18n.js) en vez de strings fijos, para que
+  // el estado vacío y las etiquetas de tipo de empresa respeten el
+  // idioma activo (ver claves alianzas.tipo.* y alianzas.aliados.*
+  // en i18n.js). Fallback a español si t() no está disponible
+  // todavía (i18n.js no cargó) o la clave no existe.
+  function tr(key, fallback) {
+    if (typeof t === 'function') return t(key);
+    return fallback;
+  }
+
   var TIPO_EMPRESA_LABEL = {
-    centro_reciclaje: 'Centro de reciclaje',
-    empresa_recicladora: 'Empresa recicladora',
-    punto_acopio: 'Punto de acopio',
-    transportista: 'Transportista de residuos',
-    otro: 'Aliado RECO+'
+    centro_reciclaje: 'alianzas.tipo.centro_reciclaje',
+    empresa_recicladora: 'alianzas.tipo.empresa_recicladora',
+    punto_acopio: 'alianzas.tipo.punto_acopio',
+    transportista: 'alianzas.tipo.transportista',
+    otro: 'alianzas.tipo.otro'
   };
+
+  function tipoEmpresaLabel(tipo) {
+    var key = TIPO_EMPRESA_LABEL[tipo] || TIPO_EMPRESA_LABEL.otro;
+    return tr(key, 'Aliado RECO+');
+  }
 
   var LOGO_RESPALDO = 'img/empresa1.png';
 
@@ -101,7 +116,7 @@
      ══════════════════════════════════════════════ */
   function renderTarjeta(aliado) {
     var nombre = aliado.nombre_comercial || aliado.nombre_empresa;
-    var tagline = TIPO_EMPRESA_LABEL[aliado.tipo_empresa] || 'Aliado RECO+';
+    var tagline = tipoEmpresaLabel(aliado.tipo_empresa);
     return (
       '<button type="button" class="aliado-card aliado-card--clicable" data-aliado-id="' + esc(aliado.id) + '">' +
         '<span class="aliado-card__icon">' +
@@ -119,9 +134,9 @@
     return (
       '<div class="alid-vacio">' +
         '<span class="alid-vacio__icon">🌳</span>' +
-        '<p class="alid-vacio__titulo">Todavía no hay aliados con plan Premium</p>' +
-        '<p class="alid-vacio__desc">Las empresas con plan Premium aparecen aquí, destacadas ante toda la comunidad de RECO+.</p>' +
-        '<button type="button" class="alid-vacio__btn" data-abrir-suscripcion>Conocer el plan Premium →</button>' +
+        '<p class="alid-vacio__titulo" data-i18n="alianzas.aliados.vacio.titulo">' + esc(tr('alianzas.aliados.vacio.titulo', 'Todavía no hay aliados con plan Premium')) + '</p>' +
+        '<p class="alid-vacio__desc" data-i18n="alianzas.aliados.vacio.desc">' + esc(tr('alianzas.aliados.vacio.desc', 'Las empresas con plan Premium aparecen aquí, destacadas ante toda la comunidad de RECO+.')) + '</p>' +
+        '<button type="button" class="alid-vacio__btn" data-abrir-suscripcion data-i18n="alianzas.aliados.vacio.btn">' + esc(tr('alianzas.aliados.vacio.btn', 'Conocer el plan Premium →')) + '</button>' +
       '</div>'
     );
   }
@@ -169,7 +184,7 @@
       '<div class="rae-modal" role="dialog" aria-modal="true" aria-labelledby="alidDetalleTitulo" style="max-width:480px">' +
         '<div class="rae-modal__header">' +
           '<div>' +
-            '<p class="rae-modal__kicker">Aliado destacado 🌳</p>' +
+            '<p class="rae-modal__kicker" data-i18n="alianzas.aliados.destacado">' + esc(tr('alianzas.aliados.destacado', 'Aliado destacado 🌳')) + '</p>' +
             '<h2 class="rae-modal__title" id="alidDetalleTitulo"></h2>' +
           '</div>' +
           '<button type="button" class="rae-modal__close" id="alidDetalleClose" aria-label="Cerrar">' +
@@ -193,7 +208,7 @@
   }
 
   function renderDetalleBody(aliado) {
-    var tipoLabel = TIPO_EMPRESA_LABEL[aliado.tipo_empresa] || 'Aliado RECO+';
+    var tipoLabel = tipoEmpresaLabel(aliado.tipo_empresa);
     var ubicacion = [aliado.distrito, aliado.provincia].filter(Boolean).join(', ');
 
     var contactoItems = [];
@@ -222,7 +237,26 @@
   /* ══════════════════════════════════════════════
      ARRANQUE
      ══════════════════════════════════════════════ */
+  var ultimosAliados = null; // cache del último resultado renderizado, para re-pintar en cambio de idioma sin volver a consultar Supabase
+
   ready(function () {
-    cargarAliadosDestacados().then(pintarCarousel);
+    cargarAliadosDestacados().then(function (aliados) {
+      ultimosAliados = aliados;
+      pintarCarousel(aliados);
+    });
+
+    // El estado vacío y el modal de detalle se generan con textContent
+    // fijo en tiempo de creación (no data-i18n aplicado por applyLang()
+    // sobre HTML dinámico ya insertado en modales tipo overlay), así que
+    // se re-renderizan explícitamente al cambiar de idioma.
+    document.addEventListener('reco:langchange', function () {
+      if (ultimosAliados && !ultimosAliados.length) {
+        pintarCarousel(ultimosAliados);
+      }
+      if (overlayDetalle && overlayDetalle.getAttribute('data-open') === 'true') {
+        var kicker = overlayDetalle.querySelector('.rae-modal__kicker');
+        if (kicker) kicker.textContent = tr('alianzas.aliados.destacado', 'Aliado destacado 🌳');
+      }
+    });
   });
 })();
