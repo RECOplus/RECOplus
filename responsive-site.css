@@ -149,6 +149,31 @@ button {
     width: 36px;
     height: 36px;
   }
+  /* La campana de notificaciones (notif-bell__btn, notificaciones.css)
+     y el chip de cuenta (nav-user__btn, navbar-auth.css) se agregaron
+     DESPUÉS de que este breakpoint ya comprimía dm-pill/nav-burger/CTA
+     a un tamaño que alcanzaba justo para caber en el pill en celular.
+     Sin reducirlos también, la fila de acciones (dm-pill + lang-pill +
+     nav-burger + campana + chip de cuenta, con sesión activa) no
+     entraba completa en el ancho disponible; como .bubble-nav__actions
+     tiene overflow-x:auto (nav-overflow-fix.css) para no romper el
+     pill redondeado, el sobrante quedaba oculto fuera del área visible
+     del scroll — y como el chip de cuenta es el ÚLTIMO elemento de la
+     fila, era el que se veía cortado a la mitad (solo una tira vertical
+     del avatar) en vez de mostrarse completo. */
+  .notif-bell__btn {
+    width: 30px;
+    height: 30px;
+  }
+  .nav-user__btn {
+    padding: 3px;
+    min-height: 30px;
+  }
+  .nav-user__avatar {
+    width: 22px;
+    height: 22px;
+    font-size: 0.66rem;
+  }
 }
 
 @media (max-width: 380px) {
@@ -167,6 +192,43 @@ button {
   }
   .bubble-nav__logo img {
     height: 85px;
+  }
+  /* Mismo motivo que el bloque ≤520px de arriba: en pantallas aún más
+     angostas hace falta comprimir un poco más dm-pill, campana y chip
+     de cuenta (además de achicar gaps/padding del pill completo) para
+     que la fila de acciones quepa sin que el chip de cuenta quede
+     cortado por el overflow-x:auto de .bubble-nav__actions. */
+  .dm-pill {
+    padding: 2px;
+    gap: 1px;
+  }
+  .dm-pill__btn {
+    width: 22px;
+    height: 22px;
+  }
+  .nav-burger {
+    width: 32px;
+    height: 32px;
+  }
+  .notif-bell__btn {
+    width: 28px;
+    height: 28px;
+  }
+  .nav-user__btn {
+    padding: 2px;
+    min-height: 28px;
+  }
+  .nav-user__avatar {
+    width: 20px;
+    height: 20px;
+    font-size: 0.62rem;
+  }
+  .bubble-nav {
+    gap: 6px;
+    padding: 6px 8px;
+  }
+  .bubble-nav__actions {
+    gap: 4px;
   }
 }
 
