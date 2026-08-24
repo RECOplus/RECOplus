@@ -1,0 +1,64 @@
+/* ═══════════════════════════════════════════════════════════════
+   NAV-CTA-MOBILE-FIX.CSS — RECO+
+   Capa ADITIVA sobre navbar.css, navbar-auth.css y nav-overflow-fix.css.
+
+   BUG: en móvil (≤860px), sin sesión activa, el CTA "Únete"
+   (.bubble-nav__cta, un <a> con ícono + texto "Únete") se ve como un
+   círculo verde vacío, sin texto.
+
+   CAUSA: nav-overflow-fix.css le puso overflow-x:auto + scrollbar
+   oculta a .bubble-nav__actions para que nada se salga del pill
+   redondeado del navbar. Eso evita que se desborde, pero el CTA
+   sigue teniendo su ancho completo (ícono + "Únete" + sparkle, todo
+   con white-space:nowrap) y en pantallas angostas —donde ya compite
+   por espacio con el pill de idioma, el de tema y, en donar.html,
+   el botón ♻️ de "mis publicaciones"— no entra completo: el texto
+   queda recortado fuera del área visible del scroll oculto, dejando
+   solo el círculo del ícono visible. Es el mismo problema que
+   navbar-auth.css ya resuelve para el chip de usuario CON sesión
+   (ahí el chip se diseñó compacto a propósito, solo avatar); este
+   archivo aplica el mismo criterio al CTA SIN sesión.
+
+   FIX: en ≤860px, ocultar el texto "Únete" y el destello, dejando
+   el CTA como un botón circular (mismo tamaño que nav-burger y
+   nav-user__btn) con solo el ícono — compacto a propósito, en vez
+   de cortado a medias por el scroll.
+
+   Cárgalo DESPUÉS de navbar.css, nav-overflow-fix.css y
+   navbar-auth.css:
+   <link rel="stylesheet" href="nav-cta-mobile-fix.css">
+═══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 860px) {
+  .bubble-nav__cta {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    min-height: 38px;
+    max-width: 38px;
+    max-height: 38px;
+    padding: 0 !important;
+    margin: 0;
+    line-height: 0;
+    flex-shrink: 0;
+    gap: 0;
+    box-sizing: border-box;
+    overflow: visible;
+  }
+  .bubble-nav__cta span:not(.btn-sparkle) {
+    display: none;
+  }
+  .bubble-nav__cta .btn-sparkle {
+    display: none;
+  }
+  .bubble-nav__cta svg {
+    display: block;
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    margin: 0;
+  }
+}

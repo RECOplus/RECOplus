@@ -52,6 +52,8 @@
        navbar cuando no cabe todo el contenido (links + acciones).
        Ver comentario dentro del archivo para el detalle del bug. -->
   <link rel="stylesheet" href="nav-overflow-fix.css">
+  <!-- Capa aditiva: compacta el CTA "Únete" a solo ícono en móvil (sin sesión), en vez de dejarlo cortado por el overflow oculto de arriba -->
+  <link rel="stylesheet" href="nav-cta-mobile-fix.css">
   <!-- Capa aditiva: shine deslizante en los botones propios de donar.html,
        hover con sombra intensificada en todas las glass cards, más blur/
        transparencia, glow orbs extra y subrayado con glow — mismos
@@ -121,7 +123,7 @@
     <!-- navbar__spacer keeps compatibility with darkmode.js auto-injection -->
     <div class="bubble-nav__actions navbar__spacer">
 
-      <!-- Capa aditiva: mini menú "tus publicaciones activas" (SOLO esta página) -->
+      <!-- Capa aditiva: mini menú "tus publicaciones activas" (SOLO esta página)
       <div class="mis-pubs-wrap" id="misPubsWrap">
         <button class="mis-pubs-btn" id="misPubsBtn" type="button" aria-haspopup="true" aria-expanded="false" title="Tus publicaciones activas" aria-label="Tus publicaciones activas" data-i18n-title="donar.mispubs.title" data-i18n-aria="donar.mispubs.title">
           ♻️
@@ -133,7 +135,7 @@
           </div>
         </div>
       </div>
-
+-->
       <!-- Dark mode pill -->
       <div class="dm-pill" id="darkModeToggle" role="button" title="Cambiar modo claro/oscuro" aria-label="Cambiar modo claro/oscuro" data-i18n-title="nav.darkmode.toggle" data-i18n-aria="nav.darkmode.toggle">
         <span class="dm-pill__btn dm-pill__sun dm-sun" id="dmSunBtn">
