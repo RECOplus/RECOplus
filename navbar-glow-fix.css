@@ -1,0 +1,59 @@
+/* ═══════════════════════════════════════════════════════════════
+   NAVBAR GLOW FIX (aditivo)
+   flat-glass.css aplica --fg-shadow (sombra grande de 3 capas,
+   pensada para tarjetas/secciones) también a .dm-pill, .lang-pill y
+   .bubble-nav__cta en estado de reposo (no solo hover). Contra el
+   fondo oscuro del navbar esa sombra se ve como un bloque/halo
+   verdoso rectangular en vez de una sombra difusa — el efecto que
+   se ve "raro" en el navbar.
+
+   navbar-auth.css agrega además su propio glow (::before) al avatar
+   de usuario (.nav-user__btn) en hover, con el mismo problema visual.
+
+   Este archivo anula esas sombras/glows SOLO dentro de .bubble-nav,
+   dejando intactos --fg-shadow en el resto de tarjetas/secciones y
+   el glow del avatar fuera del navbar (no aplica en ningún otro
+   lado). Cárgalo después de flat-glass.css y navbar-auth.css. */
+
+.bubble-nav .dm-pill,
+.bubble-nav .lang-pill,
+.bubble-nav .bubble-nav__cta {
+  box-shadow: none !important;
+}
+
+.bubble-nav .nav-user__btn::before {
+  content: none;
+}
+.bubble-nav .nav-user__btn:hover::before,
+.bubble-nav .nav-user[data-open="true"] .nav-user__btn::before {
+  animation: none;
+  box-shadow: none;
+  opacity: 0;
+}
+
+/* ───────────────────────────────────────────────────────────────
+   FIX 2: barrido de luz automático de liquid-glass-fx.css
+   liquid-glass-fx.css agrega dos animaciones que corren SIEMPRE en
+   bucle infinito (no solo en hover): un brillo diagonal que recorre
+   el borde de todo el .bubble-nav (::before, 7s) y un destello
+   blanco que recorre el CTA "Únete" (::before, 3.2s, mix-blend-mode
+   overlay). Contra el fondo del navbar, ese barrido se ve como una
+   mancha de luz de color cambiante que aparece "sola" en distintos
+   puntos del navbar (entre los pills, sobre el CTA, etc.) sin que
+   el usuario haga nada — el mismo tipo de efecto "raro" que el resto
+   de este archivo corrige. Se anula solo dentro de .bubble-nav; el
+   resto de usos de lgfx-sheen-sweep (footer, botones de otras
+   secciones) no se toca. */
+.bubble-nav::before {
+  content: none !important;
+}
+.bubble-nav .bubble-nav__cta::before {
+  content: none !important;
+}
+
+/* Brillo dorado que liquid-glass-fx.css agrega al ícono de luna/sol
+   al pasar el mouse por encima del dm-pill: se quita por el mismo
+   motivo (efecto de luz no solicitado en el navbar). */
+.bubble-nav .dm-pill:hover .dm-pill__btn {
+  filter: none !important;
+}

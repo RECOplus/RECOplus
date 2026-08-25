@@ -26,3 +26,13 @@
   box-shadow: none;
   opacity: 0;
 }
+
+/* glow-boost.css también agrega dos "chispas" (puntitos de luz
+   blancos) al CTA "Únete" vía .btn-sparkle::before/::after, visibles
+   en hover. Mismo motivo que el halo de arriba: se ven como un
+   destello suelto y aleatorio contra el navbar, así que se
+   desactivan solo dentro de .bubble-nav. */
+.bubble-nav .bubble-nav__cta .btn-sparkle::before,
+.bubble-nav .bubble-nav__cta .btn-sparkle::after {
+  content: none;
+}
