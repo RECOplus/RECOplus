@@ -77,21 +77,3 @@
 .bubble-nav__actions::-webkit-scrollbar {
   display: none;
 }
-
-/* ── FIX: sombra/borde sucio pegado al dm-pill y lang-pill ──
-   Varios archivos (glow-boost.css, liquid-glass-fx.css,
-   navbar-auth.css) dibujan un halo/glow en .dm-pill y .lang-pill
-   con pseudo-elementos ::before/::after que se pintan unos px POR
-   FUERA del propio botón (inset negativo). Como .bubble-nav__actions
-   tiene overflow-y:hidden (necesario, ver arriba) y mide casi lo
-   mismo que los pills, ese halo se recorta justo en su borde
-   superior/inferior — en vez de leerse como "glow" se ve como una
-   sombra oscura y desprolija pegada a cada pill (más notorio en
-   modo oscuro). Se le da al contenedor un poco de aire vertical
-   (padding) compensado con un margin negativo igual, para que el
-   recorte de overflow-y tenga espacio de sobra sin tocar el halo. No
-   cambia el tamaño visual del bloque ni su alineación en .bubble-nav. */
-.bubble-nav__actions {
-  padding-block: 10px;
-  margin-block: -10px;
-}

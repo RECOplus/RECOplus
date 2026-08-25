@@ -1,0 +1,28 @@
+/* ═══════════════════════════════════════════════════════════════
+   GLOW BOOST — NAV FIX (aditivo)
+   glow-boost.css agrega un halo pulsante (box-shadow ::after) a
+   .dm-pill, .lang-pill y .bubble-nav__cta. En el navbar burbuja ese
+   halo se ve como una sombra/borde que no calza con el pill
+   (inset -6px sobresale del border-radius circular) y además queda
+   fijo en el CTA "Únete" por el estado :active. Este archivo
+   desactiva el halo SOLO para esos tres elementos dentro del
+   navbar, sin tocar glow-boost.css ni el efecto en otros botones
+   (.cta-btn, .mini-nav a, .redes a, etc.) que sí deben conservarlo.
+═══════════════════════════════════════════════════════════════ */
+
+.bubble-nav .dm-pill::after,
+.bubble-nav .lang-pill::after,
+.bubble-nav .bubble-nav__cta::after {
+  content: none;
+}
+
+.bubble-nav .dm-pill:hover::after,
+.bubble-nav .lang-pill:hover::after,
+.bubble-nav .bubble-nav__cta:hover::after,
+.bubble-nav .dm-pill:active::after,
+.bubble-nav .lang-pill:active::after,
+.bubble-nav .bubble-nav__cta:active::after {
+  animation: none;
+  box-shadow: none;
+  opacity: 0;
+}

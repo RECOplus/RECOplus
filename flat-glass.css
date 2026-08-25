@@ -719,12 +719,6 @@ html.dark {
     0 1.5px 0 rgba(255,255,255,0.10) inset;
 }
 
-.bubble-nav__cta,
-.lang-pill,
-.dm-pill {
-  box-shadow: var(--nav-toggle-shadow) !important;
-}
-
 .bubble-nav__cta:hover,
 .lang-pill:hover,
 .dm-pill:hover {
