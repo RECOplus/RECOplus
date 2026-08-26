@@ -71,6 +71,8 @@
     <!-- Capa aditiva: cierra los huecos de responsive en móvil (hero, stats, secciones grandes, cta banner) -->
     <link rel="stylesheet" href="responsive-index-polish.css">
   <link rel="stylesheet" href="responsive-site.css">
+  <!-- Capa aditiva: alineación de los iconos SVG que reemplazan los emojis del sitio -->
+  <link rel="stylesheet" href="emoji-icons-fix.css">
 </head>
 <body>
 
@@ -333,14 +335,14 @@
                 </div>
                 <div class="acc-card__preview acc-card__preview--scroll">
                     <div class="acc-card__scroll-list" id="donateList" aria-hidden="true">
-                        <span data-i18n="card2.scroll.libros">📚 Libros</span>
-                        <span data-i18n="card2.scroll.electronicos">🖥️ Electrónicos</span>
-                        <span data-i18n="card2.scroll.muebles">🪑 Muebles</span>
-                        <span data-i18n="card2.scroll.juguetes">🧸 Juguetes</span>
-                        <span data-i18n="card2.scroll.ropa">👗 Ropa</span>
-                        <span data-i18n="card2.scroll.libros">📚 Libros</span>
-                        <span data-i18n="card2.scroll.juguetes">🧸 Juguetes</span>
-                        <span data-i18n="card2.scroll.ropa">👗 Ropa</span>
+                        <span data-i18n="card2.scroll.libros"><svg class="scroll-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14"><path d="M4 3.5h5a2 2 0 012 2V17a1.7 1.7 0 00-1.7-1.7H4z"/><path d="M16 3.5h-5a2 2 0 00-2 2V17a1.7 1.7 0 011.7-1.7H16z"/></svg> Libros</span>
+                        <span data-i18n="card2.scroll.electronicos"><svg class="scroll-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14"><rect x="2.5" y="4" width="15" height="10" rx="1.2"/><path d="M7 17h6M10 14v3"/></svg> Electrónicos</span>
+                        <span data-i18n="card2.scroll.muebles"><svg class="scroll-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14"><path d="M4 9V5.5a1.5 1.5 0 011.5-1.5h9A1.5 1.5 0 0116 5.5V9"/><rect x="2.5" y="9" width="15" height="5" rx="1"/><path d="M4 14v2.5M16 14v2.5"/></svg> Muebles</span>
+                        <span data-i18n="card2.scroll.juguetes"><svg class="scroll-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14"><circle cx="10" cy="7.5" r="4"/><circle cx="7.3" cy="6" r=".4" fill="currentColor" stroke="none"/><circle cx="12.7" cy="6" r=".4" fill="currentColor" stroke="none"/><path d="M7.5 15.5c0-2 1-3 2.5-3s2.5 1 2.5 3"/></svg> Juguetes</span>
+                        <span data-i18n="card2.scroll.ropa"><svg class="scroll-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14" stroke-linejoin="round"><path d="M7.5 3.5L10 5.5l2.5-2 3 2.2-1.7 2.6-1.3-.8V17h-5V7.5l-1.3.8L4.5 5.7z"/></svg> Ropa</span>
+                        <span data-i18n="card2.scroll.libros"><svg class="scroll-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14"><path d="M4 3.5h5a2 2 0 012 2V17a1.7 1.7 0 00-1.7-1.7H4z"/><path d="M16 3.5h-5a2 2 0 00-2 2V17a1.7 1.7 0 011.7-1.7H16z"/></svg> Libros</span>
+                        <span data-i18n="card2.scroll.juguetes"><svg class="scroll-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14"><circle cx="10" cy="7.5" r="4"/><circle cx="7.3" cy="6" r=".4" fill="currentColor" stroke="none"/><circle cx="12.7" cy="6" r=".4" fill="currentColor" stroke="none"/><path d="M7.5 15.5c0-2 1-3 2.5-3s2.5 1 2.5 3"/></svg> Juguetes</span>
+                        <span data-i18n="card2.scroll.ropa"><svg class="scroll-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14" stroke-linejoin="round"><path d="M7.5 3.5L10 5.5l2.5-2 3 2.2-1.7 2.6-1.3-.8V17h-5V7.5l-1.3.8L4.5 5.7z"/></svg> Ropa</span>
                     </div>
                 </div>
                 <a href="https://recoplus.github.io/rEcOPlus-Final/donar.html" class="acc-card__cta" data-i18n="card2.cta">Saber más →</a>
@@ -403,14 +405,14 @@
                 </div>
                 <div class="acc-card__preview acc-card__preview--scroll">
                     <div class="acc-card__scroll-list acc-card__scroll-list--allies" aria-hidden="true">
-                        <span>🌱 EcoCiclo</span>
-                        <span>💡 GreenTech</span>
-                        <span>🔧 Repara+</span>
-                        <span>♻️ BioRecicla</span>
-                        <span>🌿 TecnoVerde</span>
-                        <span>🌱 EcoCiclo</span>
-                        <span>💡 GreenTech</span>
-                        <span>♻️ BioRecicla</span>
+                        <span><svg class="scroll-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14"><path d="M10 18V9"/><path d="M10 9C10 5 7 3.5 4 3.5 4 7.5 6.5 9.5 10 9.5z"/><path d="M10 12c0-3.3 2.3-5 5.5-5 0 3.5-2 5.5-5.5 5.5z"/></svg> EcoCiclo</span>
+                        <span><svg class="scroll-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14"><path d="M10 2.3a5.2 5.2 0 00-2.8 9.6c.5.3.8.9.8 1.5v.3h4v-.3c0-.6.3-1.2.8-1.5A5.2 5.2 0 0010 2.3z"/><path d="M8.1 16.6h3.8M8.7 18.4h2.6"/></svg> GreenTech</span>
+                        <span><svg class="scroll-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 3.5l-3.8 3.8a2.5 2.5 0 000 3.5L4 16.5"/><path d="M12 5l2.5-1.5L16.5 5 15 7.5 12.5 8z"/></svg> Repara+</span>
+                        <span><svg class="scroll-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14"><path d="M4 4l3 12 3-8 3 8 3-12"/><path d="M4 4a8 8 0 0112 0"/></svg> BioRecicla</span>
+                        <span><svg class="scroll-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14"><path d="M10 18c-3-2-5-5-5-8.5A5 5 0 0110 4a5 5 0 015 5.5c0 3.5-2 6.5-5 8.5z"/><path d="M10 9v9"/></svg> TecnoVerde</span>
+                        <span><svg class="scroll-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14"><path d="M10 18V9"/><path d="M10 9C10 5 7 3.5 4 3.5 4 7.5 6.5 9.5 10 9.5z"/><path d="M10 12c0-3.3 2.3-5 5.5-5 0 3.5-2 5.5-5.5 5.5z"/></svg> EcoCiclo</span>
+                        <span><svg class="scroll-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14"><path d="M10 2.3a5.2 5.2 0 00-2.8 9.6c.5.3.8.9.8 1.5v.3h4v-.3c0-.6.3-1.2.8-1.5A5.2 5.2 0 0010 2.3z"/><path d="M8.1 16.6h3.8M8.7 18.4h2.6"/></svg> GreenTech</span>
+                        <span><svg class="scroll-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14"><path d="M4 4l3 12 3-8 3 8 3-12"/><path d="M4 4a8 8 0 0112 0"/></svg> BioRecicla</span>
                     </div>
                 </div>
                 <a href="https://recoplus.github.io/rEcOPlus-Final/alianzas.html" class="acc-card__cta" data-i18n="card5.cta">Ver alianzas →</a>
@@ -429,15 +431,15 @@
                 <div class="acc-card__preview acc-card__preview--contact">
                     <div class="acc-card__contact-info" aria-hidden="true">
                         <div class="acc-card__contact-row">
-                            <span class="acc-card__contact-icon">✉️</span>
+                            <span class="acc-card__contact-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><rect x="2.5" y="4.5" width="15" height="11" rx="1.3"/><path d="M3 5.5l7 5.5 7-5.5"/></svg></span>
                             <span class="acc-card__contact-text">soporte.recoplus@gmail.com</span>
                         </div>
                         <div class="acc-card__contact-row">
-                            <span class="acc-card__contact-icon">📞</span>
+                            <span class="acc-card__contact-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M4.5 3.5h2.7l1 3.3-1.7 1.3a9 9 0 004.4 4.4l1.3-1.7 3.3 1v2.7a1 1 0 01-1 1c-6 0-11-5-11-11a1 1 0 011-1z"/></svg></span>
                             <span class="acc-card__contact-text">+507 6399-1249</span>
                         </div>
                         <div class="acc-card__contact-row">
-                            <span class="acc-card__contact-icon">📍</span>
+                            <span class="acc-card__contact-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M10 2a6 6 0 016 6c0 4-6 10-6 10S4 12 4 8a6 6 0 016-6z"/><circle cx="10" cy="8" r="2"/></svg></span>
                             <span class="acc-card__contact-text">David, Panama</span>
                         </div>
                     </div>
@@ -457,11 +459,11 @@
                 </div>
                 <div class="acc-card__preview acc-card__preview--blog">
                     <div class="acc-card__blog-tags" aria-hidden="true">
-                        <span class="acc-card__blog-tag" data-i18n="card7.tag1">♻️ Reciclaje</span>
-                        <span class="acc-card__blog-tag" data-i18n="card7.tag2">🌍 Sostenibilidad</span>
-                        <span class="acc-card__blog-tag" data-i18n="card7.tag3">💚 Comunidad</span>
-                        <span class="acc-card__blog-tag" data-i18n="card7.tag4">🔋 Tecnología</span>
-                        <span class="acc-card__blog-tag" data-i18n="card7.tag5">🌱 Impacto</span>
+                        <span class="acc-card__blog-tag" data-i18n="card7.tag1"><svg class="scroll-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14"><path d="M4 4l3 12 3-8 3 8 3-12"/><path d="M4 4a8 8 0 0112 0"/></svg> Reciclaje</span>
+                        <span class="acc-card__blog-tag" data-i18n="card7.tag2"><svg class="scroll-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14"><circle cx="10" cy="10" r="7.5"/><path d="M2.5 10h15M10 2.5a11 11 0 010 15M10 2.5a11 11 0 000 15"/></svg> Sostenibilidad</span>
+                        <span class="acc-card__blog-tag" data-i18n="card7.tag3"><svg class="scroll-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14"><path d="M10 17s-6.5-4.2-6.5-9A3.8 3.8 0 0110 5.5 3.8 3.8 0 0116.5 8c0 4.8-6.5 9-6.5 9z"/></svg> Comunidad</span>
+                        <span class="acc-card__blog-tag" data-i18n="card7.tag4"><svg class="scroll-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14" stroke-linejoin="round"><path d="M10.5 2L4 11h4.5L9 18l6.5-9H11z"/></svg> Tecnología</span>
+                        <span class="acc-card__blog-tag" data-i18n="card7.tag5"><svg class="scroll-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="14" height="14"><path d="M10 18V9"/><path d="M10 9C10 5 7 3.5 4 3.5 4 7.5 6.5 9.5 10 9.5z"/><path d="M10 12c0-3.3 2.3-5 5.5-5 0 3.5-2 5.5-5.5 5.5z"/></svg> Impacto</span>
                     </div>
                 </div>
                 <a href="https://recoplus.github.io/rEcOPlus-Final/blog.html" class="acc-card__cta" data-i18n="card7.cta">Leer blog →</a>
@@ -541,7 +543,7 @@
                         <div class="test-card__info">
                             <span class="test-card__handle">@milenys_g</span>
                         </div>
-                        <span class="test-card__x" aria-hidden="true">𝕏</span>
+                        <span class="test-card__x" aria-hidden="true"><svg viewBox="0 0 20 20" fill="currentColor" width="13" height="13"><path d="M11.6 8.8L17 3h-1.6l-4.6 5-3.8-5H3l5.7 7.5L3 17h1.6l4.9-5.4 4 5.4H17z"/></svg></span>
                     </div>
                     <p class="test-card__text" data-i18n="test1.texto">"Gracias a RECO+ pude encontrar piezas para reparar mi laptop a un precio justo y ayudé al planeta."</p>
                     <div class="estrellas">★★★★★</div>
@@ -553,7 +555,7 @@
                         <div class="test-card__info">
                             <span class="test-card__handle">@soleid_dc</span>
                         </div>
-                        <span class="test-card__x" aria-hidden="true">𝕏</span>
+                        <span class="test-card__x" aria-hidden="true"><svg viewBox="0 0 20 20" fill="currentColor" width="13" height="13"><path d="M11.6 8.8L17 3h-1.6l-4.6 5-3.8-5H3l5.7 7.5L3 17h1.6l4.9-5.4 4 5.4H17z"/></svg></span>
                     </div>
                     <p class="test-card__text" data-i18n="test2.texto">"Doné ropa y objetos que ya no usaba y saber que ayudó a otra persona me hace feliz."</p>
                     <div class="estrellas">★★★★★</div>
@@ -565,7 +567,7 @@
                         <div class="test-card__info">
                             <span class="test-card__handle">@carlos_sam</span>
                         </div>
-                        <span class="test-card__x" aria-hidden="true">𝕏</span>
+                        <span class="test-card__x" aria-hidden="true"><svg viewBox="0 0 20 20" fill="currentColor" width="13" height="13"><path d="M11.6 8.8L17 3h-1.6l-4.6 5-3.8-5H3l5.7 7.5L3 17h1.6l4.9-5.4 4 5.4H17z"/></svg></span>
                     </div>
                     <p class="test-card__text" data-i18n="test3.texto">"La plataforma es fácil de usar y el equipo siempre está apoyando a la comunidad."</p>
                     <div class="estrellas">★★★★★</div>
@@ -587,7 +589,7 @@
                         <div class="test-card__info">
                             <span class="test-card__handle">@carlos_sam</span>
                         </div>
-                        <span class="test-card__x" aria-hidden="true">𝕏</span>
+                        <span class="test-card__x" aria-hidden="true"><svg viewBox="0 0 20 20" fill="currentColor" width="13" height="13"><path d="M11.6 8.8L17 3h-1.6l-4.6 5-3.8-5H3l5.7 7.5L3 17h1.6l4.9-5.4 4 5.4H17z"/></svg></span>
                     </div>
                     <p class="test-card__text" data-i18n="test3.texto">"La plataforma es fácil de usar y el equipo siempre está apoyando a la comunidad."</p>
                     <div class="estrellas">★★★★★</div>
@@ -599,7 +601,7 @@
                         <div class="test-card__info">
                             <span class="test-card__handle">@milenys_g</span>
                         </div>
-                        <span class="test-card__x" aria-hidden="true">𝕏</span>
+                        <span class="test-card__x" aria-hidden="true"><svg viewBox="0 0 20 20" fill="currentColor" width="13" height="13"><path d="M11.6 8.8L17 3h-1.6l-4.6 5-3.8-5H3l5.7 7.5L3 17h1.6l4.9-5.4 4 5.4H17z"/></svg></span>
                     </div>
                     <p class="test-card__text" data-i18n="test1.texto">"Gracias a RECO+ pude encontrar piezas para reparar mi laptop a un precio justo y ayudé al planeta."</p>
                     <div class="estrellas">★★★★★</div>
@@ -611,7 +613,7 @@
                         <div class="test-card__info">
                             <span class="test-card__handle">@soleid_dc</span>
                         </div>
-                        <span class="test-card__x" aria-hidden="true">𝕏</span>
+                        <span class="test-card__x" aria-hidden="true"><svg viewBox="0 0 20 20" fill="currentColor" width="13" height="13"><path d="M11.6 8.8L17 3h-1.6l-4.6 5-3.8-5H3l5.7 7.5L3 17h1.6l4.9-5.4 4 5.4H17z"/></svg></span>
                     </div>
                     <p class="test-card__text" data-i18n="test2.texto">"Doné ropa y objetos que ya no usaba y saber que ayudó a otra persona me hace feliz."</p>
                     <div class="estrellas">★★★★★</div>
@@ -673,8 +675,8 @@
           <p data-i18n="footer.tagline">El plus que el planeta necesita.</p>
           <div class="redes">
 
-              <a href="#">tk</a>
-              <a href="#">▶</a>
+              <a href="#" aria-label="TikTok"><svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15"><path d="M13.5 2.5c.5 2 2 3.2 4 3.4v2.6a6.6 6.6 0 01-4-1.3v5.6a4.7 4.7 0 11-4-4.6v2.7a2 2 0 102 2V2.5z"/></svg></a>
+              <a href="#" aria-label="YouTube"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="16" height="16"><rect x="2" y="5" width="16" height="10" rx="2.5"/><path d="M8.5 8l4 2-4 2z" fill="currentColor" stroke="none"/></svg></a>
           </div>
       </div>
       <div class="footer-col">

@@ -96,11 +96,11 @@ const translations = {
     "card2.title":          "Donar",
     "card2.desc":           "Dona objetos que ya no usas <br> y ayuda a quienes  mas <br> lo necesitan.",
     "card2.cta":            "Saber más →",
-    "card2.scroll.libros":       "📚 Libros",
-    "card2.scroll.electronicos": "🖥️ Electrónicos",
-    "card2.scroll.muebles":      "🪑 Muebles",
-    "card2.scroll.juguetes":     "🧸 Juguetes",
-    "card2.scroll.ropa":         "👗 Ropa",
+    "card2.scroll.libros":       "Libros",
+    "card2.scroll.electronicos": "Electrónicos",
+    "card2.scroll.muebles":      "Muebles",
+    "card2.scroll.juguetes":     "Juguetes",
+    "card2.scroll.ropa":         "Ropa",
     "card3.title":          "Solicitar ayuda",
     "card3.desc":           "Pide lo que necesitas <br>o publica una solicitud<br> a tu comunidad.",
     "card3.cta":            "Saber más →",
@@ -118,11 +118,11 @@ const translations = {
     "card6.cta":            "Escribirnos →",
     "card7.title":          "Blog",
     "card7.desc":           "Historias, tips y noticias sobre reciclaje, sostenibilidad y comunidad.",
-    "card7.tag1":           "♻️ Reciclaje",
-    "card7.tag2":           "🌍 Sostenibilidad",
-    "card7.tag3":           "💚 Comunidad",
-    "card7.tag4":           "🔋 Tecnología",
-    "card7.tag5":           "🌱 Impacto",
+    "card7.tag1":           "Reciclaje",
+    "card7.tag2":           "Sostenibilidad",
+    "card7.tag3":           "Comunidad",
+    "card7.tag4":           "Tecnología",
+    "card7.tag5":           "Impacto",
     "card7.cta":            "Leer blog →",
 
     "acc.aria.map":        "Encontrar puntos de reciclaje",
@@ -233,7 +233,7 @@ const translations = {
     "mapa.filter.label":        "Filtrar por material:",
     "mapa.filter.label.more":   "Más materiales:",
     "mapa.filter.todos":        "Todos",
-    "mapa.filter.more":         "☰ Más filtros",
+    "mapa.filter.more":         "Más filtros",
 
     "mapa.legend.recycle":   "Puntos de reciclaje",
     "mapa.legend.donation":  "Puntos de donación",
@@ -258,7 +258,7 @@ const translations = {
     "mapa.rate.ariaLabel":      "Valorar con {n} estrella{s}",
     "mapa.rate.toastNew":       "¡Gracias por tu valoración de {n} ★!",
     "mapa.rate.toastUpdate":    "Actualizaste tu valoración a {n} ★",
-    "mapa.modal.submitToast":   "¡Gracias! Tu sugerencia fue enviada 🌱",
+    "mapa.modal.submitToast":   "¡Gracias! Tu sugerencia fue enviada",
 
     "mapa.tooltip.title": "¿Sabías qué?",
     "mapa.tooltip.fact":  "Reciclar 1 botella de plástico ahorra suficiente energía para iluminar una bombilla por 6 horas.",
@@ -599,8 +599,8 @@ const translations = {
 
     "donar.form.upload.text":  "Arrastra una imagen aquí<br>o <strong>haz clic para subir</strong>",
     "donar.form.terminos":     "Al publicar, aceptas los <a href=\"#\">Términos de uso</a> de RECO+.",
-    "donar.form1.submit":      "✔ Publicar donación",
-    "donar.form2.submit":      "✔ Publicar solicitud",
+    "donar.form1.submit":      "Publicar donación",
+    "donar.form2.submit":      "Publicar solicitud",
 
     "donar.trust1.title": "Comunidad segura y confiable",
     "donar.trust1.desc":  "Verificamos perfiles y publicaciones.",
@@ -612,7 +612,7 @@ const translations = {
     "donar.trust4.desc":  "Cada acción genera un cambio real.",
 
     /* ── DONAR: secciones home (elección, pasos, stats, listados, tracker, cta) ── */
-    "donar.choice.title":       "🌿 ¿Qué quieres hacer hoy? 🌿",
+    "donar.choice.title":       "¿Qué quieres hacer hoy?",
     "donar.choice.subtitle":    "Elige cómo quieres ayudar o recibir ayuda.",
     "donar.choice.card1.title": "Tengo algo para donar",
     "donar.choice.card1.desc":  "Publica objetos, ropa, libros, electrónicos o lo que ya no usas y conéctate con alguien que lo necesita.",
@@ -621,7 +621,7 @@ const translations = {
     "donar.choice.card2.desc":  "Solicita los objetos que necesitas para ti o para tu comunidad. Alguien puede tener justo lo que buscas.",
     "donar.choice.card2.btn":   "Publicar solicitud →",
 
-    "donar.steps.title":    "🌿 Conecta una necesidad 🌿",
+    "donar.steps.title":    "Conecta una necesidad",
     "donar.steps.subtitle": "En RECO+ conectamos lo que ya no usas con quien más lo necesita.",
     "donar.steps.s1.title": "1. Publicas",
     "donar.steps.s1.desc":  "Publicas lo que quieres donar.",
@@ -638,22 +638,22 @@ const translations = {
     "donar.stats.comunidades":   "Comunidades conectadas",
     "donar.stats.reutilizados":  "Objetos reutilizados",
 
-    "donar.listings.donaciones.title":   "🌿 Donaciones disponibles",
-    "donar.listings.solicitudes.title":  "🌿 Solicitudes de donación",
+    "donar.listings.donaciones.title":   "Donaciones disponibles",
+    "donar.listings.solicitudes.title":  "Solicitudes de donación",
     "donar.listings.verTodas":           "Ver todas →",
 
-    "donar.campanas.title":              "🌿 Campañas de nuestros aliados 🌿",
+    "donar.campanas.title":              "Campañas de nuestros aliados",
     "donar.campanas.subtitle":           "Empresas y centros aliados de RECO+ comparten aquí sus próximas campañas de reciclaje y donación.",
-    "donar.campanas.reciclaje.title":    "♻️ Campañas de reciclaje",
-    "donar.campanas.donacion.title":     "🎁 Campañas de donación",
+    "donar.campanas.reciclaje.title":    "Campañas de reciclaje",
+    "donar.campanas.donacion.title":     "Campañas de donación",
     "donar.campanas.verMas":             "Ver más →",
-    "donar.campanas.metaCard":           "🎯 Meta:",
+    "donar.campanas.metaCard":           "Meta:",
     "donar.campanas.errorCargar":        "No se pudieron cargar las campañas por ahora.",
     "donar.campanas.vacio.reciclaje":    "Todavía no hay campañas de reciclaje activas. ¡Sé la primera empresa en publicar una desde Alianzas!",
     "donar.campanas.vacio.donacion":     "Todavía no hay campañas de donación activas. ¡Sé la primera empresa en publicar una desde Alianzas!",
 
-    "donar.campdetalle.kicker.reciclaje": "♻️ Campaña de reciclaje",
-    "donar.campdetalle.kicker.donacion":  "🎁 Campaña de donación",
+    "donar.campdetalle.kicker.reciclaje": "Campaña de reciclaje",
+    "donar.campdetalle.kicker.donacion":  "Campaña de donación",
     "donar.campdetalle.meta":             "Meta:",
 
     "donar.campins.cargando":              "Cargando…",
@@ -671,7 +671,7 @@ const translations = {
     "donar.campins.form.enviando":         "Inscribiendo...",
     "donar.campins.form.errorNombre":      "Ingresa tu nombre para inscribirte.",
     "donar.campins.form.errorGenerico":    "No se pudo completar tu inscripción. Intenta de nuevo.",
-    "donar.campins.yaInscrito.msg":           "✅ Ya estás inscrito en esta campaña.",
+    "donar.campins.yaInscrito.msg":           "Ya estás inscrito en esta campaña.",
     "donar.campins.yaInscrito.cancelarBtn":   "Cancelar inscripción",
     "donar.campins.yaInscrito.cancelando":    "Cancelando...",
     "donar.campins.yaInscrito.errorCancelar": "No se pudo cancelar tu inscripción. Intenta de nuevo.",
@@ -739,8 +739,8 @@ const translations = {
     "donar.listings.puntoRecepcion": "Punto de recepción",
     "donar.listings.empresa": "Empresa",
     "donar.listings.sinDescripcion": "Sin descripción adicional.",
-    "donar.listings.kicker.donacion": "🌿 Donación disponible",
-    "donar.listings.kicker.solicitud": "🙋 Solicitud de ayuda",
+    "donar.listings.kicker.donacion": "Donación disponible",
+    "donar.listings.kicker.solicitud": "Solicitud de ayuda",
     "donar.listings.usuarioGenerico": "Usuario RECO+",
 
     "donar.time.justoAhora":  "justo ahora",
@@ -752,16 +752,16 @@ const translations = {
     "donaciones.hero.title":    "Todas las publicaciones",
     "donaciones.hero.subtitle": "Explora todas las donaciones disponibles y las solicitudes de ayuda activas en la comunidad RECO+, con todos sus detalles.",
     "donaciones.filter.todas":       "Todas",
-    "donaciones.filter.donaciones":  "🌿 Donaciones",
-    "donaciones.filter.solicitudes": "🙋 Solicitudes de ayuda",
+    "donaciones.filter.donaciones":  "Donaciones",
+    "donaciones.filter.solicitudes": "Solicitudes de ayuda",
     "donaciones.search.placeholder": "Buscar por categoría, descripción o ubicación...",
     "donaciones.count.suffix": "publicaciones activas",
     "donaciones.cargando":     "Cargando publicaciones...",
     "donaciones.error.conexion": "No se pudo conectar con la base de datos. Intenta recargar la página.",
     "donaciones.error.carga":    "Ocurrió un error al cargar las publicaciones. Intenta de nuevo más tarde.",
     "donaciones.sinResultados":  "No se encontraron publicaciones con esos filtros.",
-    "donaciones.tipo.donacion":  "🌿 Donación",
-    "donaciones.tipo.solicitud": "🙋 Solicitud",
+    "donaciones.tipo.donacion":  "Donación",
+    "donaciones.tipo.solicitud": "Solicitud",
 
     /* ── ALIANZAS (página alianzas.html) ── */
     "alianzas.hero.title":    "Alianzas /<br>Empresas",
@@ -787,7 +787,7 @@ const translations = {
     "alianzas.aliados.vacio.titulo": "Todavía no hay aliados con plan Premium",
     "alianzas.aliados.vacio.desc": "Las empresas con plan Premium aparecen aquí, destacadas ante toda la comunidad de RECO+.",
     "alianzas.aliados.vacio.btn": "Conocer el plan Premium →",
-    "alianzas.aliados.destacado": "Aliado destacado 🌳",
+    "alianzas.aliados.destacado": "Aliado destacado",
     "alianzas.tipo.centro_reciclaje": "Centro de reciclaje",
     "alianzas.tipo.empresa_recicladora": "Empresa recicladora",
     "alianzas.tipo.punto_acopio": "Punto de acopio",
@@ -814,7 +814,7 @@ const translations = {
     "rae.kicker.simple": "Registro de aliado",
     "rae.btn.atras": "← Atrás",
     "rae.btn.siguiente": "Siguiente →",
-    "rae.btn.registrar": "Registrar aliado ✓",
+    "rae.btn.registrar": "Registrar aliado",
     "rae.btn.enviando": "Enviando...",
     "rae.status.revisaCampos": "Revisa los campos marcados antes de continuar.",
     "rae.confirmCerrar": "¿Seguro que quieres cerrar? Se perderá la información ingresada en este formulario.",
@@ -1032,7 +1032,7 @@ const translations = {
     "rae.envio.sesionExpirada": "Tu sesión expiró. Vuelve a iniciar sesión e intenta el registro de nuevo.",
     "rae.envio.subiendoArchivos": "Subiendo logo y fotos...",
     "rae.envio.guardandoPerfil": "Guardando tu perfil de aliado...",
-    "rae.envio.exito": "✓ ¡Listo! Tu empresa quedó registrada. Revisaremos tu perfil y pronto aparecerá como aliado en RECO+.",
+    "rae.envio.exito": "¡Listo! Tu empresa quedó registrada. Revisaremos tu perfil y pronto aparecerá como aliado en RECO+.",
     "rae.envio.errorGenerico": "Ocurrió un error inesperado. Intenta de nuevo.",
     "rae.envio.errorDuplicado": "Ya existe un registro de aliado con esos datos (correo o RUC).",
     "rae.envio.errorPermisos": "No se pudo guardar el perfil por un problema de permisos. Contacta a soporte.",
@@ -1059,7 +1059,7 @@ const translations = {
        Claves por página: tutorial.<prefijo>_stepN.*
        (idx_ = index.html)
        ══════════════════════════════════════════ */
-    "tutorial.idx_step0.title": "¡Bienvenido a RECO+! 👋",
+    "tutorial.idx_step0.title": "¡Bienvenido a RECO+!",
     "tutorial.idx_step0.desc":  "En un par de minutos te mostramos dónde está todo: el mapa de puntos de reciclaje, cómo donar, pedir ayuda y mucho más. Usa los botones de abajo para moverte, y Esc para salir cuando quieras.",
 
     "tutorial.idx_step1.title": "Tu barra de navegación",
@@ -1101,7 +1101,7 @@ const translations = {
     "tutorial.idx_step13.title": "El impacto en números",
     "tutorial.idx_step13.desc":  "Estas cifras crecen cada día gracias a personas como tú: usuarios activos, puntos de reciclaje, toneladas recicladas y comunidades unidas.",
 
-    "tutorial.idx_step14.title": "¡Listo, ya conoces RECO+! 🎉",
+    "tutorial.idx_step14.title": "¡Listo, ya conoces RECO+!",
     "tutorial.idx_step14.desc":  "Explora a tu ritmo. Si en algún momento quieres repetir el recorrido completo, el botón verde flotante siempre estará aquí abajo para ayudarte.",
 
     "tutorial.btn.next":    "Siguiente",
@@ -1116,11 +1116,11 @@ const translations = {
     "tutorial.fab.label":     "Ver tutorial",
     "tutorial.fab.tooltip":   "¿Necesitas ayuda? Reinicia el tutorial",
 
-    "tutorial.done.title": "¡Bien hecho! 🎊",
+    "tutorial.done.title": "¡Bien hecho!",
     "tutorial.done.desc":  "Completaste el recorrido. Ya sabes moverte por RECO+ como un experto.",
 
     /* ── TUTORIAL: página Reciclar (rec_) ── */
-    "tutorial.rec_step0.title": "¡Bienvenido a Reciclar! ♻️",
+    "tutorial.rec_step0.title": "¡Bienvenido a Reciclar!",
     "tutorial.rec_step0.desc":  "Te mostramos cómo elegir qué reciclar, usar el escáner con IA y encontrar el centro más cercano. Usa los botones de abajo para moverte, y Esc para salir cuando quieras.",
 
     "tutorial.rec_step5.title": "Dos formas de empezar",
@@ -1141,11 +1141,11 @@ const translations = {
     "tutorial.rec_step10.title": "Cada objeto cuenta",
     "tutorial.rec_step10.desc":  "Cuando quieras, este botón te lleva directo al mapa para empezar a reciclar hoy mismo.",
 
-    "tutorial.rec_step11.title": "¡Listo para reciclar! 🎉",
+    "tutorial.rec_step11.title": "¡Listo para reciclar!",
     "tutorial.rec_step11.desc":  "Ya sabes cómo moverte por esta página. El botón verde flotante siempre estará aquí si quieres repetir el recorrido.",
 
     /* ── TUTORIAL: página Mapa (map_) ── */
-    "tutorial.map_step0.title": "¡Bienvenido al Mapa! 🗺️",
+    "tutorial.map_step0.title": "¡Bienvenido al Mapa!",
     "tutorial.map_step0.desc":  "Te mostramos cómo buscar, filtrar y encontrar el punto de reciclaje o donación más cercano. Usa los botones de abajo para moverte, y Esc para salir cuando quieras.",
 
     "tutorial.map_step1.title": "Busca una dirección",
@@ -1175,11 +1175,11 @@ const translations = {
     "tutorial.map_step9.title": "¿Falta un punto?",
     "tutorial.map_step9.desc":  "Si no encuentras un lugar que conoces, sugiérelo aquí y ayúdanos a hacer crecer el mapa de RECO+.",
 
-    "tutorial.map_step10.title": "¡Listo para explorar! 🎉",
+    "tutorial.map_step10.title": "¡Listo para explorar!",
     "tutorial.map_step10.desc":  "Ya sabes cómo moverte por el mapa. El botón verde flotante siempre estará aquí si quieres repetir el recorrido.",
 
     /* ── TUTORIAL: página Donar (don_) ── */
-    "tutorial.don_step0.title": "¡Bienvenido a Donar / Ayuda! 🌿",
+    "tutorial.don_step0.title": "¡Bienvenido a Donar / Ayuda!",
     "tutorial.don_step0.desc":  "Te mostramos cómo donar objetos, pedir ayuda y seguir el camino de tu donación. Usa los botones de abajo para moverte, y Esc para salir cuando quieras.",
 
     "tutorial.don_step1.title": "Dos formas de empezar",
@@ -1203,11 +1203,11 @@ const translations = {
     "tutorial.don_step7.title": "Una comunidad confiable",
     "tutorial.don_step7.desc":  "Verificamos perfiles, tenemos políticas claras y miles de personas listas para ayudar o recibir ayuda.",
 
-    "tutorial.don_step8.title": "¡Listo para donar! 🎉",
+    "tutorial.don_step8.title": "¡Listo para donar!",
     "tutorial.don_step8.desc":  "Ya sabes cómo moverte por esta página. El botón verde flotante siempre estará aquí si quieres repetir el recorrido.",
 
     /* ── TUTORIAL: página Guía (gui_) ── */
-    "tutorial.gui_step0.title": "¡Bienvenido a la Guía! 📚",
+    "tutorial.gui_step0.title": "¡Bienvenido a la Guía!",
     "tutorial.gui_step0.desc":  "Te mostramos dónde están los videos, las instrucciones paso a paso y los datos que necesitas para reciclar y donar mejor. Usa los botones de abajo para moverte, y Esc para salir cuando quieras.",
 
     "tutorial.gui_step1.title": "Videos principales",
@@ -1231,11 +1231,11 @@ const translations = {
     "tutorial.gui_step7.title": "Únete a la comunidad",
     "tutorial.gui_step7.desc":  "Cuando estés listo, crea tu cuenta y empieza a ser parte del cambio junto a miles de personas.",
 
-    "tutorial.gui_step8.title": "¡Listo para aprender! 🎉",
+    "tutorial.gui_step8.title": "¡Listo para aprender!",
     "tutorial.gui_step8.desc":  "Ya sabes cómo moverte por la guía. El botón verde flotante siempre estará aquí si quieres repetir el recorrido.",
 
     /* ── TUTORIAL: página Alianzas (ali_) ── */
-    "tutorial.ali_step0.title": "¡Bienvenido a Alianzas! 🤝",
+    "tutorial.ali_step0.title": "¡Bienvenido a Alianzas!",
     "tutorial.ali_step0.desc":  "Te mostramos cómo registrar tu empresa, explorar iniciativas y conocer a nuestros aliados. Usa los botones de abajo para moverte, y Esc para salir cuando quieras.",
 
     "tutorial.ali_step1.title": "Colabora y multiplica el impacto",
@@ -1250,11 +1250,11 @@ const translations = {
     "tutorial.ali_step4.title": "¿Tu empresa quiere sumarse?",
     "tutorial.ali_step4.desc":  "Toca aquí para registrar tu empresa y unirte a la comunidad de aliados que construyen un futuro más sostenible.",
 
-    "tutorial.ali_step5.title": "¡Listo para colaborar! 🎉",
+    "tutorial.ali_step5.title": "¡Listo para colaborar!",
     "tutorial.ali_step5.desc":  "Ya sabes cómo moverte por esta página. El botón verde flotante siempre estará aquí si quieres repetir el recorrido.",
 
     /* ── TUTORIAL: página Videos (vid_) ── */
-    "tutorial.vid_step0.title": "¡Bienvenido a la Biblioteca de videos! 🎥",
+    "tutorial.vid_step0.title": "¡Bienvenido a la Biblioteca de videos!",
     "tutorial.vid_step0.desc":  "Te mostramos cómo buscar, filtrar y compartir videos sobre reciclaje y donación. Usa los botones de abajo para moverte, y Esc para salir cuando quieras.",
 
     "tutorial.vid_step1.title": "Busca un video",
@@ -1266,11 +1266,11 @@ const translations = {
     "tutorial.vid_step3.title": "Explora la biblioteca",
     "tutorial.vid_step3.desc":  "Toca cualquier video para verlo directamente aquí, sin salir de RECO+.",
 
-    "tutorial.vid_step4.title": "¡Listo para aprender! 🎉",
+    "tutorial.vid_step4.title": "¡Listo para aprender!",
     "tutorial.vid_step4.desc":  "Ya sabes cómo moverte por la biblioteca de videos. El botón verde flotante siempre estará aquí si quieres repetir el recorrido.",
 
     /* ── TUTORIAL: página Escáner (esc_) ── */
-    "tutorial.esc_step0.title": "¡Bienvenido al Escáner! ✨",
+    "tutorial.esc_step0.title": "¡Bienvenido al Escáner!",
     "tutorial.esc_step0.desc":  "Te mostramos cómo identificar cualquier objeto con inteligencia artificial en segundos. Usa los botones de abajo para moverte, y Esc para salir cuando quieras.",
 
     "tutorial.esc_step1.title": "Apunta la cámara",
@@ -1285,7 +1285,7 @@ const translations = {
     "tutorial.esc_step4.title": "Historial de esta sesión",
     "tutorial.esc_step4.desc":  "Aquí verás todos los objetos que has identificado durante esta sesión de escáneo.",
 
-    "tutorial.esc_step5.title": "¡Listo para escanear! 🎉",
+    "tutorial.esc_step5.title": "¡Listo para escanear!",
     "tutorial.esc_step5.desc":  "Ya sabes cómo usar el escáner. El botón verde flotante siempre estará aquí si quieres repetir el recorrido.",
 
     /* ── PÁGINA RECICLAR ── */
@@ -1332,8 +1332,8 @@ const translations = {
     "reciclar.escaner.cargandoModelo": "Preparando el motor de reconocimiento (solo la primera vez)…",
     "reciclar.escaner.analizando": "Analizando la imagen…",
     "reciclar.escaner.detectamos": "Detectamos",
-    "reciclar.escaner.mensajeReciclable": "✅ Esto se recicla.",
-    "reciclar.escaner.mensajePuntoEspecial": "⚠️ Esto se recicla, pero necesita un punto especial.",
+    "reciclar.escaner.mensajeReciclable": "Esto se recicla.",
+    "reciclar.escaner.mensajePuntoEspecial": "Esto se recicla, pero necesita un punto especial.",
     "reciclar.escaner.confianza": "Confianza",
     "reciclar.escaner.bajaConfianza": "No estamos muy seguros. Si no coincide, prueba con otra foto o elige el material manualmente arriba.",
     "reciclar.escaner.verAbajo": "Mira los detalles completos en el panel de abajo ↓",
@@ -1570,10 +1570,10 @@ const translations = {
     "scannerdemo.btn.pausar":     "Pausar",
     "scannerdemo.btn.reanudar":   "Reanudar",
     "scannerdemo.btn.detener":    "Detener cámara",
-    "scannerdemo.btn.ia":         "✨ Escaneo preciso (IA)",
-    "scannerdemo.btn.iaCapturando": "📸 Capturando...",
-    "scannerdemo.btn.iaConsultando": "🔎 Consultando IA...",
-    "scannerdemo.btn.volverEscanear": "🔄 Volver a escanear",
+    "scannerdemo.btn.ia":         "Escaneo preciso (IA)",
+    "scannerdemo.btn.iaCapturando": "Capturando...",
+    "scannerdemo.btn.iaConsultando": "Consultando IA...",
+    "scannerdemo.btn.volverEscanear": "Volver a escanear",
     "scannerdemo.resultado.esperando": "Esperando objeto...",
     "scannerdemo.confianza.alta": "IA · confianza alta",
     "scannerdemo.confianza.media": "IA · confianza media",
@@ -1646,8 +1646,8 @@ const translations = {
     /* ── Paso 1: Datos de la campaña ── */
     "campanas.paso1.desc": "Cuéntanos de qué trata tu campaña. Aparecerá en Donar una vez que la aprobemos.",
     "campanas.paso1.tipoLabel": "Tipo de campaña",
-    "campanas.paso1.tipoReciclaje": "♻️ Reciclaje",
-    "campanas.paso1.tipoDonacion": "🎁 Donación",
+    "campanas.paso1.tipoReciclaje": "Reciclaje",
+    "campanas.paso1.tipoDonacion": "Donación",
     "campanas.paso1.tituloLabel": "Título de la campaña",
     "campanas.paso1.tituloPh": "Ej. Recolectón de electrónicos en David",
     "campanas.paso1.tituloError": "Ingresa un título para la campaña.",
@@ -1695,7 +1695,7 @@ const translations = {
     "campanas.paso.objetivo.titulo": "Objetivo de la campaña",
     "campanas.btnAtras": "← Atrás",
     "campanas.btnSiguiente": "Siguiente →",
-    "campanas.btnPublicar": "Publicar campaña ✓",
+    "campanas.btnPublicar": "Publicar campaña",
     "campanas.btnPublicando": "Publicando...",
     "campanas.statusRevisa": "Revisa los campos marcados antes de continuar.",
     "campanas.confirmCerrar": "¿Seguro que quieres cerrar? Se perderá la información ingresada en este formulario.",

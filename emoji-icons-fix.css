@@ -1,0 +1,18 @@
+/* Capa aditiva: alineación vertical de los iconos SVG que reemplazan
+   los emojis en listas/chips (scroll-list de Donar/Alianzas, tags de
+   Blog, fila de contacto, ícono X de testimonios, redes del footer).
+   No modifica ningún archivo base. */
+.scroll-icon {
+  vertical-align: -2px;
+  margin-right: 2px;
+}
+.acc-card__contact-icon svg {
+  vertical-align: middle;
+}
+.test-card__x svg {
+  vertical-align: middle;
+  opacity: 0.85;
+}
+.redes a svg {
+  vertical-align: middle;
+}
