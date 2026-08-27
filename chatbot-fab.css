@@ -107,14 +107,16 @@ html.dark .reco-chatbot-fab__dot { border-color: #0f1a12; }
   50%      { transform: scale(1.25); opacity: 0.75; }
 }
 
-/* ── Oculta el widget flotante nativo de Botpress (ya usamos nuestro propio FAB) ──
-   Nota: .bpFab vive directo en el documento (no dentro de un wrapper con id
-   #bp-web-widget-container, ese selector nunca hacía match), por eso se veía
-   el botón azul nativo de Botpress apilado junto al botón verde propio. ── */
-.bpFab,
-[class*="floatingButton"] {
-  display: none !important;
-}
+/* ── Ya NO ocultamos .bpFab por CSS ──
+   Ahora que en Botpress Cloud (Webchat > Deploy settings) el "Chat launcher"
+   está configurado como "Custom element" apuntando a #recoChatbotFab,
+   Botpress deja de dibujar su botón nativo por sí solo (no hace falta CSS).
+   Forzar display:none en .bpFab le quitaba tamaño/posición (0x0), y Botpress
+   parece usar ese mismo elemento como referencia para posicionar/animar la
+   ventana del chat al abrirse — por eso el botón propio dejó de funcionar
+   después de ocultarlo. Si en el futuro el botón nativo reaparece pese a la
+   config de Botpress, usar visibility:hidden en vez de display:none para no
+   perder sus dimensiones/posición. */
 
 /* ── Responsive ── */
 @media (max-width: 640px) {
