@@ -217,7 +217,7 @@ const translations = {
     "footer.nl.desc":   "Recibe tips, noticias y oportunidades para ayudar.",
     "footer.nl.ph":     "Tu correo electrónico",
     "footer.nl.btn":    "Suscribirme",
-    "footer.copy":      "© 2024 RECO+. Todos los derechos reservados.",
+    "footer.copy":      "© 2026 RECO+. Todos los derechos reservados.",
 
     /* ── MAPA (página mapa.html) ── */
     "mapa.hero.title":        "Mapa",
@@ -2514,7 +2514,7 @@ const translations = {
     "footer.nl.desc":   "Receive tips, news and opportunities to help.",
     "footer.nl.ph":     "Your email address",
     "footer.nl.btn":    "Subscribe",
-    "footer.copy":      "© 2024 RECO+. All rights reserved.",
+    "footer.copy":      "© 2026 RECO+. All rights reserved.",
 
     /* ── MAP (mapa.html page) ── */
     "mapa.hero.title":        "Map",
@@ -3582,7 +3582,7 @@ const translations = {
     "tutorial.esc_step5.desc":  "You now know how to use the scanner. The floating green button will always be here if you want to repeat the tour.",
 
     /* ── RECYCLE PAGE ── */
-    "reciclar.hero.title1": "Recycle today,",
+    "reciclar.hero.title1": "Recycle today",
     "reciclar.hero.title2": "transform tomorrow.",
     "reciclar.hero.desc":   "Learn to sort your waste, find out where to recycle, and discover the positive impact every action makes for the planet.",
     "reciclar.hero.btn1":   "Find a recycling point",
