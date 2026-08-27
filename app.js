@@ -478,24 +478,20 @@ function initMap() {
     zoomControl: true,
   });
 
-  // Expone la instancia globalmente para que capas aditivas externas
-  // (ej. mapa-theme-sync.js, que cambia el tile al togglear el tema)
-  // puedan acceder al mapa sin necesidad de reestructurar este archivo.
+  // Expone la instancia globalmente por si alguna capa aditiva externa
+  // necesita acceder al mapa sin reestructurar este archivo.
   window.recoMap = map;
 
-  // Tile del mapa: OSM claro por defecto, CartoDB Dark Matter si el
-  // sitio está en modo oscuro (html.dark, controlado por darkmode.js).
-  // mapa-dark-theme.css se encarga del resto (popups, marcador de
-  // usuario, etc.) — aquí solo se elige la capa de teselas correcta.
-  const isDark = document.documentElement.classList.contains("dark");
+  // Tile único (OSM) para ambos temas: ya no dependemos de un
+  // servicio de teselas oscuras de terceros (CartoDB empezó a pedir
+  // API key). El look oscuro ahora lo da un filtro CSS aplicado a
+  // .leaflet-tile-pane cuando html.dark está activo (ver
+  // mapa-dark-theme.css, sección 0) — no hace falta elegir ni
+  // cambiar de tile layer según el tema.
   window.recoMapTileLayer = L.tileLayer(
-    isDark
-      ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-      : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
     {
-      attribution: isDark
-        ? '© OpenStreetMap © CARTO'
-        : '© OpenStreetMap',
+      attribution: '© OpenStreetMap',
       maxZoom: 19,
     }
   ).addTo(map);

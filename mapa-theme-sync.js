@@ -1,26 +1,23 @@
 /* ══════════════════════════════════════════════════════════════
-   MAPA-THEME-SYNC.JS
-   Capa ADITIVA. No modifica darkmode.js ni app.js (salvo dos líneas
-   en app.js que exponen window.recoMap / window.recoMapTileLayer,
-   necesarias para que este script pueda alcanzar el mapa).
+   MAPA-THEME-SYNC.JS  — DEPRECADO / INERTE
 
-   PROBLEMA QUE RESUELVE:
-   app.js elegía el tile de Leaflet (OSM claro vs. CartoDB Dark
-   Matter) UNA sola vez, al ejecutar initMap(), leyendo html.dark en
-   ese instante. darkmode.js no dispara ningún evento al togglear el
-   tema, así que si el usuario cambiaba de modo oscuro a claro (o
-   viceversa) DESPUÉS de que el mapa ya había cargado, el tile nunca
-   se enteraba y el mapa se quedaba con las teselas del tema anterior
-   hasta recargar la página completa.
+   Este script existía para reemplazar en caliente el tile de
+   Leaflet (OSM claro ↔ CartoDB Dark Matter) cuando el usuario
+   togglea el tema DESPUÉS de que el mapa ya cargó, porque antes
+   app.js elegía el tile una sola vez al iniciar.
 
-   SOLUCIÓN:
-   Un MutationObserver observa la clase del <html> (sin tocar
-   darkmode.js) y, cada vez que detecta que .dark se agregó o quitó,
-   reemplaza la capa de teselas activa por la correcta para el nuevo
-   tema.
+   Ya no hace falta: app.js ahora carga el MISMO tile de OSM en
+   ambos temas (CartoDB empezó a exigir API key para sus tiles
+   gratuitos, así que se soltó esa dependencia), y el look oscuro lo
+   da un filtro CSS sobre .leaflet-tile-pane en mapa-dark-theme.css,
+   que reacciona solo con la clase html.dark sin necesitar JS.
 
-   Cárgalo DESPUÉS de app.js:
-   <script src="mapa-theme-sync.js"></script>
+   Se dejó el archivo en el repo (en vez de borrarlo) por si en el
+   futuro se vuelve a necesitar swap de tiles por algún otro motivo,
+   pero el <script> que lo cargaba se sacó de mapa.html: si lo
+   querés reactivar, actualizá tileConfigFor() primero (todavía
+   apunta al dark_all de CartoDB que pide key) y volvé a agregar la
+   etiqueta <script src="mapa-theme-sync.js"></script>.
 ═══════════════════════════════════════════════════════════════ */
 (function () {
   "use strict";

@@ -5,17 +5,35 @@
    tiempo real (punto azul de usuario, línea de ruta, panel de
    distancia/ETA, popups oscuros).
 
-   IMPORTANTE: el tile del mapa se elige en app.js según
-   html.dark (claro = OSM original blanco, oscuro = CartoDB dark).
-   Este archivo solo aplica estilos de POPUP oscuro cuando
-   html.dark está activo — en modo claro el popup conserva el
-   blanco de Leaflet por defecto, tal como estaba antes.
+   IMPORTANTE: app.js ahora carga el MISMO tile de OSM en ambos
+   temas (ya no hay tile oscuro de CartoDB — empezó a exigir API
+   key y se quitó esa dependencia). El look oscuro del mapa base lo
+   da la sección 0 de este archivo: un filtro CSS sobre
+   .leaflet-tile-pane, que reacciona solo con la clase html.dark
+   (sin JS de por medio — darkmode.js ya la toggea). El resto del
+   archivo aplica estilos de POPUP oscuro cuando html.dark está
+   activo — en modo claro el popup conserva el blanco de Leaflet
+   por defecto, tal como estaba antes.
 
    No toca la estructura de #map, .leaflet-*, .result-item ni el
-   resto de la interfaz.
+   resto de la interfaz (salvo el filtro de la sección 0, acotado
+   solo al pane de teselas para no afectar marcadores, popups ni
+   la línea de ruta, que viven en panes separados de Leaflet).
 
    Cárgalo DESPUÉS de mapa-effects.css y liquid-glass-mapa.css.
 ═══════════════════════════════════════════════════════════════ */
+
+/* ── 0. TILE BASE OSCURO (sin servicio de terceros ni API key) ──
+   OSM no publica un estilo oscuro propio, así que simulamos uno
+   invirtiendo los colores del tile claro y corrigiendo el matiz
+   para que el agua/verdes no queden con tonos raros. Acotado a
+   .leaflet-tile-pane: los marcadores (.leaflet-marker-pane), la
+   línea de ruta y el círculo de precisión (.leaflet-overlay-pane) y
+   los popups (.leaflet-popup-pane) viven en panes distintos y no se
+   ven afectados por este filtro. */
+html.dark .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.92) saturate(0.85);
+}
 
 /* ── 1. POPUPS DE LEAFLET: solo se oscurecen en modo oscuro ──
    En modo claro no se toca nada (Leaflet ya pinta blanco por
