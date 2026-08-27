@@ -1,0 +1,22 @@
+/* ═══════════════════════════════════════════════════════════════
+   CURIOSIDADES-SPACING-FIX.CSS
+   Capa ADITIVA — separa la sección "Datos curiosos" (.curiosidades)
+   del video de fondo del hero. Antes .curiosidades arrancaba pegada
+   justo debajo de .hero (sin gap), así que el borde superior de la
+   tarjeta quedaba tocando el video. Se agrega un margen superior
+   para que la sección respire antes de empezar.
+   No modifica style.css, index.css ni ningún otro archivo.
+
+   Cargar al final del <head>, después de responsive-index-polish.css:
+   <link rel="stylesheet" href="curiosidades-spacing-fix.css">
+═══════════════════════════════════════════════════════════════ */
+
+.curiosidades {
+  margin-top: 48px;
+}
+
+@media (max-width: 640px) {
+  .curiosidades {
+    margin-top: 28px;
+  }
+}

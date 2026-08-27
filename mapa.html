@@ -323,7 +323,7 @@
   <!-- SEARCH + FILTERS -->
   <section class="controls">
     <div class="search-bar">
-      <span class="search-icon">&#128269;</span>
+      <span class="search-icon"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" width="16" height="16"><circle cx="8.5" cy="8.5" r="5.3"/><line x1="16.3" y1="16.3" x2="12.5" y2="12.5"/></svg></span>
       <input type="text" id="searchInput" placeholder="Buscar dirección o ubicación" data-i18n="mapa.search.placeholder" />
       <button class="locate-btn" data-i18n-title="mapa.search.locate.title" title="Usar mi ubicación"><img src="img/ubicacion_barra_de_busqueda.png" alt="ubicación"></button>
     </div>
@@ -339,7 +339,7 @@
         <button class="chip" data-filter="ropa" data-i18n="reciclar.mat.ropa">Ropa</button>
         <button class="chip" data-filter="electronicos" data-i18n="reciclar.mat.electronicos">Electrónicos</button>
       </div>
-      <button class="more-filters-btn" id="moreFiltersBtn" data-i18n="mapa.filter.more">&#9776; Más filtros</button>
+      <button class="more-filters-btn" id="moreFiltersBtn" data-i18n="mapa.filter.more"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" width="13" height="13"><line x1="3" y1="6" x2="17" y2="6"/><line x1="3" y1="10" x2="17" y2="10"/><line x1="3" y1="14" x2="17" y2="14"/></svg> Más filtros</button>
 
       <!-- Dropdown flotante: no ocupa espacio en el layout, se
            sobrepone encima del contenido. Contiene el resto de las
@@ -382,7 +382,7 @@
 
       <!-- TOOLTIP -->
       <div class="map-tooltip" id="mapTooltip">
-        <button class="tooltip-close" id="tooltipClose" aria-label="Cerrar" data-i18n-aria="nav.cerrar">&times;</button>
+        <button class="tooltip-close" id="tooltipClose" aria-label="Cerrar" data-i18n-aria="nav.cerrar"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" width="12" height="12"><line x1="5" y1="5" x2="15" y2="15"/><line x1="15" y1="5" x2="5" y2="15"/></svg></button>
         <div class="tooltip-icon"><img src="img/hoja.png" alt="hoja"></div>
         <div class="tooltip-text">
           <strong data-i18n="mapa.tooltip.title">¿Sabías qué?</strong>
@@ -429,7 +429,7 @@
   <!-- MODAL: Suggest Point -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
-      <button class="modal-close" id="modalClose" aria-label="Cerrar" data-i18n-aria="nav.cerrar">&times;</button>
+      <button class="modal-close" id="modalClose" aria-label="Cerrar" data-i18n-aria="nav.cerrar"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" width="13" height="13"><line x1="5" y1="5" x2="15" y2="15"/><line x1="15" y1="5" x2="5" y2="15"/></svg></button>
       <h2 data-i18n="mapa.modal.title">Sugerir un punto</h2>
       <p data-i18n="mapa.modal.desc">Ayúdanos a ampliar el mapa de reciclaje y donación.</p>
       <input type="text" placeholder="Nombre del lugar" class="modal-input" data-i18n="mapa.modal.ph.nombre" />
@@ -437,7 +437,7 @@
       <div class="modal-coords">
         <input type="text" inputmode="decimal" placeholder="Latitud" class="modal-input modal-coord-input" id="modalLat" data-i18n="mapa.modal.ph.lat" />
         <input type="text" inputmode="decimal" placeholder="Longitud" class="modal-input modal-coord-input" id="modalLng" data-i18n="mapa.modal.ph.lng" />
-        <button type="button" class="modal-coord-btn" id="modalUseMyLocation" title="Usar mi ubicación actual" data-i18n-title="mapa.modal.useLocation">📍</button>
+        <button type="button" class="modal-coord-btn" id="modalUseMyLocation" title="Usar mi ubicación actual" data-i18n-title="mapa.modal.useLocation"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M10 17.5s5.5-5.8 5.5-9.8A5.5 5.5 0 104.5 7.7c0 4 5.5 9.8 5.5 9.8z"/><circle cx="10" cy="7.7" r="1.8"/></svg></button>
       </div>
       <select class="modal-input" id="modalTypeSelect">
         <option value="" data-i18n="mapa.modal.opt.tipo">Tipo de punto</option>
@@ -482,7 +482,7 @@
           <div class="redes">
 
               <a href="#">tk</a>
-              <a href="#">▶</a>
+              <a href="#"><svg viewBox="0 0 20 20" fill="currentColor" width="13" height="13"><path d="M6 4l10 6-10 6z"/></svg></a>
           </div>
       </div>
       <div class="footer-col">

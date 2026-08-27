@@ -70,29 +70,45 @@
       '</svg>' +
       '<span class="reco-chatbot-fab__dot" aria-hidden="true"></span>';
 
-    btn.addEventListener("click", function () {
-      try {
-        if (window.botpress && typeof window.botpress.open === "function") {
-          window.botpress.open();
-        } else {
-          // Botpress todavía no terminó de inicializar: reintenta brevemente.
-          var tries = 0;
-          var iv = setInterval(function () {
-            tries++;
-            if (window.botpress && typeof window.botpress.open === "function") {
-              window.botpress.open();
-              clearInterval(iv);
-            } else if (tries > 20) {
-              clearInterval(iv);
-            }
-          }, 150);
-        }
-      } catch (e) { /* noop */ }
-    });
-
     document.body.appendChild(btn);
     return btn;
   }
+
+  /* ═══════════════════════════════════════════════════════════
+     2b) Clic delegado en document (no en el botón directamente)
+     ═══════════════════════════════════════════════════════════
+     Motivo: al configurar en Botpress Cloud el "Chat launcher" como
+     "Custom element" apuntando a #recoChatbotFab, todo indica que
+     Botpress reemplaza/clona ese nodo para engancharle su propio
+     listener interno — lo que deja huérfano cualquier listener que
+     hayamos puesto directamente sobre el <button> original con
+     btn.addEventListener("click", ...), aunque el botón se siga
+     viendo igual y conserve el mismo id. Delegar el clic en
+     document (que nunca es reemplazado) y buscar el id en cada
+     clic evita ese problema por completo. */
+  function openBotpress() {
+    try {
+      if (window.botpress && typeof window.botpress.open === "function") {
+        window.botpress.open();
+      } else {
+        var tries = 0;
+        var iv = setInterval(function () {
+          tries++;
+          if (window.botpress && typeof window.botpress.open === "function") {
+            window.botpress.open();
+            clearInterval(iv);
+          } else if (tries > 20) {
+            clearInterval(iv);
+          }
+        }, 150);
+      }
+    } catch (e) { /* noop */ }
+  }
+
+  document.addEventListener("click", function (e) {
+    var target = e.target && e.target.closest ? e.target.closest("#recoChatbotFab") : null;
+    if (target) openBotpress();
+  });
 
   function init() {
     if (document.getElementById("recoChatbotFab")) return; // evita duplicados

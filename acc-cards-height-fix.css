@@ -1,0 +1,148 @@
+/* ═══════════════════════════════════════════════════════════════
+   ACC-CARDS-HEIGHT-FIX.CSS — RECO+
+   Capa ADITIVA: corrige que el contenido de .acc-card (icono,
+   título, descripción, preview y CTA) se vea cortado/desbordado
+   dentro de la tarjeta, con el CTA pegado al borde inferior y el
+   resto del contenido recortado por encima.
+
+   Causa: .acc-card (style.css) define min-height:138px con
+   display:flex, flex-direction:column, justify-content:space-between,
+   pero el contenido real (.acc-card__top con icono+título+descripción
+   de hasta 2 líneas, .acc-card__preview, y .acc-card__cta) necesita
+   más alto del que ese min-height permite en varias tarjetas
+   (Guía con 3 pasos, Blog con 5 tags, Contacto con 3 filas, etc.).
+   Al no caber, el contenido se desborda visualmente por encima del
+   borde de la tarjeta y queda tapado por la tarjeta vecina / el
+   overflow-x:hidden de .acc-strip, dejando solo el CTA visible en
+   la franja inferior. Esto se agrava en anchos donde el navegador
+   ya está apretando el layout general (tablet / ventanas intermedias).
+
+   Fix: subir min-height a un valor que sí acomoda el contenido más
+   largo, y ajustarlo también en los breakpoints ya existentes de
+   style.css (860px, 600px) para mantener la proporción. No se toca
+   flex-basis/width de las tarjetas ni ninguna otra propiedad.
+
+   Cargar DESPUÉS de style.css e interactive.css:
+   <link rel="stylesheet" href="acc-cards-height-fix.css">
+═══════════════════════════════════════════════════════════════ */
+
+.acc-card {
+  min-height: 210px;
+}
+
+@media (max-width: 860px) {
+  .acc-card {
+    min-height: 196px;
+  }
+}
+
+@media (max-width: 600px) {
+  .acc-card {
+    min-height: 210px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FLECHAS DEL CARRUSEL (.acc-arrow--prev / .acc-arrow--next)
+
+   Causa: style.css las posiciona con position:absolute + top:50% +
+   left:-24px / right:-24px, relativas a .acc-strip-wrapper. Ese
+   `top:50%` se calcula sobre el ALTO de .acc-strip-wrapper — pero
+   ese wrapper es solo "position:relative" sin alto propio fijado
+   (su alto real depende de .acc-strip, que a su vez depende de que
+   las tarjetas ya hayan calculado su layout). En ciertos anchos, el
+   navegador termina resolviendo el alto del wrapper como muy chico
+   (casi 0) ANTES de que el carrusel de tarjetas termine de acomodarse,
+   así que top:50% cae arriba del todo y left/right terminan los dos
+   muy cerca del borde izquierdo en vez de a los costados del carril
+   — de ahí que ambas flechas se vean apiladas en la esquina en lugar
+   de separadas a cada lado.
+
+   Fix: se saca a las flechas del flujo "absolute sobre wrapper
+   incierto" y se posicionan con position:absolute directamente sobre
+   .acciones (que sí tiene un alto real y estable, al contener el
+   resto de la sección), con top explícito y ancladas cada una a SU
+   lado (left:0 / right:0) del área del carrusel, sin depender de
+   ningún cálculo de porcentaje sobre el wrapper. ── */
+.acciones {
+  position: relative;
+}
+
+.acc-strip-wrapper {
+  overflow: visible;
+  position: static;
+}
+
+.acc-arrow--prev,
+.acc-arrow--next {
+  position: absolute;
+  top: 168px;
+  transform: none;
+}
+
+.acc-arrow--prev {
+  left: 12px;
+  right: auto;
+}
+
+.acc-arrow--next {
+  right: 12px;
+  left: auto;
+}
+
+@media (max-width: 860px) {
+  .acc-arrow--prev,
+  .acc-arrow--next {
+    top: 158px;
+  }
+  .acc-arrow--prev {
+    left: 6px;
+  }
+  .acc-arrow--next {
+    right: 6px;
+  }
+}
+
+@media (max-width: 600px) {
+  .acc-arrow--prev,
+  .acc-arrow--next {
+    display: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ESPACIO VERTICAL DE LA CAJA ".acciones"
+
+   style.css define padding:70px 40px 80px (70px arriba, 80px abajo).
+   Se reduce el aire superior e inferior de toda la sección "¿Qué
+   puedes hacer?", manteniendo el padding lateral (40px) intacto.
+   El `top` de las flechas del bloque anterior se reajusta para
+   seguir cayendo a media altura del carril con el nuevo padding
+   superior más chico. ── */
+.acciones {
+  padding-top: 20px;
+  padding-bottom: 24px;
+}
+
+.acc-arrow--prev,
+.acc-arrow--next {
+  top: 118px;
+}
+
+@media (max-width: 860px) {
+  .acciones {
+    padding-top: 16px;
+    padding-bottom: 18px;
+  }
+  .acc-arrow--prev,
+  .acc-arrow--next {
+    top: 116px;
+  }
+}
+
+@media (max-width: 600px) {
+  .acciones {
+    padding-top: 14px;
+    padding-bottom: 16px;
+  }
+}
