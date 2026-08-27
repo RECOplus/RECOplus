@@ -1,0 +1,22 @@
+/* ═══════════════════════════════════════════════════════════════
+   RD-BANNERS-VERTICAL-CENTER-FIX.CSS
+   Capa ADITIVA — corrige el padding vertical asimétrico de
+   .rd-banners (contenedor de las tarjetas "Reciclar" / "Donar").
+
+   index.css define: padding: 44px 40px 8px;  →  44px arriba,
+   solo 8px abajo. flat-glass.css luego sobreescribe el padding
+   izquierdo/derecho a 32px pero deja ese 44px/8px vertical intacto,
+   así que las tarjetas quedan pegadas al borde inferior de la caja
+   y con mucho aire arriba — descentradas verticalmente dentro de
+   su propio contenedor.
+
+   No modifica index.css ni flat-glass.css: solo iguala arriba/abajo.
+
+   Cargar al final del <head>, después de curiosidades-spacing-fix.css:
+   <link rel="stylesheet" href="rd-banners-vertical-center-fix.css">
+═══════════════════════════════════════════════════════════════ */
+
+.rd-banners {
+  padding-top: 40px !important;
+  padding-bottom: 40px !important;
+}
