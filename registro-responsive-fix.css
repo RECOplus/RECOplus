@@ -1,0 +1,94 @@
+/* ═══════════════════════════════════════════════════════════════
+   REGISTRO-RESPONSIVE-FIX.CSS — RECO+
+   Capa ADITIVA sobre login.css y nav-cta-mobile-fix.css. Corrige dos
+   bugs de responsive en registro.html (formulario "Crea tu cuenta").
+
+   BUG 1 — BOTÓN "Crear cuenta" SE VE COMO UN CÍRCULO VACÍO:
+   .login-submit reutiliza la clase .bubble-nav__cta (para heredar el
+   estilo de botón pill verde del sitio). nav-cta-mobile-fix.css, en
+   ≤860px, comprime CUALQUIER .bubble-nav__cta a un botón circular de
+   38x38px con el texto oculto — pensado únicamente para el botón
+   "Únete" del navbar (que sí necesita ese tratamiento en pantallas
+   angostas). Como .login-submit no tiene ninguna clase que lo
+   diferencie del CTA de navbar, hereda la misma compresión y el
+   texto "Crear cuenta" desaparece junto con el ancho completo del
+   botón, dejando solo un círculo.
+
+   FIX: se restaura explícitamente el tamaño/forma completos de
+   .login-submit en cualquier ancho, con especificidad/orden de carga
+   suficiente para ganarle a nav-cta-mobile-fix.css.
+
+   BUG 2 — EL CAMPO DE EMAIL (Y OTROS INPUTS) SE SALE DE LA CAJA:
+   .login-field__wrap es un flex container sin min-width:0. Un hijo
+   flex (.login-field__input, aunque tenga width:100%) no puede
+   encogerse por debajo de su ancho de contenido por defecto en
+   flexbox — con el ícono absoluto + padding-left:46px del input,
+   en viewports angostos (~360-390px) el navegador termina calculando
+   un ancho mínimo mayor al disponible dentro de .login-card, y el
+   input se desborda del padding lateral de la tarjeta en vez de
+   respetarlo.
+
+   FIX: min-width:0 en la cadena de contenedores (.login-card,
+   .login-form, .login-field, .login-field__wrap) para que flexbox
+   permita encoger por debajo del ancho de contenido — mismo patrón
+   ya usado en donar-carousel-overflow-fix.css y nav-overflow-fix.css
+   de este proyecto.
+
+   Cargar DESPUÉS de login.css y nav-cta-mobile-fix.css:
+   <link rel="stylesheet" href="registro-responsive-fix.css">
+═══════════════════════════════════════════════════════════════ */
+
+/* ── BUG 1: restaurar el botón "Crear cuenta" completo ── */
+.login-submit.login-submit {
+  width: 100%;
+  height: auto;
+  min-width: 0;
+  max-width: none;
+  min-height: 0;
+  max-height: none;
+  padding: 15px 18px !important;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.login-submit.login-submit span:not(.login-submit__shine):not(.login-submit__sparkle) {
+  display: inline-block !important;
+}
+
+.login-submit.login-submit svg {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .login-submit.login-submit {
+    width: 100%;
+    padding: 15px 18px !important;
+  }
+}
+
+/* ── BUG 2: evitar que los inputs se desborden de la tarjeta ── */
+.login-card,
+.login-form,
+.login-field,
+.login-field__wrap {
+  min-width: 0;
+}
+
+.login-field__input {
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+  .login-field__input {
+    padding-left: 42px;
+    padding-right: 16px;
+  }
+  .login-field__icon {
+    left: 15px;
+  }
+}
