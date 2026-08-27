@@ -2896,8 +2896,8 @@ const translations = {
 
     "donar.form.upload.text":  "Drag an image here<br>or <strong>click to upload</strong>",
     "donar.form.terminos":     "By publishing, you accept RECO+'s <a href=\"#\">Terms of use</a>.",
-    "donar.form1.submit":      "✔ Publish donation",
-    "donar.form2.submit":      "✔ Publish request",
+    "donar.form1.submit":      "Publish donation",
+    "donar.form2.submit":      "Publish request",
 
     "donar.trust1.title": "Safe and trustworthy community",
     "donar.trust1.desc":  "We verify profiles and posts.",
@@ -2909,7 +2909,7 @@ const translations = {
     "donar.trust4.desc":  "Every action creates real change.",
 
     /* ── DONAR: home sections (choice, steps, stats, listings, tracker, cta) ── */
-    "donar.choice.title":       "🌿 What do you want to do today? 🌿",
+    "donar.choice.title":       "What do you want to do today?",
     "donar.choice.subtitle":    "Choose how you want to help or receive help.",
     "donar.choice.card1.title": "I have something to donate",
     "donar.choice.card1.desc":  "Post items, clothes, books, electronics or anything you no longer use and connect with someone who needs it.",
@@ -2918,7 +2918,7 @@ const translations = {
     "donar.choice.card2.desc":  "Request the items you need for yourself or your community. Someone might have exactly what you're looking for.",
     "donar.choice.card2.btn":   "Post a request →",
 
-    "donar.steps.title":    "🌿 Connect a need 🌿",
+    "donar.steps.title":    "Connect a need",
     "donar.steps.subtitle": "At RECO+ we connect what you no longer use with those who need it most.",
     "donar.steps.s1.title": "1. You post",
     "donar.steps.s1.desc":  "You post what you want to donate.",
@@ -2935,14 +2935,14 @@ const translations = {
     "donar.stats.comunidades":   "Communities connected",
     "donar.stats.reutilizados":  "Items reused",
 
-    "donar.listings.donaciones.title":   "🌿 Available donations",
-    "donar.listings.solicitudes.title":  "🌿 Donation requests",
+    "donar.listings.donaciones.title":   "Available donations",
+    "donar.listings.solicitudes.title":  "Donation requests",
     "donar.listings.verTodas":           "See all →",
 
-    "donar.campanas.title":              "🌿 Campaigns from our allies 🌿",
+    "donar.campanas.title":              "Campaigns from our allies",
     "donar.campanas.subtitle":           "Allied companies and centers on RECO+ share their upcoming recycling and donation campaigns here.",
-    "donar.campanas.reciclaje.title":    "♻️ Recycling campaigns",
-    "donar.campanas.donacion.title":     "🎁 Donation campaigns",
+    "donar.campanas.reciclaje.title":    "Recycling campaigns",
+    "donar.campanas.donacion.title":     "Donation campaigns",
     "donar.campanas.verMas":             "See more →",
     "donar.campanas.metaCard":           "🎯 Target:",
     "donar.campanas.errorCargar":        "Campaigns couldn't be loaded right now.",
@@ -3049,8 +3049,8 @@ const translations = {
     "donaciones.hero.title":    "All posts",
     "donaciones.hero.subtitle": "Explore all available donations and active help requests in the RECO+ community, with full details.",
     "donaciones.filter.todas":       "All",
-    "donaciones.filter.donaciones":  "🌿 Donations",
-    "donaciones.filter.solicitudes": "🙋 Help requests",
+    "donaciones.filter.donaciones":  "Donations",
+    "donaciones.filter.solicitudes": "Help requests",
     "donaciones.search.placeholder": "Search by category, description or location...",
     "donaciones.count.suffix": "active posts",
     "donaciones.cargando":     "Loading posts...",
@@ -4655,7 +4655,7 @@ function applyLang(lang) {
     // íconos internos. Antes solo cubría BUTTON, lo que hacía que
     // innerHTML borrara el SVG en <a class="bubble-nav__cta"> (CTA
     // "Únete") y otros enlaces/botones con ícono + texto plano.
-    if ((el.tagName === "BUTTON" || el.tagName === "A" || el.tagName === "SPAN" || el.tagName === "DIV") && el.querySelector("svg, img")) {
+    if ((el.tagName === "BUTTON" || el.tagName === "A" || el.tagName === "SPAN" || el.tagName === "DIV" || el.tagName === "H2" || el.tagName === "H3" || el.tagName === "H4") && el.querySelector("svg, img")) {
       // Buscar el primer nodo de texto directo no vacío y actualizarlo
       const textNode = Array.from(el.childNodes).find(
         n => n.nodeType === Node.TEXT_NODE && n.textContent.trim()

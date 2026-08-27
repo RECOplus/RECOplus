@@ -107,9 +107,12 @@ html.dark .reco-chatbot-fab__dot { border-color: #0f1a12; }
   50%      { transform: scale(1.25); opacity: 0.75; }
 }
 
-/* ── Oculta el widget flotante nativo de Botpress (ya usamos nuestro propio FAB) ── */
-#bp-web-widget-container .bpFab,
-#bp-web-widget-container [class*="floatingButton"] {
+/* ── Oculta el widget flotante nativo de Botpress (ya usamos nuestro propio FAB) ──
+   Nota: .bpFab vive directo en el documento (no dentro de un wrapper con id
+   #bp-web-widget-container, ese selector nunca hacía match), por eso se veía
+   el botón azul nativo de Botpress apilado junto al botón verde propio. ── */
+.bpFab,
+[class*="floatingButton"] {
   display: none !important;
 }
 

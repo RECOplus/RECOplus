@@ -16,3 +16,11 @@
 .redes a svg {
   vertical-align: middle;
 }
+
+/* donar.html: pin de ubicación inline junto al texto de ciudad en
+   las tarjetas de donaciones/solicitudes (.dh-card-meta no es flex) */
+.dh-card-meta svg {
+  vertical-align: -2px;
+  margin-right: 2px;
+  flex-shrink: 0;
+}
