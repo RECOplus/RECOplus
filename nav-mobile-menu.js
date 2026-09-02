@@ -59,6 +59,14 @@
       panel.appendChild(a.cloneNode(true));
     });
 
+    // Capa aditiva: el pill "Modo optimizado" (perf-pill) se oculta
+    // en ≤860px (responsive-site.css) porque no entraba junto al
+    // resto de acciones del navbar en móvil. Para que el control siga
+    // disponible también sin sesión (el modal de Ajustes, que tiene su
+    // propio switch, solo es accesible con sesión activa), se agrega
+    // el mismo toggle acá abajo, dentro del panel del menú.
+    appendPerfToggle(panel);
+
     document.body.appendChild(overlay);
     document.body.appendChild(panel);
 
@@ -111,8 +119,61 @@
       Array.prototype.forEach.call(freshLinks.querySelectorAll('a'), function (a) {
         panel.appendChild(a.cloneNode(true));
       });
+      // El toggle de Modo Optimizado no es un <a> clonado de
+      // .bubble-nav__links, así que se pierde con el innerHTML=''
+      // de arriba y hay que reagregarlo a mano.
+      appendPerfToggle(panel);
     });
   }
+
+  /* ══════════════════════════════════════════════
+     TOGGLE "MODO OPTIMIZADO" DENTRO DEL PANEL
+     ─────────────────────────────────────────────
+     Mismo control que el switch #ajPerfSwitch del modal de Ajustes
+     (ajustes-modal.js), delegando en window.RecoPerf (perf-mode.js)
+     para no duplicar el estado en dos localStorage distintos. Vive
+     acá para que también esté disponible sin sesión activa (el modal
+     de Ajustes solo se abre desde el chip de usuario, que requiere
+     sesión), ya que en móvil el pill del navbar (.perf-pill) se
+     oculta para no desbordar la fila de acciones (responsive-site.css).
+     ══════════════════════════════════════════════ */
+  var PERF_ICON =
+    '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M11 2 4 11h4.5L8 18l7-9h-4.5z"/></svg>';
+
+  function appendPerfToggle(panel) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'nav-mobile-panel__perf';
+    btn.id = 'navMobilePerfToggle';
+    var on = window.RecoPerf ? window.RecoPerf.isOn() : false;
+    btn.setAttribute('data-on', on ? 'true' : 'false');
+    btn.innerHTML =
+      PERF_ICON +
+      '<span data-i18n="ajustes.apariencia.perfLabel">Modo optimizado</span>' +
+      '<span class="nav-mobile-panel__perf-dot" aria-hidden="true"></span>';
+    btn.addEventListener('click', function () {
+      if (window.RecoPerf) window.RecoPerf.toggle();
+    });
+    panel.appendChild(btn);
+
+    // El panel se arma dinámicamente después de que i18n.js ya corrió
+    // su pasada inicial (mismo motivo que ajustes-modal.js al construir
+    // su modal): hay que traducir el span recién creado a mano con el
+    // idioma actual, o se queda en español aunque el sitio esté en EN.
+    if (typeof window.applyLang === 'function' && typeof window.currentLang === 'function') {
+      window.applyLang(window.currentLang());
+    }
+  }
+
+  // Mantiene el estado visual del toggle sincronizado si el usuario
+  // cambia el Modo Optimizado desde otro control (el pill de escritorio
+  // o el switch del modal de Ajustes) mientras el panel móvil existe.
+  document.addEventListener('reco:perfmodechange', function (e) {
+    var btn = document.getElementById('navMobilePerfToggle');
+    if (!btn) return;
+    var on = e && e.detail ? !!e.detail.on : (window.RecoPerf ? window.RecoPerf.isOn() : false);
+    btn.setAttribute('data-on', on ? 'true' : 'false');
+  });
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);

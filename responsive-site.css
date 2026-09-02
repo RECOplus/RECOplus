@@ -110,6 +110,22 @@ button {
     left: auto;
     max-width: calc(100vw - 32px);
   }
+  /* El pill de Modo Optimizado (perf-pill, inyectado por perf-mode.js
+     justo antes de dm-pill en TODAS las páginas) es un control más
+     que sumar a una fila que ya iba justa de espacio en móvil (tema +
+     idioma + hamburguesa + CTA, y con sesión activa también campana +
+     chip de cuenta) — ver el bloque ≤520px más abajo, que ya tuvo que
+     comprimir esos elementos para que el chip de cuenta no quedara
+     cortado por el overflow-x:auto de .bubble-nav__actions. Agregar
+     un pill más rompía ese balance otra vez para TODOS los usuarios,
+     no solo con sesión. En vez de seguir exprimiendo tamaños, se saca
+     el control de esta fila en móvil: el mismo toggle ya vive en el
+     modal de Ajustes (#ajPerfSwitch, solo con sesión) y, para que
+     también quede accesible sin sesión, nav-mobile-menu.js agrega el
+     mismo control dentro del panel del menú hamburguesa. */
+  .perf-pill {
+    display: none !important;
+  }
 }
 
 @media (max-width: 520px) {
