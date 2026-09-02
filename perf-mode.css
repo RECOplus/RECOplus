@@ -94,6 +94,26 @@ html.perf-mode *::after {
   animation: none !important;
 }
 
+/* — 2.2.1 FIX: bloques "reveal on scroll" (fade-in + translateY que
+   depende de su propia @keyframes, ej. .bn-reveal en banner-unificado.css,
+   o de que el IntersectionObserver de turno les agregue .is-visible,
+   ej. .rc-reveal/.gh-reveal/.dn-reveal) —
+   Al apagar TODA animación arriba (2.2), estos elementos se quedan
+   congelados en su estado inicial (opacity:0, con translateY), porque
+   nunca llegan a jugar el frame final que los deja visibles. Eso
+   incluía los banners .bn-hero de donar.html y guia.html: se veían
+   completamente invisibles en Modo Optimizado. Se fuerza aquí su
+   estado final "ya revelado" para que el contenido sea visible sin
+   necesidad de la animación ni de que se dispare el observer. */
+html.perf-mode .bn-reveal,
+html.perf-mode .rc-reveal,
+html.perf-mode .gh-reveal,
+html.perf-mode .dn-reveal,
+html.perf-mode .dh-glass.dn-reveal {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
 /* — 2.3 Fondos de "vidrio" → sólidos simples —
    Los gradientes de tinte/shine de liquid-glass.css se vuelven un
    fondo plano y liviano, usando las mismas variables de tema. */

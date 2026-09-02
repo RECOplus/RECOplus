@@ -1,40 +1,55 @@
 /**
- * session-bridge.js — Puente de sesión entre los dos dominios de RECO+.
+ * session-bridge.js — Puente de sesión Y de Modo Optimizado entre los
+ * dos dominios de RECO+.
  *
  * RECO+ está desplegado en DOS orígenes distintos:
  *   - https://recoplus.github.io/rEcOPlus-Final/   (GitHub Pages)
  *   - https://r-ec-o-plus-final.vercel.app/        (Vercel)
  *
  * localStorage está aislado por origen (es una protección del propio
- * navegador, no un bug), así que la sesión de Supabase guardada en un
- * dominio NO existe para el otro. Sin este puente, al hacer clic en un
- * link de la navbar que cruza de dominio (ej. "Reciclar" desde
- * cualquier página hacia reciclar.html en Vercel), el usuario "pierde"
- * la sesión en el dominio destino — y si en algún momento inició
- * sesión ahí con OTRA cuenta, ve esa cuenta vieja en vez de estar
- * desconectado, que es justo el bug reportado.
+ * navegador, no un bug), así que tanto la sesión de Supabase como la
+ * preferencia de Modo Optimizado (perf-mode.js, key "reco-perf-mode")
+ * guardadas en un dominio NO existen para el otro. Sin este puente:
+ *   a) al cruzar de dominio el usuario "pierde" la sesión — y si en
+ *      algún momento inició sesión ahí con OTRA cuenta, ve esa cuenta
+ *      vieja en vez de estar desconectado (bug original de este archivo).
+ *   b) si activó Modo Optimizado en un dominio, al cruzar al otro
+ *      (ej. navbar "Reciclar"/"Guía"/"Escáner" → Vercel) el modo se
+ *      apaga solo, porque ese dominio nunca vio el localStorage del
+ *      primero.
  *
- * CÓMO FUNCIONA:
+ * CÓMO FUNCIONA (mismo mecanismo para ambos, un solo viaje de ida):
  * 1) SALIDA: escucha (en fase de captura, antes que cualquier otro
  *    handler) los clics en cualquier <a> cuyo href apunte al OTRO
- *    dominio de RECO+. Si hay sesión activa, adjunta el access_token
- *    y el refresh_token como parámetros en la URL antes de navegar.
+ *    dominio de RECO+. SIEMPRE adjunta el estado actual de perf-mode
+ *    (rb_pm=1/0, lectura síncrona de localStorage). Si además hay
+ *    sesión activa, adjunta el access_token y el refresh_token.
  * 2) ENTRADA: al cargar cualquier página, si la URL trae esos
- *    parámetros, llama a supabase.auth.setSession() para reconstruir
- *    la sesión en este dominio, y de inmediato limpia los parámetros
- *    de la URL (history.replaceState) para no dejarlos visibles ni
- *    reenviarlos si el usuario recarga o comparte el link.
+ *    parámetros: aplica rb_pm de inmediato (clase perf-mode en <html>
+ *    + localStorage, y sincroniza window.RecoPerf/el pill del navbar
+ *    si perf-mode.js ya corrió) y llama a supabase.auth.setSession()
+ *    para reconstruir la sesión si vinieron tokens. Limpia los
+ *    parámetros de la URL de inmediato (history.replaceState) para no
+ *    dejarlos visibles ni reenviarlos si el usuario recarga o
+ *    comparte el link.
  *
  * REQUIERE, en TODAS las páginas, cargarse DESPUÉS de supabase-config.js
- * y ANTES de navbar-auth.js:
+ * y ANTES de navbar-auth.js. También debe cargarse DESPUÉS de
+ * perf-mode.js si se quiere que la entrada sincronice el pill del
+ * navbar sin esperar a DOMContentLoaded (no es obligatorio: si
+ * perf-mode.js aún no corrió, este archivo espera a DOMContentLoaded
+ * y sincroniza igual):
  *   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
  *   <script src="supabase-config.js"></script>
  *   <script src="auth.js"></script>
  *   <script src="session-bridge.js"></script>
  *   ...
  *   <script src="navbar-auth.js"></script>
+ *   ...
+ *   <script defer src="perf-mode.js"></script>
  *
- * Capa ADITIVA: no modifica auth.js, navbar-auth.js ni supabase-config.js.
+ * Capa ADITIVA: no modifica auth.js, navbar-auth.js, supabase-config.js
+ * ni perf-mode.js (solo lee/llama a su API pública window.RecoPerf).
  */
 (function () {
   'use strict';
@@ -46,6 +61,8 @@
 
   var PARAM_AT = 'rb_at'; // rb = "reco bridge", at = access_token
   var PARAM_RT = 'rb_rt'; // rt = refresh_token
+  var PARAM_PM = 'rb_pm'; // rb = "reco bridge", pm = perf-mode ("1"/"0")
+  var PERF_STORAGE_KEY = 'reco-perf-mode'; // misma key que usa perf-mode.js
 
   function ready(fn) {
     if (document.readyState === 'loading') {
@@ -67,8 +84,9 @@
     var url = new URL(window.location.href);
     var at = url.searchParams.get(PARAM_AT);
     var rt = url.searchParams.get(PARAM_RT);
+    var pm = url.searchParams.get(PARAM_PM);
 
-    if (!at || !rt) return;
+    if (!at && !rt && pm === null) return;
 
     // Limpia los parámetros de la URL de inmediato, ANTES de esperar
     // la respuesta de Supabase. Son tokens de sesión: cuanto menos
@@ -77,7 +95,34 @@
     // queda logueado en este dominio (igual que antes de este puente).
     url.searchParams.delete(PARAM_AT);
     url.searchParams.delete(PARAM_RT);
+    url.searchParams.delete(PARAM_PM);
     window.history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+
+    // Modo Optimizado (perf-mode): no depende de Supabase ni de sesión,
+    // así que se aplica siempre que venga en la URL, tenga o no tokens
+    // de auth el mismo link. Mismo mecanismo que perf-mode.js usa al
+    // cargar normalmente (clase en <html> + localStorage), pero acá
+    // además avisa a perf-mode.js si ya se inyectó (por si este script
+    // corre después) para que sincronice el pill del navbar sin esperar
+    // a que el usuario lo togglee manualmente.
+    if (pm === '1' || pm === '0') {
+      var pmOn = pm === '1';
+      document.documentElement.classList.toggle('perf-mode', pmOn);
+      try {
+        localStorage.setItem(PERF_STORAGE_KEY, pmOn ? 'true' : 'false');
+      } catch (e) {}
+      if (window.RecoPerf && typeof window.RecoPerf.set === 'function') {
+        window.RecoPerf.set(pmOn, { silent: true });
+      } else {
+        document.addEventListener('DOMContentLoaded', function () {
+          if (window.RecoPerf && typeof window.RecoPerf.set === 'function') {
+            window.RecoPerf.set(pmOn, { silent: true });
+          }
+        });
+      }
+    }
+
+    if (!at || !rt) return;
 
     if (!window.recoSupabase) {
       console.error('[RECO+] session-bridge: recoSupabase no está inicializado, no se puede restaurar la sesión.');
@@ -114,13 +159,31 @@
       // wa.me, Google Maps, etc.)
       if (destino.hostname === window.location.hostname) return;
       if (!esDominioReco(destino.hostname)) return;
-      if (!window.recoAuth) return;
+
+      // Modo Optimizado: lectura síncrona de localStorage (no depende
+      // de sesión/recoAuth), se adjunta siempre para que el estado
+      // viaje igual al dominio destino en cualquier escenario.
+      var pmOn = false;
+      try {
+        pmOn = localStorage.getItem(PERF_STORAGE_KEY) === 'true';
+      } catch (e2) {}
+      destino.searchParams.set(PARAM_PM, pmOn ? '1' : '0');
+
+      if (!window.recoAuth) {
+        // Sin recoAuth no hay tokens de sesión que resolver de forma
+        // asíncrona: se navega ya mismo al `destino` actualizado en
+        // memoria (el href original del <a> aún no tiene rb_pm).
+        e.preventDefault();
+        window.location.href = destino.href;
+        return;
+      }
 
       // No podemos esperar de forma síncrona a getSession() dentro
       // del evento de clic (es una Promise), así que: prevenimos la
       // navegación por defecto, resolvemos la sesión, y navegamos
       // manualmente en cuanto tengamos la respuesta (con o sin
-      // tokens — si no hay sesión, el link funciona igual que antes).
+      // tokens — si no hay sesión, el link funciona igual que antes,
+      // ya con rb_pm incluido).
       e.preventDefault();
 
       window.recoAuth.getSession().then(function (session) {

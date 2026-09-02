@@ -62,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---- Mini mapa (vista previa, no interactivo) ---- */
   const mapEl = document.getElementById('rcMiniMap');
   if (mapEl && window.L) {
-    const isDark = document.documentElement.classList.contains('dark');
     const map = L.map('rcMiniMap', {
       zoomControl: false,
       dragging: false,
@@ -73,15 +72,22 @@ document.addEventListener('DOMContentLoaded', () => {
       attributionControl: false
     }).setView([8.4333, -82.4333], 13);
 
-    // Expone la instancia globalmente para que capas aditivas externas
-    // (ej. reciclar-theme-sync.js, que cambia el tile al togglear el
-    // tema) puedan acceder al mini-mapa sin reestructurar este archivo.
+    // Expone la instancia globalmente por si alguna capa aditiva externa
+    // (ej. reciclar-minimap-real.js) necesita acceder al mini-mapa sin
+    // reestructurar este archivo.
     window.recoMiniMap = map;
 
-    const tileUrl = isDark
-      ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-      : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
-    window.recoMiniMapTileLayer = L.tileLayer(tileUrl, { maxZoom: 19 }).addTo(map);
+    // Tile único (OSM) para ambos temas: mismo criterio que initMap()
+    // en app.js — ya no dependemos de un servicio de teselas oscuras de
+    // terceros (CartoDB empezó a exigir API key para sus tiles
+    // gratuitos). El look oscuro lo da el filtro CSS de la sección 0 de
+    // mapa-dark-theme.css sobre .leaflet-tile-pane cuando html.dark
+    // está activo — no hace falta elegir ni cambiar de tile layer según
+    // el tema (reciclar-theme-sync.js, que hacía ese swap, quedó inerte).
+    window.recoMiniMapTileLayer = L.tileLayer(
+      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      { attribution: '© OpenStreetMap', maxZoom: 19 }
+    ).addTo(map);
 
     const dotIcon = L.divIcon({
       className: '',

@@ -1,24 +1,25 @@
 /* ══════════════════════════════════════════════════════════════
-   RECICLAR-THEME-SYNC.JS
-   Capa ADITIVA. No modifica darkmode.js ni reciclar.js (salvo dos
-   líneas en reciclar.js que exponen window.recoMiniMap /
-   window.recoMiniMapTileLayer, necesarias para que este script
-   pueda alcanzar el mini-mapa).
+   RECICLAR-THEME-SYNC.JS  — DEPRECADO / INERTE
 
-   Mismo problema y misma solución que mapa-theme-sync.js aplicado
-   al mini-mapa de vista previa (#rcMiniMap) en reciclar.html:
-   reciclar.js elegía el tile de Leaflet (CartoDB claro vs. oscuro)
-   una sola vez al crear el mapa, leyendo html.dark en ese instante.
-   darkmode.js no dispara ningún evento al togglear el tema, así que
-   si el usuario cambiaba de modo el mini-mapa se quedaba con las
-   teselas del tema anterior hasta recargar la página.
+   Este script existía para reemplazar en caliente el tile de
+   Leaflet del mini-mapa (#rcMiniMap, en reciclar.html) entre
+   CartoDB claro y oscuro cuando el usuario togglea el tema DESPUÉS
+   de que el mini-mapa ya cargó, porque antes reciclar.js elegía el
+   tile una sola vez al iniciar, leyendo html.dark en ese instante.
 
-   Un MutationObserver observa la clase del <html> (sin tocar
-   darkmode.js) y, cada vez que detecta que .dark se agregó o quitó,
-   reemplaza la capa de teselas activa por la correcta.
+   Ya no hace falta: reciclar.js ahora carga el MISMO tile de OSM en
+   ambos temas (mismo criterio que initMap() en app.js — CartoDB
+   empezó a exigir API key para sus tiles gratuitos, así que se
+   soltó esa dependencia), y el look oscuro lo da el filtro CSS de
+   la sección 0 de mapa-dark-theme.css sobre .leaflet-tile-pane, que
+   reacciona solo con la clase html.dark sin necesitar JS.
 
-   Cárgalo DESPUÉS de reciclar.js:
-   <script src="reciclar-theme-sync.js"></script>
+   Se dejó el archivo en el repo (en vez de borrarlo) por si en el
+   futuro se vuelve a necesitar swap de tiles por algún otro motivo,
+   pero el <script> que lo cargaba se sacó de reciclar.html: si lo
+   querés reactivar, actualizá tileUrlFor() primero (todavía apunta
+   al dark_all/light_all de CartoDB que pide key) y volvé a agregar
+   la etiqueta <script src="reciclar-theme-sync.js"></script>.
 ═══════════════════════════════════════════════════════════════ */
 (function () {
   "use strict";
