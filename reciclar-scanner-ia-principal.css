@@ -1,0 +1,96 @@
+/**
+ * reciclar-scanner-ia-principal.css
+ * ---------------------------------------------------------------
+ * Capa 100% aditiva sobre scanner-widget.css. No la modifica ni la
+ * reemplaza: solo agrega los estilos nuevos que necesita el cambio
+ * de producto en scanner-demo.html (promover el escaneo con IA a
+ * "modo principal" / resultado final, dejando MobileNet como vista
+ * previa en vivo mientras se apunta la cámara).
+ *
+ * Elementos nuevos que estiliza (agregados en scanner-demo.html):
+ *   - .reco-scanner__resultado-eyebrow  (etiqueta "Vista previa en
+ *     vivo" / "Resultado final" encima del nombre del material)
+ *   - .reco-scanner__preview-hint       (aviso bajo la tarjeta de
+ *     resultado, oculto una vez llega un resultado final de IA)
+ *   - .reco-scanner__controles--secundarios y .reco-scanner__btn--sutil
+ *     (Pausar/Detener cámara, ahora controles secundarios y más
+ *     discretos que el botón de IA)
+ * ---------------------------------------------------------------
+ */
+
+/* ---------- Eyebrow dentro de la tarjeta de resultado ---------- */
+.reco-scanner__resultado-eyebrow {
+  display: block;
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 2px;
+  color: var(--rs-texto-suave);
+}
+
+/* Mientras el resultado visible es la vista previa de MobileNet (sin
+   confirmar con IA todavía), el eyebrow queda en un tono neutro y la
+   tarjeta se ve ligeramente atenuada para no competir visualmente
+   con el CTA de IA. */
+.reco-scanner__resultado[data-fuente='preview'] .reco-scanner__resultado-eyebrow {
+  color: var(--rs-texto-suave);
+}
+.reco-scanner__resultado[data-fuente='preview'] {
+  opacity: 0.86;
+}
+
+/* Un resultado final (IA / Gemini) se resalta: eyebrow en el verde de
+   marca y borde algo más marcado, para que se note como "el dato que
+   cuenta" frente a la vista previa. */
+.reco-scanner__resultado[data-fuente='final'] {
+  opacity: 1;
+  border-color: color-mix(in srgb, var(--rs-verde) 45%, var(--rs-glass-border));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--rs-verde) 25%, transparent);
+}
+.reco-scanner__resultado[data-fuente='final'] .reco-scanner__resultado-eyebrow {
+  color: var(--rs-verde);
+}
+
+/* ---------- Aviso "orientativo" bajo la tarjeta ---------- */
+.reco-scanner__preview-hint {
+  margin: 8px 4px 0;
+  font-size: 0.74rem;
+  line-height: 1.4;
+  color: var(--rs-texto-suave);
+  text-align: center;
+}
+
+/* ---------- Controles secundarios (Pausar / Detener cámara) ---------- */
+.reco-scanner__controles--secundarios {
+  margin-top: 10px;
+}
+.reco-scanner__controles--secundarios .reco-scanner__btn--sutil {
+  flex: 1;
+  background: transparent;
+  border: 1px solid var(--rs-glass-border);
+  color: var(--rs-texto-suave);
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 9px 14px;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.reco-scanner__controles--secundarios .reco-scanner__btn--sutil:hover {
+  background: var(--rs-glass-bg);
+  color: var(--rs-texto);
+}
+
+/* ---------- Refuerzo visual del CTA de IA como acción principal ---------- */
+.reco-scanner__btn--ia {
+  font-size: 0.98rem;
+  padding: 14px 16px;
+  box-shadow: 0 8px 24px rgba(77, 110, 224, 0.28);
+}
+.reco-scanner__btn--ia:not(:disabled):hover {
+  box-shadow: 0 10px 28px rgba(77, 110, 224, 0.36);
+}
+
+@media (max-width: 480px) {
+  .reco-scanner__resultado-eyebrow { font-size: 0.62rem; }
+}

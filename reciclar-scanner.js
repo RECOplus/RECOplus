@@ -416,7 +416,11 @@
      comparar. Si el backend no está desplegado o falla, el resto
      del escáner sigue funcionando normal.
      ────────────────────────────────────────────────────────── */
-  function runIAScan(iaBox, iaBtn) {
+  // auto: true cuando se dispara solo (apenas se analiza la foto),
+  // false cuando el usuario pulsa el botón manualmente (reintento).
+  // Solo afecta los textos/estados iniciales del botón; la lógica de
+  // cuota y consulta es idéntica en ambos casos.
+  function runIAScan(iaBox, iaBtn, auto) {
     if (!lastPhotoDataUrl) return;
 
     iaBtn.disabled = true;
@@ -431,6 +435,7 @@
           '<div class="rc-scan-result__body">' +
             '<div class="rc-scan-result__title">' + tr("rscan.ia.limiteTitulo", "Alcanzaste tu límite diario de escaneos con IA") + '</div>' +
             '<p class="rc-scan-result__hint">' + tr("rscan.ia.limiteDesc", 'Tu plan ' + cuota.nombrePlan + ' incluye ' + cuota.limite + ' escaneos con IA al día. Mejora tu plan para escanear sin límites.', { plan: cuota.nombrePlan, limite: cuota.limite }) + '</p>' +
+            (auto ? '<p class="rc-scan-result__hint">' + tr("rscan.ia.resultadoLocalNota", "Mientras tanto, te mostramos una estimación rápida arriba (sin verificar con IA).") + '</p>' : '') +
             '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">' +
               '<button type="button" class="rc-scan-ia-btn" data-abrir-suscripcion>' + tr("rscan.ia.verPlanesBtn", "Ver planes →") + '</button>' +
               '<button type="button" class="rc-scan-ia-btn" id="rcScanPagoSimuladoBtn">' + tr("rscan.ia.pagoSimuladoBtn", "🧪 Simular pago Premium") + '</button>' +

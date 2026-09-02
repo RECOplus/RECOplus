@@ -35,25 +35,25 @@
 //    se sobreescriben en vivo desde Supabase cuando están disponibles.
 // -----------------------------------------------------------------
 export const MATERIALES = {
-  plastico: { id: 'plastico', nombre: 'Plástico', color: '#3aa8ff', icono: '♳' },
-  vidrio: { id: 'vidrio', nombre: 'Vidrio', color: '#2fbf71', icono: '🍾' },
-  metal: { id: 'metal', nombre: 'Metal', color: '#b0b7c0', icono: '🥫' },
-  papel: { id: 'papel', nombre: 'Papel', color: '#d9b26a', icono: '📄' },
-  libros: { id: 'libros', nombre: 'Libros', color: '#b5793a', icono: '📚' },
-  electronicos: { id: 'electronicos', nombre: 'Electrónicos', color: '#c04dcc', icono: '🔌' },
-  celulares: { id: 'celulares', nombre: 'Celulares', color: '#9b59d6', icono: '📱' },
-  ropa: { id: 'ropa', nombre: 'Ropa', color: '#e07a9c', icono: '👕' },
-  muebles: { id: 'muebles', nombre: 'Muebles', color: '#8a6d4a', icono: '🪑' },
-  juguetes: { id: 'juguetes', nombre: 'Juguetes', color: '#f2994a', icono: '🧸' },
-  baterias: { id: 'baterias', nombre: 'Baterías', color: '#e0483a', icono: '🔋' },
-  bombillos: { id: 'bombillos', nombre: 'Bombillos', color: '#e8c547', icono: '💡' },
-  no_reciclable: { id: 'no_reciclable', nombre: 'No identificado', color: '#7a7a7a', icono: '🚫' },
+  plastico: { id: 'plastico', nombre: 'Plástico', nombre_en: 'Plastic', color: '#3aa8ff', icono: '♳' },
+  vidrio: { id: 'vidrio', nombre: 'Vidrio', nombre_en: 'Glass', color: '#2fbf71', icono: '🍾' },
+  metal: { id: 'metal', nombre: 'Metal', nombre_en: 'Metal', color: '#b0b7c0', icono: '🥫' },
+  papel: { id: 'papel', nombre: 'Papel', nombre_en: 'Paper', color: '#d9b26a', icono: '📄' },
+  libros: { id: 'libros', nombre: 'Libros', nombre_en: 'Books', color: '#b5793a', icono: '📚' },
+  electronicos: { id: 'electronicos', nombre: 'Electrónicos', nombre_en: 'Electronics', color: '#c04dcc', icono: '🔌' },
+  celulares: { id: 'celulares', nombre: 'Celulares', nombre_en: 'Cell phones', color: '#9b59d6', icono: '📱' },
+  ropa: { id: 'ropa', nombre: 'Ropa', nombre_en: 'Clothing', color: '#e07a9c', icono: '👕' },
+  muebles: { id: 'muebles', nombre: 'Muebles', nombre_en: 'Furniture', color: '#8a6d4a', icono: '🪑' },
+  juguetes: { id: 'juguetes', nombre: 'Juguetes', nombre_en: 'Toys', color: '#f2994a', icono: '🧸' },
+  baterias: { id: 'baterias', nombre: 'Baterías', nombre_en: 'Batteries', color: '#e0483a', icono: '🔋' },
+  bombillos: { id: 'bombillos', nombre: 'Bombillos', nombre_en: 'Light bulbs', color: '#e8c547', icono: '💡' },
+  no_reciclable: { id: 'no_reciclable', nombre: 'No identificado', nombre_en: 'Not identified', color: '#7a7a7a', icono: '🚫' },
   // Estado especial: no es que el objeto no sea reciclable, es que el
   // modelo no tiene confianza suficiente en NINGUNA de sus predicciones
   // para siquiera aventurar una categoría. Se distingue de
   // 'no_reciclable' porque el mensaje correcto para el usuario es
   // "acércate más o mejora la luz", no "esto no se recicla".
-  sin_confianza: { id: 'sin_confianza', nombre: 'No estoy seguro', color: '#a8a8a8', icono: '❓' },
+  sin_confianza: { id: 'sin_confianza', nombre: 'No estoy seguro', nombre_en: 'Not sure', color: '#a8a8a8', icono: '❓' },
 };
 
 // -----------------------------------------------------------------
@@ -171,6 +171,20 @@ function normalizarLabel(labelCrudo) {
     .filter(Boolean);
 }
 
+// Idioma activo del sitio (misma clave de localStorage que usa
+// i18n.js). Se usa como respaldo para elegir nombre_en/nombre
+// mientras Supabase (fuente de verdad real) todavía no responde o
+// no está disponible — mismo patrón que scanner-core.js/reciclar-scanner.js.
+function _isEnglish() {
+  return (typeof window !== 'undefined') &&
+    typeof window.localStorage !== 'undefined' &&
+    window.localStorage.getItem('reco-lang') === 'en';
+}
+
+function _nombreLocalizado(material) {
+  return (_isEnglish() && material.nombre_en) || material.nombre;
+}
+
 // -----------------------------------------------------------------
 // 4. Función principal de mapeo
 // -----------------------------------------------------------------
@@ -201,6 +215,7 @@ export function mapLabelToMaterial(labelMobileNet, confianza = 1) {
         const material = MATERIALES[regla.material];
         return {
           ...material,
+          nombre: _nombreLocalizado(material),
           labelOriginal: labelMobileNet,
           coincidenciaKeyword: match,
           confianzaBaja: confianza < 0.4,
@@ -213,7 +228,7 @@ export function mapLabelToMaterial(labelMobileNet, confianza = 1) {
   // se muestra igual para que el usuario decida)
   return {
     ...MATERIALES.no_reciclable,
-    nombre: 'No identificado',
+    nombre: _nombreLocalizado(MATERIALES.no_reciclable),
     labelOriginal: labelMobileNet,
     coincidenciaKeyword: null,
     confianzaBaja: confianza < 0.4,
@@ -248,6 +263,7 @@ export function resolverMaterialDesdePredicciones(predicciones, opciones = {}) {
   if (predicciones[0].confidence < confianzaMinima) {
     return {
       ...MATERIALES.sin_confianza,
+      nombre: _nombreLocalizado(MATERIALES.sin_confianza),
       labelOriginal: predicciones[0].label,
       coincidenciaKeyword: null,
       confianzaBaja: true,

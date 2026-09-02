@@ -37,6 +37,15 @@ import { resolverMaterialDesdePredicciones, MATERIALES } from './material-map.js
  */
 let _categoriasSupabasePromise = null;
 
+// Idioma activo del sitio (misma clave de localStorage que usa
+// i18n.js y reciclar-scanner.js). Se usa para elegir, de los datos de
+// Supabase, las columnas "_en" cuando el sitio está en inglés.
+function _isEnglish() {
+  return (typeof window !== 'undefined') &&
+    typeof window.localStorage !== 'undefined' &&
+    window.localStorage.getItem('reco-lang') === 'en';
+}
+
 function _cargarCategoriasSupabase() {
   if (_categoriasSupabasePromise) return _categoriasSupabasePromise;
 
@@ -47,7 +56,7 @@ function _cargarCategoriasSupabase() {
 
   _categoriasSupabasePromise = window.recoSupabase
     .from('categorias')
-    .select('id, nombre, reciclable, requiere_punto_especial, badge, mensaje_escaner')
+    .select('id, nombre, reciclable, requiere_punto_especial, badge, mensaje_escaner, nombre_en, badge_en, mensaje_escaner_en')
     .then((res) => {
       if (res.error || !res.data) {
         console.warn('[RecoScanner] No se pudieron cargar categorías de Supabase, usando respaldo local:', res.error && res.error.message);
@@ -76,11 +85,12 @@ function _enriquecerConCategoriaSupabase(material, categoriasMapa) {
   if (!material || !categoriasMapa) return material;
   const fila = categoriasMapa[material.id];
   if (!fila) return material;
+  const en = _isEnglish();
   return {
     ...material,
-    nombre: fila.nombre || material.nombre,
-    badge: fila.badge || material.badge,
-    mensaje: fila.mensaje_escaner || material.mensaje,
+    nombre: (en && fila.nombre_en) || fila.nombre || material.nombre,
+    badge: (en && fila.badge_en) || fila.badge || material.badge,
+    mensaje: (en ? (fila.mensaje_escaner_en || fila.mensaje_escaner) : fila.mensaje_escaner) || material.mensaje,
     reciclable: fila.reciclable !== false,
     requierePuntoEspecial: !!fila.requiere_punto_especial,
   };
@@ -585,7 +595,7 @@ export class RecoScanner {
       const respuesta = await fetch(this.config.endpointClasificacionIA, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ image: base64 }),
+        body: JSON.stringify({ image: base64, idioma: _isEnglish() ? 'en' : 'es' }),
       });
 
       const datos = await respuesta.json().catch(() => null);
@@ -596,9 +606,10 @@ export class RecoScanner {
       }
 
       const base = MATERIALES[datos.id] || MATERIALES.no_reciclable;
+      const nombreBase = (_isEnglish() && base.nombre_en) || base.nombre;
       const materialCrudo = {
         ...base,
-        nombre: base.nombre,
+        nombre: nombreBase,
         labelOriginal: datos.razon || '',
         coincidenciaKeyword: datos.razon || null,
         confianzaBaja: datos.confianza === 'baja',

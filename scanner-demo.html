@@ -32,6 +32,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="scanner-widget.css" />
+<!-- Capa aditiva: escaneo con IA como resultado final / modo principal, MobileNet como vista previa en vivo -->
+<link rel="stylesheet" href="reciclar-scanner-ia-principal.css" />
 
 <!-- Navbar compartida (idéntica al resto de páginas) -->
 <link rel="stylesheet" href="navbar.css" />
@@ -264,7 +266,7 @@
   <header class="encabezado">
     <span class="eyebrow" data-i18n="scannerdemo.eyebrow">RECO+ · Escáner</span>
     <h1 data-i18n="scannerdemo.title">¿Qué estás reciclando?</h1>
-    <p data-i18n="scannerdemo.subtitle">Apunta la cámara al objeto. Lo identificamos y te decimos en qué categoría va.</p>
+    <p data-i18n="scannerdemo.subtitle">Apunta la cámara: verás una vista previa en vivo. Cuando el objeto esté centrado, confirma con IA para tu resultado final.</p>
   </header>
 
   <!-- Widget del escáner -->
@@ -286,31 +288,35 @@
       </div>
     </div>
 
-    <div class="reco-scanner__resultado" id="recoResultado" data-visible="false">
+    <div class="reco-scanner__resultado" id="recoResultado" data-visible="false" data-fuente="preview">
       <div class="reco-scanner__resultado-icono" id="recoIcono">♳</div>
       <div class="reco-scanner__resultado-texto">
+        <span class="reco-scanner__resultado-eyebrow" id="recoResultadoEyebrow" data-i18n="scannerdemo.preview.eyebrow">Vista previa en vivo</span>
         <div class="reco-scanner__resultado-material" id="recoMaterialNombre">—</div>
         <span class="reco-scanner__resultado-badge" id="recoBadge" style="display:none"></span>
         <div class="reco-scanner__resultado-detalle" id="recoDetalle" data-i18n="scannerdemo.resultado.esperando">Esperando objeto...</div>
       </div>
       <div class="reco-scanner__resultado-confianza" id="recoConfianza">—</div>
     </div>
-
-    <div class="reco-scanner__controles">
-      <button class="reco-scanner__btn" id="recoBtnPausar" disabled data-i18n="scannerdemo.btn.pausar">Pausar</button>
-      <button class="reco-scanner__btn reco-scanner__btn--primario" id="recoBtnDetener" disabled data-i18n="scannerdemo.btn.detener">Detener cámara</button>
-    </div>
+    <p class="reco-scanner__preview-hint" id="recoPreviewHint" data-i18n="scannerdemo.preview.hint">
+      Orientativo mientras apuntas. Para el resultado final, usa "Confirmar con IA".
+    </p>
 
     <div class="reco-scanner__controles">
       <button class="reco-scanner__btn reco-scanner__btn--ia" id="recoBtnIA" disabled data-i18n="scannerdemo.btn.ia">
-        ✨ Escaneo preciso (IA)
+        ✨ Confirmar con IA (resultado final)
       </button>
     </div>
 
     <div class="reco-scanner__controles" id="recoVolverEscanearWrap" hidden>
       <button class="reco-scanner__btn reco-scanner__btn--primario" id="recoBtnVolverEscanear" data-i18n="scannerdemo.btn.volverEscanear">
-        🔄 Volver a escanear
+        🔄 Escanear otro objeto
       </button>
+    </div>
+
+    <div class="reco-scanner__controles reco-scanner__controles--secundarios">
+      <button class="reco-scanner__btn reco-scanner__btn--sutil" id="recoBtnPausar" disabled data-i18n="scannerdemo.btn.pausar">Pausar vista previa</button>
+      <button class="reco-scanner__btn reco-scanner__btn--sutil" id="recoBtnDetener" disabled data-i18n="scannerdemo.btn.detener">Detener cámara</button>
     </div>
   </div>
 
@@ -398,6 +404,8 @@
   const detalleEl = document.getElementById('recoDetalle');
   const confianzaEl = document.getElementById('recoConfianza');
   const historialEl = document.getElementById('recoHistorial');
+  const recoResultadoEyebrowEl = document.getElementById('recoResultadoEyebrow');
+  const previewHintEl = document.getElementById('recoPreviewHint');
 
   let ultimoMaterialId = null;
   let historialSet = new Set();
@@ -440,16 +448,16 @@
         // este estado) y se muestra "Volver a escanear" como única vía
         // para reactivar la clasificación en vivo.
         btnIA.disabled = true;
-        btnIA.textContent = tr('scannerdemo.btn.ia', '✨ Escaneo preciso (IA)');
+        btnIA.textContent = tr('scannerdemo.btn.ia', '✨ Confirmar con IA (resultado final)');
         btnPausar.disabled = true;
         volverEscanearWrap.hidden = false;
       } else if (subEstadoIA) {
         btnIA.disabled = true;
-        btnIA.textContent = subEstadoIA === 'capturando' ? tr('scannerdemo.btn.iaCapturando', '📸 Capturando...') : tr('scannerdemo.btn.iaConsultando', '🔎 Consultando IA...');
+        btnIA.textContent = subEstadoIA === 'capturando' ? tr('scannerdemo.btn.iaCapturando', '📸 Capturando...') : tr('scannerdemo.btn.iaConsultando', '🔎 Analizando con IA...');
         volverEscanearWrap.hidden = true;
       } else {
         btnIA.disabled = !camaraActiva;
-        btnIA.textContent = tr('scannerdemo.btn.ia', '✨ Escaneo preciso (IA)');
+        btnIA.textContent = tr('scannerdemo.btn.ia', '✨ Confirmar con IA (resultado final)');
         volverEscanearWrap.hidden = true;
       }
     },
@@ -459,6 +467,17 @@
       resultadoEl.style.setProperty('--rs-material-color', material.color);
       iconoEl.textContent = material.icono;
       materialNombreEl.textContent = material.nombre;
+
+      // Distingue visualmente un resultado final de IA (Gemini) de la
+      // vista previa en vivo de MobileNet: cambia el eyebrow y oculta
+      // el aviso "orientativo" una vez que ya hay un resultado final.
+      const esFinal = meta && meta.fuente === 'gemini';
+      resultadoEl.setAttribute('data-fuente', esFinal ? 'final' : 'preview');
+      const trEyebrow = (key, fb) => (window.t ? t(key) : fb);
+      recoResultadoEyebrowEl.textContent = esFinal
+        ? trEyebrow('scannerdemo.resultado.finalEyebrow', 'Resultado final')
+        : trEyebrow('scannerdemo.preview.eyebrow', 'Vista previa en vivo');
+      if (previewHintEl) previewHintEl.style.display = esFinal ? 'none' : '';
 
       // Badge de reciclabilidad (Reciclable / Reutilizable / Requiere
       // punto especial): viene de la tabla `categorias` de Supabase.
@@ -550,8 +569,8 @@
   botonOverlay.addEventListener('click', () => scanner.iniciar());
 
   btnPausar.addEventListener('click', () => {
-    const textoPausar = (window.t ? t('scannerdemo.btn.pausar') : 'Pausar');
-    const textoReanudar = (window.t ? t('scannerdemo.btn.reanudar') : 'Reanudar');
+    const textoPausar = (window.t ? t('scannerdemo.btn.pausar') : 'Pausar vista previa');
+    const textoReanudar = (window.t ? t('scannerdemo.btn.reanudar') : 'Reanudar vista previa');
     if (btnPausar.textContent === textoPausar) {
       scanner.pausar();
       btnPausar.textContent = textoReanudar;
@@ -565,7 +584,16 @@
 
   btnIA.addEventListener('click', () => scanner.escanearPreciso());
 
-  btnVolverEscanear.addEventListener('click', () => scanner.volverAEscanear());
+  btnVolverEscanear.addEventListener('click', () => {
+    scanner.volverAEscanear();
+    // El resultado de IA en pantalla vuelve a quedar "desactualizado"
+    // en cuanto el bucle local retoma: se anticipa el eyebrow a vista
+    // previa para no dejar "Resultado final" pegado a un dato viejo.
+    resultadoEl.setAttribute('data-fuente', 'preview');
+    const trEyebrow = (key, fb) => (window.t ? t(key) : fb);
+    recoResultadoEyebrowEl.textContent = trEyebrow('scannerdemo.preview.eyebrow', 'Vista previa en vivo');
+    if (previewHintEl) previewHintEl.style.display = '';
+  });
 
   window.addEventListener('beforeunload', () => scanner.destruir());
 </script>
