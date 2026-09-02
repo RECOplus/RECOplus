@@ -1,0 +1,128 @@
+/**
+ * scanner-camera-fx.css
+ * ---------------------------------------------------------------
+ * Capa 100% aditiva sobre scanner-widget.css / liquid-glass-scanner-demo.css.
+ * No las modifica: agrega el "efecto de disparo" que se dispara justo
+ * cuando el usuario toca "Confirmar con IA" en scanner-demo.html.
+ *
+ * POR QUÉ: hasta ahora, al tocar el botón de IA la cámara seguía
+ * corriendo en vivo mientras Gemini analizaba una foto que ya había
+ * quedado atrás (el frame se captura en ese instante, pero el video
+ * seguía moviéndose). Esto genera un pequeño desfase: lo que el
+ * usuario ve ya no es exactamente lo que se está evaluando.
+ *
+ * Este archivo, junto con el JS agregado en scanner-demo.html, pausa
+ * el <video> en el momento exacto de la captura (el mismo frame que
+ * viaja a Gemini), y lo acompaña de:
+ *   - un flash + barrido tipo obturador de cámara (sensación de "clic")
+ *   - una viñeta sutil + insignia "Foto capturada" mientras el video
+ *     está congelado, para dejar claro que ya no es cámara en vivo
+ *
+ * Elementos nuevos (agregados en scanner-demo.html, dentro de
+ * .reco-scanner__stage):
+ *   - .reco-scanner__flash          (destello de disparo)
+ *   - .reco-scanner__shutter-line   (barrido rápido tipo obturador)
+ *   - .reco-scanner__captured-badge (insignia "Foto capturada")
+ * Clase de estado nueva:
+ *   - .reco-scanner__stage.is-frozen (mientras el video está en pausa)
+ * ---------------------------------------------------------------
+ */
+
+/* ---------- Destello de disparo ---------- */
+.reco-scanner__flash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0) 70%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+.reco-scanner__flash.is-firing {
+  animation: reco-flash-pop 0.5s cubic-bezier(.2, .8, .3, 1) both;
+}
+@keyframes reco-flash-pop {
+  0%   { opacity: 0; }
+  12%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ---------- Barrido tipo obturador (sensación de "clic") ---------- */
+.reco-scanner__shutter-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #fff, var(--rs-verde, #2d8c4e), transparent);
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.85));
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+.reco-scanner__shutter-line.is-firing {
+  animation: reco-shutter-sweep 0.45s cubic-bezier(.3, .8, .3, 1) both;
+}
+@keyframes reco-shutter-sweep {
+  0%   { top: 0%;   opacity: 1; }
+  88%  { top: 96%;  opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* ---------- Video congelado (frame ya capturado) ---------- */
+.reco-scanner__stage.is-frozen .reco-scanner__video {
+  filter: saturate(0.85) brightness(0.92);
+}
+.reco-scanner__stage.is-frozen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(5, 10, 6, 0.35) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+/* La línea de escaneo ambiental y el pulso de las esquinas no tienen
+   sentido sobre un frame congelado: se apagan mientras dure. */
+.reco-scanner__stage.is-frozen .reco-scanner__linea-scan {
+  opacity: 0 !important;
+  animation: none !important;
+}
+.reco-scanner__stage.is-frozen {
+  animation-play-state: paused !important;
+}
+
+/* ---------- Insignia "Foto capturada" ---------- */
+.reco-scanner__captured-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px 5px 9px;
+  border-radius: 999px;
+  background: rgba(10, 16, 12, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #f2f5f2;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity .3s ease, transform .3s ease;
+  pointer-events: none;
+  z-index: 4;
+}
+.reco-scanner__captured-badge.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reco-scanner__flash.is-firing,
+  .reco-scanner__shutter-line.is-firing {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+}

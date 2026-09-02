@@ -34,6 +34,8 @@
 <link rel="stylesheet" href="scanner-widget.css" />
 <!-- Capa aditiva: escaneo con IA como resultado final / modo principal, MobileNet como vista previa en vivo -->
 <link rel="stylesheet" href="reciclar-scanner-ia-principal.css" />
+<!-- Capa aditiva: efecto de disparo (flash + freeze del frame) al confirmar con IA -->
+<link rel="stylesheet" href="scanner-camera-fx.css" />
 
 <!-- Navbar compartida (idéntica al resto de páginas) -->
 <link rel="stylesheet" href="navbar.css" />
@@ -266,7 +268,7 @@
   <header class="encabezado">
     <span class="eyebrow" data-i18n="scannerdemo.eyebrow">RECO+ · Escáner</span>
     <h1 data-i18n="scannerdemo.title">¿Qué estás reciclando?</h1>
-    <p data-i18n="scannerdemo.subtitle">Apunta la cámara: verás una vista previa en vivo. Cuando el objeto esté centrado, confirma con IA para tu resultado final.</p>
+    <p data-i18n="scannerdemo.subtitle">Apunta la cámara al objeto. Cuando esté centrado, toca "Confirmar con IA" para ver el resultado.</p>
   </header>
 
   <!-- Widget del escáner -->
@@ -286,6 +288,15 @@
         </div>
         <button class="reco-scanner__overlay-boton" id="recoBotonOverlay" data-i18n="scannerdemo.btn.iniciar">Iniciar escáner</button>
       </div>
+
+      <!-- Efecto de disparo al confirmar con IA: flash + barrido tipo
+           obturador + insignia mientras el frame queda congelado. -->
+      <div class="reco-scanner__flash" id="recoFlash" aria-hidden="true"></div>
+      <div class="reco-scanner__shutter-line" id="recoShutterLine" aria-hidden="true"></div>
+      <div class="reco-scanner__captured-badge" id="recoCapturedBadge" aria-hidden="true">
+        <span aria-hidden="true">📸</span>
+        <span data-i18n="scannerdemo.captured">Foto capturada</span>
+      </div>
     </div>
 
     <div class="reco-scanner__resultado" id="recoResultado" data-visible="false" data-fuente="preview">
@@ -299,7 +310,7 @@
       <div class="reco-scanner__resultado-confianza" id="recoConfianza">—</div>
     </div>
     <p class="reco-scanner__preview-hint" id="recoPreviewHint" data-i18n="scannerdemo.preview.hint">
-      Orientativo mientras apuntas. Para el resultado final, usa "Confirmar con IA".
+      Apunta al objeto y toca "Confirmar con IA" para ver el resultado.
     </p>
 
     <div class="reco-scanner__controles">
@@ -396,6 +407,10 @@
   const btnIA = document.getElementById('recoBtnIA');
   const volverEscanearWrap = document.getElementById('recoVolverEscanearWrap');
   const btnVolverEscanear = document.getElementById('recoBtnVolverEscanear');
+  const stageEl = contenedor.querySelector('.reco-scanner__stage');
+  const flashEl = document.getElementById('recoFlash');
+  const shutterLineEl = document.getElementById('recoShutterLine');
+  const capturedBadgeEl = document.getElementById('recoCapturedBadge');
 
   const resultadoEl = document.getElementById('recoResultado');
   const iconoEl = document.getElementById('recoIcono');
@@ -407,6 +422,32 @@
   const recoResultadoEyebrowEl = document.getElementById('recoResultadoEyebrow');
   const previewHintEl = document.getElementById('recoPreviewHint');
 
+  /* ── Efecto de disparo: flash + freeze del frame + insignia ──
+     Se dispara justo cuando el usuario toca "Confirmar con IA", sobre
+     el MISMO frame que scanner-core.js captura y manda a Gemini (ver
+     escanearPreciso() / _capturarFrameComoBase64()): antes, el video
+     seguía corriendo en vivo mientras se analizaba una foto que ya
+     había quedado atrás. Pausar el <video> en este instante deja
+     claro, visualmente, que lo que se ve es la foto evaluada. */
+  function dispararEfectoCaptura() {
+    videoEl.pause();
+    stageEl.classList.add('is-frozen');
+    capturedBadgeEl.classList.add('is-visible');
+    flashEl.classList.remove('is-firing');
+    shutterLineEl.classList.remove('is-firing');
+    void flashEl.offsetWidth; // reinicia la animación si se dispara dos veces seguidas
+    flashEl.classList.add('is-firing');
+    shutterLineEl.classList.add('is-firing');
+  }
+
+  function reanudarVideoEnVivo() {
+    stageEl.classList.remove('is-frozen');
+    capturedBadgeEl.classList.remove('is-visible');
+    if (videoEl.paused && videoEl.srcObject) {
+      videoEl.play().catch(() => {});
+    }
+  }
+
   let ultimoMaterialId = null;
   let historialSet = new Set();
 
@@ -414,6 +455,12 @@
     videoEl,
     onEstado: (estado, detalle) => {
       contenedor.setAttribute('data-estado', estado);
+
+      // Si la cámara se detiene o el escáner arranca de nuevo, se
+      // limpia cualquier freeze/insignia que hubiera quedado de un
+      // escaneo IA anterior (evita un frame congelado "fantasma" la
+      // próxima vez que se active la cámara).
+      if (estado === ESTADOS.INACTIVO) reanudarVideoEnVivo();
 
       const tr = (key, fb) => (window.t ? t(key) : fb);
       const textos = {
@@ -463,6 +510,12 @@
     },
 
     onResultado: (material, prediccionesCrudas, meta) => {
+      // Solo se pinta el resultado cuando viene del botón "Confirmar
+      // con IA" (Gemini). El bucle local de MobileNet sigue corriendo
+      // igual (sirve para el suavizado por votación interno), pero ya
+      // no se refleja en pantalla mientras no haya un resultado final.
+      if (!meta || meta.fuente !== 'gemini') return;
+
       resultadoEl.setAttribute('data-visible', 'true');
       resultadoEl.style.setProperty('--rs-material-color', material.color);
       iconoEl.textContent = material.icono;
@@ -539,6 +592,10 @@
       // Se muestra el error en el mismo lugar donde aparecen los
       // resultados, y se restaura solo.
       if (contexto === 'escaneoPreciso') {
+        // El escaneo con IA falló: no hay resultado nuevo que mostrar
+        // sobre el frame congelado, así que se reanuda el video en
+        // vivo para que el usuario pueda apuntar de nuevo.
+        reanudarVideoEnVivo();
         detalleEl.textContent = mensajeErrorLegible(error);
         console.error(`[RecoScanner] Error en "${contexto}":`, error);
         return;
@@ -582,13 +639,18 @@
 
   btnDetener.addEventListener('click', () => scanner.detener());
 
-  btnIA.addEventListener('click', () => scanner.escanearPreciso());
+  btnIA.addEventListener('click', () => {
+    dispararEfectoCaptura();
+    scanner.escanearPreciso();
+  });
 
   btnVolverEscanear.addEventListener('click', () => {
+    reanudarVideoEnVivo();
     scanner.volverAEscanear();
-    // El resultado de IA en pantalla vuelve a quedar "desactualizado"
-    // en cuanto el bucle local retoma: se anticipa el eyebrow a vista
-    // previa para no dejar "Resultado final" pegado a un dato viejo.
+    // Ya no hay resultado que mostrar hasta el próximo "Confirmar con
+    // IA": se oculta la tarjeta en vez de dejar pegado el resultado
+    // final anterior.
+    resultadoEl.setAttribute('data-visible', 'false');
     resultadoEl.setAttribute('data-fuente', 'preview');
     const trEyebrow = (key, fb) => (window.t ? t(key) : fb);
     recoResultadoEyebrowEl.textContent = trEyebrow('scannerdemo.preview.eyebrow', 'Vista previa en vivo');
