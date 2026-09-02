@@ -282,6 +282,8 @@ html.dark .dm-pill__sun { opacity: 0.38; }
   <!-- Capa aditiva: menú hamburguesa móvil (los links del navbar se ocultan en ≤860px sin esto) -->
   <link rel="stylesheet" href="nav-mobile-menu.css">
   <link rel="stylesheet" href="responsive-site.css">
+  <!-- Capa aditiva: Modo Optimizado (quita blur/glow/animaciones bajo html.perf-mode) -->
+  <link rel="stylesheet" href="perf-mode.css">
 </head>
 <body>
 
@@ -617,5 +619,7 @@ html.dark .dm-pill__sun { opacity: 0.38; }
        <head>; esto puede ir al final con defer sin bloquear el
        primer render. -->
   <script defer src="darkmode.js"></script>
+  <!-- Capa aditiva: Modo Optimizado (toggle en navbar + integración con Ajustes) -->
+  <script defer src="perf-mode.js"></script>
 </body>
 </html>

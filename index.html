@@ -74,6 +74,8 @@
     <!-- Capa aditiva: cierra los huecos de responsive en móvil (hero, stats, secciones grandes, cta banner) -->
     <link rel="stylesheet" href="responsive-index-polish.css">
   <link rel="stylesheet" href="responsive-site.css">
+  <!-- Capa aditiva: Modo Optimizado (quita blur/glow/animaciones bajo html.perf-mode) -->
+  <link rel="stylesheet" href="perf-mode.css">
   <!-- Capa aditiva: alineación de los iconos SVG que reemplazan los emojis del sitio -->
   <link rel="stylesheet" href="emoji-icons-fix.css">
   <!-- Capa aditiva: separa la sección "Datos curiosos" del video de fondo del hero -->
@@ -764,5 +766,7 @@
        <head>; esto puede ir al final con defer sin bloquear el
        primer render. -->
   <script defer src="darkmode.js"></script>
+  <!-- Capa aditiva: Modo Optimizado (toggle en navbar + integración con Ajustes) -->
+  <script defer src="perf-mode.js"></script>
 </body>
 </html>

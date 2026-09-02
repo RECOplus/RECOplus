@@ -1,0 +1,621 @@
+/* ═══════════════════════════════════════════════════════════════
+   PERF-MODE.CSS — RECO+
+   Modo Optimizado: capa ADITIVA que, bajo html.perf-mode, apaga
+   blur (backdrop-filter), animaciones de glow/shimmer/sparkle/pulse
+   y recorta box-shadow/drop-shadow al mínimo, para aliviar el hilo
+   de renderizado en dispositivos de gama media/baja.
+
+   No borra ni reescribe liquid-glass.css / liquid-glass-fx.css /
+   glow-boost.css / liquid-glass-*.css: solo los neutraliza cuando
+   el modo está activo, con selectores de alta especificidad y
+   !important donde el propio proyecto ya usa ese patrón.
+
+   Cárgalo AL FINAL de todos los CSS de efectos, justo después de
+   responsive-site.css:
+   <link rel="stylesheet" href="perf-mode.css" />
+═══════════════════════════════════════════════════════════════ */
+
+/* ──────────────────────────────────────────────────
+   1. PILL DEL TOGGLE (navbar) — mismo patrón visual
+   que .dm-pill / .lang-pill (navbar.css)
+   ────────────────────────────────────────────────── */
+.perf-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--nav-dm-bg);
+  border: 1px solid var(--nav-dm-border);
+  border-radius: 999px;
+  padding: 3px;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s;
+  min-height: 34px;
+  box-sizing: border-box;
+}
+
+.perf-pill__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: var(--nav-link-color);
+  opacity: 0.45;
+  transition: background 0.2s, color 0.2s, opacity 0.2s;
+}
+
+.perf-pill[data-on="true"] .perf-pill__btn {
+  opacity: 1;
+  background: rgba(240, 180, 41, 0.20);
+  color: #b98a2e;
+}
+
+html.dark .perf-pill[data-on="true"] .perf-pill__btn {
+  background: rgba(240, 180, 41, 0.22);
+  color: #f0c860;
+}
+
+@media (max-width: 520px) {
+  .perf-pill {
+    padding: 2px;
+  }
+  .perf-pill__btn {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+@media (max-width: 380px) {
+  .perf-pill__btn {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+/* ──────────────────────────────────────────────────
+   2. MODO OPTIMIZADO ACTIVO
+   ────────────────────────────────────────────────── */
+
+/* — 2.1 Quitar TODO backdrop-filter (blur/saturate) —
+   Cubre liquid-glass.css, liquid-glass-fx.css, navbar.css,
+   ajustes-modal.css y todas las variantes liquid-glass-*.css. */
+html.perf-mode * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* — 2.2 Apagar TODAS las animaciones de efecto —
+   Mismo criterio que ya usa el proyecto en sus bloques
+   @media (prefers-reduced-motion: reduce): animation: none. */
+html.perf-mode *,
+html.perf-mode *::before,
+html.perf-mode *::after {
+  animation: none !important;
+}
+
+/* — 2.3 Fondos de "vidrio" → sólidos simples —
+   Los gradientes de tinte/shine de liquid-glass.css se vuelven un
+   fondo plano y liviano, usando las mismas variables de tema. */
+html.perf-mode .bubble-nav__cta,
+html.perf-mode .lang-pill,
+html.perf-mode .dm-pill,
+html.perf-mode .perf-pill,
+html.perf-mode .search-glass,
+html.perf-mode .search-glass__btn,
+html.perf-mode .acc-arrow,
+html.perf-mode .acc-card__cta,
+html.perf-mode .cta-btn,
+html.perf-mode .mini-nav,
+html.perf-mode .mini-nav__chip,
+html.perf-mode .newsletter-form,
+html.perf-mode .rd-banner,
+html.perf-mode .rd-banner__cta,
+html.perf-mode .acc-card,
+html.perf-mode .curiosidad-card,
+html.perf-mode .material-chip,
+html.perf-mode .test-card,
+html.perf-mode .aliado,
+html.perf-mode .cf-step,
+html.perf-mode .stat-item,
+html.perf-mode .redes a,
+html.perf-mode .bubble-nav {
+  background-image: none !important;
+}
+
+html.perf-mode .hero,
+html.perf-mode .curiosidades,
+html.perf-mode .rd-banners,
+html.perf-mode .acciones,
+html.perf-mode .stats,
+html.perf-mode .como-funciona,
+html.perf-mode .aliados,
+html.perf-mode .testimonios,
+html.perf-mode .cta-banner,
+html.perf-mode .footer {
+  background-image: none !important;
+}
+
+/* — 2.4 Sombras y halos → recorte al mínimo —
+   En vez de quitar el box-shadow entero (algunos lo usan también
+   para separar visualmente tarjetas del fondo), se limita a una
+   sombra de contorno chica y sin difuminado grande. */
+html.perf-mode .bubble-nav,
+html.perf-mode .bubble-nav__cta,
+html.perf-mode .lang-pill,
+html.perf-mode .dm-pill,
+html.perf-mode .perf-pill,
+html.perf-mode .acc-arrow,
+html.perf-mode .acc-card,
+html.perf-mode .curiosidad-card,
+html.perf-mode .material-chip,
+html.perf-mode .test-card,
+html.perf-mode .aliado,
+html.perf-mode .cf-step,
+html.perf-mode .stat-item,
+html.perf-mode .rd-banner,
+html.perf-mode .redes a,
+html.perf-mode .cta-btn,
+html.perf-mode .see-all-btn,
+html.perf-mode .suggest-btn,
+html.perf-mode .sort-select,
+html.perf-mode .result-item,
+html.perf-mode .result-icon,
+html.perf-mode .material-icon,
+html.perf-mode .modal,
+html.perf-mode .modal-input,
+html.perf-mode .modal-close,
+html.perf-mode .modal-submit,
+html.perf-mode .legend,
+html.perf-mode .map-tooltip,
+html.perf-mode .filter-chips .chip,
+html.perf-mode .more-filters-btn,
+html.perf-mode .newsletter-form input,
+html.perf-mode .newsletter-form button,
+html.perf-mode .locate-btn,
+html.perf-mode #toast {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+}
+
+html.dark.perf-mode .bubble-nav,
+html.dark.perf-mode .bubble-nav__cta,
+html.dark.perf-mode .lang-pill,
+html.dark.perf-mode .dm-pill,
+html.dark.perf-mode .perf-pill,
+html.dark.perf-mode .acc-arrow,
+html.dark.perf-mode .acc-card,
+html.dark.perf-mode .curiosidad-card,
+html.dark.perf-mode .material-chip,
+html.dark.perf-mode .test-card,
+html.dark.perf-mode .aliado,
+html.dark.perf-mode .cf-step,
+html.dark.perf-mode .stat-item,
+html.dark.perf-mode .rd-banner,
+html.dark.perf-mode .redes a,
+html.dark.perf-mode .cta-btn,
+html.dark.perf-mode .see-all-btn,
+html.dark.perf-mode .suggest-btn,
+html.dark.perf-mode .sort-select,
+html.dark.perf-mode .result-item,
+html.dark.perf-mode .result-icon,
+html.dark.perf-mode .material-icon,
+html.dark.perf-mode .modal,
+html.dark.perf-mode .modal-input,
+html.dark.perf-mode .modal-close,
+html.dark.perf-mode .modal-submit,
+html.dark.perf-mode .legend,
+html.dark.perf-mode .map-tooltip,
+html.dark.perf-mode .filter-chips .chip,
+html.dark.perf-mode .more-filters-btn,
+html.dark.perf-mode .newsletter-form input,
+html.dark.perf-mode .newsletter-form button,
+html.dark.perf-mode .locate-btn,
+html.dark.perf-mode #toast {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Halos ::before/::after de bordes animados (bubble-nav sheen,
+   result-item gradient border, cf-step__num ring, sparkles, etc.):
+   ocultarlos por completo en vez de dejarlos estáticos, ya que su
+   única función es animar. */
+html.perf-mode .bubble-nav::before,
+html.perf-mode .bubble-nav__cta::before,
+html.perf-mode .cta-btn::before,
+html.perf-mode .see-all-btn::before,
+html.perf-mode .suggest-btn::before,
+html.perf-mode .newsletter-form button::before,
+html.perf-mode .modal-submit::before,
+html.perf-mode .result-item::before,
+html.perf-mode .cf-step__num::after,
+html.perf-mode .acc-card__icon-wrap::after,
+html.perf-mode .legend-icon::after,
+html.perf-mode .locate-btn::after,
+html.perf-mode .test-card::after,
+html.perf-mode .curiosidad-card::after,
+html.perf-mode .material-chip::after,
+html.perf-mode .cta-btn .btn-sparkle,
+html.perf-mode .bubble-nav__cta .btn-sparkle,
+html.perf-mode .btn::after,
+html.perf-mode .search button::after,
+html.perf-mode .ver-todos-btn::after,
+html.perf-mode .ver-producto-btn::after,
+html.perf-mode .acc-arrow::after,
+html.perf-mode .lang-pill::after,
+html.perf-mode .dm-pill::after,
+html.perf-mode .mini-nav a::after,
+html.perf-mode .redes a::after,
+html.perf-mode .map-wrapper::after {
+  display: none !important;
+}
+
+/* — 2.5 drop-shadow / filter decorativos → apagados —
+   Iconos flotantes con filter: drop-shadow(...) (badge-leaf,
+   footer-leaf, sidebar-pin, legend-icon, marcadores del mapa, etc.) */
+html.perf-mode .badge-leaf img,
+html.perf-mode .footer-leaf img,
+html.perf-mode .sidebar-pin img,
+html.perf-mode .locate-btn img,
+html.perf-mode .search-icon,
+html.perf-mode .material-icon:hover,
+html.perf-mode .rate-star.rated svg,
+html.perf-mode .rate-star:hover svg,
+html.perf-mode .result-rating-stars .star-full,
+html.perf-mode .leaflet-marker-icon,
+html.perf-mode .leaflet-marker-icon:hover,
+html.perf-mode .map-tooltip .tooltip-icon img {
+  filter: none !important;
+}
+
+/* — 2.6 Transforms de hover que simulan "flotar"/"elevarse" —
+   Se mantiene la funcionalidad (hover sigue cambiando color/estado),
+   solo se quita el desplazamiento/escala que fuerza repaint+composite
+   en cada frame de transición. */
+html.perf-mode .bubble-nav__cta:hover,
+html.perf-mode .cta-btn:hover,
+html.perf-mode .suggest-btn:hover,
+html.perf-mode .see-all-btn:hover,
+html.perf-mode .dm-pill:hover,
+html.perf-mode .lang-pill:hover,
+html.perf-mode .legend:hover,
+html.perf-mode .footer-col a:hover,
+html.perf-mode .redes a:hover,
+html.perf-mode .hero__badge:hover,
+html.perf-mode .newsletter-form input:focus,
+html.perf-mode .newsletter-form button:hover,
+html.perf-mode .modal-input:focus,
+html.perf-mode .result-distance,
+html.perf-mode .modal-close:hover {
+  transform: none !important;
+}
+
+/* — 2.7 Blend modes de las capas de brillo: apagar — */
+html.perf-mode * {
+  background-blend-mode: normal !important;
+  mix-blend-mode: normal !important;
+}
+
+/* — 2.8 Scrollbar de resultados: color plano, sin gradiente — */
+html.perf-mode .results-list::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb, #a8dab5) !important;
+}
+
+/* ──────────────────────────────────────────
+   3. PÁGINAS CON SU PROPIO "VIDRIO OSCURO" (mapa/donar/reciclar/
+   guia/alianzas/videos): cada una define sus propias variables
+   --lg-*, --lgg-*, --lga-*, --lgv-* (liquid-glass-mapa.css,
+   liquid-glass-donar.css, liquid-glass-reciclar.css,
+   liquid-glass-guia.css, liquid-glass-alianzas.css,
+   liquid-glass-videos.css) y las consumen con selectores propios
+   de esa página (.rc-panel, .donar-tabs, .chip, .gh-panel,
+   .aliado-card, .vh-card, etc.), todos con !important.
+
+   En vez de listar cada selector de cada página, se sobreescriben
+   las VARIABLES compartidas a valores neutros: blur en 0, sombras
+   a un contorno mínimo y el reflejo diagonal (--*-shine) a un
+   gradiente transparente. Como cada regla de esas hojas consume
+   la variable en vez de un valor fijo, esto neutraliza el efecto
+   en todas las piezas de la página sin duplicar selectores.
+   ────────────────────────────────────────── */
+html.perf-mode {
+  /* mapa.html / donar.html / reciclar.html (liquid-glass-mapa.css,
+     liquid-glass-donar.css, liquid-glass-reciclar.css) */
+  --lg-blur: 0px !important;
+  --lg-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+  --lg-shadow-hover: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+  --lg-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+  --lg-shine: none !important;
+  --lg-accent-glow: transparent !important;
+
+  /* guia.html (liquid-glass-guia.css) */
+  --lgg-blur: 0px !important;
+  --lgg-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+  --lgg-shadow-hover: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+  --lgg-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+  --lgg-shine: none !important;
+
+  /* alianzas.html (liquid-glass-alianzas.css) */
+  --lga-blur: 0px !important;
+  --lga-shadow: 0 1px 3px rgba(0, 0, 0, 0.10) !important;
+  --lga-shadow-hover: 0 1px 3px rgba(0, 0, 0, 0.10) !important;
+  --lga-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.10) !important;
+  --lga-shine: none !important;
+
+  /* videos.html (liquid-glass-videos.css) */
+  --lgv-blur: 0px !important;
+  --lgv-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+  --lgv-shadow-hover: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+  --lgv-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+  --lgv-shine: none !important;
+}
+
+html.dark.perf-mode {
+  --lg-shadow: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+  --lg-shadow-hover: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+  --lg-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+  --lgg-shadow: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+  --lgg-shadow-hover: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+  --lgg-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+  --lga-shadow: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+  --lga-shadow-hover: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+  --lga-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+  --lgv-shadow: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+  --lgv-shadow-hover: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+  --lgv-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Selectores que fijan su propio box-shadow/background-image en
+   valores LITERALES (no vía variable) y por eso no bajan solos al
+   pisar --lg*-shadow/--lg*-shine arriba. Se anulan aparte. */
+html.perf-mode .rc-btn--solid,
+html.perf-mode .rc-btn--outline,
+html.perf-mode .rc-material.active,
+html.perf-mode .rc-cta,
+html.perf-mode .rc-cta .rc-btn--solid,
+html.perf-mode .rc-process__icon,
+html.perf-mode .rc-panel__icon,
+html.perf-mode .rc-material__icon,
+html.perf-mode .rc-scanner__drop-icon,
+html.perf-mode .rc-stat,
+html.perf-mode .rc-result,
+html.perf-mode .rc-history__ring,
+html.perf-mode .rc-map-preview,
+html.perf-mode .chip.active,
+html.perf-mode .suggest-btn,
+html.perf-mode .modal-submit,
+html.perf-mode .type-tag,
+html.perf-mode .material-icon,
+html.perf-mode .result-icon,
+html.perf-mode .donar-tab.active,
+html.perf-mode .donar-submit-btn,
+html.perf-mode .donar-submit-btn--solicitar,
+html.perf-mode .gh-switch__btn.active,
+html.perf-mode .gh-chip.active,
+html.perf-mode .gh-donate-panel__cta,
+html.perf-mode .gh-learn__side-btn,
+html.perf-mode .gh-panel__visual-icon,
+html.perf-mode .gh-donate-panel__icon,
+html.perf-mode .gh-box__icon,
+html.perf-mode .gh-hero,
+html.perf-mode .gh-cta,
+html.perf-mode .gh-cta__btn,
+html.perf-mode .gh-video-card,
+html.perf-mode .gh-learn__side,
+html.perf-mode .bn-hero .bn-btn--solid,
+html.perf-mode .bn-hero .bn-btn--outline,
+html.perf-mode .vh-chip.active,
+html.perf-mode .vh-upload-btn,
+html.perf-mode .vh-card,
+html.perf-mode .vh-empty,
+html.perf-mode .vh-search__input,
+html.perf-mode .vh-search__input:focus,
+html.perf-mode .vh-hero,
+html.perf-mode .feat-card,
+html.perf-mode .aliado-card,
+html.perf-mode .alianzas-cta,
+html.perf-mode .alianzas-cta__btn,
+html.perf-mode .alianzas-hero__content,
+html.perf-mode .alianzas-intro,
+html.perf-mode .alianzas-aliados,
+html.perf-mode .rc-hero {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+  background-image: none !important;
+}
+html.dark.perf-mode .rc-btn--solid,
+html.dark.perf-mode .rc-btn--outline,
+html.dark.perf-mode .rc-material.active,
+html.dark.perf-mode .rc-cta,
+html.dark.perf-mode .rc-cta .rc-btn--solid,
+html.dark.perf-mode .rc-process__icon,
+html.dark.perf-mode .rc-panel__icon,
+html.dark.perf-mode .rc-material__icon,
+html.dark.perf-mode .rc-scanner__drop-icon,
+html.dark.perf-mode .rc-stat,
+html.dark.perf-mode .rc-result,
+html.dark.perf-mode .rc-history__ring,
+html.dark.perf-mode .rc-map-preview,
+html.dark.perf-mode .chip.active,
+html.dark.perf-mode .suggest-btn,
+html.dark.perf-mode .modal-submit,
+html.dark.perf-mode .type-tag,
+html.dark.perf-mode .material-icon,
+html.dark.perf-mode .result-icon,
+html.dark.perf-mode .donar-tab.active,
+html.dark.perf-mode .donar-submit-btn,
+html.dark.perf-mode .donar-submit-btn--solicitar,
+html.dark.perf-mode .gh-switch__btn.active,
+html.dark.perf-mode .gh-chip.active,
+html.dark.perf-mode .gh-donate-panel__cta,
+html.dark.perf-mode .gh-learn__side-btn,
+html.dark.perf-mode .gh-panel__visual-icon,
+html.dark.perf-mode .gh-donate-panel__icon,
+html.dark.perf-mode .gh-box__icon,
+html.dark.perf-mode .gh-hero,
+html.dark.perf-mode .gh-cta,
+html.dark.perf-mode .gh-cta__btn,
+html.dark.perf-mode .gh-video-card,
+html.dark.perf-mode .gh-learn__side,
+html.dark.perf-mode .bn-hero .bn-btn--solid,
+html.dark.perf-mode .bn-hero .bn-btn--outline,
+html.dark.perf-mode .vh-chip.active,
+html.dark.perf-mode .vh-upload-btn,
+html.dark.perf-mode .vh-card,
+html.dark.perf-mode .vh-empty,
+html.dark.perf-mode .vh-search__input,
+html.dark.perf-mode .vh-hero,
+html.dark.perf-mode .feat-card,
+html.dark.perf-mode .aliado-card,
+html.dark.perf-mode .alianzas-cta,
+html.dark.perf-mode .alianzas-cta__btn,
+html.dark.perf-mode .alianzas-hero__content,
+html.dark.perf-mode .alianzas-intro,
+html.dark.perf-mode .alianzas-aliados,
+html.dark.perf-mode .rc-hero {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+  background-image: none !important;
+}
+
+/* Halos ::after/::before decorativos propios de cada página
+   ("gota de vidrio" superior, guirnalda de luces del CTA de
+   reciclar, orbes flotantes del hero de videos, reflejo diagonal
+   del banner de guía) — se ocultan por completo. */
+html.perf-mode .legend::after,
+html.perf-mode .map-tooltip::after,
+html.perf-mode .modal::after,
+html.perf-mode .sidebar::after,
+html.perf-mode .result-item::after,
+html.perf-mode .rc-panel::after,
+html.perf-mode .rc-material::after,
+html.perf-mode .rc-scanner__drop::after,
+html.perf-mode .rc-result::after,
+html.perf-mode .rc-stat::after,
+html.perf-mode .rc-cta::after,
+html.perf-mode .rc-string-lights,
+html.perf-mode .donar-form-panel::after,
+html.perf-mode .donar-trust-item::after,
+html.perf-mode .donar-modal::after,
+html.perf-mode .donar-hero__card-float::after,
+html.perf-mode .donar-upload::after,
+html.perf-mode .gh-panel::after,
+html.perf-mode .gh-donate-panel::after,
+html.perf-mode .gh-box::after,
+html.perf-mode .gh-video-card::after,
+html.perf-mode .gh-learn__side::after,
+html.perf-mode .gh-donate-cat::after,
+html.perf-mode .gh-stats-grid .stat-item::after,
+html.perf-mode .gh-cta::after,
+html.perf-mode .gh-hero .bn-hero::before,
+html.perf-mode .gh-hero .bn-hero::after,
+html.perf-mode .vh-card::after,
+html.perf-mode .vh-hero::before,
+html.perf-mode .vh-hero::after,
+html.perf-mode .alianzas-hero__content::after,
+html.perf-mode .alianzas-intro::after,
+html.perf-mode .feat-card::after,
+html.perf-mode .alianzas-aliados::after,
+html.perf-mode .aliado-card::after,
+html.perf-mode .alianzas-cta::after,
+html.perf-mode .footer-brand::after,
+html.perf-mode .footer-col::after {
+  display: none !important;
+}
+
+/* Transforms de hover/active que simulan flotar/elevarse, propios
+   de estas páginas (se conserva el cambio de color/borde en hover,
+   solo se quita el desplazamiento que fuerza repaint) */
+html.perf-mode .chip:hover,
+html.perf-mode .locate-btn:hover,
+html.perf-mode .more-filters-btn:hover,
+html.perf-mode .suggest-btn:hover,
+html.perf-mode .modal-submit:hover,
+html.perf-mode .result-item:hover,
+html.perf-mode .result-item:active,
+html.perf-mode .rc-panel:hover,
+html.perf-mode .rc-material:hover,
+html.perf-mode .rc-scanner__drop:hover,
+html.perf-mode .rc-result:hover,
+html.perf-mode .rc-stat:hover,
+html.perf-mode .rc-btn--solid:hover,
+html.perf-mode .rc-btn--outline:hover,
+html.perf-mode .rc-process__step:hover,
+html.perf-mode .gh-panel:hover,
+html.perf-mode .gh-donate-panel:hover,
+html.perf-mode .gh-box:hover,
+html.perf-mode .gh-donate-panel__cta:hover,
+html.perf-mode .gh-learn__side-btn:hover,
+html.perf-mode .footer-brand:hover,
+html.perf-mode .footer-col:hover,
+html.perf-mode .vh-upload-btn:hover,
+html.perf-mode .vh-card:hover,
+html.perf-mode .feat-card:hover,
+html.perf-mode .aliado-card:hover,
+html.perf-mode .alianzas-cta__btn:hover {
+  transform: none !important;
+}
+
+/* Iconos con filter (brightness/contrast/drop-shadow) usados en
+   estas páginas para resaltar sobre el vidrio oscuro: ya no hace
+   falta el realce una vez que el fondo deja de ser vidrio oscuro
+   translucido. */
+html.perf-mode .locate-btn img,
+html.perf-mode .legend-icon,
+html.perf-mode .tooltip-icon img,
+html.perf-mode .sidebar-pin img,
+html.perf-mode .footer-leaf img,
+html.perf-mode .rc-panel__icon,
+html.perf-mode .rc-material__icon,
+html.perf-mode .rc-scanner__drop-icon,
+html.perf-mode .rc-scanner__feature svg,
+html.perf-mode .rc-note svg,
+html.perf-mode .rc-stat__label svg,
+html.perf-mode .rc-field label svg,
+html.perf-mode .donar-tab-icon img,
+html.perf-mode .donar-trust-icon img,
+html.perf-mode .donar-hero__card-icon img,
+html.perf-mode .donar-form-icon img,
+html.perf-mode .donar-form-icon2 img,
+html.perf-mode .donar-upload-icon,
+html.perf-mode .vh-search__icon,
+html.perf-mode .vh-card__icon,
+html.perf-mode .vh-empty svg {
+  filter: none !important;
+}
+
+/* Modal overlays (mapa/donar): blur del fondo detrás del modal */
+html.perf-mode .modal-overlay,
+html.perf-mode .donar-modal-overlay {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Footer con vidrio propio (guia/alianzas): fondo plano usando la
+   variable de tema ya existente, sin blur */
+html.perf-mode .footer,
+html.perf-mode .footer-brand,
+html.perf-mode .footer-col {
+  background: var(--footer-bg, #eef7f1) !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Partículas/luces/destellos inyectados como elementos DOM reales
+   por reciclar-effects.js, donar-effects.js, guia-effects.js,
+   reciclar-shimmer.js y donar-shimmer.js (.light-dot, .rc-lights,
+   .dn-lights, .gh-lights, .rc-string-lights, .dn-string-lights,
+   .btn-sparkle, .rc-shine-static, .rc-shine-sweep). Sus animaciones
+   ya quedan apagadas por la regla universal de 2.2, pero al ser
+   nodos puramente decorativos se ocultan del todo para ahorrar
+   también el pintado estático. */
+html.perf-mode .light-dot,
+html.perf-mode .rc-lights,
+html.perf-mode .dn-lights,
+html.perf-mode .gh-lights,
+html.perf-mode .rc-string-lights,
+html.perf-mode .dn-string-lights,
+html.perf-mode .btn-sparkle,
+html.perf-mode .rc-shine-static,
+html.perf-mode .rc-shine-sweep {
+  display: none !important;
+}
+
+

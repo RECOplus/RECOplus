@@ -16,6 +16,13 @@
     return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }
 
+  // Modo optimizado (perf-mode.js): mismo criterio que reduced-motion,
+  // se consulta aparte porque es una preferencia explícita del usuario
+  // dentro de RECO+ y no depende de la configuración del sistema.
+  function perfModeOn() {
+    return document.documentElement.classList.contains("perf-mode");
+  }
+
   // ── Halo tipo radar sobre cada marcador nuevo del mapa ──
   // Leaflet monta cada marcador como un <img>/<div class="leaflet-marker-icon">
   // dentro de .leaflet-marker-pane. Observamos ese pane y, por cada nodo
@@ -23,7 +30,7 @@
   // mismo tamaño, centrado), que se retira solo tras un par de pulsos para
   // no acumular animaciones infinitas de más en mapas con muchos puntos.
   function attachMarkerHalo(markerEl) {
-    if (prefersReducedMotion()) return;
+    if (prefersReducedMotion() || perfModeOn()) return;
     if (!markerEl || markerEl.dataset.lgfxHalo) return;
     markerEl.dataset.lgfxHalo = "1";
 
@@ -97,7 +104,7 @@
   // (legend, tooltip, footer-cta): aparecen con fade-up la primera
   // vez que entran en el viewport, sin afectar su funcionalidad.
   function initScrollReveal() {
-    if (prefersReducedMotion()) return;
+    if (prefersReducedMotion() || perfModeOn()) return;
     const targets = document.querySelectorAll(".legend, .footer-cta, .site-header, .controls");
     if (!targets.length || !("IntersectionObserver" in window)) return;
 
@@ -115,6 +122,18 @@
 
     targets.forEach((el) => io.observe(el));
   }
+
+  // Si el usuario activa el modo optimizado mientras el mapa ya está
+  // abierto, se retiran de inmediato los halos que sigan en pantalla
+  // (los que ya se habían insertado antes del cambio). No hace falta
+  // desconectar el MutationObserver: attachMarkerHalo ya corta en seco
+  // apenas ve perf-mode activo, así que simplemente deja de agregar
+  // halos nuevos a partir de ese momento.
+  document.addEventListener("reco:perfmodechange", (e) => {
+    if (e.detail && e.detail.on) {
+      document.querySelectorAll(".lgfx-marker-halo").forEach((h) => h.remove());
+    }
+  });
 
   document.addEventListener("DOMContentLoaded", () => {
     watchMapMarkers();

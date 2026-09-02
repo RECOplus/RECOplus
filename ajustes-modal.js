@@ -308,6 +308,14 @@
             '<button type="button" class="ajustes-segmented__opt" data-valor="lg">A+</button>' +
           '</div>' +
         '</div>' +
+        '<hr class="ajustes-divider">' +
+        '<div class="ajustes-row">' +
+          '<div class="ajustes-row__text">' +
+            '<p class="ajustes-row__label" data-i18n="ajustes.apariencia.perfLabel">Modo optimizado</p>' +
+            '<p class="ajustes-row__desc" data-i18n="ajustes.apariencia.perfDesc">Reduce efectos visuales (brillos, desenfoques y animaciones) para mejorar el rendimiento en dispositivos con menos recursos.</p>' +
+          '</div>' +
+          '<button type="button" class="ajustes-switch" id="ajPerfSwitch" data-on="false"><span class="ajustes-switch__knob"></span></button>' +
+        '</div>' +
       '</section>'
     );
   }
@@ -356,6 +364,25 @@
       });
     });
     pintarFuente();
+
+    /* ── Modo optimizado (perf-mode.js) ──
+       El switch delega en window.RecoPerf en vez de manejar su
+       propio localStorage, para que el estado quede centralizado
+       en un solo lugar (perf-mode.js) y se mantenga sincronizado
+       con el pill del navbar sin duplicar lógica aquí. */
+    var perfSwitch = overlay.querySelector('#ajPerfSwitch');
+    if (perfSwitch) {
+      function pintarPerf() {
+        var on = window.RecoPerf ? window.RecoPerf.isOn() : false;
+        perfSwitch.setAttribute('data-on', on ? 'true' : 'false');
+      }
+      perfSwitch.addEventListener('click', function () {
+        if (window.RecoPerf) window.RecoPerf.toggle();
+        pintarPerf();
+      });
+      pintarPerf();
+      document.addEventListener('reco:perfmodechange', pintarPerf);
+    }
   }
 
   /* ══════════════════════════════════════════════
