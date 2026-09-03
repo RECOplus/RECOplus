@@ -36,8 +36,6 @@
   <link rel="stylesheet" href="guia-effects.css" />
   <!-- Capa aditiva: botón + modal de comentarios (footer, cualquier página) -->
   <link rel="stylesheet" href="comentar-modal.css" />
-  <!-- Capa aditiva: botón + modal de "Subir video" (comunidad) -->
-  <link rel="stylesheet" href="subir-video-modal.css" />
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" />
 <!-- Navbar compartida (idéntica al resto de páginas, incluye el
      logo que alterna entre claro/oscuro según html.dark) -->
@@ -448,7 +446,9 @@
   <script src="script.js"></script>
   <!-- Capa aditiva: lógica del nuevo hub de Guía (switch, chips, panel de pasos, reveal on scroll) -->
   <script src="guia-hub.js"></script>
-  <!-- Capa aditiva: llena el hero (videos principales + minis) con videos reales de la comunidad desde Supabase -->
+  <!-- Capa aditiva: datos estáticos de la biblioteca de videos (fuente común con videos.html) -->
+  <script src="videos-data.js"></script>
+  <!-- Capa aditiva: llena el hero (videos principales + minis) con los videos estáticos de videos-data.js -->
   <script src="guia-hero-videos.js"></script>
   <!-- Capa aditiva: rotación automática de ¿Sabías qué? y Consejos rápidos -->
   <script src="guia-tips-rotate.js"></script>
@@ -471,8 +471,6 @@
   <script src="ajustes-suscripcion.js"></script>
   <!-- Capa aditiva: botón + modal de comentarios en el footer -->
   <script src="comentar-modal.js"></script>
-  <!-- Capa aditiva: botón + modal de "Subir video" (comunidad) -->
-  <script src="subir-video-modal.js"></script>
   <script src="contact-fab.js"></script>
 <script src="chatbot-fab.js"></script>
   <!-- darkmode.js completo (botón toggle + inyección de estilos):

@@ -470,21 +470,32 @@ const translations = {
     "videos.search.empty.title":  "No encontramos videos para “{q}”",
     "videos.search.empty.desc":   "Prueba con otra palabra o borra la búsqueda para ver toda la categoría.",
 
-    "videos.v4.desc":  "Aprende a clasificar cada material antes de llevarlo a un punto de reciclaje.",
-    "videos.v5.desc":  "Sigue el viaje de tus residuos desde el contenedor hasta su transformación.",
-    "videos.v6.desc":  "Dale una segunda vida a los objetos que ya no usas.",
-    "videos.v7.desc":  "Entiende el ciclo que convierte residuos en nuevos recursos.",
+    "videos.v16.titulo": "Recycled Today, Brighter Tomorrow",
+    "videos.v16.desc":  "Enseña a los niños las tres R: reducir, reutilizar y reciclar. También muestra cómo donar ropa que ya no se necesita para que otras personas puedan aprovecharla.",
 
-    "videos.v8.title": "Cómo donar de forma segura",
-    "videos.v8.desc":  "Consejos prácticos para coordinar una donación sin contratiempos.",
-    "videos.v9.title": "El impacto de tu donación",
-    "videos.v9.desc":  "Conoce a dónde llega lo que compartes y cómo cambia vidas.",
-    "videos.v10.title": "Historias que transforman vidas",
-    "videos.v10.desc":  "Testimonios reales de personas que reciclan y donan con RECO+.",
-    "videos.v11.title": "Comunidades que reciclan juntas",
-    "videos.v11.desc":  "Cómo un barrio organizado puede multiplicar su impacto ambiental.",
-    "videos.v12.title": "Reduce, reutiliza, recicla",
-    "videos.v12.desc":  "Los tres pilares que sostienen un estilo de vida sostenible.",
+    "videos.v20.titulo": "¿Cómo reciclar? Aprende con Nacho las 3 R del reciclaje",
+    "videos.v20.desc":  "Nacho explica de forma entretenida cómo reducir, reutilizar y reciclar para cuidar el planeta y generar menos basura.",
+
+    "videos.v19.titulo": "Reducir, Reutilizar y Reciclar. Para mejorar el mundo",
+    "videos.v19.desc":  "Explica de manera sencilla las tres R y enseña a los niños cómo reducir desperdicios, reutilizar objetos y reciclar materiales para cuidar el planeta.",
+
+    "videos.v18.titulo": "¡Reutilicen!",
+    "videos.v18.desc":  "Elmo y Ernie muestran cómo reutilizar objetos, como una botella de agua, para crear cosas nuevas y divertidas en lugar de desecharlos.",
+
+    "videos.v17.titulo": "Ayudar a los demás",
+    "videos.v17.desc":  "Elmo enseña diferentes formas de ayudar a las personas de la comunidad, incluyendo donar juguetes y ropa en buen estado que ya no usamos.",
+
+    "videos.v10.titulo": "¿Qué es el reciclaje y por qué es importante?",
+    "videos.v10.desc":  "El video explica las consecuencias de dejar de reciclar y cómo esto afecta al medio ambiente, aumentando la contaminación y el desperdicio de recursos.",
+
+    "videos.v9.titulo": "¿Qué sucede con la basura que generamos?",
+    "videos.v9.desc":  "El video explica las consecuencias de la generación excesiva de basura y destaca la importancia del reciclaje para reducir la contaminación y proteger el medio ambiente.",
+
+    "videos.v8.titulo": "¿Cómo reciclar?",
+    "videos.v8.desc":  "El video explica la importancia del reciclaje y la correcta separación de los residuos, promoviendo hábitos responsables para cuidar y proteger el medio ambiente.",
+
+    "videos.v1.titulo": "que es reciclar",
+    "videos.v1.desc":  "que es reciclar",
 
     "videos.badge.comunidad": "Comunidad",
 
@@ -2772,21 +2783,32 @@ const translations = {
     "videos.search.empty.title":  "No videos found for “{q}”",
     "videos.search.empty.desc":   "Try a different word or clear the search to see the full category.",
 
-    "videos.v4.desc":  "Learn how to sort each material before taking it to a recycling point.",
-    "videos.v5.desc":  "Follow your waste's journey from the bin to its transformation.",
-    "videos.v6.desc":  "Give a second life to things you no longer use.",
-    "videos.v7.desc":  "Understand the cycle that turns waste into new resources.",
+    "videos.v16.titulo": "Recycled Today, Brighter Tomorrow",
+    "videos.v16.desc":  "Teaches children the three R's: reduce, reuse and recycle. It also shows how to donate clothes that are no longer needed so other people can make use of them.",
 
-    "videos.v8.title": "How to donate safely",
-    "videos.v8.desc":  "Practical tips for coordinating a donation without hiccups.",
-    "videos.v9.title": "The impact of your donation",
-    "videos.v9.desc":  "See where what you share ends up and how it changes lives.",
-    "videos.v10.title": "Stories that change lives",
-    "videos.v10.desc":  "Real testimonials from people who recycle and donate with RECO+.",
-    "videos.v11.title": "Communities that recycle together",
-    "videos.v11.desc":  "How an organized neighborhood can multiply its environmental impact.",
-    "videos.v12.title": "Reduce, reuse, recycle",
-    "videos.v12.desc":  "The three pillars that support a sustainable lifestyle.",
+    "videos.v20.titulo": "How to recycle? Learn with Nacho the 3 R's of recycling",
+    "videos.v20.desc":  "Nacho explains in an entertaining way how to reduce, reuse and recycle to take care of the planet and generate less waste.",
+
+    "videos.v19.titulo": "Reduce, Reuse and Recycle. To improve the world",
+    "videos.v19.desc":  "Explains the three R's in a simple way and teaches children how to reduce waste, reuse objects and recycle materials to take care of the planet.",
+
+    "videos.v18.titulo": "Reuse it!",
+    "videos.v18.desc":  "Elmo and Ernie show how to reuse objects, like a water bottle, to create new and fun things instead of throwing them away.",
+
+    "videos.v17.titulo": "Helping others",
+    "videos.v17.desc":  "Elmo teaches different ways to help people in the community, including donating toys and clothes in good condition that we no longer use.",
+
+    "videos.v10.titulo": "What is recycling and why is it important?",
+    "videos.v10.desc":  "The video explains the consequences of not recycling and how this affects the environment, increasing pollution and the waste of resources.",
+
+    "videos.v9.titulo": "What happens to the trash we generate?",
+    "videos.v9.desc":  "The video explains the consequences of excessive trash generation and highlights the importance of recycling to reduce pollution and protect the environment.",
+
+    "videos.v8.titulo": "How to recycle?",
+    "videos.v8.desc":  "The video explains the importance of recycling and properly sorting waste, promoting responsible habits to take care of and protect the environment.",
+
+    "videos.v1.titulo": "what is recycling",
+    "videos.v1.desc":  "what is recycling",
 
     "videos.badge.comunidad": "Community",
 

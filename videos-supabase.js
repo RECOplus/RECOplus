@@ -66,14 +66,23 @@
     var data = window.RECO_VIDEOS_DATA;
     if (!data || !data.videos) return;
 
-    var yaPresentes = {};
-    data.videos.forEach(function (v) { yaPresentes[v.id] = true; });
+    var indicePorId = {};
+    data.videos.forEach(function (v, i) { indicePorId[v.id] = i; });
 
     rows.forEach(function (row, idx) {
       var video = mapRow(row, idx);
-      if (yaPresentes[video.id]) return;
+      if (indicePorId.hasOwnProperty(video.id)) {
+        // Ya existe (ej. se está re-fusionando tras un cambio de
+        // idioma): actualiza título/descripción en el mismo lugar en
+        // vez de duplicar la tarjeta, para que la traducción sí se
+        // refleje al alternar ES/EN.
+        var existente = data.videos[indicePorId[video.id]];
+        existente.titleFallback = video.titleFallback;
+        existente.descFallback = video.descFallback;
+        return;
+      }
       data.videos.push(video);
-      yaPresentes[video.id] = true;
+      indicePorId[video.id] = data.videos.length - 1;
     });
 
     if (typeof window.recoVideosHubRefresh === 'function') {
@@ -100,7 +109,11 @@
       .order('created_at', { ascending: false })
       .then(function (res) {
         if (res.error || !res.data) return;
-        fusionarVideos(res.data);
+        if (window.RecoVideoTranslate) {
+          window.RecoVideoTranslate.translate(res.data, fusionarVideos);
+        } else {
+          fusionarVideos(res.data);
+        }
       })
       .catch(function () {
         // Sin conexión o servicio no disponible: la biblioteca sigue
@@ -145,6 +158,16 @@
     if (!document.getElementById('vhGrid')) return;
     wireClicksComunidad();
     cargarVideosComunidad();
+  });
+
+  // Al cambiar de idioma (botón ES/EN), vuelve a pedir los videos: si
+  // ahora el idioma activo es inglés, cargarVideosComunidad() pasa
+  // por RecoVideoTranslate y fusionarVideos() actualiza el título y
+  // la descripción de las tarjetas ya renderizadas con la traducción
+  // (usando caché, así que no vuelve a llamar a Gemini si ya se había
+  // traducido antes en esta sesión/navegador).
+  document.addEventListener('reco:langchange', function () {
+    if (document.getElementById('vhGrid')) cargarVideosComunidad();
   });
 
   // Permite recargar manualmente (ej. después de moderar un video
