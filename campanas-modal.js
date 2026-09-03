@@ -51,7 +51,7 @@
   // URL de donar.html donde se muestran las campañas aprobadas
   // (misma convención de enlaces absolutos que usa el resto del
   // sitio — ver index.html/alianzas.html).
-  var URL_DONAR_CAMPANAS = 'https://recoplus.github.io/rEcOPlus-Final/donar.html#campanas-empresas';
+  var URL_DONAR_CAMPANAS = 'https://recoplus.github.io/RECOplus/donar.html#campanas-empresas';
 
   /* Mismos 18 ids de `categorias` que usan el escáner, el mapa y
      ajustes-empresa.js — así una campaña de reciclaje queda

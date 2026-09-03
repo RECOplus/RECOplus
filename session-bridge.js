@@ -3,7 +3,7 @@
  * dos dominios de RECO+.
  *
  * RECO+ está desplegado en DOS orígenes distintos:
- *   - https://recoplus.github.io/rEcOPlus-Final/   (GitHub Pages)
+ *   - https://recoplus.github.io/RECOplus/   (GitHub Pages)
  *   - https://r-ec-o-plus-final.vercel.app/        (Vercel)
  *
  * localStorage está aislado por origen (es una protección del propio
