@@ -470,7 +470,7 @@ const translations = {
     "videos.search.empty.title":  "No encontramos videos para “{q}”",
     "videos.search.empty.desc":   "Prueba con otra palabra o borra la búsqueda para ver toda la categoría.",
 
-    "videos.v16.titulo": "Recycled Today, Brighter Tomorrow",
+    "videos.v16.titulo": "Reciclado hoy, un mañana más brillante",
     "videos.v16.desc":  "Enseña a los niños las tres R: reducir, reutilizar y reciclar. También muestra cómo donar ropa que ya no se necesita para que otras personas puedan aprovecharla.",
 
     "videos.v20.titulo": "¿Cómo reciclar? Aprende con Nacho las 3 R del reciclaje",
