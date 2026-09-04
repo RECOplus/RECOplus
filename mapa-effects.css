@@ -353,17 +353,29 @@ html.dark .leaflet-marker-icon:hover {
   animation: mapaDropdownIn .22s cubic-bezier(.4,0,.2,1);
 }
 
-/* FIX: #filterChipsExtraList (la lista real de chips secundarios)
-   heredaba "flex: 1" de .filter-chips (styles.css), lo que junto al
-   "flex-wrap: wrap" del .more-filters-dropdown que la envuelve
-   generaba doble wrapping anidado: el ultimo chip ("Utiles
-   escolares") podia quedar solo en su propia linea con espacio vacio
-   a la derecha en vez de fluir pegado a los demas. Al ser ya el unico
-   hijo relevante del dropdown, no necesita flex-grow propio -- solo
-   debe wrappear sus chips de forma compacta. */
+/* FIX: en vez de que los chips secundarios envuelvan a una segunda
+   linea (dejando el chip mas largo, "Utiles escolares", solo y con
+   espacio vacio a su derecha), la fila entera hace scroll horizontal
+   y se mantiene compacta en una sola linea, igual que el resto de la
+   barra de filtros. */
 #filterChipsExtraList.filter-chips {
-  flex: initial;
-  width: 100%;
+  flex: 1;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  padding-bottom: .15rem;
+}
+#filterChipsExtraList.filter-chips .chip {
+  flex-shrink: 0;
+}
+#filterChipsExtraList.filter-chips::-webkit-scrollbar {
+  height: 5px;
+}
+#filterChipsExtraList.filter-chips::-webkit-scrollbar-thumb {
+  background: var(--border-light, #a8dab5);
+  border-radius: 999px;
 }
 
 /* La etiqueta "Más materiales:" ya no se muestra: al ser un

@@ -335,12 +335,14 @@ html.dark .dm-pill__sun { opacity: 0.38; }
  <!-- ── BUBBLE NAVBAR ── -->
 <div class="bubble-nav-wrapper">
   <header class="bubble-nav">
+    <!-- Logo -->
     <div class="bubble-nav__logo">
       <img src="img/logo modo claro.png" alt="RECO+" class="logo-light">
       <img src="img/logo modo dark.png" alt="RECO+" class="logo-dark">
     </div>
 
-        <nav class="bubble-nav__links">
+    <!-- Links -->
+    <nav class="bubble-nav__links">
       <a href="https://recoplus.github.io/RECOplus/index.html" data-tooltip="Vuelve a la página principal." data-i18n-tooltip="nav.inicio.desc">
         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15"><path d="M3 9.5L10 3l7 6.5V17a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M7 18v-6h6v6"/></svg>
         <span data-i18n="nav.inicio">Inicio</span>
@@ -371,11 +373,10 @@ html.dark .dm-pill__sun { opacity: 0.38; }
       </a>
     </nav>
 
-    <!-- Right side: dark mode pill + lang pill + CTA -->
+    <!-- Right side: dark mode pill + lang toggle + CTA -->
     <!-- navbar__spacer keeps compatibility with darkmode.js auto-injection -->
     <div class="bubble-nav__actions navbar__spacer">
-
-      <!-- Dark mode pill -->
+      <!-- Dark mode pill: sun | moon -->
       <div class="dm-pill" id="darkModeToggle" role="button" title="Cambiar modo claro/oscuro" aria-label="Cambiar modo claro/oscuro" data-i18n-title="nav.darkmode.toggle" data-i18n-aria="nav.darkmode.toggle">
         <span class="dm-pill__btn dm-pill__sun dm-sun" id="dmSunBtn">
           <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" width="16" height="16">
@@ -393,8 +394,8 @@ html.dark .dm-pill__sun { opacity: 0.38; }
         </span>
       </div>
 
-      <!-- Language pill -->
-      <button class="lang-pill" onclick="toggleLang()" aria-label="Cambiar idioma" data-current="es" data-i18n-aria="nav.lang.toggle">
+      <!-- Language toggle pill -->
+      <button class="lang-pill" onclick="toggleLang()" aria-label="Cambiar idioma" data-i18n-aria="nav.lang.toggle" data-current="es">
         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="15" height="15">
           <circle cx="10" cy="10" r="8"/>
           <ellipse cx="10" cy="10" rx="3.5" ry="8"/>
@@ -412,7 +413,6 @@ html.dark .dm-pill__sun { opacity: 0.38; }
         <span data-i18n="nav.unete">Únete</span>
         <span class="btn-sparkle" aria-hidden="true"></span>
       </a>
-
     </div>
   </header>
 </div>

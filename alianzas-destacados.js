@@ -148,6 +148,20 @@
     var wrapper = carousel ? carousel.closest('.alianzas-carousel-wrapper') : null;
     if (!carousel) return;
 
+    // FIX: cada llamada anterior a pintarCarousel() en estado vacío
+    // insertaba una tarjeta ".alid-vacio" nueva con insertAdjacentHTML
+    // sin quitar la anterior. Si esta funcion se invocaba mas de una
+    // vez (p.ej. el listener de "reco:langchange" en ARRANQUE llama a
+    // pintarCarousel(ultimosAliados) de nuevo), las tarjetas vacias se
+    // iban acumulando una tras otra en vez de reemplazarse. Ahora se
+    // limpia cualquier estado vacio previo al principio, sin importar
+    // cuantas veces se llame esta funcion ni por que motivo.
+    if (wrapper) {
+      wrapper.parentNode.querySelectorAll('.alid-vacio').forEach(function (el) {
+        el.remove();
+      });
+    }
+
     if (!aliados.length) {
       carousel.innerHTML = '';
       if (wrapper) wrapper.classList.add('alianzas-carousel-wrapper--vacio');
@@ -158,6 +172,12 @@
       carousel.insertAdjacentHTML('afterend', renderVacio());
       return;
     }
+
+    if (wrapper) wrapper.classList.remove('alianzas-carousel-wrapper--vacio');
+    var prevBtnR = document.getElementById('prevBtn');
+    var nextBtnR = document.getElementById('nextBtn');
+    if (prevBtnR) prevBtnR.style.display = '';
+    if (nextBtnR) nextBtnR.style.display = '';
 
     aliados.forEach(function (a) { aliadosCache[String(a.id)] = a; });
     carousel.innerHTML = aliados.map(renderTarjeta).join('');
