@@ -88,6 +88,41 @@ body.rc-modal-open {
 .rc-minfo__scrollbody {
   overflow-y: auto;
   min-height: 0;
+  /* Barra de scroll propia (fina, color de acento) en vez de la
+     barra nativa blanca del navegador que se veía "cruda" sobre
+     el fondo oscuro del panel. Firefox: */
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--accent) 45%, transparent) transparent;
+}
+
+/* Chrome / Edge / Safari */
+.rc-minfo__scrollbody::-webkit-scrollbar {
+  width: 7px;
+}
+
+.rc-minfo__scrollbody::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.rc-minfo__scrollbody::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--accent) 45%, transparent);
+  border-radius: 999px;
+}
+
+.rc-minfo__scrollbody::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--accent) 65%, transparent);
+}
+
+/* Difuminado superior del panel: el botón de cerrar (.rc-minfo__close)
+   es fijo y NO se desplaza junto con el contenido, así que sin este
+   fade cualquier bloque que llegue a quedar justo bajo su franja al
+   hacer scroll se ve "pegado" o chocando contra el círculo (ej. el
+   bloque "Dónde llevarlo" cuando el usuario baja el panel). Con la
+   máscara, el contenido se desvanece unos px antes de llegar ahí, sin
+   importar en qué punto del scroll esté. */
+.rc-minfo-overlay .rc-minfo__scrollbody {
+  mask-image: linear-gradient(to bottom, transparent 0, black 44px, black 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, black 44px, black 100%);
 }
 
 .rc-minfo-overlay .rc-minfo__inner {
@@ -109,7 +144,16 @@ body.rc-modal-open {
   justify-content: center;
   cursor: pointer;
   z-index: 2;
-  transition: background 0.2s, color 0.2s, transform 0.2s, border-color 0.2s;
+  transition: background 0.2s, color 0.2s, transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+/* En la ventana flotante (overlay) el botón queda fijo sobre contenido
+   que sí se desplaza (ver el fade en .rc-minfo__scrollbody arriba), así
+   que necesita verse como un control sólido y elevado en cualquier
+   momento del scroll, no solo un aro fino que se mezcla con el fondo. */
+.rc-minfo-overlay .rc-minfo__close {
+  background: color-mix(in srgb, var(--bg-card) 92%, black 8%);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.30);
 }
 
 .rc-minfo__close:hover {

@@ -346,11 +346,24 @@ html.dark .leaflet-marker-icon:hover {
 .more-filters-dropdown {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: .35rem;
   flex: 1;
   min-width: 0;
   animation: mapaDropdownIn .22s cubic-bezier(.4,0,.2,1);
+}
+
+/* FIX: #filterChipsExtraList (la lista real de chips secundarios)
+   heredaba "flex: 1" de .filter-chips (styles.css), lo que junto al
+   "flex-wrap: wrap" del .more-filters-dropdown que la envuelve
+   generaba doble wrapping anidado: el ultimo chip ("Utiles
+   escolares") podia quedar solo en su propia linea con espacio vacio
+   a la derecha en vez de fluir pegado a los demas. Al ser ya el unico
+   hijo relevante del dropdown, no necesita flex-grow propio -- solo
+   debe wrappear sus chips de forma compacta. */
+#filterChipsExtraList.filter-chips {
+  flex: initial;
+  width: 100%;
 }
 
 /* La etiqueta "Más materiales:" ya no se muestra: al ser un
