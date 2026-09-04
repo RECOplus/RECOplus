@@ -1,0 +1,62 @@
+/* ═══════════════════════════════════════════════════════════════
+   NAV-LINKS-SHRINK-FIX.CSS — RECO+
+   Capa ADITIVA sobre navbar.css y nav-overflow-fix.css.
+
+   BUG: en un rango de ancho intermedio (por debajo de donde todo el
+   navbar entra cómodo, pero todavía por encima de los 860px donde
+   .bubble-nav__links se oculta del todo para pasar a móvil), los 7
+   links (Inicio, Reciclar, Donar/Ayuda, Guía, Escáner, Mapa,
+   Alianzas) más el bloque de acciones (dark pill, lang pill, CTA
+   "Únete") no caben todos en una sola fila dentro del pill. 
+   nav-overflow-fix.css ya evita que esto rompa el layout (le puso
+   overflow-x:auto + scrollbar oculta a .bubble-nav__links), pero el
+   efecto visual de ese scroll oculto es que el ÚLTIMO link (el
+   activo en cada página, ej. "Alianzas") queda cortado a la mitad
+   ("Alianza:") en vez de mostrarse completo — se ve roto aunque
+   técnicamente el layout no se desborda.
+
+   FIX: en ese mismo rango, en vez de depender solo del scroll oculto,
+   se achica progresivamente el tamaño de fuente, el padding y el gap
+   entre íconos y texto de los links (y el gap entre links entre sí),
+   para que los 7 quepan completos y legibles sin cortarse. El scroll
+   oculto de nav-overflow-fix.css se mantiene como red de seguridad
+   para anchos aún más angostos dentro de este mismo rango.
+
+   El breakpoint superior (1080px) es donde en la práctica empieza a
+   faltar espacio en pantallas típicas de laptop/tablet con esta
+   estructura de navbar; el inferior (860px) coincide con el
+   breakpoint ya existente en navbar.css donde los links se ocultan
+   del todo. Cárgalo DESPUÉS de navbar.css y nav-overflow-fix.css:
+   <link rel="stylesheet" href="nav-links-shrink-fix.css">
+═══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1080px) and (min-width: 861px) {
+  .bubble-nav__links {
+    gap: 0;
+  }
+
+  .bubble-nav__links a {
+    font-size: 0.78rem;
+    padding: 6px 8px;
+    gap: 4px;
+  }
+
+  .bubble-nav__links a svg {
+    width: 13px;
+    height: 13px;
+  }
+}
+
+/* Rango aún más angosto dentro de la misma franja "escritorio": si
+   980px tampoco alcanza, se compacta un poco más antes de llegar al
+   punto donde navbar.css directamente oculta los links (860px). */
+@media (max-width: 980px) and (min-width: 861px) {
+  .bubble-nav__links a {
+    font-size: 0.74rem;
+    padding: 6px 6px;
+  }
+
+  .bubble-nav__links a span {
+    white-space: nowrap;
+  }
+}

@@ -255,6 +255,11 @@ html.dark .dm-pill__sun { opacity: 0.38; }
 <!-- Capa aditiva: evita que el CTA "Únete" se salga del pill del
      navbar cuando no cabe todo el contenido (links + acciones). -->
 <link rel="stylesheet" href="nav-overflow-fix.css">
+<!-- Capa aditiva: achica progresivamente los links del navbar en el
+     rango de ancho donde no caben completos, evitando que el último
+     (el link activo de la página) se corte a la mitad por el scroll
+     oculto de nav-overflow-fix.css. -->
+<link rel="stylesheet" href="nav-links-shrink-fix.css">
 <!-- Capa aditiva: compacta el CTA "Únete" a solo ícono en móvil (sin sesión), en vez de dejarlo cortado por el overflow oculto de arriba -->
 <link rel="stylesheet" href="nav-cta-mobile-fix.css">
 <script>
