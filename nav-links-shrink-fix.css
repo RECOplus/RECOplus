@@ -30,7 +30,14 @@
    <link rel="stylesheet" href="nav-links-shrink-fix.css">
 ═══════════════════════════════════════════════════════════════ */
 
-@media (max-width: 1080px) and (min-width: 861px) {
+/* ACTUALIZACIÓN: se quita el techo original de 1080px — confirmado
+   con captura real que el corte persistía en ventanas de escritorio
+   bastante más anchas (7 links + 4 piezas de acciones no entran
+   cómodos ni siquiera bien por encima de 1080px dado el
+   max-width:1160px del pill). El achique ahora aplica siempre que
+   los links estén visibles (>860px), no solo en una franja angosta
+   intermedia. */
+@media (min-width: 861px) {
   .bubble-nav__links {
     gap: 0;
   }
