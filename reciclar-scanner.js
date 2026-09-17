@@ -468,7 +468,7 @@
     fetch(CLASSIFY_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ image: base64 })
+      body: JSON.stringify({ image: base64, idioma: isEnglish() ? "en" : "es" })
     })
       .then(function (res) {
         return res.json().catch(function () { return null; }).then(function (datos) {
