@@ -107,9 +107,10 @@ const MODELO_GEMINI = 'gemini-flash-latest'; // alias de Google al flash estable
 const ENDPOINT_GEMINI =
   `https://generativelanguage.googleapis.com/v1beta/models/${MODELO_GEMINI}:generateContent`;
 
-function construirPrompt(categorias) {
+function construirPrompt(categorias, idioma) {
   const guia = categorias.map((c) => `- ${c.id}: ${c.descripcion_ia}`).join('\n');
   const ids = categorias.map((c) => c.id).join('\n- ');
+  const idiomaRazon = idioma === 'en' ? 'in English' : 'en español';
 
   return `Eres un clasificador de residuos para una app de reciclaje llamada RECO+.
 Se te muestra una foto de UN objeto. Debes decidir a cuál de estas categorías pertenece
@@ -124,7 +125,7 @@ Reglas:
 - Si el objeto no encaja claramente en ninguna categoría, o la imagen no es clara,
   usa "id": null.
 - "confianza" debe ser "alta", "media" o "baja".
-- "razon" es una descripción breve (máximo 8 palabras) en español de qué viste.
+- "razon" es una descripción breve (máximo 8 palabras) ${idiomaRazon} de qué viste.
 
 Formato exacto de respuesta:
 {"id": "plastico", "confianza": "alta", "razon": "botella de agua transparente"}`;
@@ -171,7 +172,7 @@ module.exports = async function handler(req, res) {
 
   try {
     const categorias = await obtenerCategorias();
-    const promptSistema = construirPrompt(categorias);
+    const promptSistema = construirPrompt(categorias, idioma);
 
     const respuestaGemini = await fetch(ENDPOINT_GEMINI, {
       method: 'POST',
