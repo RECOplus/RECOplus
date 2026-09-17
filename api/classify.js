@@ -48,18 +48,18 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 // agregas o quitas una categoría en Supabase, esto queda desactualizado
 // pero solo se usa como último recurso.
 const CATEGORIAS_RESPALDO = [
-  { id: 'plastico', descripcion_ia: 'envases, botellas, bolsas y objetos de plástico en general', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '✅ Esto se recicla. Es plástico: enjuágalo y llévalo a un contenedor de reciclaje.' },
-  { id: 'vidrio', descripcion_ia: 'botellas, frascos y envases de vidrio', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '✅ Esto se recicla. Es vidrio: enjuágalo y llévalo a un contenedor de reciclaje.' },
-  { id: 'metal', descripcion_ia: 'latas, ollas, utensilios y objetos metálicos', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '✅ Esto se recicla. Es metal: llévalo a un contenedor de reciclaje.' },
-  { id: 'papel', descripcion_ia: 'hojas, sobres, empaques de papel o cartón', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '✅ Esto se recicla. Es papel: llévalo a un contenedor de reciclaje.' },
-  { id: 'libros', descripcion_ia: 'libros y revistas', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '♻️ Esto se reutiliza. Es un libro: dónalo o llévalo a un punto de acopio de papel.' },
-  { id: 'electronicos', descripcion_ia: 'laptops, monitores, electrodomésticos, cables, impresoras', reciclable: true, requiere_punto_especial: true, mensaje_escaner: '⚠️ Esto se recicla, pero necesita un punto especial. Es un electrónico: llévalo a un centro de acopio electrónico.' },
-  { id: 'celulares', descripcion_ia: 'teléfonos móviles y tablets', reciclable: true, requiere_punto_especial: true, mensaje_escaner: '⚠️ Esto se recicla, pero necesita un punto especial. Es un celular: llévalo a un punto de recolección de operadoras.' },
-  { id: 'ropa', descripcion_ia: 'prendas de vestir, zapatos, accesorios textiles', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '✅ Esto se recicla o dona. Es ropa: dónala si está en buen estado, o llévala a un punto de acopio textil.' },
-  { id: 'muebles', descripcion_ia: 'sillas, mesas, estantes y mobiliario en general', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '♻️ Esto se reutiliza. Es un mueble: dónalo si está en buen estado.' },
-  { id: 'juguetes', descripcion_ia: 'juguetes de cualquier material', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '♻️ Esto se reutiliza. Es un juguete: dónalo si está en buen estado.' },
-  { id: 'baterias', descripcion_ia: 'pilas y baterías sueltas o recargables', reciclable: true, requiere_punto_especial: true, mensaje_escaner: '⚠️ Esto se recicla, pero necesita un punto especial. Es una batería: NUNCA la tires a la basura común.' },
-  { id: 'bombillos', descripcion_ia: 'bombillos y focos de cualquier tipo', reciclable: true, requiere_punto_especial: true, mensaje_escaner: '⚠️ Esto se recicla, pero necesita un punto especial. Es un bombillo: llévalo a un punto de acopio de residuos especiales.' },
+  { id: 'plastico', descripcion_ia: 'envases, botellas, bolsas y objetos de plástico en general', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '✅ Esto se recicla. Es plástico: enjuágalo y llévalo a un contenedor de reciclaje.', mensaje_escaner_en: "✅ This is recyclable. It's plastic: rinse it and take it to a recycling bin." },
+  { id: 'vidrio', descripcion_ia: 'botellas, frascos y envases de vidrio', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '✅ Esto se recicla. Es vidrio: enjuágalo y llévalo a un contenedor de reciclaje.', mensaje_escaner_en: "✅ This is recyclable. It's glass: rinse it and take it to a recycling bin." },
+  { id: 'metal', descripcion_ia: 'latas, ollas, utensilios y objetos metálicos', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '✅ Esto se recicla. Es metal: llévalo a un contenedor de reciclaje.', mensaje_escaner_en: "✅ This is recyclable. It's metal: take it to a recycling bin." },
+  { id: 'papel', descripcion_ia: 'hojas, sobres, empaques de papel o cartón', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '✅ Esto se recicla. Es papel: llévalo a un contenedor de reciclaje.', mensaje_escaner_en: "✅ This is recyclable. It's paper: take it to a recycling bin." },
+  { id: 'libros', descripcion_ia: 'libros y revistas', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '♻️ Esto se reutiliza. Es un libro: dónalo o llévalo a un punto de acopio de papel.', mensaje_escaner_en: "♻️ This gets reused. It's a book: donate it or take it to a paper collection point." },
+  { id: 'electronicos', descripcion_ia: 'laptops, monitores, electrodomésticos, cables, impresoras', reciclable: true, requiere_punto_especial: true, mensaje_escaner: '⚠️ Esto se recicla, pero necesita un punto especial. Es un electrónico: llévalo a un centro de acopio electrónico.', mensaje_escaner_en: "⚠️ This is recyclable, but needs a special drop-off point. It's electronics: take it to an e-waste collection center." },
+  { id: 'celulares', descripcion_ia: 'teléfonos móviles y tablets', reciclable: true, requiere_punto_especial: true, mensaje_escaner: '⚠️ Esto se recicla, pero necesita un punto especial. Es un celular: llévalo a un punto de recolección de operadoras.', mensaje_escaner_en: "⚠️ This is recyclable, but needs a special drop-off point. It's a phone: take it to a carrier collection point." },
+  { id: 'ropa', descripcion_ia: 'prendas de vestir, zapatos, accesorios textiles', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '✅ Esto se recicla o dona. Es ropa: dónala si está en buen estado, o llévala a un punto de acopio textil.', mensaje_escaner_en: "✅ This gets recycled or donated. It's clothing: donate it if it's in good condition, or take it to a textile collection point." },
+  { id: 'muebles', descripcion_ia: 'sillas, mesas, estantes y mobiliario en general', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '♻️ Esto se reutiliza. Es un mueble: dónalo si está en buen estado.', mensaje_escaner_en: "♻️ This gets reused. It's furniture: donate it if it's in good condition." },
+  { id: 'juguetes', descripcion_ia: 'juguetes de cualquier material', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '♻️ Esto se reutiliza. Es un juguete: dónalo si está en buen estado.', mensaje_escaner_en: "♻️ This gets reused. It's a toy: donate it if it's in good condition." },
+  { id: 'baterias', descripcion_ia: 'pilas y baterías sueltas o recargables', reciclable: true, requiere_punto_especial: true, mensaje_escaner: '⚠️ Esto se recicla, pero necesita un punto especial. Es una batería: NUNCA la tires a la basura común.', mensaje_escaner_en: "⚠️ This is recyclable, but needs a special drop-off point. It's a battery: NEVER throw it in regular trash." },
+  { id: 'bombillos', descripcion_ia: 'bombillos y focos de cualquier tipo', reciclable: true, requiere_punto_especial: true, mensaje_escaner: '⚠️ Esto se recicla, pero necesita un punto especial. Es un bombillo: llévalo a un punto de acopio de residuos especiales.', mensaje_escaner_en: "⚠️ This is recyclable, but needs a special drop-off point. It's a light bulb: take it to a special waste collection point." },
 ];
 
 // Cache en memoria: en Vercel, una misma instancia "caliente" de la
@@ -77,7 +77,7 @@ async function obtenerCategorias() {
   }
 
   try {
-    const url = `${SUPABASE_URL}/rest/v1/categorias?select=id,descripcion_ia,reciclable,requiere_punto_especial,mensaje_escaner`;
+    const url = `${SUPABASE_URL}/rest/v1/categorias?select=id,descripcion_ia,reciclable,requiere_punto_especial,mensaje_escaner,mensaje_escaner_en`;
     const respuesta = await fetch(url, {
       headers: {
         apikey: SUPABASE_ANON_KEY,
@@ -161,6 +161,12 @@ module.exports = async function handler(req, res) {
     return;
   }
 
+  // Idioma pedido por el cliente (ver scanner-core.js: escanearPreciso
+  // manda { image, idioma }). Antes se ignoraba por completo, así que
+  // el mensaje final siempre volvía en español sin importar el idioma
+  // activo en el sitio.
+  const idioma = body && body.idioma === 'en' ? 'en' : 'es';
+
   const base64Limpio = imagenBase64.replace(/^data:image\/\w+;base64,/, '');
 
   try {
@@ -232,7 +238,9 @@ module.exports = async function handler(req, res) {
         ? clasificacion.confianza
         : 'media',
       razon: typeof clasificacion.razon === 'string' ? clasificacion.razon.slice(0, 120) : '',
-      mensaje: categoriaEncontrada ? categoriaEncontrada.mensaje_escaner : null,
+      mensaje: categoriaEncontrada
+        ? ((idioma === 'en' && categoriaEncontrada.mensaje_escaner_en) || categoriaEncontrada.mensaje_escaner)
+        : null,
       reciclable: categoriaEncontrada ? !!categoriaEncontrada.reciclable : null,
       requierePuntoEspecial: categoriaEncontrada ? !!categoriaEncontrada.requiere_punto_especial : null,
     });

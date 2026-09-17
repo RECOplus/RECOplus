@@ -259,6 +259,7 @@ const translations = {
     "mapa.rate.toastNew":       "¡Gracias por tu valoración de {n} ★!",
     "mapa.rate.toastUpdate":    "Actualizaste tu valoración a {n} ★",
     "mapa.modal.submitToast":   "¡Gracias! Tu sugerencia fue enviada",
+    "mapa.route.btn":           "🧭 Cómo llegar",
 
     "mapa.tooltip.title": "¿Sabías qué?",
     "mapa.tooltip.fact":  "Reciclar 1 botella de plástico ahorra suficiente energía para iluminar una bombilla por 6 horas.",
@@ -2572,6 +2573,7 @@ const translations = {
     "mapa.rate.toastNew":       "Thanks for your {n}-star rating!",
     "mapa.rate.toastUpdate":    "You updated your rating to {n} ★",
     "mapa.modal.submitToast":   "Thank you! Your suggestion was submitted 🌱",
+    "mapa.route.btn":           "🧭 Get directions",
 
     "mapa.tooltip.title": "Did you know?",
     "mapa.tooltip.fact":  "Recycling 1 plastic bottle saves enough energy to power a light bulb for 6 hours.",
