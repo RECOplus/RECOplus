@@ -27,6 +27,32 @@
   var PLAY_ICON = '<svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18"><path d="M6 4.5v11l9-5.5-9-5.5z"/></svg>';
 
   var DATA = window.RECO_VIDEOS_DATA || { categories: [], videos: [] };
+
+  // Abre el reproductor (video-player-modal.js) para CUALQUIER
+  // tarjeta de la biblioteca, no solo las de la comunidad: antes
+  // solo los videos subidos por la comunidad abrian el modal al
+  // hacer clic (ver videos-supabase.js, que ya ni siquiera se carga
+  // en videos.html), y los videos "de demostracion" (v1, v8-v10,
+  // v16-v20) que ahora viven como contenido estatico en
+  // videos-data.js se quedaron sin ninguna forma de reproducirse.
+  function abrirVideo(video) {
+    if (!video || !video.videoUrl) return;
+    if (typeof window.recoAbrirVideoModal !== "function") return;
+    var titulo = video.titleKey ? tr(video.titleKey, video.titleFallback) : video.titleFallback;
+    window.recoAbrirVideoModal(video.videoUrl, titulo);
+  }
+
+  function wireCardClicks() {
+    var grid = gridWrap();
+    if (!grid || grid._recoCardsWired) return;
+    grid._recoCardsWired = true;
+    grid.addEventListener("click", function (e) {
+      var card = e.target.closest ? e.target.closest(".vh-card") : null;
+      if (!card) return;
+      var video = DATA.videos.filter(function (v) { return v.id === card.dataset.id; })[0];
+      abrirVideo(video);
+    });
+  }
   var currentFilter = "todos";
   var currentSearch = "";
 
@@ -285,6 +311,7 @@
 
     buildChips();
     wireSearch();
+    wireCardClicks();
 
     if (searchParam) {
       currentSearch = searchParam;
