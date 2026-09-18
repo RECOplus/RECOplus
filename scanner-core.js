@@ -97,6 +97,119 @@ function _enriquecerConCategoriaSupabase(material, categoriasMapa) {
 }
 
 /**
+ * Región (en píxeles nativos de una fuente de video/foto) que
+ * corresponde al marco guía que el usuario ve superpuesto en pantalla
+ * (.reco-scanner__visor-marco en scanner-widget.css). Enviar a Gemini
+ * solo esta región, en vez del frame completo, recorta el fondo/
+ * desorden alrededor del objeto que el usuario ya está centrando
+ * visualmente — mismo objeto, menos ambigüedad para la IA.
+ *
+ * OJO: estas dos constantes deben coincidir con el CSS real. Si se
+ * cambia el aspect-ratio de .reco-scanner__stage o el tamaño de
+ * .reco-scanner__visor-marco, hay que actualizarlas aquí también.
+ */
+const ASPECTO_STAGE = 4 / 3; // .reco-scanner__stage { aspect-ratio: 4/3 }
+const FRACCION_MARCO = 0.62; // .reco-scanner__visor-marco { width/height: 62% }
+
+function _calcularRegionMarco(anchoFuente, altoFuente) {
+  if (!anchoFuente || !altoFuente) {
+    // Fuente sin dimensiones válidas todavía: no se puede calcular
+    // nada sensato, se devuelve el frame completo tal cual para no
+    // romper la captura (mejor una foto sin recortar que ninguna foto).
+    return { x: 0, y: 0, width: anchoFuente || 0, height: altoFuente || 0 };
+  }
+
+  const aspectoFuente = anchoFuente / altoFuente;
+
+  // 1) Recorte tipo "cover" que hace el <video> para llenar el stage
+  //    4:3 (mismo resultado que object-fit:cover, calculado en
+  //    píxeles en vez de CSS): la dimensión que sobra se recorta
+  //    simétricamente de cada lado.
+  let visW = anchoFuente;
+  let visH = altoFuente;
+  if (aspectoFuente > ASPECTO_STAGE) {
+    visW = altoFuente * ASPECTO_STAGE; // fuente más ancha: se recortan los costados
+  } else if (aspectoFuente < ASPECTO_STAGE) {
+    visH = anchoFuente / ASPECTO_STAGE; // fuente más alta: se recorta arriba/abajo
+  }
+  const visX = (anchoFuente - visW) / 2;
+  const visY = (altoFuente - visH) / 2;
+
+  // 2) El marco guía es el 62% central de esa región visible (mismo
+  //    porcentaje y mismo centrado que .reco-scanner__visor-marco).
+  const marcoW = visW * FRACCION_MARCO;
+  const marcoH = visH * FRACCION_MARCO;
+  return {
+    x: visX + (visW - marcoW) / 2,
+    y: visY + (visH - marcoH) / 2,
+    width: marcoW,
+    height: marcoH,
+  };
+}
+
+/**
+ * Mide brillo y nitidez aproximada de un canvas ya capturado, para
+ * decidir si vale la pena mandarlo a Gemini o pedirle al usuario que
+ * vuelva a intentar (cámara tapada, poca luz, mano temblando).
+ *
+ * Se reescala a un ancho pequeño (anchoAnalisis) antes de analizar:
+ * ni el brillo promedio ni la nitidez relativa (comparada contra un
+ * umbral fijo) necesitan la resolución completa, y así el análisis es
+ * prácticamente instantáneo incluso con fotos de varios megapíxeles.
+ *
+ * - brillo: promedio de luminancia (0-255). Bajo = imagen oscura.
+ * - nitidez: varianza del Laplaciano (kernel de bordes de 4 vecinos)
+ *   sobre la imagen en escala de grises — la técnica clásica de
+ *   "variance of Laplacian" para detectar desenfoque: una foto
+ *   nítida tiene muchos bordes marcados (varianza alta), una borrosa
+ *   los suaviza todos (varianza baja).
+ */
+function _medirCalidadImagen(canvasOrigen, anchoAnalisis) {
+  const alto = Math.max(1, Math.round(canvasOrigen.height * (anchoAnalisis / canvasOrigen.width)));
+  const mini = document.createElement('canvas');
+  mini.width = anchoAnalisis;
+  mini.height = alto;
+  const ctxMini = mini.getContext('2d', { willReadFrequently: true });
+  ctxMini.drawImage(canvasOrigen, 0, 0, anchoAnalisis, alto);
+
+  const { data } = ctxMini.getImageData(0, 0, anchoAnalisis, alto);
+  const gris = new Float32Array(anchoAnalisis * alto);
+  let sumaBrillo = 0;
+  for (let i = 0, p = 0; i < data.length; i += 4, p++) {
+    // Luminancia perceptual (ITU-R BT.601), misma fórmula que usan la
+    // mayoría de conversores a escala de grises.
+    const g = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+    gris[p] = g;
+    sumaBrillo += g;
+  }
+  const brillo = sumaBrillo / gris.length;
+
+  // Varianza del Laplaciano (kernel de 4 vecinos), ignorando el borde
+  // de 1px para no salirse del arreglo.
+  let sumaLap = 0;
+  let sumaLap2 = 0;
+  let n = 0;
+  for (let y = 1; y < alto - 1; y++) {
+    for (let x = 1; x < anchoAnalisis - 1; x++) {
+      const idx = y * anchoAnalisis + x;
+      const lap =
+        4 * gris[idx] -
+        gris[idx - 1] -
+        gris[idx + 1] -
+        gris[idx - anchoAnalisis] -
+        gris[idx + anchoAnalisis];
+      sumaLap += lap;
+      sumaLap2 += lap * lap;
+      n++;
+    }
+  }
+  const mediaLap = n ? sumaLap / n : 0;
+  const nitidez = n ? sumaLap2 / n - mediaLap * mediaLap : 0;
+
+  return { brillo, nitidez };
+}
+
+/**
  * Estados posibles del escáner, útiles para pintar la UI.
  */
 export const ESTADOS = {
@@ -151,8 +264,16 @@ const CONFIG_DEFECTO = {
   // escáner está realmente roto (en vez de un glitch puntual)
   maxFallosConsecutivos: 5,
 
-  // Resolución solicitada a la cámara
-  video: { width: 480, height: 360, facingMode: 'environment' },
+  // Resolución solicitada a la cámara. Antes era 480x360 (pensada
+  // para que MobileNet clasificara rápido en el bucle en vivo), pero
+  // ese resultado en vivo ya no se pinta en la UI (ver onResultado en
+  // scanner-demo.html: descarta todo lo que no venga de Gemini), así
+  // que ya no hay razón para limitar la cámara a esa resolución tan
+  // baja. Se sube a 720p (ideal, no exacto: se degrada solo en
+  // cámaras/webcams que no lo soporten) porque de ahí sale también la
+  // foto que se manda a Gemini en escanearPreciso() — más detalle acá
+  // ayuda directamente a que la IA reconozca mejor el objeto.
+  video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'environment' },
 
   // Endpoint del backend (función serverless en Vercel) que esconde
   // la API key de Gemini y clasifica una foto. Solo se usa cuando se
@@ -165,6 +286,33 @@ const CONFIG_DEFECTO = {
   // sube más rápido y consume menos cuota de red, pero peor detalle
   // para objetos pequeños o con poco contraste.
   calidadCapturaIA: 0.85,
+
+  // --- Chequeo de calidad de la foto antes de mandarla a Gemini ---
+  // Evita gastar una llamada (y darle al usuario un resultado "no
+  // identificado") cuando la foto en sí ya viene mal: muy oscura o
+  // borrosa por temblor de mano. Se puede desactivar con
+  // chequeoCalidadFoto:false si en la práctica da demasiados falsos
+  // positivos.
+  chequeoCalidadFoto: true,
+
+  // Ancho (px) al que se reescala la foto para medir brillo/nitidez.
+  // No hace falta el tamaño completo para esto, así que el análisis
+  // es prácticamente gratis incluso con fotos de varios megapíxeles.
+  anchoAnalisisCalidad: 160,
+
+  // Brillo promedio mínimo (0-255, luminancia) para considerar que
+  // hay suficiente luz. Calibrado de forma conservadora (bastante
+  // bajo) para no rechazar fotos en interiores con luz normal; ajusta
+  // este número si en la práctica deja pasar fotos muy oscuras o
+  // rechaza fotos que en realidad se ven bien.
+  umbralBrilloMinimo: 35,
+
+  // Varianza mínima del Laplaciano para considerar la foto "nítida"
+  // (técnica clásica de "variance of Laplacian" para detectar
+  // desenfoque). Umbral empírico: valores típicos rondan varios
+  // cientos en fotos nítidas y caen por debajo de 50-80 en fotos
+  // claramente borrosas. Puede necesitar ajuste con cámaras reales.
+  umbralNitidezMinima: 60,
 };
 
 export class RecoScanner {
@@ -589,7 +737,7 @@ export class RecoScanner {
     this._setEstadoIA('capturando');
 
     try {
-      const base64 = this._capturarFrameComoBase64();
+      const base64 = await this._capturarFrameComoBase64();
       this._setEstadoIA('consultando');
 
       const respuesta = await fetch(this.config.endpointClasificacionIA, {
@@ -613,6 +761,12 @@ export class RecoScanner {
         labelOriginal: datos.razon || '',
         coincidenciaKeyword: datos.razon || null,
         confianzaBaja: datos.confianza === 'baja',
+        // Consejo accionable que Gemini devuelve SOLO cuando id es null
+        // o la confianza es baja (ver construirPrompt en api/classify.js):
+        // qué problema concreto tuvo la foto (borrosa, poca luz, objeto
+        // muy lejos, etc.) y qué hacer para la próxima. null en el resto
+        // de los casos (confianza alta/media).
+        sugerencia: datos.sugerencia || null,
       };
       // api/classify.js ya valida datos.id contra la tabla `categorias`
       // y devuelve mensaje/reciclable/requierePuntoEspecial en la misma
@@ -656,16 +810,104 @@ export class RecoScanner {
     this.onEstado(this.estadoActual, { subEstadoIA: subEstado });
   }
 
-  /** Dibuja el frame actual del <video> en un canvas oculto y lo devuelve como base64 JPEG. */
-  _capturarFrameComoBase64() {
-    const canvas = document.createElement('canvas');
-    canvas.width = this.videoEl.videoWidth;
-    canvas.height = this.videoEl.videoHeight;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(this.videoEl, 0, 0, canvas.width, canvas.height);
+  /**
+   * Obtiene la mejor foto posible del objeto y la devuelve como base64
+   * JPEG (sin el prefijo "data:image/jpeg;base64,").
+   *
+   * Intenta primero con ImageCapture.takePhoto(), que en los
+   * navegadores que lo soportan (Chrome/Edge/Android) puede devolver
+   * una foto en la resolución NATIVA del sensor de la cámara — casi
+   * siempre más alta que la resolución negociada para el stream de
+   * video en vivo (config.video), incluso ahora que esa se subió a
+   * 720p. Si no está disponible (Safari, Firefox) o falla por lo que
+   * sea, se cae al método de siempre: dibujar el frame actual del
+   * <video> en un canvas. Cualquiera de los dos caminos siempre
+   * reencoda a JPEG antes de devolver el base64, así que el backend
+   * (api/classify.js) no necesita saber cuál se usó.
+   */
+  async _capturarFrameComoBase64() {
+    const canvas = await this._obtenerCanvasRecortado();
+    this._verificarCalidadFoto(canvas);
     // toDataURL incluye el prefijo "data:image/jpeg;base64,"; el backend
     // ya sabe recortarlo, pero se recorta aquí también para mandar menos bytes.
     return canvas.toDataURL('image/jpeg', this.config.calidadCapturaIA).split(',')[1];
+  }
+
+  /** Obtiene el canvas ya recortado al marco guía, probando primero ImageCapture y cayendo al <video> si falla. */
+  async _obtenerCanvasRecortado() {
+    if (typeof ImageCapture !== 'undefined' && this.stream) {
+      try {
+        return await this._capturarConImageCapture();
+      } catch (err) {
+        console.warn(
+          '[RecoScanner] ImageCapture.takePhoto() falló, se usa el frame del <video> como respaldo:',
+          err
+        );
+      }
+    }
+    return this._capturarFrameDesdeVideo();
+  }
+
+  /** Foto en la resolución nativa del sensor, vía la Image Capture API, ya recortada al marco guía. */
+  async _capturarConImageCapture() {
+    const track = this.stream.getVideoTracks()[0];
+    if (!track) throw new Error('Sin track de video disponible para ImageCapture');
+
+    const imageCapture = new ImageCapture(track);
+    const blob = await imageCapture.takePhoto();
+    const bitmap = await createImageBitmap(blob);
+
+    return this._recortarACanvas(bitmap, bitmap.width, bitmap.height);
+  }
+
+  /** Respaldo: dibuja el frame actual del <video>, ya recortado al marco guía. */
+  _capturarFrameDesdeVideo() {
+    return this._recortarACanvas(this.videoEl, this.videoEl.videoWidth, this.videoEl.videoHeight);
+  }
+
+  /**
+   * Recorta `fuente` (un <video> o un ImageBitmap) a la región del
+   * marco guía (ver _calcularRegionMarco) y devuelve el CANVAS
+   * resultante (todavía sin codificar a JPEG, para poder analizar su
+   * calidad antes de decidir si vale la pena mandarlo). Mandar solo
+   * esa región a Gemini, en vez del frame completo, es lo que de
+   * verdad mejora el reconocimiento: se quita el fondo/desorden que
+   * rodea al objeto, dejando solo lo que el usuario ya centró
+   * visualmente dentro del marco en pantalla.
+   */
+  _recortarACanvas(fuente, anchoFuente, altoFuente) {
+    const region = _calcularRegionMarco(anchoFuente, altoFuente);
+    const canvas = document.createElement('canvas');
+    canvas.width = region.width;
+    canvas.height = region.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(
+      fuente,
+      region.x, region.y, region.width, region.height,
+      0, 0, region.width, region.height
+    );
+    return canvas;
+  }
+
+  /**
+   * Revisa brillo y nitidez del canvas ya recortado (ver
+   * _medirCalidadImagen) y aborta ANTES de gastar una llamada a
+   * Gemini si la foto claramente no sirve (muy oscura o borrosa por
+   * temblor de mano): mejor pedirle al usuario que reintente en el
+   * momento que esperar ~1-2s por una respuesta que de todos modos
+   * iba a salir mal.
+   */
+  _verificarCalidadFoto(canvas) {
+    if (!this.config.chequeoCalidadFoto) return;
+
+    const { brillo, nitidez } = _medirCalidadImagen(canvas, this.config.anchoAnalisisCalidad);
+
+    if (brillo < this.config.umbralBrilloMinimo) {
+      throw new Error('FOTO_OSCURA');
+    }
+    if (nitidez < this.config.umbralNitidezMinima) {
+      throw new Error('FOTO_BORROSA');
+    }
   }
 
   _manejarError(error, contexto) {
@@ -743,6 +985,8 @@ export function mensajeErrorLegible(error) {
     CLASIFICACION_FALLO: 'Ocurrió un error analizando la imagen. Reintentando automáticamente.',
     SIN_VIDEO_PARA_CAPTURAR: 'La cámara todavía no está lista para capturar una foto.',
     IA_CLASIFICACION_FALLO: 'No se pudo consultar el escaneo preciso. Intenta de nuevo en unos segundos.',
+    FOTO_OSCURA: 'La foto salió muy oscura. Acércate a una fuente de luz e inténtalo de nuevo.',
+    FOTO_BORROSA: 'La foto salió borrosa. Mantén el teléfono firme, a unos 15-20cm del objeto, e inténtalo de nuevo.',
   };
   return mapa[codigo] || 'Ocurrió un error inesperado con el escáner.';
 }

@@ -259,6 +259,7 @@ const translations = {
     "mapa.rate.toastNew":       "¡Gracias por tu valoración de {n} ★!",
     "mapa.rate.toastUpdate":    "Actualizaste tu valoración a {n} ★",
     "mapa.modal.submitToast":   "¡Gracias! Tu sugerencia fue enviada",
+    "mapa.route.btn":           "🧭 Cómo llegar",
 
     "mapa.tooltip.title": "¿Sabías qué?",
     "mapa.tooltip.fact":  "Reciclar 1 botella de plástico ahorra suficiente energía para iluminar una bombilla por 6 horas.",
@@ -2324,6 +2325,45 @@ const translations = {
     "legal.privacidad.s12.li1": "Correo: <a href=\"mailto:soporte.recoplus@gmail.com\">soporte.recoplus@gmail.com</a>",
     "legal.privacidad.s12.li2": "Teléfono / WhatsApp: +507 6399-1249",
     "legal.privacidad.s12.li3": "Ubicación: David, Panamá",
+
+    /* ── SUSCRIPCIÓN / MI PLAN ── */
+    "susc.titulo":          "Mi plan",
+    "susc.cargando":        "Cargando tu plan…",
+    "susc.verCambiarBtn":   "Ver y cambiar de plan",
+    "susc.escaneosHoy":     "Escaneos con IA hoy",
+    "susc.ilimitado":       "Ilimitado",
+    "susc.planLabel":       "Plan {plan}",
+    "susc.tuPlanActual":    "Tu plan actual: {plan}",
+    "susc.hint":            "Los planes de pago se activan al instante. Por ahora no hay cobro real: es una simulación mientras se integra la pasarela de pago.",
+    "susc.masCompleto":     "Más completo",
+    "susc.btnActual":       "Tu plan actual",
+    "susc.btnVolverGratis": "Volver a Gratis",
+    "susc.btnSuscribirme":  "Suscribirme",
+    "susc.aplicando":       "Aplicando…",
+    "susc.errorSesion":     "Inicia sesión para elegir un plan.",
+    "susc.errorServicio":   "No se pudo conectar con el servicio. Intenta de nuevo más tarde.",
+    "susc.errorActualizar": "No se pudo actualizar tu plan. Intenta de nuevo.",
+    "susc.errorConexion":   "Ocurrió un problema de conexión. Intenta de nuevo.",
+    "susc.planActualizado": "✓ Tu plan ahora es {plan}.",
+
+    "susc.plan.gratis.nombre":     "Gratis",
+    "susc.plan.gratis.precio":     "Gratis",
+    "susc.plan.gratis.beneficio1": "10 escaneos con IA al día",
+    "susc.plan.gratis.beneficio2": "1 campaña activa a la vez",
+    "susc.plan.gratis.beneficio3": "Campañas de hasta 3 días de vigencia",
+
+    "susc.plan.basico.nombre":     "Básico",
+    "susc.plan.basico.precio":     "$9.99/mes",
+    "susc.plan.basico.beneficio1": "50 escaneos con IA al día",
+    "susc.plan.basico.beneficio2": "Hasta 3 campañas activas a la vez",
+    "susc.plan.basico.beneficio3": "Campañas de hasta 7 días de vigencia",
+
+    "susc.plan.premium.nombre":     "Premium",
+    "susc.plan.premium.precio":     "$24.99/mes",
+    "susc.plan.premium.beneficio1": "Escaneos con IA ilimitados",
+    "susc.plan.premium.beneficio2": "Campañas activas ilimitadas",
+    "susc.plan.premium.beneficio3": "Campañas de hasta 30 días de vigencia",
+    "susc.plan.premium.beneficio4": "Tu empresa aparece en Aliados destacados",
   },
 
   en: {
@@ -2572,6 +2612,7 @@ const translations = {
     "mapa.rate.toastNew":       "Thanks for your {n}-star rating!",
     "mapa.rate.toastUpdate":    "You updated your rating to {n} ★",
     "mapa.modal.submitToast":   "Thank you! Your suggestion was submitted 🌱",
+    "mapa.route.btn":           "🧭 Get directions",
 
     "mapa.tooltip.title": "Did you know?",
     "mapa.tooltip.fact":  "Recycling 1 plastic bottle saves enough energy to power a light bulb for 6 hours.",
@@ -4633,6 +4674,45 @@ const translations = {
     "legal.privacidad.s12.li1": "Email: <a href=\"mailto:soporte.recoplus@gmail.com\">soporte.recoplus@gmail.com</a>",
     "legal.privacidad.s12.li2": "Phone / WhatsApp: +507 6399-1249",
     "legal.privacidad.s12.li3": "Location: David, Panama",
+
+    /* ── SUBSCRIPTION / MY PLAN ── */
+    "susc.titulo":          "My plan",
+    "susc.cargando":        "Loading your plan…",
+    "susc.verCambiarBtn":   "View and change plan",
+    "susc.escaneosHoy":     "AI scans today",
+    "susc.ilimitado":       "Unlimited",
+    "susc.planLabel":       "{plan} plan",
+    "susc.tuPlanActual":    "Your current plan: {plan}",
+    "susc.hint":            "Paid plans activate instantly. There's no real charge yet — it's a simulation while the payment gateway is integrated.",
+    "susc.masCompleto":     "Most complete",
+    "susc.btnActual":       "Your current plan",
+    "susc.btnVolverGratis": "Switch to Free",
+    "susc.btnSuscribirme":  "Subscribe",
+    "susc.aplicando":       "Applying…",
+    "susc.errorSesion":     "Sign in to choose a plan.",
+    "susc.errorServicio":   "Couldn't connect to the service. Please try again later.",
+    "susc.errorActualizar": "Couldn't update your plan. Please try again.",
+    "susc.errorConexion":   "A connection problem occurred. Please try again.",
+    "susc.planActualizado": "✓ Your plan is now {plan}.",
+
+    "susc.plan.gratis.nombre":     "Free",
+    "susc.plan.gratis.precio":     "Free",
+    "susc.plan.gratis.beneficio1": "10 AI scans per day",
+    "susc.plan.gratis.beneficio2": "1 active campaign at a time",
+    "susc.plan.gratis.beneficio3": "Campaigns lasting up to 3 days",
+
+    "susc.plan.basico.nombre":     "Basic",
+    "susc.plan.basico.precio":     "$9.99/month",
+    "susc.plan.basico.beneficio1": "50 AI scans per day",
+    "susc.plan.basico.beneficio2": "Up to 3 active campaigns at a time",
+    "susc.plan.basico.beneficio3": "Campaigns lasting up to 7 days",
+
+    "susc.plan.premium.nombre":     "Premium",
+    "susc.plan.premium.precio":     "$24.99/month",
+    "susc.plan.premium.beneficio1": "Unlimited AI scans",
+    "susc.plan.premium.beneficio2": "Unlimited active campaigns",
+    "susc.plan.premium.beneficio3": "Campaigns lasting up to 30 days",
+    "susc.plan.premium.beneficio4": "Your company appears in Featured allies",
   }
 };
 

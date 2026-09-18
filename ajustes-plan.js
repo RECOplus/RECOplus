@@ -16,6 +16,13 @@
  *   suscripcion-modal.js (mismas 3 tarjetas que ahí, sin duplicar
  *   ese HTML aquí).
  *
+ * i18n: todos los textos pasan por tr() (envoltorio de window.t(),
+ * i18n.js — claves "susc.*", compartidas con suscripcion-modal.js),
+ * con el texto en español como respaldo si i18n.js no cargó. Esta
+ * pestaña se inyecta dinámicamente en el modal de Ajustes (fuera de
+ * la pasada inicial de applyLang), así que se re-traduce a mano en
+ * 'reco:langchange' — mismo patrón que suscripcion-modal.js.
+ *
  * Sigue el MISMO patrón que ajustes-empresa.js: envuelve
  * window.recoAjustes.open para inyectar su pestaña cada vez que el
  * modal se abre, y localiza el overlay ya construido por
@@ -24,18 +31,20 @@
  * REQUIERE, en cualquier página con ajustes-modal.js:
  *   <link rel="stylesheet" href="suscripcion-modal.css">
  *   ...
+ *   <script src="i18n.js"></script>
  *   <script src="ajustes-modal.js"></script>
  *   <script src="suscripcion-planes.js"></script>
  *   <script src="suscripcion-modal.js"></script>
  *   <script src="ajustes-plan.js"></script>
- * (usa window.recoAuth, window.recoSupabase, window.recoPlanes y
- * window.recoSuscripcion ya inicializados)
+ * (usa window.recoAuth, window.recoSupabase, window.recoPlanes,
+ * window.recoSuscripcion y window.t ya inicializados)
  */
 (function () {
   'use strict';
 
   var TAB_KEY = 'miplan';
   var tabInjected = false;
+  var ultimoUserId = null; // se guarda para poder re-pintar en 'reco:langchange' sin volver a resolver la sesión
 
   var ICON_PLAN = '<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.5l6 2.2v4.6c0 4-2.6 6.8-6 8.2-3.4-1.4-6-4.2-6-8.2V4.7z"/><path d="M7.3 10l1.8 1.8 3.6-3.9"/></svg>';
 
@@ -47,6 +56,24 @@
     }
   }
 
+  // Envoltorio de window.t() con respaldo en español (mismo patrón
+  // que suscripcion-modal.js), para que esta pestaña nunca se quede
+  // sin texto si este script se cargara antes que i18n.js.
+  function interpolar(str, vars) {
+    if (!vars) return str;
+    Object.keys(vars).forEach(function (k) {
+      str = str.replace(new RegExp('\\{' + k + '\\}', 'g'), vars[k]);
+    });
+    return str;
+  }
+  function tr(key, fallback, vars) {
+    if (typeof window.t === 'function') {
+      var val = window.t(key, vars);
+      if (val && val !== key) return val;
+    }
+    return interpolar(fallback, vars);
+  }
+
   /* ══════════════════════════════════════════════
      RENDER
      ══════════════════════════════════════════════ */
@@ -55,11 +82,11 @@
       '<section class="ajustes-section" data-section="' + TAB_KEY + '">' +
         '<div class="susc-resumen" id="ajplanResumen">' +
           '<span class="susc-resumen__icon">⏳</span>' +
-          '<div class="susc-resumen__texto"><div class="susc-resumen__titulo">Cargando tu plan…</div></div>' +
+          '<div class="susc-resumen__texto"><div class="susc-resumen__titulo">' + tr('susc.cargando', 'Cargando tu plan…') + '</div></div>' +
         '</div>' +
         '<div id="ajplanUso"></div>' +
         '<div style="margin-top:16px">' +
-          '<button type="button" class="ajustes-btn ajustes-btn--primario" id="ajplanVerBtn">Ver y cambiar de plan</button>' +
+          '<button type="button" class="ajustes-btn ajustes-btn--primario" id="ajplanVerBtn">' + tr('susc.verCambiarBtn', 'Ver y cambiar de plan') + '</button>' +
         '</div>' +
       '</section>'
     );
@@ -69,7 +96,7 @@
     if (plan.escaneosIaPorDia === -1) {
       return (
         '<div class="susc-uso">' +
-          '<div class="susc-uso__label"><span>Escaneos con IA hoy</span><span>Ilimitado</span></div>' +
+          '<div class="susc-uso__label"><span>' + tr('susc.escaneosHoy', 'Escaneos con IA hoy') + '</span><span>' + tr('susc.ilimitado', 'Ilimitado') + '</span></div>' +
         '</div>'
       );
     }
@@ -77,13 +104,14 @@
     var lleno = usados >= plan.escaneosIaPorDia;
     return (
       '<div class="susc-uso">' +
-        '<div class="susc-uso__label"><span>Escaneos con IA hoy</span><span>' + usados + ' / ' + plan.escaneosIaPorDia + '</span></div>' +
+        '<div class="susc-uso__label"><span>' + tr('susc.escaneosHoy', 'Escaneos con IA hoy') + '</span><span>' + usados + ' / ' + plan.escaneosIaPorDia + '</span></div>' +
         '<div class="susc-uso__track"><div class="susc-uso__bar' + (lleno ? ' susc-uso__bar--lleno' : '') + '" style="width:' + pct + '%"></div></div>' +
       '</div>'
     );
   }
 
   function refrescarContenido(seccionEl, userId) {
+    ultimoUserId = userId;
     var resumenEl = seccionEl.querySelector('#ajplanResumen');
     var usoEl = seccionEl.querySelector('#ajplanUso');
 
@@ -92,7 +120,7 @@
       resumenEl.innerHTML =
         '<span class="susc-resumen__icon">' + plan.icono + '</span>' +
         '<div class="susc-resumen__texto">' +
-          '<div class="susc-resumen__titulo">Plan ' + plan.nombre + '</div>' +
+          '<div class="susc-resumen__titulo">' + tr('susc.planLabel', 'Plan {plan}', { plan: plan.nombre }) + '</div>' +
           '<div class="susc-resumen__desc">' + plan.beneficios.join(' · ') + '</div>' +
         '</div>';
 
@@ -124,7 +152,7 @@
     tabBtn.className = 'ajustes-tab';
     tabBtn.setAttribute('data-tab', TAB_KEY);
     tabBtn.setAttribute('data-active', 'false');
-    tabBtn.innerHTML = ICON_PLAN + '<span>Mi plan</span>';
+    tabBtn.innerHTML = ICON_PLAN + '<span>' + tr('susc.titulo', 'Mi plan') + '</span>';
     // "Mi plan" se ubica justo después de "Cuenta" (segunda pestaña),
     // no al final, para que quede visible sin tener que hacer scroll
     // horizontal en la barra de pestañas.
@@ -211,5 +239,30 @@
         }
       }).catch(function () {});
     };
+  });
+
+  /* ══════════════════════════════════════════════
+     CAMBIO DE IDIOMA: la pestaña se inyecta fuera de la pasada
+     inicial de applyLang() (i18n.js), así que hay que re-traducir a
+     mano su etiqueta y el botón "Ver y cambiar de plan", y volver a
+     pintar el resumen + el uso (refrescarContenido ya usa tr() en
+     cada llamada, así que basta con volver a invocarla con el
+     último userId conocido).
+     ══════════════════════════════════════════════ */
+  document.addEventListener('reco:langchange', function () {
+    if (!tabInjected) return;
+    var overlay = document.querySelector('.ajustes-overlay');
+    if (!overlay) return;
+
+    var tabLabel = overlay.querySelector('.ajustes-tab[data-tab="' + TAB_KEY + '"] span');
+    if (tabLabel) tabLabel.textContent = tr('susc.titulo', 'Mi plan');
+
+    var seccionEl = overlay.querySelector('.ajustes-section[data-section="' + TAB_KEY + '"]');
+    if (!seccionEl) return;
+
+    var verBtn = seccionEl.querySelector('#ajplanVerBtn');
+    if (verBtn) verBtn.textContent = tr('susc.verCambiarBtn', 'Ver y cambiar de plan');
+
+    if (ultimoUserId) refrescarContenido(seccionEl, ultimoUserId);
   });
 })();

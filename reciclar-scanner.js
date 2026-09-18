@@ -468,7 +468,7 @@
     fetch(CLASSIFY_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ image: base64 })
+      body: JSON.stringify({ image: base64, idioma: isEnglish() ? "en" : "es" })
     })
       .then(function (res) {
         return res.json().catch(function () { return null; }).then(function (datos) {
@@ -498,6 +498,10 @@
               '<span class="rc-minfo__badge">' + etiquetaConfianza + "</span>" +
               (datos.mensaje ? '<p class="rc-scan-result__hint rc-scan-result__hint--ok">' + datos.mensaje + "</p>" : "") +
               (datos.razon ? '<p class="rc-scan-result__hint">' + datos.razon + "</p>" : "") +
+              // Confianza "baja" con id válido: Gemini igual pudo incluir una
+              // sugerencia de cómo mejorar la foto para la próxima. Solo se
+              // muestra en ese caso (confianza alta/media no la trae).
+              (datos.sugerencia ? '<p class="rc-scan-result__hint">' + datos.sugerencia + "</p>" : "") +
             "</div>";
           window.recoMaterialInfo.showByKey(key);
           logScan(key, "[IA] " + (datos.razon || ""), null, true);
@@ -506,7 +510,7 @@
           iaBox.innerHTML =
             '<div class="rc-scan-result__body">' +
               '<div class="rc-scan-result__title">' + tr("rscan.ia.tampocoIdentifico", "La IA tampoco pudo identificarlo con seguridad") + '</div>' +
-              '<p class="rc-scan-result__hint">' + tr("rscan.ia.sugerenciaOtraFoto", "Prueba con más luz o un encuadre más cercano, o elige el material manualmente arriba.") + '</p>' +
+              '<p class="rc-scan-result__hint">' + (datos.sugerencia || tr("rscan.ia.sugerenciaOtraFoto", "Prueba con más luz o un encuadre más cercano, o elige el material manualmente arriba.")) + '</p>' +
             "</div>";
           logScan(null, "[IA] " + (datos.razon || ""), null, true);
         }

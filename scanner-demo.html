@@ -560,9 +560,15 @@
           baja: trv('scannerdemo.confianza.baja', null, 'IA · confianza baja'),
         };
         confianzaEl.textContent = etiquetaConfianza[meta.confianza] || trv('scannerdemo.confianza.ia', null, 'IA');
-        detalleEl.textContent = material.mensaje
-          ? material.mensaje
-          : (material.labelOriginal ? trv('scannerdemo.deteccion.gemini', { label: material.labelOriginal }, `Gemini detectó: ${material.labelOriginal}`) : trv('scannerdemo.deteccion.clasificadoIA', null, 'Clasificado por IA'));
+        // Prioridad: 1) sugerencia de Gemini (solo llega cuando id es
+        // null o confianza baja -- ver api/classify.js) porque es la
+        // más accionable y específica a ESTA foto; 2) mensaje real de
+        // Supabase; 3) qué vio el modelo; 4) genérico.
+        detalleEl.textContent = material.sugerencia
+          ? material.sugerencia
+          : (material.mensaje
+            ? material.mensaje
+            : (material.labelOriginal ? trv('scannerdemo.deteccion.gemini', { label: material.labelOriginal }, `Gemini detectó: ${material.labelOriginal}`) : trv('scannerdemo.deteccion.clasificadoIA', null, 'Clasificado por IA')));
       } else if (material.id === 'sin_confianza') {
         confianzaEl.textContent = trv('scannerdemo.confianza.sinCerteza', null, 'Sin certeza');
         detalleEl.textContent = trv('scannerdemo.confianza.detalleSinCerteza', null, 'Acércate más o mejora la iluminación.');

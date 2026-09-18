@@ -28,8 +28,10 @@
  *   { "id": "plastico", "confianza": "alta", "razon": "botella de agua",
  *     "mensaje": "✅ Esto se recicla...", "reciclable": true,
  *     "requierePuntoEspecial": false }
- *   Si Gemini no logra identificar el objeto con ninguna categoría:
- *   { "id": null, "confianza": "baja", "razon": "..." }
+ *   Si Gemini no logra identificar el objeto con ninguna categoría, o la
+ *   confianza es baja, se agrega "sugerencia": un consejo accionable sobre
+ *   qué mejorar de la foto (ej. "Acércate más, la imagen sale borrosa"):
+ *   { "id": null, "confianza": "baja", "razon": "...", "sugerencia": "..." }
  * ---------------------------------------------------------------
  */
 
@@ -48,18 +50,18 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 // agregas o quitas una categoría en Supabase, esto queda desactualizado
 // pero solo se usa como último recurso.
 const CATEGORIAS_RESPALDO = [
-  { id: 'plastico', descripcion_ia: 'envases, botellas, bolsas y objetos de plástico en general', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '✅ Esto se recicla. Es plástico: enjuágalo y llévalo a un contenedor de reciclaje.' },
-  { id: 'vidrio', descripcion_ia: 'botellas, frascos y envases de vidrio', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '✅ Esto se recicla. Es vidrio: enjuágalo y llévalo a un contenedor de reciclaje.' },
-  { id: 'metal', descripcion_ia: 'latas, ollas, utensilios y objetos metálicos', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '✅ Esto se recicla. Es metal: llévalo a un contenedor de reciclaje.' },
-  { id: 'papel', descripcion_ia: 'hojas, sobres, empaques de papel o cartón', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '✅ Esto se recicla. Es papel: llévalo a un contenedor de reciclaje.' },
-  { id: 'libros', descripcion_ia: 'libros y revistas', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '♻️ Esto se reutiliza. Es un libro: dónalo o llévalo a un punto de acopio de papel.' },
-  { id: 'electronicos', descripcion_ia: 'laptops, monitores, electrodomésticos, cables, impresoras', reciclable: true, requiere_punto_especial: true, mensaje_escaner: '⚠️ Esto se recicla, pero necesita un punto especial. Es un electrónico: llévalo a un centro de acopio electrónico.' },
-  { id: 'celulares', descripcion_ia: 'teléfonos móviles y tablets', reciclable: true, requiere_punto_especial: true, mensaje_escaner: '⚠️ Esto se recicla, pero necesita un punto especial. Es un celular: llévalo a un punto de recolección de operadoras.' },
-  { id: 'ropa', descripcion_ia: 'prendas de vestir, zapatos, accesorios textiles', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '✅ Esto se recicla o dona. Es ropa: dónala si está en buen estado, o llévala a un punto de acopio textil.' },
-  { id: 'muebles', descripcion_ia: 'sillas, mesas, estantes y mobiliario en general', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '♻️ Esto se reutiliza. Es un mueble: dónalo si está en buen estado.' },
-  { id: 'juguetes', descripcion_ia: 'juguetes de cualquier material', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '♻️ Esto se reutiliza. Es un juguete: dónalo si está en buen estado.' },
-  { id: 'baterias', descripcion_ia: 'pilas y baterías sueltas o recargables', reciclable: true, requiere_punto_especial: true, mensaje_escaner: '⚠️ Esto se recicla, pero necesita un punto especial. Es una batería: NUNCA la tires a la basura común.' },
-  { id: 'bombillos', descripcion_ia: 'bombillos y focos de cualquier tipo', reciclable: true, requiere_punto_especial: true, mensaje_escaner: '⚠️ Esto se recicla, pero necesita un punto especial. Es un bombillo: llévalo a un punto de acopio de residuos especiales.' },
+  { id: 'plastico', descripcion_ia: 'envases, botellas, bolsas y objetos de plástico en general', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '✅ Esto se recicla. Es plástico: enjuágalo y llévalo a un contenedor de reciclaje.', mensaje_escaner_en: "✅ This is recyclable. It's plastic: rinse it and take it to a recycling bin." },
+  { id: 'vidrio', descripcion_ia: 'botellas, frascos y envases de vidrio', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '✅ Esto se recicla. Es vidrio: enjuágalo y llévalo a un contenedor de reciclaje.', mensaje_escaner_en: "✅ This is recyclable. It's glass: rinse it and take it to a recycling bin." },
+  { id: 'metal', descripcion_ia: 'latas, ollas, utensilios y objetos metálicos', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '✅ Esto se recicla. Es metal: llévalo a un contenedor de reciclaje.', mensaje_escaner_en: "✅ This is recyclable. It's metal: take it to a recycling bin." },
+  { id: 'papel', descripcion_ia: 'hojas, sobres, empaques de papel o cartón', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '✅ Esto se recicla. Es papel: llévalo a un contenedor de reciclaje.', mensaje_escaner_en: "✅ This is recyclable. It's paper: take it to a recycling bin." },
+  { id: 'libros', descripcion_ia: 'libros y revistas', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '♻️ Esto se reutiliza. Es un libro: dónalo o llévalo a un punto de acopio de papel.', mensaje_escaner_en: "♻️ This gets reused. It's a book: donate it or take it to a paper collection point." },
+  { id: 'electronicos', descripcion_ia: 'laptops, monitores, electrodomésticos, cables, impresoras', reciclable: true, requiere_punto_especial: true, mensaje_escaner: '⚠️ Esto se recicla, pero necesita un punto especial. Es un electrónico: llévalo a un centro de acopio electrónico.', mensaje_escaner_en: "⚠️ This is recyclable, but needs a special drop-off point. It's electronics: take it to an e-waste collection center." },
+  { id: 'celulares', descripcion_ia: 'teléfonos móviles y tablets', reciclable: true, requiere_punto_especial: true, mensaje_escaner: '⚠️ Esto se recicla, pero necesita un punto especial. Es un celular: llévalo a un punto de recolección de operadoras.', mensaje_escaner_en: "⚠️ This is recyclable, but needs a special drop-off point. It's a phone: take it to a carrier collection point." },
+  { id: 'ropa', descripcion_ia: 'prendas de vestir, zapatos, accesorios textiles', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '✅ Esto se recicla o dona. Es ropa: dónala si está en buen estado, o llévala a un punto de acopio textil.', mensaje_escaner_en: "✅ This gets recycled or donated. It's clothing: donate it if it's in good condition, or take it to a textile collection point." },
+  { id: 'muebles', descripcion_ia: 'sillas, mesas, estantes y mobiliario en general', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '♻️ Esto se reutiliza. Es un mueble: dónalo si está en buen estado.', mensaje_escaner_en: "♻️ This gets reused. It's furniture: donate it if it's in good condition." },
+  { id: 'juguetes', descripcion_ia: 'juguetes de cualquier material', reciclable: true, requiere_punto_especial: false, mensaje_escaner: '♻️ Esto se reutiliza. Es un juguete: dónalo si está en buen estado.', mensaje_escaner_en: "♻️ This gets reused. It's a toy: donate it if it's in good condition." },
+  { id: 'baterias', descripcion_ia: 'pilas y baterías sueltas o recargables', reciclable: true, requiere_punto_especial: true, mensaje_escaner: '⚠️ Esto se recicla, pero necesita un punto especial. Es una batería: NUNCA la tires a la basura común.', mensaje_escaner_en: "⚠️ This is recyclable, but needs a special drop-off point. It's a battery: NEVER throw it in regular trash." },
+  { id: 'bombillos', descripcion_ia: 'bombillos y focos de cualquier tipo', reciclable: true, requiere_punto_especial: true, mensaje_escaner: '⚠️ Esto se recicla, pero necesita un punto especial. Es un bombillo: llévalo a un punto de acopio de residuos especiales.', mensaje_escaner_en: "⚠️ This is recyclable, but needs a special drop-off point. It's a light bulb: take it to a special waste collection point." },
 ];
 
 // Cache en memoria: en Vercel, una misma instancia "caliente" de la
@@ -77,7 +79,7 @@ async function obtenerCategorias() {
   }
 
   try {
-    const url = `${SUPABASE_URL}/rest/v1/categorias?select=id,descripcion_ia,reciclable,requiere_punto_especial,mensaje_escaner`;
+    const url = `${SUPABASE_URL}/rest/v1/categorias?select=id,descripcion_ia,reciclable,requiere_punto_especial,mensaje_escaner,mensaje_escaner_en`;
     const respuesta = await fetch(url, {
       headers: {
         apikey: SUPABASE_ANON_KEY,
@@ -103,13 +105,27 @@ async function obtenerCategorias() {
   }
 }
 
-const MODELO_GEMINI = 'gemini-flash-latest'; // alias de Google al flash estable más reciente
-const ENDPOINT_GEMINI =
-  `https://generativelanguage.googleapis.com/v1beta/models/${MODELO_GEMINI}:generateContent`;
+// Cadena de modelos a probar EN ORDEN cuando el anterior falla por
+// cuota/sobrecarga (429/503). Cada modelo de Gemini tiene su propio
+// límite de requests por minuto/día en el tier gratuito — son cupos
+// INDEPENDIENTES aunque compartan la misma GEMINI_API_KEY, así que
+// agotar flash no significa que pro también esté agotado.
+// Orden: el más rápido/barato primero (mejor para el caso normal),
+// cayendo a modelos con cupo propio si los anteriores están saturados.
+const MODELOS_GEMINI = [
+  'gemini-flash-latest',      // alias de Google al flash estable más reciente (uso normal)
+  'gemini-flash-lite-latest', // más liviano, cupo de rate limit separado del flash normal
+  'gemini-pro-latest',        // más lento/caro, pero cupo totalmente aparte — último recurso
+];
 
-function construirPrompt(categorias) {
+function endpointGemini(modelo) {
+  return `https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent`;
+}
+
+function construirPrompt(categorias, idioma) {
   const guia = categorias.map((c) => `- ${c.id}: ${c.descripcion_ia}`).join('\n');
   const ids = categorias.map((c) => c.id).join('\n- ');
+  const idiomaRazon = idioma === 'en' ? 'in English' : 'en español';
 
   return `Eres un clasificador de residuos para una app de reciclaje llamada RECO+.
 Se te muestra una foto de UN objeto. Debes decidir a cuál de estas categorías pertenece
@@ -124,10 +140,22 @@ Reglas:
 - Si el objeto no encaja claramente en ninguna categoría, o la imagen no es clara,
   usa "id": null.
 - "confianza" debe ser "alta", "media" o "baja".
-- "razon" es una descripción breve (máximo 8 palabras) en español de qué viste.
+- "razon" es una descripción breve (máximo 8 palabras) ${idiomaRazon} de qué viste.
+- "sugerencia": SOLO cuando "id" sea null O "confianza" sea "baja", incluye este campo
+  con un consejo breve y ACCIONABLE (máximo 10 palabras) ${idiomaRazon} sobre qué
+  problema concreto de la FOTO le impidió estar seguro y qué puede hacer el usuario
+  para arreglarlo -- por ejemplo: imagen borrosa/movida, poca luz, objeto muy lejos
+  o muy pequeño en el encuadre, objeto parcialmente cortado o tapado, demasiados
+  objetos a la vez, ángulo que no deja ver el material. NO repitas "no se pudo
+  identificar": ve directo al motivo y la acción (ej. "Acércate más, la imagen sale
+  borrosa" en vez de "No se pudo identificar el objeto"). Si "id" tiene un valor
+  real y "confianza" es "alta" o "media", NO incluyas este campo.
 
 Formato exacto de respuesta:
-{"id": "plastico", "confianza": "alta", "razon": "botella de agua transparente"}`;
+{"id": "plastico", "confianza": "alta", "razon": "botella de agua transparente"}
+
+Formato cuando no hay certeza (id null o confianza baja):
+{"id": null, "confianza": "baja", "razon": "objeto poco visible", "sugerencia": "Acércate más y mejora la iluminación"}`;
 }
 
 module.exports = async function handler(req, res) {
@@ -161,41 +189,88 @@ module.exports = async function handler(req, res) {
     return;
   }
 
+  // Idioma pedido por el cliente (ver scanner-core.js: escanearPreciso
+  // manda { image, idioma }). Antes se ignoraba por completo, así que
+  // el mensaje final siempre volvía en español sin importar el idioma
+  // activo en el sitio.
+  const idioma = body && body.idioma === 'en' ? 'en' : 'es';
+
   const base64Limpio = imagenBase64.replace(/^data:image\/\w+;base64,/, '');
 
   try {
     const categorias = await obtenerCategorias();
-    const promptSistema = construirPrompt(categorias);
+    const promptSistema = construirPrompt(categorias, idioma);
 
-    const respuestaGemini = await fetch(ENDPOINT_GEMINI, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-goog-api-key': apiKey,
-      },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              { text: promptSistema },
-              { inline_data: { mime_type: 'image/jpeg', data: base64Limpio } },
-            ],
-          },
-        ],
-        generationConfig: {
-          temperature: 0.2,
-          responseMimeType: 'application/json',
+    const bodyGemini = JSON.stringify({
+      contents: [
+        {
+          parts: [
+            { text: promptSistema },
+            { inline_data: { mime_type: 'image/jpeg', data: base64Limpio } },
+          ],
         },
-      }),
+      ],
+      generationConfig: {
+        temperature: 0.2,
+        responseMimeType: 'application/json',
+      },
     });
 
-    if (!respuestaGemini.ok) {
-      const detalle = await respuestaGemini.text();
-      console.error('[api/classify] Gemini respondió con error:', respuestaGemini.status, detalle);
+    // Intenta cada modelo de MODELOS_GEMINI en orden. Por cada uno,
+    // reintenta UNA vez si el fallo fue 429 (cuota) o 503 (sobrecarga) --
+    // esos dos códigos suelen resolverse solos un par de segundos
+    // después. Si el modelo sigue fallando tras su reintento, se pasa
+    // al siguiente modelo de la lista (que tiene cupo independiente).
+    // Solo se responde con error al cliente si TODOS los modelos fallan.
+    let respuestaGemini = null;
+    let modeloUsado = null;
+    let ultimoStatus = null;
+    let ultimoDetalle = '';
+
+    for (let i = 0; i < MODELOS_GEMINI.length; i++) {
+      const modelo = MODELOS_GEMINI[i];
+      let intento = await fetch(endpointGemini(modelo), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+        body: bodyGemini,
+      });
+
+      if (!intento.ok && (intento.status === 429 || intento.status === 503)) {
+        const detalleInicial = await intento.text();
+        console.warn(`[api/classify] ${modelo} respondió ${intento.status}, reintentando una vez:`, detalleInicial);
+        await new Promise((r) => setTimeout(r, 1200));
+        intento = await fetch(endpointGemini(modelo), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+          body: bodyGemini,
+        });
+      }
+
+      if (intento.ok) {
+        respuestaGemini = intento;
+        modeloUsado = modelo;
+        break;
+      }
+
+      ultimoStatus = intento.status;
+      ultimoDetalle = await intento.text();
+      console.error(`[api/classify] ${modelo} falló tras reintento:`, ultimoStatus, ultimoDetalle);
+      // Un error que NO es de cuota/sobrecarga (400 imagen inválida, 403
+      // key sin permisos) va a fallar igual en cualquier otro modelo de
+      // la lista -- no tiene sentido seguir probando modelos.
+      if (ultimoStatus !== 429 && ultimoStatus !== 503) break;
+    }
+
+    if (!respuestaGemini) {
       res.status(502).json({
         error: 'GEMINI_ERROR',
-        mensaje: 'Gemini no pudo procesar la imagen.',
-        status: respuestaGemini.status,
+        mensaje: ultimoStatus === 429
+          ? 'Se alcanzó la cuota gratuita de Gemini en todos los modelos disponibles por ahora. Intenta de nuevo en un momento.'
+          : ultimoStatus === 400
+            ? 'La imagen no pudo ser procesada por Gemini (formato o contenido rechazado).'
+            : 'Gemini no pudo procesar la imagen.',
+        status: ultimoStatus,
+        detalleGemini: ultimoDetalle.slice(0, 300),
       });
       return;
     }
@@ -232,9 +307,22 @@ module.exports = async function handler(req, res) {
         ? clasificacion.confianza
         : 'media',
       razon: typeof clasificacion.razon === 'string' ? clasificacion.razon.slice(0, 120) : '',
-      mensaje: categoriaEncontrada ? categoriaEncontrada.mensaje_escaner : null,
+      // Solo tiene sentido mostrar una sugerencia cuando NO hubo una
+      // identificación clara (sin categoría o confianza baja); en ese
+      // caso se limpia y acota por si Gemini se extiende de más pese a
+      // la instrucción del prompt de máximo 10 palabras.
+      sugerencia: (!idValido || clasificacion.confianza === 'baja') && typeof clasificacion.sugerencia === 'string'
+        ? clasificacion.sugerencia.slice(0, 140)
+        : null,
+      mensaje: categoriaEncontrada
+        ? ((idioma === 'en' && categoriaEncontrada.mensaje_escaner_en) || categoriaEncontrada.mensaje_escaner)
+        : null,
       reciclable: categoriaEncontrada ? !!categoriaEncontrada.reciclable : null,
       requierePuntoEspecial: categoriaEncontrada ? !!categoriaEncontrada.requiere_punto_especial : null,
+      // Qué modelo de la cadena respondió -- útil para saber, sin ir a
+      // los logs de Vercel, si se usó el modelo normal o ya se cayó a un
+      // modelo de respaldo por cuota agotada.
+      modeloUsado,
     });
   } catch (err) {
     console.error('[api/classify] Error inesperado llamando a Gemini:', err);

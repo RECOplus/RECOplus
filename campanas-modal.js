@@ -48,6 +48,15 @@
       .replace(/"/g, '&quot;');
   }
 
+  // Envoltorio de window.t() (definido en i18n.js) con respaldo por si
+  // este script se cargara antes que i18n.js: devuelve la clave tal
+  // cual para no romper el render (mejor una clave visible que un
+  // "undefined").
+  function t(key, vars) {
+    if (typeof window.t === 'function') return window.t(key, vars);
+    return key;
+  }
+
   // URL de donar.html donde se muestran las campañas aprobadas
   // (misma convención de enlaces absolutos que usa el resto del
   // sitio — ver index.html/alianzas.html).
@@ -114,24 +123,24 @@
       '<div class="rae-modal" role="dialog" aria-modal="true" aria-labelledby="campOpcTitulo" style="max-width:460px">' +
         '<div class="rae-modal__header">' +
           '<div>' +
-            '<p class="rae-modal__kicker">Proyectos y campañas</p>' +
-            '<h2 class="rae-modal__title" id="campOpcTitulo">Campañas e iniciativas</h2>' +
+            '<p class="rae-modal__kicker" id="campOpcKicker">' + t('campanas.opciones.kicker') + '</p>' +
+            '<h2 class="rae-modal__title" id="campOpcTitulo">' + t('campanas.opciones.titulo') + '</h2>' +
           '</div>' +
-          '<button type="button" class="rae-modal__close" id="campOpcClose" aria-label="Cerrar">' +
+          '<button type="button" class="rae-modal__close" id="campOpcClose" aria-label="' + t('nav.cerrar') + '">' +
             '<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l10 10M15 5L5 15"/></svg>' +
           '</button>' +
         '</div>' +
         '<div class="rae-modal__body">' +
-          '<p class="rae-step__desc">Descubre campañas de reciclaje y donación de nuestros aliados, o publica la tuya si representas una empresa registrada en RECO+.</p>' +
+          '<p class="rae-step__desc" id="campOpcDesc">' + t('campanas.opciones.desc') + '</p>' +
           '<div class="camp-opciones">' +
             '<button type="button" class="camp-opcion" id="campOpcVer">' +
               '<span class="camp-opcion__icon">🔍</span>' +
-              '<span class="camp-opcion__texto"><strong>Ver campañas activas</strong><small>Explora las campañas ya publicadas por empresas aliadas.</small></span>' +
+              '<span class="camp-opcion__texto"><strong id="campOpcVerTitulo">' + t('campanas.opciones.ver.titulo') + '</strong><small id="campOpcVerDesc">' + t('campanas.opciones.ver.desc') + '</small></span>' +
               '<span class="camp-opcion__arrow">→</span>' +
             '</button>' +
             '<button type="button" class="camp-opcion" id="campOpcPublicar">' +
               '<span class="camp-opcion__icon">📢</span>' +
-              '<span class="camp-opcion__texto"><strong>Publicar una campaña</strong><small>Comparte tu próxima campaña de reciclaje o donación.</small></span>' +
+              '<span class="camp-opcion__texto"><strong id="campOpcPublicarTitulo">' + t('campanas.opciones.publicar.titulo') + '</strong><small id="campOpcPublicarDesc">' + t('campanas.opciones.publicar.desc') + '</small></span>' +
               '<span class="camp-opcion__arrow">→</span>' +
             '</button>' +
           '</div>' +
@@ -145,6 +154,18 @@
       overlay.setAttribute('data-open', 'false');
       document.body.style.overflow = '';
     }
+
+    document.addEventListener('reco:langchange', function () {
+      if (!overlayOpciones) return;
+      overlayOpciones.querySelector('#campOpcKicker').textContent = t('campanas.opciones.kicker');
+      overlayOpciones.querySelector('#campOpcTitulo').textContent = t('campanas.opciones.titulo');
+      overlayOpciones.querySelector('#campOpcDesc').textContent = t('campanas.opciones.desc');
+      overlayOpciones.querySelector('#campOpcVerTitulo').textContent = t('campanas.opciones.ver.titulo');
+      overlayOpciones.querySelector('#campOpcVerDesc').textContent = t('campanas.opciones.ver.desc');
+      overlayOpciones.querySelector('#campOpcPublicarTitulo').textContent = t('campanas.opciones.publicar.titulo');
+      overlayOpciones.querySelector('#campOpcPublicarDesc').textContent = t('campanas.opciones.publicar.desc');
+      overlayOpciones.querySelector('#campOpcClose').setAttribute('aria-label', t('nav.cerrar'));
+    });
 
     overlay.querySelector('#campOpcClose').addEventListener('click', cerrar);
     overlay.addEventListener('click', function (e) {
@@ -186,16 +207,16 @@
       '<div class="rae-modal" role="dialog" aria-modal="true" aria-labelledby="campAvisoTitulo" style="max-width:420px">' +
         '<div class="rae-modal__header">' +
           '<div>' +
-            '<p class="rae-modal__kicker">Publicar campaña</p>' +
+            '<p class="rae-modal__kicker" id="campAvisoKicker">' + t('campanas.aviso.kicker') + '</p>' +
             '<h2 class="rae-modal__title" id="campAvisoTitulo"></h2>' +
           '</div>' +
-          '<button type="button" class="rae-modal__close" id="campAvisoClose" aria-label="Cerrar">' +
+          '<button type="button" class="rae-modal__close" id="campAvisoClose" aria-label="' + t('nav.cerrar') + '">' +
             '<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l10 10M15 5L5 15"/></svg>' +
           '</button>' +
         '</div>' +
         '<div class="rae-modal__body"><p class="rae-step__desc" id="campAvisoMsg"></p></div>' +
         '<div class="rae-modal__footer">' +
-          '<button type="button" class="rae-btn" id="campAvisoCancelar">Cerrar</button>' +
+          '<button type="button" class="rae-btn" id="campAvisoCancelar">' + t('campanas.aviso.cerrar') + '</button>' +
           '<button type="button" class="rae-btn rae-btn--primario" id="campAvisoAccion" style="display:none"></button>' +
         '</div>' +
       '</div>';
@@ -209,10 +230,34 @@
     overlay.querySelector('#campAvisoClose').addEventListener('click', cerrar);
     overlay.querySelector('#campAvisoCancelar').addEventListener('click', cerrar);
     overlay.addEventListener('click', function (e) { if (e.target === overlay) cerrar(); });
+
+    document.addEventListener('reco:langchange', function () {
+      if (!avisoEl) return;
+      avisoEl.querySelector('#campAvisoKicker').textContent = t('campanas.aviso.kicker');
+      avisoEl.querySelector('#campAvisoCancelar').textContent = t('campanas.aviso.cerrar');
+      avisoEl.querySelector('#campAvisoClose').setAttribute('aria-label', t('nav.cerrar'));
+      // Título / mensaje / botón de acción: se re-traducen solo si el
+      // aviso sigue abierto con las claves de la última llamada
+      // (avisoUltimo), para no perder el mensaje de error en curso.
+      if (avisoUltimo) {
+        avisoEl.querySelector('#campAvisoTitulo').textContent = t(avisoUltimo.tituloKey, avisoUltimo.vars);
+        avisoEl.querySelector('#campAvisoMsg').textContent = t(avisoUltimo.mensajeKey, avisoUltimo.vars);
+        var btn = avisoEl.querySelector('#campAvisoAccion');
+        if (avisoUltimo.accionKey) btn.textContent = t(avisoUltimo.accionKey);
+      }
+    });
   }
 
-  /* accion: { texto, onClick } opcional — si no se pasa, solo se ve "Cerrar" */
+  // Recuerda las claves (no el texto ya traducido) del último aviso
+  // abierto con abrirAvisoClaves, para poder re-traducirlo en caliente
+  // si el idioma cambia mientras el aviso sigue en pantalla.
+  var avisoUltimo = null;
+
+  /* accion: { texto, onClick } opcional — si no se pasa, solo se ve el botón de cerrar.
+     Mantiene la firma original con texto ya resuelto, para el único
+     caso (error de Supabase ya traducido) que no tiene clave i18n. */
   function abrirAviso(titulo, mensaje, accion) {
+    avisoUltimo = null;
     if (!avisoEl) buildAviso();
     avisoEl.querySelector('#campAvisoTitulo').textContent = titulo;
     avisoEl.querySelector('#campAvisoMsg').textContent = mensaje;
@@ -236,6 +281,19 @@
     document.body.style.overflow = 'hidden';
   }
 
+  /* Variante que recibe CLAVES i18n en vez de texto ya resuelto, para
+     los avisos que sí tienen traducción (todos salvo los errores
+     crudos de Supabase). vars se pasa a t() para interpolar (ej.
+     {plan}, {max}, {dias}). accionKey es opcional. */
+  function abrirAvisoClaves(tituloKey, mensajeKey, vars, accionKey, onClick) {
+    avisoUltimo = { tituloKey: tituloKey, mensajeKey: mensajeKey, vars: vars, accionKey: accionKey };
+    abrirAviso(
+      t(tituloKey, vars),
+      t(mensajeKey, vars),
+      accionKey ? { texto: t(accionKey), onClick: onClick } : null
+    );
+  }
+
   /* ══════════════════════════════════════════════
      VERIFICACIÓN: sesión activa + aliado aprobado + límite de plan
      ══════════════════════════════════════════════ */
@@ -255,39 +313,40 @@
 
     window.recoAuth.getVerifiedSession().then(function (sesion) {
       if (!sesion || !sesion.user) {
-        abrirAviso(
-          'Inicia sesión primero',
-          'Para publicar una campaña, primero necesitas iniciar sesión con la cuenta de tu empresa aliada.',
-          { texto: 'Iniciar sesión →', onClick: function () { window.location.href = 'login.html'; } }
+        abrirAvisoClaves(
+          'campanas.aviso.sesion.titulo',
+          'campanas.aviso.sesion.msg',
+          null,
+          'campanas.aviso.sesion.btn',
+          function () { window.location.href = 'login.html'; }
         );
         return;
       }
 
       var client = window.recoSupabase;
       if (!client) {
-        abrirAviso('Servicio no disponible', 'No se pudo conectar con el servicio. Intenta de nuevo más tarde.', null);
+        abrirAvisoClaves('campanas.aviso.servicioNoDisponible.titulo', 'campanas.aviso.servicioNoDisponible.msg', null, null, null);
         return;
       }
 
       client.from('aliados').select('id,nombre_empresa,estado').eq('user_id', sesion.user.id).maybeSingle().then(function (res) {
         if (res.error) {
-          abrirAviso('No se pudo verificar tu empresa', 'Ocurrió un problema al revisar tu registro de aliado. Intenta de nuevo.', null);
+          abrirAvisoClaves('campanas.aviso.errorVerificar.titulo', 'campanas.aviso.errorVerificar.msg', null, null, null);
           return;
         }
 
         if (!res.data) {
-          abrirAviso(
-            'Primero registra tu empresa',
-            'Todavía no tienes una empresa registrada como aliado de RECO+. Regístrala primero; una vez aprobada podrás publicar campañas.',
-            {
-              texto: 'Registrar mi empresa →',
-              onClick: function () {
-                if (window.recoRegistroAliado && typeof window.recoRegistroAliado.open === 'function') {
-                  window.recoRegistroAliado.open();
-                } else {
-                  var trigger = document.getElementById('btnRegistrarEmpresaAliado');
-                  if (trigger) trigger.click();
-                }
+          abrirAvisoClaves(
+            'campanas.aviso.registraEmpresa.titulo',
+            'campanas.aviso.registraEmpresa.msg',
+            null,
+            'campanas.aviso.registraEmpresa.btn',
+            function () {
+              if (window.recoRegistroAliado && typeof window.recoRegistroAliado.open === 'function') {
+                window.recoRegistroAliado.open();
+              } else {
+                var trigger = document.getElementById('btnRegistrarEmpresaAliado');
+                if (trigger) trigger.click();
               }
             }
           );
@@ -295,14 +354,9 @@
         }
 
         if (res.data.estado !== 'aprobado') {
-          var mensaje = res.data.estado === 'rechazado'
-            ? 'El registro de tu empresa fue rechazado, así que todavía no puedes publicar campañas. Actualiza tus datos desde Ajustes y espera una nueva revisión.'
-            : 'Tu empresa está pendiente de revisión. Podrás publicar campañas en cuanto sea aprobada.';
-          abrirAviso('Empresa pendiente de aprobación', mensaje, {
-            texto: 'Ir a Ajustes de cuenta →',
-            onClick: function () {
-              if (window.recoAjustes && typeof window.recoAjustes.open === 'function') window.recoAjustes.open();
-            }
+          var mensajeKey = res.data.estado === 'rechazado' ? 'campanas.aviso.rechazado.msg' : 'campanas.aviso.pendiente.msg';
+          abrirAvisoClaves('campanas.aviso.pendiente.titulo', mensajeKey, null, 'campanas.aviso.ajustesBtn', function () {
+            if (window.recoAjustes && typeof window.recoAjustes.open === 'function') window.recoAjustes.open();
           });
           return;
         }
@@ -310,13 +364,15 @@
         aliadoActual = res.data;
         verificarLimitePlanYAbrir(sesion.user.id);
       }).catch(function () {
-        abrirAviso('No se pudo verificar tu empresa', 'Ocurrió un problema de conexión. Intenta de nuevo.', null);
+        abrirAvisoClaves('campanas.aviso.errorVerificar.titulo', 'campanas.aviso.errorVerificarConexion.msg', null, null, null);
       });
     }).catch(function () {
-      abrirAviso(
-        'Inicia sesión primero',
-        'Para publicar una campaña, primero necesitas iniciar sesión con la cuenta de tu empresa aliada.',
-        { texto: 'Iniciar sesión →', onClick: function () { window.location.href = 'login.html'; } }
+      abrirAvisoClaves(
+        'campanas.aviso.sesion.titulo',
+        'campanas.aviso.sesion.msg',
+        null,
+        'campanas.aviso.sesion.btn',
+        function () { window.location.href = 'login.html'; }
       );
     });
   }
@@ -355,14 +411,13 @@
           var activas = (res && typeof res.count === 'number') ? res.count : 0;
           if (activas >= plan.campanasActivasMax) {
             var plural = plan.campanasActivasMax === 1 ? '' : 's';
-            abrirAviso(
-              'Alcanzaste el límite de tu plan',
-              'Tu plan ' + plan.nombre + ' permite hasta ' + plan.campanasActivasMax + ' campaña' + plural + ' activa' + plural + ' a la vez. Cierra una campaña existente o mejora tu plan para publicar más.',
-              {
-                texto: 'Ver planes →',
-                onClick: function () {
-                  if (window.recoSuscripcion && typeof window.recoSuscripcion.open === 'function') window.recoSuscripcion.open();
-                }
+            abrirAvisoClaves(
+              'campanas.aviso.limite.titulo',
+              'campanas.aviso.limite.msg',
+              { plan: plan.nombre, max: plan.campanasActivasMax, plural: plural },
+              'campanas.aviso.verPlanesBtn',
+              function () {
+                if (window.recoSuscripcion && typeof window.recoSuscripcion.open === 'function') window.recoSuscripcion.open();
               }
             );
             return;
@@ -381,41 +436,41 @@
     var tipo = data.tipo || 'reciclaje';
     return (
       '<div class="rae-step" data-step="datos">' +
-        '<p class="rae-step__desc">Cuéntanos de qué trata tu campaña. Aparecerá en Donar una vez que la aprobemos.</p>' +
+        '<p class="rae-step__desc">' + t('campanas.paso1.desc') + '</p>' +
 
         '<div class="rae-field">' +
-          '<label>Tipo de campaña <span class="rae-required">*</span></label>' +
+          '<label>' + t('campanas.paso1.tipoLabel') + ' <span class="rae-required">*</span></label>' +
           '<div class="camp-tipo-toggle" id="campTipoToggle">' +
-            '<button type="button" class="camp-tipo-btn' + (tipo === 'reciclaje' ? ' camp-tipo-btn--active' : '') + '" data-tipo="reciclaje">♻️ Reciclaje</button>' +
-            '<button type="button" class="camp-tipo-btn' + (tipo === 'donacion' ? ' camp-tipo-btn--active' : '') + '" data-tipo="donacion">🎁 Donación</button>' +
+            '<button type="button" class="camp-tipo-btn' + (tipo === 'reciclaje' ? ' camp-tipo-btn--active' : '') + '" data-tipo="reciclaje">♻️ ' + t('campanas.paso1.tipoReciclaje') + '</button>' +
+            '<button type="button" class="camp-tipo-btn' + (tipo === 'donacion' ? ' camp-tipo-btn--active' : '') + '" data-tipo="donacion">🎁 ' + t('campanas.paso1.tipoDonacion') + '</button>' +
           '</div>' +
         '</div>' +
 
         '<div class="rae-field">' +
-          '<label for="campTitulo">Título de la campaña <span class="rae-required">*</span></label>' +
-          '<input type="text" id="campTitulo" class="rae-input" placeholder="Ej. Recolectón de electrónicos en David" maxlength="100" value="' + esc(data.titulo) + '">' +
-          '<span class="rae-error" id="campTituloError">Ingresa un título para la campaña.</span>' +
+          '<label for="campTitulo">' + t('campanas.paso1.tituloLabel') + ' <span class="rae-required">*</span></label>' +
+          '<input type="text" id="campTitulo" class="rae-input" placeholder="' + t('campanas.paso1.tituloPh') + '" maxlength="100" value="' + esc(data.titulo) + '">' +
+          '<span class="rae-error" id="campTituloError">' + t('campanas.paso1.tituloError') + '</span>' +
         '</div>' +
 
         '<div class="rae-field">' +
-          '<label for="campDescripcion">Descripción <span class="rae-required">*</span></label>' +
-          '<textarea id="campDescripcion" class="rae-input rae-textarea" placeholder="Cuenta de qué trata la campaña, cómo participar y qué se hará con lo recolectado..." maxlength="500">' + esc(data.descripcion) + '</textarea>' +
-          '<span class="rae-hint" id="campDescripcionHint">' + (data.descripcion ? data.descripcion.length : 0) + ' / 500 (mínimo 20 caracteres)</span>' +
-          '<span class="rae-error" id="campDescripcionError">Escribe una descripción de al menos 20 caracteres.</span>' +
+          '<label for="campDescripcion">' + t('campanas.paso1.descLabel') + ' <span class="rae-required">*</span></label>' +
+          '<textarea id="campDescripcion" class="rae-input rae-textarea" placeholder="' + t('campanas.paso1.descPh') + '" maxlength="500">' + esc(data.descripcion) + '</textarea>' +
+          '<span class="rae-hint" id="campDescripcionHint">' + t('campanas.paso1.descHint', { n: data.descripcion ? data.descripcion.length : 0 }) + '</span>' +
+          '<span class="rae-error" id="campDescripcionError">' + t('campanas.paso1.descError') + '</span>' +
         '</div>' +
 
         '<div class="rae-field">' +
-          '<label>Banner de la campaña <span class="rae-optional">(opcional)</span></label>' +
+          '<label>' + t('campanas.paso1.bannerLabel') + ' <span class="rae-optional">(opcional)</span></label>' +
           '<div class="rae-logo-row">' +
             '<div class="rae-logo-preview camp-banner-preview" id="campBannerPreview">' +
               (data.bannerDataUrl
-                ? '<img src="' + data.bannerDataUrl + '" alt="Banner de la campaña">'
+                ? '<img src="' + data.bannerDataUrl + '" alt="' + t('campanas.paso1.bannerLabel') + '">'
                 : '<svg viewBox="0 0 20 20" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="4" width="15" height="12" rx="1.5"/><circle cx="7" cy="8.5" r="1.4"/><path d="M17.5 13.5l-4-4-3 3-2.5-2.5-5.5 5.5"/></svg>') +
             '</div>' +
             '<div class="rae-logo-actions">' +
-              '<button type="button" class="rae-btn rae-btn--sm" id="campBannerBtn">' + (data.bannerDataUrl ? 'Cambiar banner' : 'Subir banner') + '</button>' +
-              '<button type="button" class="rae-btn rae-btn--sm rae-btn--ghost" id="campBannerRemoveBtn" style="' + (data.bannerDataUrl ? '' : 'display:none') + '">Quitar</button>' +
-              '<span class="rae-hint">JPG, PNG o WEBP, máx. 4MB.</span>' +
+              '<button type="button" class="rae-btn rae-btn--sm" id="campBannerBtn">' + (data.bannerDataUrl ? t('campanas.paso1.bannerCambiar') : t('campanas.paso1.bannerSubir')) + '</button>' +
+              '<button type="button" class="rae-btn rae-btn--sm rae-btn--ghost" id="campBannerRemoveBtn" style="' + (data.bannerDataUrl ? '' : 'display:none') + '">' + t('campanas.paso1.bannerQuitar') + '</button>' +
+              '<span class="rae-hint">' + t('campanas.paso1.bannerHint') + '</span>' +
             '</div>' +
             '<input type="file" id="campBannerInput" accept="image/*" style="display:none">' +
           '</div>' +
@@ -447,7 +502,7 @@
     var descTextarea = body.querySelector('#campDescripcion');
     var descHint = body.querySelector('#campDescripcionHint');
     descTextarea.addEventListener('input', function () {
-      descHint.textContent = descTextarea.value.length + ' / 500 (mínimo 20 caracteres)';
+      descHint.textContent = t('campanas.paso1.descHint', { n: descTextarea.value.length });
     });
 
     var bannerInput = body.querySelector('#campBannerInput');
@@ -460,14 +515,14 @@
       var file = bannerInput.files && bannerInput.files[0];
       if (!file) return;
       if (file.size > 4 * 1024 * 1024) {
-        window.alert('La imagen pesa demasiado (máx. 4MB).');
+        window.alert(t('campanas.paso1.bannerAlert'));
         bannerInput.value = '';
         return;
       }
       leerArchivoComoDataUrl(file).then(function (dataUrl) {
         data.bannerDataUrl = dataUrl;
-        bannerPreview.innerHTML = '<img src="' + dataUrl + '" alt="Banner de la campaña">';
-        bannerBtn.textContent = 'Cambiar banner';
+        bannerPreview.innerHTML = '<img src="' + dataUrl + '" alt="' + t('campanas.paso1.bannerLabel') + '">';
+        bannerBtn.textContent = t('campanas.paso1.bannerCambiar');
         bannerRemoveBtn.style.display = '';
       });
     });
@@ -475,7 +530,7 @@
       data.bannerDataUrl = null;
       bannerInput.value = '';
       bannerPreview.innerHTML = '<svg viewBox="0 0 20 20" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="4" width="15" height="12" rx="1.5"/><circle cx="7" cy="8.5" r="1.4"/><path d="M17.5 13.5l-4-4-3 3-2.5-2.5-5.5 5.5"/></svg>';
-      bannerBtn.textContent = 'Subir banner';
+      bannerBtn.textContent = t('campanas.paso1.bannerSubir');
       bannerRemoveBtn.style.display = 'none';
     });
   }
@@ -517,38 +572,38 @@
 
     return (
       '<div class="rae-step" data-step="ubicacion">' +
-        '<p class="rae-step__desc">¿Dónde se lleva a cabo la campaña y durante cuánto tiempo estará activa?</p>' +
+        '<p class="rae-step__desc">' + t('campanas.paso2.desc') + '</p>' +
 
         '<div class="rae-field">' +
-          '<label for="campProvincia">Provincia o comarca <span class="rae-required">*</span></label>' +
+          '<label for="campProvincia">' + t('campanas.paso2.provinciaLabel') + ' <span class="rae-required">*</span></label>' +
           '<select id="campProvincia" class="rae-input">' +
-            '<option value="">Selecciona una provincia</option>' + opciones +
+            '<option value="">' + t('campanas.paso2.provinciaDefault') + '</option>' + opciones +
           '</select>' +
-          '<span class="rae-error" id="campProvinciaError">Selecciona una provincia.</span>' +
+          '<span class="rae-error" id="campProvinciaError">' + t('campanas.paso2.provinciaError') + '</span>' +
         '</div>' +
 
         '<div class="rae-field">' +
-          '<label for="campDistrito">Distrito o ciudad <span class="rae-required">*</span></label>' +
+          '<label for="campDistrito">' + t('campanas.paso2.distritoLabel') + ' <span class="rae-required">*</span></label>' +
           '<input type="text" id="campDistrito" class="rae-input" maxlength="80" value="' + esc(data.distrito) + '">' +
-          '<span class="rae-error" id="campDistritoError">Ingresa el distrito o ciudad.</span>' +
+          '<span class="rae-error" id="campDistritoError">' + t('campanas.paso2.distritoError') + '</span>' +
         '</div>' +
 
         '<div class="rae-field">' +
-          '<label for="campDireccion">Dirección o punto de encuentro <span class="rae-required">*</span></label>' +
+          '<label for="campDireccion">' + t('campanas.paso2.direccionLabel') + ' <span class="rae-required">*</span></label>' +
           '<textarea id="campDireccion" class="rae-input rae-textarea" style="min-height:64px" maxlength="240">' + esc(data.direccion) + '</textarea>' +
-          '<span class="rae-error" id="campDireccionError">Ingresa la dirección o punto de encuentro.</span>' +
+          '<span class="rae-error" id="campDireccionError">' + t('campanas.paso2.direccionError') + '</span>' +
         '</div>' +
 
         '<div class="rae-row">' +
           '<div class="rae-field">' +
-            '<label for="campFechaInicio">Fecha de inicio <span class="rae-required">*</span></label>' +
+            '<label for="campFechaInicio">' + t('campanas.paso2.fechaInicioLabel') + ' <span class="rae-required">*</span></label>' +
             '<input type="date" id="campFechaInicio" class="rae-input" value="' + esc(data.fechaInicio) + '">' +
-            '<span class="rae-error" id="campFechaInicioError">Selecciona la fecha de inicio.</span>' +
+            '<span class="rae-error" id="campFechaInicioError">' + t('campanas.paso2.fechaInicioError') + '</span>' +
           '</div>' +
           '<div class="rae-field">' +
-            '<label for="campFechaFin">Fecha de fin <span class="rae-required">*</span></label>' +
+            '<label for="campFechaFin">' + t('campanas.paso2.fechaFinLabel') + ' <span class="rae-required">*</span></label>' +
             '<input type="date" id="campFechaFin" class="rae-input" value="' + esc(data.fechaFin) + '">' +
-            '<span class="rae-error" id="campFechaFinError">La fecha de fin debe ser igual o posterior a la de inicio.</span>' +
+            '<span class="rae-error" id="campFechaFinError">' + t('campanas.paso2.fechaFinErrorDefault') + '</span>' +
           '</div>' +
         '</div>' +
       '</div>'
@@ -575,7 +630,7 @@
     var fin = body.querySelector('#campFechaFin');
     var inicio = body.querySelector('#campFechaInicio').value;
     var finError = body.querySelector('#campFechaFinError');
-    var MENSAJE_FIN_DEFAULT = 'La fecha de fin debe ser igual o posterior a la de inicio.';
+    var MENSAJE_FIN_DEFAULT = t('campanas.paso2.fechaFinErrorDefault');
 
     if (!fin.value.trim() || (inicio && fin.value < inicio)) {
       finError.textContent = MENSAJE_FIN_DEFAULT;
@@ -586,7 +641,7 @@
       // en supabase-suscripciones.sql (duración máxima por plan).
       var dias = Math.round((new Date(fin.value) - new Date(inicio)) / 86400000);
       if (dias > planActualCache.duracionCampanaMaxDias) {
-        finError.textContent = 'Tu plan ' + planActualCache.nombre + ' permite campañas de hasta ' + planActualCache.duracionCampanaMaxDias + ' días. Acorta el rango de fechas o mejora tu plan.';
+        finError.textContent = t('campanas.paso2.fechaFinErrorPlan', { plan: planActualCache.nombre, dias: planActualCache.duracionCampanaMaxDias });
         marcarError(fin, finError, true);
         ok = false;
       } else {
