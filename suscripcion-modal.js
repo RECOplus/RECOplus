@@ -13,6 +13,13 @@
  * webhook) — el resto del modal, los límites del escáner/campañas y
  * la barra de aliados destacados no necesitan cambiar.
  *
+ * i18n: todos los textos pasan por tr() (envoltorio de window.t(),
+ * definido en i18n.js — claves "susc.*"), con el mismo texto en
+ * español como respaldo si i18n.js no cargó. Como el modal se
+ * construye e inserta dinámicamente (fuera de la pasada inicial de
+ * applyLang), se re-traduce a mano en 'reco:langchange' — mismo
+ * patrón que campanas-modal.js / alianzas-destacados.js.
+ *
  * Se puede abrir desde cualquier página con:
  *   window.recoSuscripcion.open()
  * (ej. desde campanas-modal.js cuando se alcanza el límite del
@@ -23,11 +30,12 @@
  *   <link rel="stylesheet" href="alianzas-registro-modal.css">
  *   <link rel="stylesheet" href="suscripcion-modal.css">
  *   ...
+ *   <script src="i18n.js"></script>
  *   <script src="auth.js"></script>
  *   <script src="suscripcion-planes.js"></script>
  *   <script src="suscripcion-modal.js"></script>
- * (usa window.recoAuth, window.recoSupabase y window.recoPlanes ya
- * inicializados)
+ * (usa window.recoAuth, window.recoSupabase, window.recoPlanes y
+ * window.t ya inicializados)
  */
 (function () {
   'use strict';
@@ -38,6 +46,26 @@
     } else {
       fn();
     }
+  }
+
+  // Envoltorio de window.t() con respaldo en español, para que el
+  // modal nunca se quede sin texto si este script se cargara antes
+  // que i18n.js. vars se interpola a mano sobre el respaldo cuando
+  // window.t no está disponible o no reconoce la clave (window.t ya
+  // interpola por su cuenta cuando sí la reconoce).
+  function interpolar(str, vars) {
+    if (!vars) return str;
+    Object.keys(vars).forEach(function (k) {
+      str = str.replace(new RegExp('\\{' + k + '\\}', 'g'), vars[k]);
+    });
+    return str;
+  }
+  function tr(key, fallback, vars) {
+    if (typeof window.t === 'function') {
+      var val = window.t(key, vars);
+      if (val && val !== key) return val;
+    }
+    return interpolar(fallback, vars);
   }
 
   var CHECK_SVG = '<svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7.2l3 3 6-6.4"/></svg>';
@@ -90,16 +118,16 @@
         '<div class="rae-modal__header">' +
           '<div>' +
             '<p class="rae-modal__kicker">RECO+</p>' +
-            '<h2 class="rae-modal__title" id="suscTitulo">Mi plan</h2>' +
+            '<h2 class="rae-modal__title" id="suscTitulo">' + tr('susc.titulo', 'Mi plan') + '</h2>' +
           '</div>' +
-          '<button type="button" class="rae-modal__close" id="suscClose" aria-label="Cerrar">' +
+          '<button type="button" class="rae-modal__close" id="suscClose" aria-label="' + tr('nav.cerrar', 'Cerrar') + '">' +
             '<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l10 10M15 5L5 15"/></svg>' +
           '</button>' +
         '</div>' +
         '<div class="rae-modal__body" id="suscBody">' +
           '<div class="susc-resumen" id="suscResumen"></div>' +
           '<div class="susc-planes-grid" id="suscGrid"></div>' +
-          '<p class="rae-hint" style="margin-top:12px">Los planes de pago se activan al instante. Por ahora no hay cobro real: es una simulación mientras se integra la pasarela de pago.</p>' +
+          '<p class="rae-hint" id="suscHint" style="margin-top:12px">' + tr('susc.hint', 'Los planes de pago se activan al instante. Por ahora no hay cobro real: es una simulación mientras se integra la pasarela de pago.') + '</p>' +
         '</div>' +
         '<div class="rae-modal__status" id="suscStatus"></div>' +
       '</div>';
@@ -126,7 +154,7 @@
     el.innerHTML =
       '<span class="susc-resumen__icon">' + plan.icono + '</span>' +
       '<div class="susc-resumen__texto">' +
-        '<div class="susc-resumen__titulo">Tu plan actual: ' + plan.nombre + '</div>' +
+        '<div class="susc-resumen__titulo">' + tr('susc.tuPlanActual', 'Tu plan actual: {plan}', { plan: plan.nombre }) + '</div>' +
         '<div class="susc-resumen__desc">' + plan.beneficios.join(' · ') + '</div>' +
       '</div>';
   }
@@ -134,13 +162,13 @@
   function renderPlanCard(plan) {
     var esActual = plan.id === planActual;
     var claseExtra = esActual ? ' susc-plan--actual' : (plan.id === 'premium' ? ' susc-plan--destacado' : '');
-    var ribbon = plan.id === 'premium' ? '<span class="susc-plan__ribbon">Más completo</span>' : '';
+    var ribbon = plan.id === 'premium' ? '<span class="susc-plan__ribbon">' + tr('susc.masCompleto', 'Más completo') + '</span>' : '';
 
     var beneficiosHTML = plan.beneficios.map(function (b) {
       return '<li>' + CHECK_SVG + '<span>' + b + '</span></li>';
     }).join('');
 
-    var btnTexto = esActual ? 'Tu plan actual' : (plan.id === 'gratis' ? 'Volver a Gratis' : 'Suscribirme');
+    var btnTexto = esActual ? tr('susc.btnActual', 'Tu plan actual') : (plan.id === 'gratis' ? tr('susc.btnVolverGratis', 'Volver a Gratis') : tr('susc.btnSuscribirme', 'Suscribirme'));
     var btnDisabled = esActual ? 'disabled' : '';
 
     return (
@@ -185,19 +213,19 @@
     window.recoAuth.getVerifiedSession().then(function (sesion) {
       var userId = sesion && sesion.user && sesion.user.id;
       if (!userId) {
-        mostrarStatus('error', 'Inicia sesión para elegir un plan.');
+        mostrarStatus('error', tr('susc.errorSesion', 'Inicia sesión para elegir un plan.'));
         return;
       }
 
       var client = window.recoSupabase;
       if (!client) {
-        mostrarStatus('error', 'No se pudo conectar con el servicio. Intenta de nuevo más tarde.');
+        mostrarStatus('error', tr('susc.errorServicio', 'No se pudo conectar con el servicio. Intenta de nuevo más tarde.'));
         return;
       }
 
       var textoOriginal = btnOrigen.textContent;
       btnOrigen.disabled = true;
-      btnOrigen.textContent = 'Aplicando…';
+      btnOrigen.textContent = tr('susc.aplicando', 'Aplicando…');
 
       var vigenteHasta = planId === 'gratis'
         ? null
@@ -215,20 +243,20 @@
           btnOrigen.textContent = textoOriginal;
 
           if (res.error) {
-            mostrarStatus('error', 'No se pudo actualizar tu plan. Intenta de nuevo.');
+            mostrarStatus('error', tr('susc.errorActualizar', 'No se pudo actualizar tu plan. Intenta de nuevo.'));
             return;
           }
 
           planActual = planId;
           renderResumen();
           renderGrid();
-          mostrarStatus('ok', '✓ Tu plan ahora es ' + window.recoPlanes.getPlan(planId).nombre + '.');
+          mostrarStatus('ok', tr('susc.planActualizado', '✓ Tu plan ahora es {plan}.', { plan: window.recoPlanes.getPlan(planId).nombre }));
           onPlanChangeCallbacks.forEach(function (cb) { try { cb(planId); } catch (e) {} });
         })
         .catch(function () {
           btnOrigen.disabled = false;
           btnOrigen.textContent = textoOriginal;
-          mostrarStatus('error', 'Ocurrió un problema de conexión. Intenta de nuevo.');
+          mostrarStatus('error', tr('susc.errorConexion', 'Ocurrió un problema de conexión. Intenta de nuevo.'));
         });
     });
   }
@@ -242,7 +270,7 @@
     document.body.style.overflow = 'hidden';
 
     var resumen = overlayEl.querySelector('#suscResumen');
-    resumen.innerHTML = '<span class="susc-resumen__icon">⏳</span><div class="susc-resumen__texto"><div class="susc-resumen__titulo">Cargando tu plan…</div></div>';
+    resumen.innerHTML = '<span class="susc-resumen__icon">⏳</span><div class="susc-resumen__texto"><div class="susc-resumen__titulo">' + tr('susc.cargando', 'Cargando tu plan…') + '</div></div>';
 
     fetchPlanActual().then(function (plan) {
       planActual = plan;
@@ -280,5 +308,25 @@
         openModal();
       }
     });
+  });
+
+  /* ══════════════════════════════════════════════
+     CAMBIO DE IDIOMA: el modal se construye e inserta fuera de la
+     pasada inicial de applyLang() (i18n.js), así que hay que
+     re-traducir a mano el título, el botón de cerrar y el texto de
+     ayuda, y volver a pintar el resumen + la grilla de planes (que
+     no dependen de red: usan planActual, ya cacheado). No importa
+     si el modal sigue abierto o no: mantenerlo traducido evita que
+     se vea en español un instante al reabrirlo tras cambiar de
+     idioma.
+     ══════════════════════════════════════════════ */
+  document.addEventListener('reco:langchange', function () {
+    if (!overlayEl) return;
+    overlayEl.querySelector('#suscTitulo').textContent = tr('susc.titulo', 'Mi plan');
+    overlayEl.querySelector('#suscClose').setAttribute('aria-label', tr('nav.cerrar', 'Cerrar'));
+    var hint = overlayEl.querySelector('#suscHint');
+    if (hint) hint.textContent = tr('susc.hint', 'Los planes de pago se activan al instante. Por ahora no hay cobro real: es una simulación mientras se integra la pasarela de pago.');
+    renderResumen();
+    renderGrid();
   });
 })();

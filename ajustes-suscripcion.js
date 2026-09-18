@@ -22,6 +22,14 @@
  *   - Botón "Cambiar de plan" que cierra Ajustes y abre
  *     window.recoSuscripcion.open() (el modal con las 3 tarjetas).
  *
+ * i18n: todos los textos pasan por tr() (envoltorio de window.t(),
+ * i18n.js — claves "susc.*", compartidas con suscripcion-modal.js),
+ * con el texto en español como respaldo si i18n.js no cargó. Esta
+ * pestaña se reconstruye por completo cada vez que se abre Ajustes
+ * (consultarYSincronizar), así que basta con volver a llamarla en
+ * 'reco:langchange' para que quede traducida al vuelo si el idioma
+ * cambia mientras Ajustes sigue abierto.
+ *
  * Capa 100% ADITIVA: no modifica ajustes-modal.js, suscripcion-
  * modal.js ni sus CSS. Se engancha por fuera envolviendo
  * window.recoAjustes.open, igual que ajustes-empresa.js — por eso
@@ -32,12 +40,13 @@
  * REQUIERE, en cualquier página con ajustes-modal.js:
  *   <link rel="stylesheet" href="suscripcion-modal.css">
  *   ...
+ *   <script src="i18n.js"></script>
  *   <script src="ajustes-modal.js"></script>
  *   <script src="suscripcion-planes.js"></script>
  *   <script src="suscripcion-modal.js"></script>
  *   <script src="ajustes-suscripcion.js"></script>
- * (usa window.recoAuth, window.recoSupabase, window.recoPlanes y
- * window.recoSuscripcion ya inicializados)
+ * (usa window.recoAuth, window.recoSupabase, window.recoPlanes,
+ * window.recoSuscripcion y window.t ya inicializados)
  */
 (function () {
   'use strict';
@@ -51,6 +60,24 @@
     } else {
       fn();
     }
+  }
+
+  // Envoltorio de window.t() con respaldo en español (mismo patrón
+  // que suscripcion-modal.js), para que esta pestaña nunca se quede
+  // sin texto si este script se cargara antes que i18n.js.
+  function interpolar(str, vars) {
+    if (!vars) return str;
+    Object.keys(vars).forEach(function (k) {
+      str = str.replace(new RegExp('\\{' + k + '\\}', 'g'), vars[k]);
+    });
+    return str;
+  }
+  function tr(key, fallback, vars) {
+    if (typeof window.t === 'function') {
+      var val = window.t(key, vars);
+      if (val && val !== key) return val;
+    }
+    return interpolar(fallback, vars);
   }
 
   var ICON_PLAN = '<svg viewBox="0 0 20 20" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.5l6 2.2v4.6c0 4-2.6 6.8-6 8.2-3.4-1.4-6-4.2-6-8.2V4.7z"/><path d="M7.3 10l1.9 1.9L13 8"/></svg>';
@@ -75,24 +102,25 @@
   function renderSeccionPlan(planId, usados) {
     var plan = window.recoPlanes.getPlan(planId);
     var esIlimitado = plan.escaneosIaPorDia === -1;
+    var etiquetaEscaneos = tr('susc.escaneosHoy', 'Escaneos con IA hoy');
 
     var usoHTML;
     if (esIlimitado) {
       usoHTML =
         '<div class="susc-uso"><div class="susc-uso__label">' +
-          '<span>Escaneos con IA hoy</span><span>Ilimitados ∞</span>' +
+          '<span>' + etiquetaEscaneos + '</span><span>' + tr('susc.ilimitado', 'Ilimitado') + '</span>' +
         '</div></div>';
     } else if (usados === null) {
       usoHTML =
         '<div class="susc-uso"><div class="susc-uso__label">' +
-          '<span>Escaneos con IA hoy</span><span>—</span>' +
+          '<span>' + etiquetaEscaneos + '</span><span>—</span>' +
         '</div></div>';
     } else {
       var pct = Math.min(100, Math.round((usados / plan.escaneosIaPorDia) * 100));
       var lleno = usados >= plan.escaneosIaPorDia;
       usoHTML =
         '<div class="susc-uso">' +
-          '<div class="susc-uso__label"><span>Escaneos con IA hoy</span><span>' + usados + ' / ' + plan.escaneosIaPorDia + '</span></div>' +
+          '<div class="susc-uso__label"><span>' + etiquetaEscaneos + '</span><span>' + usados + ' / ' + plan.escaneosIaPorDia + '</span></div>' +
           '<div class="susc-uso__track"><div class="susc-uso__bar' + (lleno ? ' susc-uso__bar--lleno' : '') + '" style="width:' + pct + '%"></div></div>' +
         '</div>';
     }
@@ -106,14 +134,14 @@
         '<div class="susc-resumen">' +
           '<span class="susc-resumen__icon">' + plan.icono + '</span>' +
           '<div class="susc-resumen__texto">' +
-            '<div class="susc-resumen__titulo">Tu plan actual: ' + plan.nombre + '</div>' +
+            '<div class="susc-resumen__titulo">' + tr('susc.tuPlanActual', 'Tu plan actual: {plan}', { plan: plan.nombre }) + '</div>' +
             '<div class="susc-resumen__desc">' + plan.precioLabel + '</div>' +
           '</div>' +
         '</div>' +
         usoHTML +
         '<ul class="susc-plan__beneficios" style="margin-top:16px">' + beneficiosHTML + '</ul>' +
         '<div style="margin-top:16px">' +
-          '<button type="button" class="ajustes-btn ajustes-btn--primario" id="ajplanCambiarBtn">Cambiar de plan</button>' +
+          '<button type="button" class="ajustes-btn ajustes-btn--primario" id="ajplanCambiarBtn">' + tr('susc.verCambiarBtn', 'Ver y cambiar de plan') + '</button>' +
         '</div>' +
       '</section>'
     );
@@ -134,7 +162,7 @@
     tabBtn.className = 'ajustes-tab';
     tabBtn.setAttribute('data-tab', TAB_KEY);
     tabBtn.setAttribute('data-active', 'false');
-    tabBtn.innerHTML = ICON_PLAN + '<span>Mi plan</span>';
+    tabBtn.innerHTML = ICON_PLAN + '<span>' + tr('susc.titulo', 'Mi plan') + '</span>';
     tabsNav.appendChild(tabBtn);
 
     var wrapper = document.createElement('div');
@@ -231,5 +259,16 @@
       window.__recoAjustesOverlayEl = document.querySelector('.ajustes-overlay');
       consultarYSincronizar();
     };
+  });
+
+  /* ══════════════════════════════════════════════
+     CAMBIO DE IDIOMA: si Ajustes sigue abierto con la pestaña "Mi
+     plan" ya inyectada, se vuelve a construir por completo con
+     consultarYSincronizar() — ya usa tr() en cada render, así que
+     basta con volver a llamarla para que quede traducida al vuelo
+     (conserva si la pestaña seguía activa).
+     ══════════════════════════════════════════════ */
+  document.addEventListener('reco:langchange', function () {
+    if (tabInjected) consultarYSincronizar();
   });
 })();
