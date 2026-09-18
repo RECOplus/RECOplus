@@ -174,7 +174,7 @@ module.exports = async function handler(req, res) {
     const categorias = await obtenerCategorias();
     const promptSistema = construirPrompt(categorias, idioma);
 
-    const respuestaGemini = await fetch(ENDPOINT_GEMINI, {
+    let respuestaGemini = await fetch(ENDPOINT_GEMINI, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -199,12 +199,52 @@ module.exports = async function handler(req, res) {
     if (!respuestaGemini.ok) {
       const detalle = await respuestaGemini.text();
       console.error('[api/classify] Gemini respondió con error:', respuestaGemini.status, detalle);
-      res.status(502).json({
-        error: 'GEMINI_ERROR',
-        mensaje: 'Gemini no pudo procesar la imagen.',
-        status: respuestaGemini.status,
-      });
-      return;
+
+      // Reintento automático UNA vez si Gemini devolvió 429 (cuota/rate
+      // limit) o 503 (modelo sobrecargado momentáneamente): son los dos
+      // códigos que típicamente se resuelven solos un par de segundos
+      // después, y explican por qué el fallo es intermitente ("a veces")
+      // en vez de consistente. Un 400 (imagen inválida) o 403 (key sin
+      // permisos) no se reintentan: fallarían igual la segunda vez.
+      if (respuestaGemini.status === 429 || respuestaGemini.status === 503) {
+        await new Promise((r) => setTimeout(r, 1200));
+        const reintento = await fetch(ENDPOINT_GEMINI, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+          body: JSON.stringify({
+            contents: [{ parts: [
+              { text: promptSistema },
+              { inline_data: { mime_type: 'image/jpeg', data: base64Limpio } },
+            ] }],
+            generationConfig: { temperature: 0.2, responseMimeType: 'application/json' },
+          }),
+        });
+        if (reintento.ok) {
+          respuestaGemini = reintento;
+        } else {
+          const detalleReintento = await reintento.text();
+          console.error('[api/classify] Reintento también falló:', reintento.status, detalleReintento);
+          res.status(502).json({
+            error: 'GEMINI_ERROR',
+            mensaje: reintento.status === 429
+              ? 'Se alcanzó el límite de la cuota gratuita de Gemini por ahora. Intenta de nuevo en un momento.'
+              : 'Gemini no pudo procesar la imagen (tras reintentar).',
+            status: reintento.status,
+            detalleGemini: detalleReintento.slice(0, 300),
+          });
+          return;
+        }
+      } else {
+        res.status(502).json({
+          error: 'GEMINI_ERROR',
+          mensaje: respuestaGemini.status === 400
+            ? 'La imagen no pudo ser procesada por Gemini (formato o contenido rechazado).'
+            : 'Gemini no pudo procesar la imagen.',
+          status: respuestaGemini.status,
+          detalleGemini: detalle.slice(0, 300),
+        });
+        return;
+      }
     }
 
     const datos = await respuestaGemini.json();
