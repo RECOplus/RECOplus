@@ -761,6 +761,12 @@ export class RecoScanner {
         labelOriginal: datos.razon || '',
         coincidenciaKeyword: datos.razon || null,
         confianzaBaja: datos.confianza === 'baja',
+        // Consejo accionable que Gemini devuelve SOLO cuando id es null
+        // o la confianza es baja (ver construirPrompt en api/classify.js):
+        // qué problema concreto tuvo la foto (borrosa, poca luz, objeto
+        // muy lejos, etc.) y qué hacer para la próxima. null en el resto
+        // de los casos (confianza alta/media).
+        sugerencia: datos.sugerencia || null,
       };
       // api/classify.js ya valida datos.id contra la tabla `categorias`
       // y devuelve mensaje/reciclable/requierePuntoEspecial en la misma

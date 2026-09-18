@@ -28,8 +28,10 @@
  *   { "id": "plastico", "confianza": "alta", "razon": "botella de agua",
  *     "mensaje": "✅ Esto se recicla...", "reciclable": true,
  *     "requierePuntoEspecial": false }
- *   Si Gemini no logra identificar el objeto con ninguna categoría:
- *   { "id": null, "confianza": "baja", "razon": "..." }
+ *   Si Gemini no logra identificar el objeto con ninguna categoría, o la
+ *   confianza es baja, se agrega "sugerencia": un consejo accionable sobre
+ *   qué mejorar de la foto (ej. "Acércate más, la imagen sale borrosa"):
+ *   { "id": null, "confianza": "baja", "razon": "...", "sugerencia": "..." }
  * ---------------------------------------------------------------
  */
 
@@ -139,9 +141,21 @@ Reglas:
   usa "id": null.
 - "confianza" debe ser "alta", "media" o "baja".
 - "razon" es una descripción breve (máximo 8 palabras) ${idiomaRazon} de qué viste.
+- "sugerencia": SOLO cuando "id" sea null O "confianza" sea "baja", incluye este campo
+  con un consejo breve y ACCIONABLE (máximo 10 palabras) ${idiomaRazon} sobre qué
+  problema concreto de la FOTO le impidió estar seguro y qué puede hacer el usuario
+  para arreglarlo -- por ejemplo: imagen borrosa/movida, poca luz, objeto muy lejos
+  o muy pequeño en el encuadre, objeto parcialmente cortado o tapado, demasiados
+  objetos a la vez, ángulo que no deja ver el material. NO repitas "no se pudo
+  identificar": ve directo al motivo y la acción (ej. "Acércate más, la imagen sale
+  borrosa" en vez de "No se pudo identificar el objeto"). Si "id" tiene un valor
+  real y "confianza" es "alta" o "media", NO incluyas este campo.
 
 Formato exacto de respuesta:
-{"id": "plastico", "confianza": "alta", "razon": "botella de agua transparente"}`;
+{"id": "plastico", "confianza": "alta", "razon": "botella de agua transparente"}
+
+Formato cuando no hay certeza (id null o confianza baja):
+{"id": null, "confianza": "baja", "razon": "objeto poco visible", "sugerencia": "Acércate más y mejora la iluminación"}`;
 }
 
 module.exports = async function handler(req, res) {
@@ -293,6 +307,13 @@ module.exports = async function handler(req, res) {
         ? clasificacion.confianza
         : 'media',
       razon: typeof clasificacion.razon === 'string' ? clasificacion.razon.slice(0, 120) : '',
+      // Solo tiene sentido mostrar una sugerencia cuando NO hubo una
+      // identificación clara (sin categoría o confianza baja); en ese
+      // caso se limpia y acota por si Gemini se extiende de más pese a
+      // la instrucción del prompt de máximo 10 palabras.
+      sugerencia: (!idValido || clasificacion.confianza === 'baja') && typeof clasificacion.sugerencia === 'string'
+        ? clasificacion.sugerencia.slice(0, 140)
+        : null,
       mensaje: categoriaEncontrada
         ? ((idioma === 'en' && categoriaEncontrada.mensaje_escaner_en) || categoriaEncontrada.mensaje_escaner)
         : null,
