@@ -103,9 +103,22 @@ async function obtenerCategorias() {
   }
 }
 
-const MODELO_GEMINI = 'gemini-flash-latest'; // alias de Google al flash estable más reciente
-const ENDPOINT_GEMINI =
-  `https://generativelanguage.googleapis.com/v1beta/models/${MODELO_GEMINI}:generateContent`;
+// Cadena de modelos a probar EN ORDEN cuando el anterior falla por
+// cuota/sobrecarga (429/503). Cada modelo de Gemini tiene su propio
+// límite de requests por minuto/día en el tier gratuito — son cupos
+// INDEPENDIENTES aunque compartan la misma GEMINI_API_KEY, así que
+// agotar flash no significa que pro también esté agotado.
+// Orden: el más rápido/barato primero (mejor para el caso normal),
+// cayendo a modelos con cupo propio si los anteriores están saturados.
+const MODELOS_GEMINI = [
+  'gemini-flash-latest',      // alias de Google al flash estable más reciente (uso normal)
+  'gemini-flash-lite-latest', // más liviano, cupo de rate limit separado del flash normal
+  'gemini-pro-latest',        // más lento/caro, pero cupo totalmente aparte — último recurso
+];
+
+function endpointGemini(modelo) {
+  return `https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent`;
+}
 
 function construirPrompt(categorias, idioma) {
   const guia = categorias.map((c) => `- ${c.id}: ${c.descripcion_ia}`).join('\n');
@@ -174,77 +187,78 @@ module.exports = async function handler(req, res) {
     const categorias = await obtenerCategorias();
     const promptSistema = construirPrompt(categorias, idioma);
 
-    let respuestaGemini = await fetch(ENDPOINT_GEMINI, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-goog-api-key': apiKey,
-      },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              { text: promptSistema },
-              { inline_data: { mime_type: 'image/jpeg', data: base64Limpio } },
-            ],
-          },
-        ],
-        generationConfig: {
-          temperature: 0.2,
-          responseMimeType: 'application/json',
+    const bodyGemini = JSON.stringify({
+      contents: [
+        {
+          parts: [
+            { text: promptSistema },
+            { inline_data: { mime_type: 'image/jpeg', data: base64Limpio } },
+          ],
         },
-      }),
+      ],
+      generationConfig: {
+        temperature: 0.2,
+        responseMimeType: 'application/json',
+      },
     });
 
-    if (!respuestaGemini.ok) {
-      const detalle = await respuestaGemini.text();
-      console.error('[api/classify] Gemini respondió con error:', respuestaGemini.status, detalle);
+    // Intenta cada modelo de MODELOS_GEMINI en orden. Por cada uno,
+    // reintenta UNA vez si el fallo fue 429 (cuota) o 503 (sobrecarga) --
+    // esos dos códigos suelen resolverse solos un par de segundos
+    // después. Si el modelo sigue fallando tras su reintento, se pasa
+    // al siguiente modelo de la lista (que tiene cupo independiente).
+    // Solo se responde con error al cliente si TODOS los modelos fallan.
+    let respuestaGemini = null;
+    let modeloUsado = null;
+    let ultimoStatus = null;
+    let ultimoDetalle = '';
 
-      // Reintento automático UNA vez si Gemini devolvió 429 (cuota/rate
-      // limit) o 503 (modelo sobrecargado momentáneamente): son los dos
-      // códigos que típicamente se resuelven solos un par de segundos
-      // después, y explican por qué el fallo es intermitente ("a veces")
-      // en vez de consistente. Un 400 (imagen inválida) o 403 (key sin
-      // permisos) no se reintentan: fallarían igual la segunda vez.
-      if (respuestaGemini.status === 429 || respuestaGemini.status === 503) {
+    for (let i = 0; i < MODELOS_GEMINI.length; i++) {
+      const modelo = MODELOS_GEMINI[i];
+      let intento = await fetch(endpointGemini(modelo), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+        body: bodyGemini,
+      });
+
+      if (!intento.ok && (intento.status === 429 || intento.status === 503)) {
+        const detalleInicial = await intento.text();
+        console.warn(`[api/classify] ${modelo} respondió ${intento.status}, reintentando una vez:`, detalleInicial);
         await new Promise((r) => setTimeout(r, 1200));
-        const reintento = await fetch(ENDPOINT_GEMINI, {
+        intento = await fetch(endpointGemini(modelo), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
-          body: JSON.stringify({
-            contents: [{ parts: [
-              { text: promptSistema },
-              { inline_data: { mime_type: 'image/jpeg', data: base64Limpio } },
-            ] }],
-            generationConfig: { temperature: 0.2, responseMimeType: 'application/json' },
-          }),
+          body: bodyGemini,
         });
-        if (reintento.ok) {
-          respuestaGemini = reintento;
-        } else {
-          const detalleReintento = await reintento.text();
-          console.error('[api/classify] Reintento también falló:', reintento.status, detalleReintento);
-          res.status(502).json({
-            error: 'GEMINI_ERROR',
-            mensaje: reintento.status === 429
-              ? 'Se alcanzó el límite de la cuota gratuita de Gemini por ahora. Intenta de nuevo en un momento.'
-              : 'Gemini no pudo procesar la imagen (tras reintentar).',
-            status: reintento.status,
-            detalleGemini: detalleReintento.slice(0, 300),
-          });
-          return;
-        }
-      } else {
-        res.status(502).json({
-          error: 'GEMINI_ERROR',
-          mensaje: respuestaGemini.status === 400
+      }
+
+      if (intento.ok) {
+        respuestaGemini = intento;
+        modeloUsado = modelo;
+        break;
+      }
+
+      ultimoStatus = intento.status;
+      ultimoDetalle = await intento.text();
+      console.error(`[api/classify] ${modelo} falló tras reintento:`, ultimoStatus, ultimoDetalle);
+      // Un error que NO es de cuota/sobrecarga (400 imagen inválida, 403
+      // key sin permisos) va a fallar igual en cualquier otro modelo de
+      // la lista -- no tiene sentido seguir probando modelos.
+      if (ultimoStatus !== 429 && ultimoStatus !== 503) break;
+    }
+
+    if (!respuestaGemini) {
+      res.status(502).json({
+        error: 'GEMINI_ERROR',
+        mensaje: ultimoStatus === 429
+          ? 'Se alcanzó la cuota gratuita de Gemini en todos los modelos disponibles por ahora. Intenta de nuevo en un momento.'
+          : ultimoStatus === 400
             ? 'La imagen no pudo ser procesada por Gemini (formato o contenido rechazado).'
             : 'Gemini no pudo procesar la imagen.',
-          status: respuestaGemini.status,
-          detalleGemini: detalle.slice(0, 300),
-        });
-        return;
-      }
+        status: ultimoStatus,
+        detalleGemini: ultimoDetalle.slice(0, 300),
+      });
+      return;
     }
 
     const datos = await respuestaGemini.json();
@@ -284,6 +298,10 @@ module.exports = async function handler(req, res) {
         : null,
       reciclable: categoriaEncontrada ? !!categoriaEncontrada.reciclable : null,
       requierePuntoEspecial: categoriaEncontrada ? !!categoriaEncontrada.requiere_punto_especial : null,
+      // Qué modelo de la cadena respondió -- útil para saber, sin ir a
+      // los logs de Vercel, si se usó el modelo normal o ya se cayó a un
+      // modelo de respaldo por cuota agotada.
+      modeloUsado,
     });
   } catch (err) {
     console.error('[api/classify] Error inesperado llamando a Gemini:', err);
