@@ -748,12 +748,23 @@ export class RecoScanner {
 
       const datos = await respuesta.json().catch(() => null);
 
-      if (!respuesta.ok || !datos || !datos.id) {
+      // Solo es un FALLO real de la llamada si la respuesta no fue 200 o
+      // no vino ningún body parseable. datos.id === null con
+      // respuesta.ok es un resultado VÁLIDO de api/classify.js: Gemini
+      // no logró identificar el objeto con confianza suficiente (foto
+      // borrosa, mal encuadrada, objeto no reconocible, etc.), y en ese
+      // caso el backend sí manda datos.sugerencia con un consejo
+      // accionable. Antes esto se trataba igual que un error y se
+      // perdía esa sugerencia, mostrando solo un mensaje genérico.
+      if (!respuesta.ok || !datos) {
         const mensaje = (datos && (datos.mensaje || datos.error)) || `HTTP_${respuesta.status}`;
         throw new Error('IA_CLASIFICACION_FALLO: ' + mensaje);
       }
 
-      const base = MATERIALES[datos.id] || MATERIALES.no_reciclable;
+      // Sin id: se usa 'sin_confianza' (no 'no_reciclable') porque el
+      // mensaje correcto para el usuario es "acércate más / mejora la
+      // luz", no "esto no se recicla" (ver material-map.js).
+      const base = (datos.id && MATERIALES[datos.id]) || MATERIALES.sin_confianza;
       const nombreBase = (_isEnglish() && base.nombre_en) || base.nombre;
       const materialCrudo = {
         ...base,
