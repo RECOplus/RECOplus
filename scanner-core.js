@@ -764,31 +764,11 @@ export class RecoScanner {
       // Sin id: se usa 'sin_confianza' (no 'no_reciclable') porque el
       // mensaje correcto para el usuario es "acércate más / mejora la
       // luz", no "esto no se recicla" (ver material-map.js).
-      const base = (datos.id && MATERIALES[datos.id]) || MATERIALES.sin_confianza;
-      const nombreBase = (_isEnglish() && base.nombre_en) || base.nombre;
-      const materialCrudo = {
-        ...base,
-        nombre: nombreBase,
-        labelOriginal: datos.razon || '',
-        coincidenciaKeyword: datos.razon || null,
-        confianzaBaja: datos.confianza === 'baja',
-        // Consejo accionable que Gemini devuelve SOLO cuando id es null
-        // o la confianza es baja (ver construirPrompt en api/classify.js):
-        // qué problema concreto tuvo la foto (borrosa, poca luz, objeto
-        // muy lejos, etc.) y qué hacer para la próxima. null en el resto
-        // de los casos (confianza alta/media).
-        sugerencia: datos.sugerencia || null,
-      };
-      // api/classify.js ya valida datos.id contra la tabla `categorias`
-      // y devuelve mensaje/reciclable/requierePuntoEspecial en la misma
-      // respuesta; se usan como fuente más fresca posible, pero si por
-      // alguna razón faltan (respuesta antigua del backend en caché,
-      // etc.) se completa igual con el mapa de Supabase cargado en el
-      // cliente.
-      const material = _enriquecerConCategoriaSupabase(materialCrudo, this._categoriasMapa);
-      if (datos.mensaje) material.mensaje = datos.mensaje;
-      if (typeof datos.reciclable === 'boolean') material.reciclable = datos.reciclable;
-      if (typeof datos.requierePuntoEspecial === 'boolean') material.requierePuntoEspecial = datos.requierePuntoEspecial;
+      // Se guarda la respuesta cruda para poder re-emitir el mismo
+      // resultado más adelante en otro idioma (ver
+      // relocalizarUltimoResultadoIA), sin volver a consultar a Gemini.
+      this._ultimoDatosIA = datos;
+      const material = this._materialDesdeDatosIA(datos);
 
       this.onResultado(material, [{ label: datos.razon || '', confidence: 1 }], {
         fuente: 'gemini',
@@ -819,6 +799,72 @@ export class RecoScanner {
   /** Notifica un sub-estado del escaneo IA sin tocar la máquina de estados principal (ESTADOS). */
   _setEstadoIA(subEstado) {
     this.onEstado(this.estadoActual, { subEstadoIA: subEstado });
+  }
+
+  /**
+   * Construye el objeto `material` (para onResultado) a partir de la
+   * respuesta cruda de /api/classify (Gemini), combinando el respaldo
+   * local de MATERIALES con el enriquecimiento en vivo de Supabase
+   * (_categoriasMapa) -- SIEMPRE evaluado con el idioma ACTUAL del
+   * sitio (_isEnglish()), sin importar en qué idioma se le pidió
+   * originalmente la clasificación a Gemini. Factorizado aparte de
+   * escanearPreciso() para poder reusarlo también al re-localizar un
+   * resultado ya mostrado cuando el usuario cambia de idioma después
+   * de escanear (ver relocalizarUltimoResultadoIA).
+   *
+   * `datos.mensaje/reciclable/requierePuntoEspecial` (que sí vienen
+   * fijos en el idioma que se pidió a Gemini en su momento) solo se
+   * usan como respaldo si Supabase no tiene fila para ese id --
+   * nunca pisan un valor ya recalculado en el idioma actual, para no
+   * volver a dejar el mensaje pegado en el idioma viejo.
+   */
+  _materialDesdeDatosIA(datos) {
+    const base = (datos.id && MATERIALES[datos.id]) || MATERIALES.sin_confianza;
+    const nombreBase = (_isEnglish() && base.nombre_en) || base.nombre;
+    const materialCrudo = {
+      ...base,
+      nombre: nombreBase,
+      labelOriginal: datos.razon || '',
+      coincidenciaKeyword: datos.razon || null,
+      confianzaBaja: datos.confianza === 'baja',
+      // Consejo accionable que Gemini devuelve SOLO cuando id es null
+      // o la confianza es baja (ver construirPrompt en api/classify.js):
+      // texto libre generado por la IA en el idioma que se le pidió en
+      // su momento -- es la única parte que NO se puede re-traducir sin
+      // volver a consultar a Gemini, así que se deja tal cual quedó si
+      // el usuario cambia de idioma después.
+      sugerencia: datos.sugerencia || null,
+    };
+    const material = _enriquecerConCategoriaSupabase(materialCrudo, this._categoriasMapa);
+    // Respaldo SOLO si Supabase no tenía fila para este id (entonces
+    // material.mensaje/reciclable/requierePuntoEspecial quedan sin
+    // definir tras el enriquecimiento): se completa con lo que ya
+    // trajo el backend en su momento, aunque quede en el idioma viejo
+    // -- mejor eso que dejarlo vacío.
+    if (!material.mensaje && datos.mensaje) material.mensaje = datos.mensaje;
+    if (typeof material.reciclable !== 'boolean' && typeof datos.reciclable === 'boolean') material.reciclable = datos.reciclable;
+    if (typeof material.requierePuntoEspecial !== 'boolean' && typeof datos.requierePuntoEspecial === 'boolean') material.requierePuntoEspecial = datos.requierePuntoEspecial;
+    return material;
+  }
+
+  /**
+   * Vuelve a emitir onResultado() para el ÚLTIMO resultado de escaneo
+   * preciso (IA) ya mostrado, recalculando nombre/badge/mensaje en el
+   * idioma ACTUALMENTE activo -- sin volver a llamar a Gemini. Pensado
+   * para refrescar la tarjeta de resultado cuando el usuario cambia de
+   * idioma DESPUÉS de ya tener un resultado final en pantalla (ver
+   * evento 'reco:langchange' en scanner-demo.html): antes, ese texto
+   * se quedaba pegado en el idioma en que se pidió originalmente el
+   * escaneo. No hace nada si todavía no hay ningún resultado de IA
+   * guardado en esta sesión del escáner.
+   */
+  relocalizarUltimoResultadoIA() {
+    if (!this._ultimoDatosIA) return;
+    const material = this._materialDesdeDatosIA(this._ultimoDatosIA);
+    this.onResultado(material, [{ label: this._ultimoDatosIA.razon || '', confidence: 1 }], {
+      fuente: 'gemini',
+      confianza: this._ultimoDatosIA.confianza,
+    });
   }
 
   /**

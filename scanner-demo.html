@@ -719,6 +719,20 @@
     if (previewHintEl) previewHintEl.style.display = '';
   });
 
+  // ── Re-traduce la tarjeta de resultado al cambiar de idioma ──
+  // Antes: al cambiar ES/EN después de escanear, solo se traducían los
+  // textos con data-i18n (el eyebrow "Resultado final"/"Live preview",
+  // el hint, etc.), pero el nombre del material, el badge y el mensaje
+  // quedaban pegados en el idioma en que se generó el resultado, porque
+  // esos vienen de MATERIALES/Supabase y solo se pintan dentro de
+  // onResultado(). relocalizarUltimoResultadoIA() vuelve a emitir el
+  // último resultado de IA ya mostrado, recalculado en el idioma actual
+  // (sin volver a consultar a Gemini); si todavía no hay ningún
+  // resultado en esta sesión, no hace nada.
+  document.addEventListener('reco:langchange', () => {
+    scanner.relocalizarUltimoResultadoIA();
+  });
+
   window.addEventListener('beforeunload', () => scanner.destruir());
 </script>
 
