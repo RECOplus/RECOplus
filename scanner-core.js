@@ -1040,12 +1040,20 @@ export class RecoScanner {
 }
 
 /**
- * Traduce los códigos de error internos a mensajes en español
- * listos para mostrar al usuario final.
+ * Traduce los códigos de error internos a mensajes listos para
+ * mostrar al usuario final, en el idioma activo del sitio (misma
+ * detección que usa el resto de este archivo vía _isEnglish(), que
+ * lee la clave de localStorage 'reco-lang' que también usa i18n.js).
+ * Antes esto era un mapa fijo en español; como scanner-demo.html
+ * llama a esta función directamente (sin pasar por window.t()), el
+ * mensaje se quedaba en español aunque el resto de la página ya
+ * estuviera en inglés.
  */
 export function mensajeErrorLegible(error) {
   const codigo = error.message.split(':')[0];
-  const mapa = {
+  const en = _isEnglish();
+
+  const mapaEs = {
     CAMARA_NO_SOPORTADA: 'Tu navegador no soporta acceso a cámara. Prueba con Chrome o Firefox actualizados.',
     CAMARA_PERMISO_DENEGADO: 'Necesitamos permiso de cámara para escanear. Revisa los permisos del sitio en tu navegador.',
     CAMARA_NO_ENCONTRADA: 'No se detectó ninguna cámara en este dispositivo.',
@@ -1059,5 +1067,22 @@ export function mensajeErrorLegible(error) {
     FOTO_OSCURA: 'La foto salió muy oscura. Acércate a una fuente de luz e inténtalo de nuevo.',
     FOTO_BORROSA: 'La foto salió borrosa. Mantén el teléfono firme, a unos 15-20cm del objeto, e inténtalo de nuevo.',
   };
-  return mapa[codigo] || 'Ocurrió un error inesperado con el escáner.';
+
+  const mapaEn = {
+    CAMARA_NO_SOPORTADA: 'Your browser does not support camera access. Try an updated version of Chrome or Firefox.',
+    CAMARA_PERMISO_DENEGADO: 'We need camera permission to scan. Check the site permissions in your browser.',
+    CAMARA_NO_ENCONTRADA: 'No camera was detected on this device.',
+    CAMARA_EN_USO: 'The camera is being used by another application. Close it and try again.',
+    VIDEO_TIMEOUT: 'The camera took too long to respond. Try reloading the page.',
+    ML5_NO_CARGADO: 'Could not load the recognition library (ml5.js). Check your internet connection.',
+    MODELO_NO_CARGO: 'Could not load the recognition model after several attempts. Check your connection.',
+    CLASIFICACION_FALLO: 'An error occurred analyzing the image. Retrying automatically.',
+    SIN_VIDEO_PARA_CAPTURAR: 'The camera is not ready yet to capture a photo.',
+    IA_CLASIFICACION_FALLO: 'Could not reach the precise scan. Try again in a few seconds.',
+    FOTO_OSCURA: 'The photo came out too dark. Move closer to a light source and try again.',
+    FOTO_BORROSA: 'The photo came out blurry. Hold your phone steady, about 15-20cm from the object, and try again.',
+  };
+
+  const mapa = en ? mapaEn : mapaEs;
+  return mapa[codigo] || (en ? 'An unexpected error occurred with the scanner.' : 'Ocurrió un error inesperado con el escáner.');
 }
