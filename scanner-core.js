@@ -868,6 +868,20 @@ export class RecoScanner {
   }
 
   /**
+   * true si ya hay un resultado de escaneo preciso (IA) guardado en esta
+   * sesión del escáner (es decir, si relocalizarUltimoResultadoIA() tiene
+   * algo que re-emitir). Pensado para que la UI (scanner-demo.html) sepa,
+   * al cambiar de idioma, si debe re-traducir manualmente los textos
+   * ESTÁTICOS por defecto de la tarjeta de resultado ("Vista previa en
+   * vivo" / "Esperando objeto...") -- que ya no llevan data-i18n a
+   * propósito, ver el comentario en scanner-demo.html -- o si en cambio
+   * corresponde re-traducir el resultado real vía relocalizarUltimoResultadoIA().
+   */
+  tieneResultadoIA() {
+    return !!this._ultimoDatosIA;
+  }
+
+  /**
    * Obtiene la mejor foto posible del objeto y la devuelve como base64
    * JPEG (sin el prefijo "data:image/jpeg;base64,").
    *

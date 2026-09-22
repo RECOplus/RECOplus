@@ -307,10 +307,10 @@
     <div class="reco-scanner__resultado" id="recoResultado" data-visible="false" data-fuente="preview">
       <div class="reco-scanner__resultado-icono" id="recoIcono">♳</div>
       <div class="reco-scanner__resultado-texto">
-        <span class="reco-scanner__resultado-eyebrow" id="recoResultadoEyebrow" data-i18n="scannerdemo.preview.eyebrow">Vista previa en vivo</span>
+        <span class="reco-scanner__resultado-eyebrow" id="recoResultadoEyebrow">Vista previa en vivo</span>
         <div class="reco-scanner__resultado-material" id="recoMaterialNombre">—</div>
         <span class="reco-scanner__resultado-badge" id="recoBadge" style="display:none"></span>
-        <div class="reco-scanner__resultado-detalle" id="recoDetalle" data-i18n="scannerdemo.resultado.esperando">Esperando objeto...</div>
+        <div class="reco-scanner__resultado-detalle" id="recoDetalle">Esperando objeto...</div>
       </div>
       <div class="reco-scanner__resultado-confianza" id="recoConfianza">—</div>
     </div>
@@ -426,6 +426,15 @@
   const historialEl = document.getElementById('recoHistorial');
   const recoResultadoEyebrowEl = document.getElementById('recoResultadoEyebrow');
   const previewHintEl = document.getElementById('recoPreviewHint');
+
+  // recoResultadoEyebrowEl y detalleEl ya NO llevan data-i18n en el HTML
+  // (ver por qué en el listener de 'reco:langchange' más abajo), así que
+  // hay que traducir su texto placeholder aquí a mano al cargar la
+  // página, en el idioma que ya esté guardado en localStorage -- i18n.js
+  // corre antes que este <script type="module"> y ya dejó `window.t`
+  // listo para usar.
+  recoResultadoEyebrowEl.textContent = window.t ? t('scannerdemo.preview.eyebrow') : 'Vista previa en vivo';
+  detalleEl.textContent = window.t ? t('scannerdemo.resultado.esperando') : 'Esperando objeto...';
 
   /* ── Efecto de disparo: flash + freeze del frame + insignia ──
      Se dispara justo cuando el usuario toca "Confirmar con IA", sobre
@@ -729,8 +738,29 @@
   // último resultado de IA ya mostrado, recalculado en el idioma actual
   // (sin volver a consultar a Gemini); si todavía no hay ningún
   // resultado en esta sesión, no hace nada.
+  //
+  // BUG relacionado que esto también corrige: #recoResultadoEyebrow y
+  // #recoDetalle usaban ANTES data-i18n="scannerdemo.preview.eyebrow" /
+  // data-i18n="scannerdemo.resultado.esperando" en el HTML. applyLang()
+  // (i18n.js) traduce TODO elemento con data-i18n sin distinguir si su
+  // contenido ya fue sobreescrito dinámicamente por JS -- así que cada
+  // cambio de idioma pisaba el resultado real ya mostrado (nombre del
+  // material sobrevivía porque ese <div> no tenía data-i18n, pero el
+  // eyebrow volvía a "Vista previa en vivo" y el detalle a "Esperando
+  // objeto...", los valores de PLACEHOLDER, no el resultado del escaneo).
+  // Se quitó data-i18n de esos dos elementos en el HTML y ahora se
+  // gestionan 100% desde aquí: si hay un resultado de IA guardado, se
+  // re-traduce vía relocalizarUltimoResultadoIA(); si no lo hay (el
+  // usuario todavía no confirmó ningún escaneo en esta sesión), se
+  // re-traducen manualmente los textos placeholder por defecto.
   document.addEventListener('reco:langchange', () => {
-    scanner.relocalizarUltimoResultadoIA();
+    if (scanner.tieneResultadoIA()) {
+      scanner.relocalizarUltimoResultadoIA();
+    } else {
+      const trPlaceholder = (key, fb) => (window.t ? t(key) : fb);
+      recoResultadoEyebrowEl.textContent = trPlaceholder('scannerdemo.preview.eyebrow', 'Vista previa en vivo');
+      detalleEl.textContent = trPlaceholder('scannerdemo.resultado.esperando', 'Esperando objeto...');
+    }
   });
 
   window.addEventListener('beforeunload', () => scanner.destruir());
