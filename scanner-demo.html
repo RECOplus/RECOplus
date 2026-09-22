@@ -456,6 +456,65 @@
   let ultimoMaterialId = null;
   let historialSet = new Set();
 
+  // ── Cooldown del botón "Confirmar con IA" ──
+  // Evita ráfagas de clics que agoten en minutos el RPM/RPD gratuito
+  // de Gemini: tras CADA escaneo preciso (éxito o error, da igual) se
+  // bloquea el botón un tiempo fijo antes de permitir el siguiente.
+  const COOLDOWN_IA_MS = 8000;
+  let cooldownHastaIA = 0;
+  let cooldownIntervalId = null;
+  let estadoScannerActual = ESTADOS.INACTIVO;
+  let detalleScannerActual = null;
+
+  // Centraliza toda la lógica de qué mostrar en btnIA: se llama tanto
+  // desde onEstado (cambios reales del scanner) como desde el interval
+  // del cooldown (que no dispara onEstado, solo pasa el tiempo).
+  function actualizarBotonIA() {
+    const tr = (key, fb) => (window.t ? t(key) : fb);
+    const camaraActiva = estadoScannerActual === ESTADOS.LISTO || estadoScannerActual === ESTADOS.ESCANEANDO;
+    const subEstadoIA = detalleScannerActual && detalleScannerActual.subEstadoIA;
+    const pausadoTrasIA = subEstadoIA === 'pausado_tras_resultado';
+
+    if (pausadoTrasIA) {
+      btnIA.disabled = true;
+      btnIA.textContent = tr('scannerdemo.btn.ia', '✨ Confirmar con IA (resultado final)');
+      btnPausar.disabled = true;
+      volverEscanearWrap.hidden = false;
+      return;
+    }
+
+    if (subEstadoIA) {
+      btnIA.disabled = true;
+      btnIA.textContent = subEstadoIA === 'capturando' ? tr('scannerdemo.btn.iaCapturando', '📸 Capturando...') : tr('scannerdemo.btn.iaConsultando', '🔎 Analizando con IA...');
+      volverEscanearWrap.hidden = true;
+      return;
+    }
+
+    const restanteMs = cooldownHastaIA - Date.now();
+    if (restanteMs > 0) {
+      const segRestantes = Math.ceil(restanteMs / 1000);
+      btnIA.disabled = true;
+      btnIA.textContent = (window.t ? t('scannerdemo.btn.iaCooldown', { s: segRestantes }) : null) || `⏳ Espera ${segRestantes}s...`;
+    } else {
+      btnIA.disabled = !camaraActiva;
+      btnIA.textContent = tr('scannerdemo.btn.ia', '✨ Confirmar con IA (resultado final)');
+    }
+    volverEscanearWrap.hidden = true;
+  }
+
+  function iniciarCooldownIA() {
+    cooldownHastaIA = Date.now() + COOLDOWN_IA_MS;
+    if (cooldownIntervalId) clearInterval(cooldownIntervalId);
+    cooldownIntervalId = setInterval(() => {
+      if (Date.now() >= cooldownHastaIA) {
+        clearInterval(cooldownIntervalId);
+        cooldownIntervalId = null;
+      }
+      actualizarBotonIA();
+    }, 1000);
+    actualizarBotonIA();
+  }
+
   const scanner = new RecoScanner({
     videoEl,
     onEstado: (estado, detalle) => {
@@ -490,28 +549,11 @@
       // (listo o escaneando). El sub-estado de la propia llamada IA
       // (capturando/consultando/pausado_tras_resultado) llega en
       // `detalle`, no en `estado`.
-      const camaraActiva = estado === ESTADOS.LISTO || estado === ESTADOS.ESCANEANDO;
-      const subEstadoIA = detalle && detalle.subEstadoIA;
-      const pausadoTrasIA = subEstadoIA === 'pausado_tras_resultado';
-
-      if (pausadoTrasIA) {
-        // El bucle local quedó pausado a propósito tras un escaneo IA
-        // exitoso: se oculta el botón de IA y "Pausar" (redundantes en
-        // este estado) y se muestra "Volver a escanear" como única vía
-        // para reactivar la clasificación en vivo.
-        btnIA.disabled = true;
-        btnIA.textContent = tr('scannerdemo.btn.ia', '✨ Confirmar con IA (resultado final)');
-        btnPausar.disabled = true;
-        volverEscanearWrap.hidden = false;
-      } else if (subEstadoIA) {
-        btnIA.disabled = true;
-        btnIA.textContent = subEstadoIA === 'capturando' ? tr('scannerdemo.btn.iaCapturando', '📸 Capturando...') : tr('scannerdemo.btn.iaConsultando', '🔎 Analizando con IA...');
-        volverEscanearWrap.hidden = true;
-      } else {
-        btnIA.disabled = !camaraActiva;
-        btnIA.textContent = tr('scannerdemo.btn.ia', '✨ Confirmar con IA (resultado final)');
-        volverEscanearWrap.hidden = true;
-      }
+      // El detalle de qué mostrar en btnIA (incluyendo el cooldown, que
+      // no tiene su propio evento de estado) vive en actualizarBotonIA().
+      estadoScannerActual = estado;
+      detalleScannerActual = detalle;
+      actualizarBotonIA();
     },
 
     onResultado: (material, prediccionesCrudas, meta) => {
@@ -652,7 +694,11 @@
 
   btnIA.addEventListener('click', () => {
     dispararEfectoCaptura();
-    scanner.escanearPreciso();
+    // El cooldown arranca cuando el escaneo TERMINA (éxito o error), no
+    // al hacer clic: mientras el escaneo está en curso, el botón ya
+    // está deshabilitado por subEstadoIA (capturando/consultando) en
+    // actualizarBotonIA(), así que no hace falta bloquearlo dos veces.
+    scanner.escanearPreciso().finally(() => iniciarCooldownIA());
   });
 
   btnVolverEscanear.addEventListener('click', () => {

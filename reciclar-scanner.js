@@ -64,6 +64,16 @@
   // no serviría (mostraría un error contenido, sin afectar lo demás).
   var CLASSIFY_ENDPOINT = "/api/classify";
 
+  // Cooldown del botón "Verificar con IA" tras CADA consulta (éxito o
+  // error): esta página comparte el mismo backend/cuota de Gemini que
+  // el escáner de cámara en vivo (scanner-demo.html), así que clics
+  // en ráfaga aquí también agotan el RPM/RPD gratuito para todo el
+  // sitio. El límite diario POR PLAN (verificarCuotaIA) es aparte y
+  // ya bloquea el botón el resto del día cuando corresponde; este
+  // cooldown es corto y siempre se aplica, incluso a planes con
+  // escaneos ilimitados.
+  var COOLDOWN_IA_MS = 8000;
+
   // Última foto analizada localmente (dataUrl completo, con el
   // prefijo "data:image/...;base64,"). Se guarda para que el botón
   // "Verificar con IA" pueda reusarla sin obligar al usuario a subir
@@ -455,6 +465,25 @@
     });
   }
 
+  function iniciarCooldownIA(iaBtn) {
+    var hasta = Date.now() + COOLDOWN_IA_MS;
+    iaBtn.disabled = true;
+
+    function tick() {
+      var restanteMs = hasta - Date.now();
+      if (restanteMs <= 0) {
+        iaBtn.disabled = false;
+        iaBtn.textContent = tr("rscan.ia.btnDefault", "✨ Verificar con IA (más preciso)");
+        return;
+      }
+      var seg = Math.ceil(restanteMs / 1000);
+      iaBtn.textContent = tr("rscan.ia.cooldown", "⏳ Espera " + seg + "s...", { s: seg });
+      setTimeout(tick, 1000);
+    }
+
+    tick();
+  }
+
   function ejecutarConsultaIA(iaBox, iaBtn) {
     var base64 = lastPhotoDataUrl.replace(/^data:image\/\w+;base64,/, "");
 
@@ -525,8 +554,9 @@
           "</div>";
       })
       .then(function () {
-        iaBtn.disabled = false;
-        iaBtn.textContent = tr("rscan.ia.btnDefault", "✨ Verificar con IA (más preciso)");
+        // Antes: se reactivaba el botón al toque, permitiendo re-consultar
+        // de inmediato y agotar la cuota compartida de Gemini en ráfaga.
+        iniciarCooldownIA(iaBtn);
       });
   }
 

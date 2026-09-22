@@ -116,6 +116,18 @@ const MODELOS_GEMINI = [
   'gemini-flash-latest',      // alias de Google al flash estable más reciente (uso normal)
   'gemini-flash-lite-latest', // más liviano, cupo de rate limit separado del flash normal
   'gemini-pro-latest',        // más lento/caro, pero cupo totalmente aparte — último recurso
+  // Generación anterior (2.0): los alias "-latest" de arriba apuntan
+  // todos a la familia de modelos MÁS NUEVA que publica Google, así
+  // que cuando esa familia entera se satura (como pasó hoy: los tres
+  // de arriba con RPD casi al tope el mismo día), suelen caer juntos
+  // en cuestión de horas. Estos dos son de una generación vieja con
+  // cupo gratuito propio, que casi nadie más está agotando porque ya
+  // no son el modelo "por defecto" — última línea de defensa antes de
+  // fallar del todo. Si Google los retira algún día, esta llamada
+  // simplemente fallará y se pasa al siguiente (o al error final) como
+  // con cualquier otro modelo de la lista.
+  'gemini-2.0-flash',
+  'gemini-2.0-flash-lite',
 ];
 
 function endpointGemini(modelo) {
