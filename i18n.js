@@ -1608,6 +1608,21 @@ const translations = {
     "scannerdemo.historial.title": "Detectados en esta sesión",
     "scannerdemo.historial.vacio": "Aún no se ha detectado nada.",
 
+    /* ── Mensajes de error legibles del escáner (mensajeErrorLegible en scanner-core.js) ── */
+    "scannerdemo.err.camaraNoSoportada": "Tu navegador no soporta acceso a cámara. Prueba con Chrome o Firefox actualizados.",
+    "scannerdemo.err.camaraPermisoDenegado": "Necesitamos permiso de cámara para escanear. Revisa los permisos del sitio en tu navegador.",
+    "scannerdemo.err.camaraNoEncontrada": "No se detectó ninguna cámara en este dispositivo.",
+    "scannerdemo.err.camaraEnUso": "La cámara está siendo usada por otra aplicación. Ciérrala e intenta de nuevo.",
+    "scannerdemo.err.videoTimeout": "La cámara tardó demasiado en responder. Intenta recargar la página.",
+    "scannerdemo.err.ml5NoCargado": "No se pudo cargar la librería de reconocimiento (ml5.js). Revisa tu conexión a internet.",
+    "scannerdemo.err.modeloNoCargo": "No se pudo cargar el modelo de reconocimiento tras varios intentos. Revisa tu conexión.",
+    "scannerdemo.err.clasificacionFallo": "Ocurrió un error analizando la imagen. Reintentando automáticamente.",
+    "scannerdemo.err.sinVideoParaCapturar": "La cámara todavía no está lista para capturar una foto.",
+    "scannerdemo.err.iaClasificacionFallo": "No se pudo consultar el escaneo preciso. Intenta de nuevo en unos segundos.",
+    "scannerdemo.err.fotoOscura": "La foto salió muy oscura. Acércate a una fuente de luz e inténtalo de nuevo.",
+    "scannerdemo.err.fotoBorrosa": "La foto salió borrosa. Mantén el teléfono firme, a unos 15-20cm del objeto, e inténtalo de nuevo.",
+    "scannerdemo.err.generico": "Ocurrió un error inesperado con el escáner.",
+
     /* ── COMENTAR (comentar-modal.js — botón de footer en todas las páginas) ── */
     "comentar.boton":         "Dejar un comentario",
     "comentar.titulo":        "Comparte tu experiencia",
