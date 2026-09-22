@@ -47,6 +47,24 @@ export const MATERIALES = {
   juguetes: { id: 'juguetes', nombre: 'Juguetes', nombre_en: 'Toys', color: '#f2994a', icono: '🧸' },
   baterias: { id: 'baterias', nombre: 'Baterías', nombre_en: 'Batteries', color: '#e0483a', icono: '🔋' },
   bombillos: { id: 'bombillos', nombre: 'Bombillos', nombre_en: 'Light bulbs', color: '#e8c547', icono: '💡' },
+
+  // --- Categorías adicionales ---
+  // Mismos ids que sus filas correspondientes en la tabla `categorias`
+  // de Supabase (ya tienen su propio mensaje_escaner/badge/etc. ahí,
+  // agregados vía supabase-descripciones-ia-enriquecidas.sql). Antes
+  // faltaban en este objeto: si el escaneo preciso con IA (Gemini)
+  // identificaba uno de estos objetos, MATERIALES[datos.id] devolvía
+  // undefined en escanearPreciso() (scanner-core.js) y el resultado
+  // caía por error a MATERIALES.sin_confianza ("No estoy seguro" ❓)
+  // en vez de mostrar la categoría real con su mensaje ya definido en
+  // Supabase.
+  carton: { id: 'carton', nombre: 'Cartón', nombre_en: 'Cardboard', color: '#c9975b', icono: '📦' },
+  tetrapak: { id: 'tetrapak', nombre: 'Tetra Pak', nombre_en: 'Tetra Pak', color: '#4a9ed9', icono: '🧃' },
+  aceite: { id: 'aceite', nombre: 'Aceite de cocina', nombre_en: 'Cooking oil', color: '#d9a441', icono: '🛢️' },
+  tela: { id: 'tela', nombre: 'Tela', nombre_en: 'Fabric', color: '#c77dbb', icono: '🧵' },
+  cuero: { id: 'cuero', nombre: 'Cuero', nombre_en: 'Leather', color: '#8a5a3c', icono: '👜' },
+  utilesescolares: { id: 'utilesescolares', nombre: 'Útiles escolares', nombre_en: 'School supplies', color: '#4a90d9', icono: '✏️' },
+
   no_reciclable: { id: 'no_reciclable', nombre: 'No identificado', nombre_en: 'Not identified', color: '#7a7a7a', icono: '🚫' },
   // Estado especial: no es que el objeto no sea reciclable, es que el
   // modelo no tiene confianza suficiente en NINGUNA de sus predicciones
@@ -80,10 +98,20 @@ const REGLAS = [
     'lotion', 'syringe',
   ]},
 
-  // --- Papel (incluye cartón: en la tabla `categorias` no existe
-  //     'carton' como categoría propia, va dentro de 'papel') ---
+  // --- Cartón ---
+  // Antes 'carton'/'cardboard'/'crate' vivían dentro de la regla de
+  // 'papel' porque la tabla `categorias` no tenía una categoría
+  // propia para cartón. Ahora sí existe (id 'carton', con su propio
+  // mensaje_escaner en Supabase), así que se separa para que un
+  // objeto de cartón muestre la categoría e instrucciones correctas
+  // en vez de las de papel.
+  { material: 'carton', keywords: [
+    'carton', 'cardboard', 'crate',
+  ]},
+
+  // --- Papel ---
   { material: 'papel', keywords: [
-    'carton', 'cardboard', 'packet', 'crate',
+    'packet',
     'envelope', 'menu', 'notebook',
     'binder', 'paper towel', 'toilet tissue', 'newspaper', 'paper bag',
   ]},
